@@ -1,7 +1,8 @@
 var express  = require('express');
-//var request  = require('request');
+var request  = require('request');
 
 var app = express();
+var localfile = express.static(__dirname + '/app');
 // configure Express
 app.configure(function() {
   app.set('views', __dirname + '/views');
@@ -16,7 +17,21 @@ app.configure(function() {
 //  app.use(passport.initialize());
 //  app.use(passport.session());
   app.use(app.router);
-  app.use(express.static(__dirname + '/app'));
+  app.use(localfile);
+});
+
+var usersExist = function() {
+	return false;
+};
+
+
+app.get("/", function(req, res) {
+	if (!usersExist()) {
+		res.redirect('/client/#/config');
+	}
+	else {
+		localfile(req, res);
+	}
 });
 
 app.listen(80);
