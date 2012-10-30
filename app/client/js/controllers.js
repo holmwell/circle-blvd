@@ -3,10 +3,13 @@
 /* Controllers */
 
 
-function LoginCtrl($scope, $location) {
+function LoginCtrl($scope, $location, $http) {
 	
 	$scope.login = function() {
-		$location.path('/view2');
+		// var user = $scope.user.email;
+		// var pass = $scope.user.password;
+
+		var res = $http.post('/login', $scope.user);
 	};
 }
 LoginCtrl.$inject = ['$scope', '$location'];
