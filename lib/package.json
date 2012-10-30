@@ -1,8 +1,0 @@
-{
-  "name": "burndown",
-  "version": "0.1.0",
-  "dependencies": {
-    "passport": ">= 0.0.0",
-    "passport-local": ">= 0.0.0"
-  }
-}
