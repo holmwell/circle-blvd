@@ -45,9 +45,33 @@ app.get("/", function(req, res) {
 });
 
 // Authentication
-app.post('/login', auth.authenticate('/login'), function(req, res) {
-    res.redirect('/');
+// app.post('/login', auth.authenticate('/login'), function(req, res) {
+//     res.redirect('/');
+// });
+
+app.post('/login', function(req, res, next) {
+  auth.authenticate(function(err, user, info) {
+    if (err) { 
+      // TODO: Test
+      // return next(err) 
+      return res.send(401, err); 
+    }
+    if (!user) { 
+      // Invalid login data
+      return res.send(401, "Unauthorized"); 
+    }
+    req.logIn(user, function(err) {
+      if (err) { 
+        // TODO: What is this? Test.
+        //return next(err); 
+        return res.send(401, err);         
+      }
+      // Successful login
+      return res.send(200, "Login successul");
+    });
+  })(req, res, next);
 });
+
 
 // Data API: First-time configuration
 app.put("/data/initialize", function(req, res) {
@@ -64,6 +88,7 @@ app.put("/data/initialize", function(req, res) {
     password,
     function() {
       // Success.
+      // TODO: ...
       res.send("Ok!");
     },
     function(error) {

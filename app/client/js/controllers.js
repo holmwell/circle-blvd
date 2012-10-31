@@ -10,13 +10,26 @@ HomeCtrl.$inject = ['$scope'];
 function LoginCtrl($scope, $location, $http) {
 	
 	$scope.login = function() {
-		// var user = $scope.user.email;
-		// var pass = $scope.user.password;
 
-		var res = $http.post('/login', $scope.user);
+		var xsrf = $.param($scope.user);
+
+		var res = $http({
+			method: 'POST',
+			url: '/login',
+			data: xsrf,
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+		})
+			.success(function(data, status, headers, config) {
+				$scope.message = "Success!";
+			})
+			.error(function(data, status, headers, config) {
+				$scope.message = "Sad. :-("
+    		});
 	};
 }
 LoginCtrl.$inject = ['$scope', '$location', '$http'];
+
+
 
 
 function InitializeCtrl($scope, $http, $location) {

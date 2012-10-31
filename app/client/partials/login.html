@@ -1,11 +1,10 @@
 <p>This is the partial for view 1 {{pants}}.</p>
-<form action="/login" method="post">
-<!-- <input type="email" ng-model="user.email" placeholder="Email address"/>
-<input type="password" ng-model="user.password" placeholder="Password"/>
+<form>
+ 
+<input type="text" ng-model="user.username" name="username" placeholder="Email address"/>
+<input type="password" ng-model="user.password" name="password" placeholder="Password"/>
 
- --><!-- <button id="login" ng-click="login()">Login</button> -->
-<input type="text" name="username" placeholder="Email address"/>
-<input type="password" name="password" placeholder="Password"/>
+<div>Message: {{message}}</div>
 
-<button type="submit">Submit</button>
+<button type="submit" ng-click="login()">Submit</button>
 </form>
