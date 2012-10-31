@@ -52,8 +52,14 @@ app.post('/login', auth.authenticate('/login'), function(req, res) {
 // Data API: First-time configuration
 app.put("/data/initialize", function(req, res) {
   var data = req.body;
+  var user = {
+    email: data.email,
+    id: db.users.count() + 1
+  };
+
   db.users.add(
-    data,
+    user,
+    "admin",
     function() {
       // Success.
       res.send("Ok!");
