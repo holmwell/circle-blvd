@@ -1,6 +1,7 @@
 var express  = require('express');
 var request  = require('request');
 var auth = require('./lib/auth.js');
+var db = require('./lib/dataAccess.js').instance();
 
 var app = express();
 var localfile = express.static(__dirname + '/app');
@@ -22,29 +23,54 @@ app.configure(function() {
 });
 
 
+// TODO: Read if we can add something like this to specify which
+// paths are protected behind the auth wall. 
+//
 // app.all('*', requireAuthentication)
 // app.all('*', loadUser);
 
 var usersExist = function() {
-	return false;
+	return db.users.count() > 0;
 };
 
+
+// Redirect to 'initialize' on first-time use.
 app.get("/", function(req, res) {
 	if (!usersExist()) {
-		res.redirect('/client/#/config');
+		res.redirect('/client/#/initialize');
 	}
 	else {
-		localfile(req, res);
+		res.redirect('/client/');
 	}
 });
 
-app.get("/data/what", auth.ensure, function(req, res) {
+// Authentication
+app.post('/login', auth.authenticate('/login'), function(req, res) {
+    res.redirect('/');
+});
+
+// Data API: First-time configuration
+app.put("/data/initialize", function(req, res) {
+  var data = req.body;
+  db.users.add(
+    data,
+    function() {
+      // Success.
+      res.send("Ok!");
+    },
+    function(error) {
+      // Fail.
+      res.send(500, error);
+    }
+  );
+});
+
+// Data API: Protected by authorization system
+app.get("/data/user", auth.ensure, function(req, res) {
 	res.send(req.user);
 });
 
-app.post('/login', auth.authenticate('/login'), function(req, res) {
-   	res.redirect('/');
-});
+
 
 app.listen(8080);
 

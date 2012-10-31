@@ -1,6 +1,10 @@
 'use strict';
 
 /* Controllers */
+function HomeCtrl($scope) {
+
+}
+HomeCtrl.$inject = ['$scope'];
 
 
 function LoginCtrl($scope, $location, $http) {
@@ -12,13 +16,21 @@ function LoginCtrl($scope, $location, $http) {
 		var res = $http.post('/login', $scope.user);
 	};
 }
-LoginCtrl.$inject = ['$scope', '$location'];
+LoginCtrl.$inject = ['$scope', '$location', '$http'];
 
 
-function ConfigCtrl($scope) {
+function InitializeCtrl($scope, $http, $location) {
 
-	$scope.config = function() {
-		// TODO: Save admin username.
+	$scope.initialize = function() {
+		$scope.user.name = "Administrator";
+
+		var res = $http.put('/data/initialize', $scope.user)
+			.success(function(data, status, headers, config) {
+				$location.path('/');
+			})
+			.error(function(data, status, headers, config) {
+				// TODO: Display error.
+    		});
 	};
 }
-ConfigCtrl.$inject = ['$scope'];
+InitializeCtrl.$inject = ['$scope', '$http', '$location'];
