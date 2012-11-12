@@ -90,3 +90,9 @@ function InitializeCtrl($scope, $http, $location) {
 	};
 }
 InitializeCtrl.$inject = ['$scope', '$http', '$location'];
+
+
+function AdminCtrl($scope, $location, $http) {
+
+}
+AdminCtrl.$inject = ['$scope', '$http', '$location'];
