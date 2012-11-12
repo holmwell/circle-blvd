@@ -78,6 +78,7 @@ app.put("/data/initialize", function(req, res) {
 	var data = req.body;
 
 	var user = {
+		name: "Admin",
 		email: data.email,
 		id: db.users.count() + 1
 	};
@@ -105,6 +106,33 @@ app.get("/data/user", auth.ensure, function(req, res) {
 
 app.get("/data/users", auth.ensure, function(req, res) {
 	res.send(db.users.getAll());
+});
+
+app.put("/data/users/add", auth.ensure, function(req, res) {
+	// TODO: This is the exact same thing as what's in
+	// initialize, above, so refactor it.
+	var data = req.body;
+
+	var user = {
+		name: data.name,
+		email: data.email,
+		id: db.users.count() + 1
+	};
+	var password = data.password;
+
+	db.users.add(
+		user,
+		password,
+		function() {
+			// Success.
+			// TODO: ...
+			res.send("Ok!");
+		},
+		function(error) {
+			// Fail.
+			res.send(500, error);
+		}
+	);
 });
 
 app.listen(8080);

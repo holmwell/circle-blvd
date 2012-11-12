@@ -1,1 +1,21 @@
-<p>!!!!!!!!!!!!!!!!!</p>
+<h2>Administration!</h2>
+
+<ul>
+	<li ng-repeat="user in users">
+		<div>
+			<div class="name">{{user.name}}</div>
+			<div class="email">{{user.email}}</div>
+			<div class="roles">{{user.roles}}</div>
+		</div>
+	</li>
+</ul>
+
+<form>
+<input type="text" ng-model="userName" placeholder="Display name"/>
+<input type="email" ng-model="userEmail" placeholder="Email"/>
+<input type="password" ng-model="userPassword" placeholder="Password"/>
+
+<button ng-click="addUser(userName, userEmail, userPassword)">Add user</button>
+</form>
+
+
