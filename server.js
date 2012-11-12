@@ -103,7 +103,9 @@ app.get("/data/user", auth.ensure, function(req, res) {
 	res.send(req.user);
 });
 
-
+app.get("/data/users", auth.ensure, function(req, res) {
+	res.send(db.users.getAll());
+});
 
 app.listen(8080);
 
