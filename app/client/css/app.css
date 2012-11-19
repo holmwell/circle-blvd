@@ -1,5 +1,6 @@
 /* app css stylesheet */
 
+/* global */
 .menu {
   list-style: none;
   border-bottom: 0.1em solid black;
@@ -28,3 +29,37 @@
   content: "";
   padding: 0;
 }
+
+.container, .container-fluid {
+    background: white;
+    padding: 3em;
+    padding-right: 6em;
+    padding-top: 1em; 
+
+    /* horizontal offset, vertical offset, thickness, fade */
+    -webkit-box-shadow:  0px 0px 8px 1px rgba(44, 44, 44, 1);
+    box-shadow:  0px 0px 8px 1px rgba(44, 44, 44, 1);
+}
+
+body {
+    background: #222 !important;     
+}
+
+
+
+/* admin */
+
+#userList {
+  list-style: none;
+}
+
+
+
+
+
+
+
+
+
+
+

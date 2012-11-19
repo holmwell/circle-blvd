@@ -1,6 +1,6 @@
 <h2>Administration!</h2>
 
-<ul>
+<ul id="userList">
 	<li ng-repeat="user in users">
 		<div>
 			<div class="name">{{user.name}}</div>
@@ -15,7 +15,7 @@
 <input type="email" ng-model="userEmail" placeholder="Email"/>
 <input type="password" ng-model="userPassword" placeholder="Password"/>
 
-<button ng-click="addUser(userName, userEmail, userPassword)">Add user</button>
+<button class="btn" ng-click="addUser(userName, userEmail, userPassword)">Add user</button>
 </form>
 
 
