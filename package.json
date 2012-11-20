@@ -6,6 +6,7 @@
     "passport": ">= 0.0.0",
     "passport-local": ">= 0.0.0",
     "request": ">= 0.0.0",
-    "node-uuid": ">=0.0.0"
+    "node-uuid": ">=0.0.0",
+    "cradle": ">=0.0.0"
   }
 }

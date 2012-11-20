@@ -9,9 +9,10 @@ Prerequisites
 Installation
 --------
 `
-git clone https://github.com/exclsr/burndown.git
-cd burndown
-npm install
-node server.js
-Go to http://localhost:8080
+	git clone https://github.com/exclsr/burndown.git
+	cd burndown
+	npm install
+	(start CouchDB)
+	node server.js
+	Go to http://localhost:8080
 `
