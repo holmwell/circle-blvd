@@ -3,12 +3,11 @@ var DIGEST_ENCODING = 'hex';
 
 var crypto = require('crypto');
 var uuid = require('node-uuid');
-var cradle = require('cradle');
+var nano = require('nano');
 
 var couch = function() {
 
-	var couchHost = 'http://localhost';
-	var couchPort = 5984;
+	var databaseUrl = 'http://localhost:5984';
 	// TODO: Ideally, we want to make the database automatically
 	// if 'burndown' doesn't already exist on first run, and if
 	// it does then ask for a new database name. For now, we're
@@ -16,10 +15,11 @@ var couch = function() {
 	var databaseName = 'burndown';
 
 	// Connect to Couch! 
-	var database = new(cradle.Connection)(couchHost, couchPort, {
-		cache: true,
-		raw: false
-	}).database(databaseName);
+	var database, nanoMaster;
+	var databaseOptions = {};
+	databaseOptions.url = databaseUrl;
+	var nanoMaster = nano(databaseOptions);
+	var database = nanoMaster.use(databaseName);
 
 	var createViews = function() {
 		// TODO: Add views to the database if they're
@@ -27,9 +27,37 @@ var couch = function() {
 		// as we can get by for now without this.
 	};
 
+	var databaseExists = function (callback) {
+		var opts = {
+			db: databaseName,
+			method: "GET"
+		};
+
+		nanoMaster.relax(opts, function (err, body) {
+			if (err && err['status-code'] === 404) {
+				callback(null, false);
+			}
+			else if (err) {
+				callback(err);
+			}
+			else {
+				callback(null, true);
+			}
+		});
+	};
+
+	var createDatabase = function (callback) {
+		var opts = {
+			db: databaseName,
+			method: "PUT"
+		};
+
+		nanoMaster.relax(opts, callback);
+	};
+
 	var createDatabaseAndViews = function() {
 		// Create database!
-		database.exists(function (err, exists) {
+		databaseExists(function (err, exists) {
 			if (err) {
 				throw (err);
 			}
@@ -37,7 +65,7 @@ var couch = function() {
 				createViews();
 			}
 			else {
-				database.create();
+				createDatabase();
 				createViews();
 			}
 		});
@@ -68,6 +96,7 @@ var db = function() {
 			add: function(user, password, success, failure) {				
 				if (!isValidUser(user)) {
 					// TODO: Error?
+					console.log(user);
 					return failure("User cannot be null?");
 				}
 
