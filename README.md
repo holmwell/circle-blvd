@@ -7,7 +7,7 @@ burndown
 
 ### Installation
 * `git clone https://github.com/exclsr/burndown.git`
-* `cd burndown`
+* `cd burndown/app/`
 * `npm install`
 * `(start CouchDB)`
 * `node server.js`
