@@ -1,18 +1,6 @@
-var CRYPTO_ALGORITHM = 'sha256';
-var DIGEST_ENCODING = 'hex';
-
-var crypto = require('crypto');
-var uuid = require('node-uuid');
 var nano = require('nano');
 var views = require('./views.js');
-
-// TODO: This should be in its own module probably.
-var hashPassword = function(password, salt) {
-	var hmac = crypto.createHmac(CRYPTO_ALGORITHM, salt);
-	var hash = hmac.update(password).digest(DIGEST_ENCODING);
-	return hash;
-};
-
+var encrypt = require('./encrypt.js');
 
 var couch = function() {
 
@@ -29,8 +17,6 @@ var couch = function() {
 	databaseOptions.url = databaseUrl;
 	var nanoMaster = nano(databaseOptions);
 	var database = nanoMaster.use(databaseName);
-
-
 
 	var databaseExists = function (callback) {
 		var opts = {
@@ -145,8 +131,8 @@ var couch = function() {
 			if (err) {
 				return callback(err);
 			}
-			var salt = uuid.v4();
-			var hash = hashPassword(password, salt);
+			var salt = encrypt.salt();
+			var hash = encrypt.hash(password, salt);
 			var pass = {
 				"userId": user.id,
 				"hash":hash, 
@@ -307,7 +293,7 @@ var db = function() {
 
 					var salt = pass.salt;
 					var hash = pass.hash;	
-					if(hashPassword(password, salt) === hash) {
+					if(encrypt.hash(password, salt) === hash) {
 						return success();
 					}
 					return failure();
