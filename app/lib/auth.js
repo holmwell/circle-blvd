@@ -8,38 +8,40 @@ var passwordField = 'password';
 
 // callback = fn(error, user);
 var findUserById = function(id, callback) {
-	var user = db.users.findById(id);
-	if (user) {
-		callback(null, user);
-	} else {
-		// TODO: Use error codes
-		callback(new Error('User ' + id + ' does not exist'));
-	}
-}
+	db.users.findById(id, function (user) {
+		if (user) {
+			callback(null, user);
+		} else {
+			// TODO: Use error codes
+			callback(new Error('User ' + id + ' does not exist'));
+		}	
+	});
+};
 
 // callback = fn(error, user);
 var verify = function(email, password, callback) {
-	var user = db.users.findByEmail(email);
-	if(!user) {
-		// TODO: Use error codes
-		// TODO: Really, we should just return "unauthorized"
-		// to the client, so as to not give any hints to whether
-		// an attacker is making progress.
-		callback(new Error('Unknown user ' + email));
-		return;
-	}
+	db.users.findByEmail(email, function (user) {
+		if(!user) {
+			// TODO: Use error codes
+			// TODO: Really, we should just return "unauthorized"
+			// to the client, so as to not give any hints to whether
+			// an attacker is making progress.
+			callback(new Error('Unknown user ' + email));
+			return;
+		}
 
-	var success = function () {
-		callback(null, user);
-	}
+		var success = function () {
+			callback(null, user);
+		}
 
-	var failure = function() {
-		// TODO: Use error codes
-		callback(new Error("Invalid password"));		
-	}
+		var failure = function() {
+			// TODO: Use error codes
+			callback(new Error("Invalid password"));		
+		}
 
-	db.users.validatePassword(user, password, success, failure);
-}
+		db.users.validatePassword(user, password, success, failure);	
+	});
+};
 
 
 var initialize = function() {

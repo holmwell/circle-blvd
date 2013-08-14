@@ -62,29 +62,38 @@ app.post('/login', authMiddleware);
 
 
 // Data API: First-time configuration
-app.put("/data/initialize", function(req, res) {
+app.put("/data/initialize", function (req, res) {
 	var data = req.body;
 
-	var user = {
-		name: "Admin",
-		email: data.email,
-		id: db.users.count() + 1
-	};
-	var password = data.password;
-
-	db.users.add(
-		user,
-		password,
-		function() {
-			// Success.
-			// TODO: ...
-			res.send("Ok!");
-		},
-		function(error) {
-			// Fail.
-			res.send(500, error);
+	db.users.count(function (err, count) {
+		if (err) {
+			console.log(err);
+			res.send(500);
 		}
-	);
+		else {
+			var user = {
+				name: "Admin",
+				email: data.email,
+				id: count + 1
+			};
+			var password = data.password;
+
+			db.users.add(
+				user,
+				password,
+				function() {
+					// Success.
+					// TODO: ...
+					res.send("Ok!");
+				},
+				function(err) {
+					// Fail.
+					console.log(err);
+					res.send(500, err);
+				}
+			);	
+		}
+	});
 });
 
 // Data API: Protected by authorization system
@@ -93,7 +102,15 @@ app.get("/data/user", auth.ensure, function(req, res) {
 });
 
 app.get("/data/users", auth.ensure, function(req, res) {
-	res.send(db.users.getAll());
+	db.users.getAll(function (err, users) {
+		if (err) {
+			console.log(err);
+			res.send(500);
+		}
+		else {
+			res.send(users);
+		}
+	});
 });
 
 app.put("/data/users/add", auth.ensure, function(req, res) {
@@ -101,31 +118,49 @@ app.put("/data/users/add", auth.ensure, function(req, res) {
 	// initialize, above, so refactor it.
 	var data = req.body;
 
-	var user = {
-		name: data.name,
-		email: data.email,
-		id: db.users.count() + 1
-	};
-	var password = data.password;
-
-	db.users.add(
-		user,
-		password,
-		function() {
-			// Success.
-			// TODO: ...
-			res.send("Ok!");
-		},
-		function(error) {
-			// Fail.
-			res.send(500, error);
+	db.users.count(function (err, count) {
+		if (err) {
+			console.log(err);
+			res.send(500);
 		}
-	);
+		else {
+			var user = {
+				name: data.name,
+				email: data.email,
+				id: count + 1
+			};
+			var password = data.password;
+
+			db.users.add(
+				user,
+				password,
+				function() {
+					// Success.
+					// TODO: ...
+					res.send("Ok!");
+				},
+				function(error) {
+					// Fail.
+					res.send(500, error);
+				}
+			);
+		}
+	});
 });
 
 
-var usersExist = function() {
-	return db.users.count() > 0;
+var usersExist = function(callback) {
+	db.users.count(function (err, count) {
+		if (err) {
+			callback(err);
+		}
+		else if (count > 0) {
+			callback(null, true);
+		}
+		else {
+			callback(null, false);
+		}
+	});
 };
 
 // The secret to bridging Angular and Express in a 
@@ -138,14 +173,20 @@ app.get('*', function (req, res) {
 	//
 	// Use a cookie to control flow and prevent redirect loops.
 	// Maybe not the best idea; feel free to have a better one.
-	if (!usersExist() && !req.cookies.initializing) {
-		res.cookie('initializing', 'yep');
-		res.redirect('/#/initialize');
-	}
-	else {
-		res.clearCookie('initializing');
-		routes.index(req, res);
-	}
+	usersExist(function (err, exist) {
+		if (err) {
+			console.log(err);
+			res.send(500);
+		}
+		else if (!exist && !req.cookies.initializing) {
+			res.cookie('initializing', 'yep');
+			res.redirect('/#/initialize');
+		}
+		else {
+			res.clearCookie('initializing');
+			routes.index(req, res);			
+		}
+	});
 });
 
 app.listen(app.get('port'), function() {
