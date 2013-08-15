@@ -1,8 +1,13 @@
-function SignInCtrl($scope, $location, $http) {
+function SignInCtrl(session, $scope, $location, $http) {
 
 	$scope.signIn = function() {
 		var success = function(data, status, headers, config) {
 			$scope.message = "Success!";
+
+			var user = data;
+			session.user = user;
+			session.save();
+
 			$location.path("/");
 		};
 
@@ -17,7 +22,7 @@ function SignInCtrl($scope, $location, $http) {
 			var xsrf = $.param(user);
 			var request = {
 				method: 'POST',
-				url: '/signin',
+				url: '/auth/signin',
 				data: xsrf,
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 			};		
@@ -30,4 +35,4 @@ function SignInCtrl($scope, $location, $http) {
 		signIn($scope.user, success, failure);
 	};
 }
-SignInCtrl.$inject = ['$scope', '$location', '$http'];
+SignInCtrl.$inject = ['session', '$scope', '$location', '$http'];

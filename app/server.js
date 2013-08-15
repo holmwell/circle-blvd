@@ -53,7 +53,14 @@ var ensureAuthenticated = function (req, res, next) {
 
 var authenticateLocal = function(req, res, next) {
 	var success = function() {
-		res.send(200, "Login successul");
+		var dbUser = req.user;
+		var publicUser = {};
+
+		publicUser.id = dbUser.id;
+		publicUser.email = dbUser.email;
+		publicUser.name = dbUser.name;
+
+		res.send(200, publicUser);
 	};
 
 	var failure = function(error) {
@@ -66,8 +73,12 @@ var authenticateLocal = function(req, res, next) {
 };
 
 // TODO: Require https (for passwords)
-app.post('/signin', authenticateLocal);
+app.post('/auth/signin', authenticateLocal);
 
+app.get('/auth/signout', function (req, res) {
+	req.logout();
+	res.send(204); // no content
+});
 
 // Data API: First-time configuration
 var createUser = function (name, email, password, res) {
