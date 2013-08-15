@@ -7,42 +7,6 @@ function HomeCtrl($scope) {
 HomeCtrl.$inject = ['$scope'];
 
 
-function LoginCtrl($scope, $location, $http) {
-
-	$scope.login = function() {
-		var success = function(data, status, headers, config) {
-			$scope.message = "Success!";
-		};
-
-		var failure = function(data, status, headers, config) {
-			$scope.message = "Sad. :-("
-		};
-
-		// TODO: This should probably be inside a resource, or whatever
-		// the things like $scope and $location are called in Angular.
-		// Refactor this when you're in the mood to learn, future-self.
-		var login = function (user, success, failure) {
-			var xsrf = $.param(user);
-			var request = {
-				method: 'POST',
-				url: '/login',
-				data: xsrf,
-				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-			};		
-
-			$http(request)
-			.success(success)
-			.error(failure);
-		};
-
-		login($scope.user, success, failure);
-	};
-}
-LoginCtrl.$inject = ['$scope', '$location', '$http'];
-
-
-
-
 function InitializeCtrl($scope, $location, $http) {
 
 	$scope.initialize = function() {

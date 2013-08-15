@@ -66,7 +66,7 @@ var authenticateLocal = function(req, res, next) {
 };
 
 // TODO: Require https (for passwords)
-app.post('/login', authenticateLocal);
+app.post('/signin', authenticateLocal);
 
 
 // Data API: First-time configuration
