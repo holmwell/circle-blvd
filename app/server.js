@@ -69,34 +69,36 @@ var authMiddleware = function(req, res, next) {
 app.post('/login', authMiddleware);
 
 
-// Data API: First-time configuration
-app.put("/data/initialize", function (req, res) {
-	var data = req.body;
+var createUser = function (name, email, password, res) {
+	var createUserById = function (userId) {
+		var user = {
+			name: name,
+			email: email,
+			id: userId
+		};
+
+		var onSuccess = function() {
+			res.send(200);
+		};
+		var onError = function (err) {
+			handleError(err, res);
+		};
+
+		db.users.add(user, password, onSuccess, onError);
+	};
 
 	db.users.count(function (err, count) {
 		if (err) {
 			return handleError(err, res);
 		}
-		var user = {
-			name: "Admin",
-			email: data.email,
-			id: count + 1
-		};
-		var password = data.password;
-
-		db.users.add(
-			user,
-			password,
-			function() {
-				// Success.
-				// TODO: ...
-				res.send("Ok!");
-			},
-			function (err) {
-				handleError(err, res);
-			}
-		);	
+		createUserById(count + 1);	
 	});
+};
+
+// Data API: First-time configuration
+app.put("/data/initialize", function (req, res) {
+	var data = req.body;
+	createUser("Admin", data.email, data.password, res);
 });
 
 // Data API: Protected by authorization system
@@ -114,50 +116,10 @@ app.get("/data/users", auth.ensure, function (req, res) {
 });
 
 app.put("/data/users/add", auth.ensure, function (req, res) {
-	// TODO: This is the exact same thing as what's in
-	// initialize, above, so refactor it.
 	var data = req.body;
-
-	db.users.count(function (err, count) {
-		if (err) {
-			return handleError(err, res);
-		}
-		var user = {
-			name: data.name,
-			email: data.email,
-			id: count + 1
-		};
-		var password = data.password;
-
-		db.users.add(
-			user,
-			password,
-			function() {
-				// Success.
-				// TODO: ...
-				res.send("Ok!");
-			},
-			function (err) {
-				handleError(err, res);
-			}
-		);
-	});
+	createUser(data.name, data.email, data.password, res);
 });
 
-
-var usersExist = function(callback) {
-	db.users.count(function (err, count) {
-		if (err) {
-			callback(err);
-		}
-		else if (count > 0) {
-			callback(null, true);
-		}
-		else {
-			callback(null, false);
-		}
-	});
-};
 
 // The secret to bridging Angular and Express in a 
 // way that allows us to pass any path to the client.
@@ -169,6 +131,20 @@ app.get('*', function (req, res) {
 	//
 	// Use a cookie to control flow and prevent redirect loops.
 	// Maybe not the best idea; feel free to have a better one.
+	var usersExist = function(callback) {
+		db.users.count(function (err, count) {
+			if (err) {
+				callback(err);
+			}
+			else if (count > 0) {
+				callback(null, true);
+			}
+			else {
+				callback(null, false);
+			}
+		});
+	};
+
 	usersExist(function (err, exist) {
 		if (err) {
 			return handleError(err, res);
