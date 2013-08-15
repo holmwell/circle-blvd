@@ -28,8 +28,7 @@ var verify = function(email, password, callback) {
 			// TODO: Really, we should just return "unauthorized"
 			// to the client, so as to not give any hints to whether
 			// an attacker is making progress.
-			callback(new Error('Unknown user ' + email));
-			return;
+			return callback(new Error('Unknown user ' + email));
 		}
 
 		var success = function () {
@@ -46,8 +45,7 @@ var verify = function(email, password, callback) {
 };
 
 
-var initialize = function() {
-
+exports.initialize = function() {
 	// Passport session setup.
 	//   To support persistent login sessions, Passport needs to be able to
 	//   serialize users into and deserialize users out of the session.  Typically,
@@ -63,76 +61,56 @@ var initialize = function() {
 		});
 	});
 
-
 	// Use the LocalStrategy within Passport.
 	//   Strategies in passport require a `verify` function, which accept
 	//   credentials (in this case, a username and password), and invoke a callback
 	//   with a user object.  In the real world, this would query a database;
 	//   however, in this example we are using a baked-in set of users.
-	passport.use(new LocalStrategy(
-		{
-			// Names of the properties of our User object
-			usernameField: usernameField,
-			passwordField: passwordField
-		},
-		function (username, password, callback) {
-			// asynchronous verification, for effect...
-			process.nextTick(function() {
-				verify(username, password, function(err, user) {
-					if (err) { 
-						callback(err); 
-					} else {
-						callback(null, user);
-					}
-				});
+	var formManifest = {
+		// Names of the properties of our User object
+		usernameField: usernameField,
+		passwordField: passwordField
+	};
+	var asyncVerify = function (username, password, callback) {
+		process.nextTick(function() {
+			verify(username, password, function (err, user) {
+				if (err) { 
+					callback(err); 
+				} else {
+					callback(null, user);
+				}
 			});
-		}
-	));
+		});
+	};
 
+	var strategy = new LocalStrategy(formManifest, asyncVerify);
+	passport.use(strategy);
 	return passport.initialize();
 };
 
-exports.initialize = initialize;
-
-// Simple route middleware to ensure user is authenticated.
-//   Use this route middleware on any resource that needs to be protected.  If
-//   the request is authenticated (typically via a persistent login session),
-//   the request will proceed.  Otherwise, the user will be redirected to the
-//   home page.
-// TODO: Rename to something useful
-exports.ensure = function(req, res, next) {
-	if (req.isAuthenticated()) { return next(); }
-	res.redirect('/')
-}
 
 // Returns authentication middleware that calls 'success' on
 // a successful login and 'failure' otherwise.
-exports.authenticate = function(req, success, failure) {
-
+exports.local = function(req, success, failure) {
 	// The actual verification is done via the 'verify' 
 	// function, above.
-	return passport.authenticate('local', 
-		function (err, user, info) {
-	
-			if (err) { 
-				failure(err);
-			}
-			else if (!user) { 
-				failure("Invalid login data");
-			}
-			else {
-				// req.login is added by the passport.initialize() middleware
-				// to manage login state. We need to call it directly, as we're
-				// overriding the default passport behavior.
-				req.login(user, function(err) {
-					if (err) { 
-						failure(err);
-					}
-					success();
-				});
-			}
+	return passport.authenticate('local', function (err, user, info) {
+		if (err) { 
+			return failure(err);
 		}
-	);
+		if (!user) { 
+			return failure("Invalid login data");
+		}
+		// req.login is added by the passport.initialize() middleware
+		// to manage login state. We need to call it directly, as we're
+		// overriding the default passport behavior.
+		req.login(user, function(err) {
+			if (err) { 
+				return failure(err);
+			}
+			success();
+		});
+	});
 };
 
 exports.usernameField = function(val) {
@@ -152,5 +130,3 @@ exports.passwordField = function(val) {
 exports.session = function() {
 	return passport.session();
 };
-
-

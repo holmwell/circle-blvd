@@ -2,14 +2,19 @@ var express  = require('express');
 var request  = require('request');
 var path     = require('path');
 var routes   = require('./routes')
-var auth = require('./lib/auth.js');
-var db = require('./lib/dataAccess.js').instance();
+var auth     = require('./lib/auth.js');
+var db       = require('./lib/dataAccess.js').instance();
 
 var app = express();
 
-// Configure auth 
-auth.usernameField('email');
-auth.passwordField('password');
+var initAuthentication = function () {
+	auth.usernameField('email');
+	auth.passwordField('password');
+	app.use(auth.initialize());
+	// Use passport.session() middleware to support
+	// persistent login sessions.
+	app.use(auth.session());
+};
 
 // configure Express
 app.configure(function() {
@@ -23,13 +28,11 @@ app.configure(function() {
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 	app.use(express.session({ secret: 'what? ok!' }));
-// Initialize Passport!  Also use passport.session() middleware, to support
-// persistent login sessions (recommended).
-	app.use(auth.initialize());
-	app.use(auth.session());
+	initAuthentication();	
 	app.use(app.router);
 });
 
+// Error handling.
 var logError = function (err) {
 	console.log(err);
 };
@@ -39,17 +42,16 @@ var handleError = function (err, res) {
 	res.send(500);
 };
 
-// TODO: Read if we can add something like this to specify which
-// paths are protected behind the auth wall. 
-//
-// app.all('*', requireAuthentication)
-// app.all('*', loadUser);
+// Authentication. 
+var ensureAuthenticated = function (req, res, next) {
+	if (req.isAuthenticated()) {
+		return next();
+	}
 
-// Authentication. This defines what we send
-// back to clients that want to authenticate
-// with the system.
-var authMiddleware = function(req, res, next) {
+	res.send(401, "Please authenticate with the server and try again.");
+};
 
+var authenticateLocal = function(req, res, next) {
 	var success = function() {
 		res.send(200, "Login successul");
 	};
@@ -59,16 +61,15 @@ var authMiddleware = function(req, res, next) {
 		res.send(401, "Unauthorized"); 
 	};
 
-	// The auth library provides middleware that
-	// calls 'success' or 'failure' in the appropriate
-	// login situation.
-	var middleware = auth.authenticate(req, success, failure);
+	var middleware = auth.local(req, success, failure);
 	middleware(req, res, next);
 };
 
-app.post('/login', authMiddleware);
+// TODO: Require https (for passwords)
+app.post('/login', authenticateLocal);
 
 
+// Data API: First-time configuration
 var createUser = function (name, email, password, res) {
 	var createUserById = function (userId) {
 		var user = {
@@ -95,18 +96,17 @@ var createUser = function (name, email, password, res) {
 	});
 };
 
-// Data API: First-time configuration
 app.put("/data/initialize", function (req, res) {
 	var data = req.body;
 	createUser("Admin", data.email, data.password, res);
 });
 
 // Data API: Protected by authorization system
-app.get("/data/user", auth.ensure, function (req, res) {
+app.get("/data/user", ensureAuthenticated, function (req, res) {
 	res.send(req.user);
 });
 
-app.get("/data/users", auth.ensure, function (req, res) {
+app.get("/data/users", ensureAuthenticated, function (req, res) {
 	db.users.getAll(function (err, users) {
 		if (err) {
 			return handleError(err, res);
@@ -115,7 +115,7 @@ app.get("/data/users", auth.ensure, function (req, res) {
 	});
 });
 
-app.put("/data/users/add", auth.ensure, function (req, res) {
+app.put("/data/users/add", ensureAuthenticated, function (req, res) {
 	var data = req.body;
 	createUser(data.name, data.email, data.password, res);
 });
@@ -165,4 +165,3 @@ app.listen(app.get('port'), function() {
 	console.log("Express server listening on port " + app.get('port'));
 	console.log("Ready.");
 });
-
