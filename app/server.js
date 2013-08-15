@@ -30,6 +30,14 @@ app.configure(function() {
 	app.use(app.router);
 });
 
+var logError = function (err) {
+	console.log(err);
+};
+
+var handleError = function (err, res) {
+	logError(err);
+	res.send(500);
+};
 
 // TODO: Read if we can add something like this to specify which
 // paths are protected behind the auth wall. 
@@ -47,7 +55,7 @@ var authMiddleware = function(req, res, next) {
 	};
 
 	var failure = function(error) {
-		console.log(error);
+		logError(error);
 		res.send(401, "Unauthorized"); 
 	};
 
@@ -67,84 +75,72 @@ app.put("/data/initialize", function (req, res) {
 
 	db.users.count(function (err, count) {
 		if (err) {
-			console.log(err);
-			res.send(500);
+			return handleError(err, res);
 		}
-		else {
-			var user = {
-				name: "Admin",
-				email: data.email,
-				id: count + 1
-			};
-			var password = data.password;
+		var user = {
+			name: "Admin",
+			email: data.email,
+			id: count + 1
+		};
+		var password = data.password;
 
-			db.users.add(
-				user,
-				password,
-				function() {
-					// Success.
-					// TODO: ...
-					res.send("Ok!");
-				},
-				function(err) {
-					// Fail.
-					console.log(err);
-					res.send(500, err);
-				}
-			);	
-		}
+		db.users.add(
+			user,
+			password,
+			function() {
+				// Success.
+				// TODO: ...
+				res.send("Ok!");
+			},
+			function (err) {
+				handleError(err, res);
+			}
+		);	
 	});
 });
 
 // Data API: Protected by authorization system
-app.get("/data/user", auth.ensure, function(req, res) {
+app.get("/data/user", auth.ensure, function (req, res) {
 	res.send(req.user);
 });
 
-app.get("/data/users", auth.ensure, function(req, res) {
+app.get("/data/users", auth.ensure, function (req, res) {
 	db.users.getAll(function (err, users) {
 		if (err) {
-			console.log(err);
-			res.send(500);
+			return handleError(err, res);
 		}
-		else {
-			res.send(users);
-		}
+		res.send(users);
 	});
 });
 
-app.put("/data/users/add", auth.ensure, function(req, res) {
+app.put("/data/users/add", auth.ensure, function (req, res) {
 	// TODO: This is the exact same thing as what's in
 	// initialize, above, so refactor it.
 	var data = req.body;
 
 	db.users.count(function (err, count) {
 		if (err) {
-			console.log(err);
-			res.send(500);
+			return handleError(err, res);
 		}
-		else {
-			var user = {
-				name: data.name,
-				email: data.email,
-				id: count + 1
-			};
-			var password = data.password;
+		var user = {
+			name: data.name,
+			email: data.email,
+			id: count + 1
+		};
+		var password = data.password;
 
-			db.users.add(
-				user,
-				password,
-				function() {
-					// Success.
-					// TODO: ...
-					res.send("Ok!");
-				},
-				function(error) {
-					// Fail.
-					res.send(500, error);
-				}
-			);
-		}
+		db.users.add(
+			user,
+			password,
+			function() {
+				// Success.
+				// TODO: ...
+				res.send("Ok!");
+			},
+			function (err) {
+				handleError(err, res);
+			}
+		);
 	});
 });
 
@@ -175,10 +171,10 @@ app.get('*', function (req, res) {
 	// Maybe not the best idea; feel free to have a better one.
 	usersExist(function (err, exist) {
 		if (err) {
-			console.log(err);
-			res.send(500);
+			return handleError(err, res);
 		}
-		else if (!exist && !req.cookies.initializing) {
+		
+		if (!exist && !req.cookies.initializing) {
 			res.cookie('initializing', 'yep');
 			res.redirect('/#/initialize');
 		}
