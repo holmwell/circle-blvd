@@ -109,8 +109,8 @@ var db = function() {
 					return failure();
 				}
 
-				couch.passwords.findById(user.id, function (pass) {
-					if (!pass) {
+				couch.passwords.findById(user.id, function (err, pass) {
+					if (err || !pass) {
 						return failure();
 					}
 

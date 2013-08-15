@@ -8,19 +8,21 @@ var passwordField = 'password';
 
 // callback = fn(error, user);
 var findUserById = function(id, callback) {
-	db.users.findById(id, function (user) {
+	db.users.findById(id, function (err, user) {
 		if (user) {
-			callback(null, user);
-		} else {
-			// TODO: Use error codes
-			callback(new Error('User ' + id + ' does not exist'));
-		}	
+			return callback(null, user);
+		} 
+		// TODO: Use error codes
+		callback(new Error('User ' + id + ' does not exist'));
 	});
 };
 
 // callback = fn(error, user);
 var verify = function(email, password, callback) {
-	db.users.findByEmail(email, function (user) {
+	db.users.findByEmail(email, function (err, user) {
+		if (err) {
+			return callback(err);
+		}
 		if(!user) {
 			// TODO: Use error codes
 			// TODO: Really, we should just return "unauthorized"

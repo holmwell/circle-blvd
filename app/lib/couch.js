@@ -102,13 +102,12 @@ var couch = function() {
 		getView(viewName, options, function (err, rows) {
 			var doc = null;
 			if (err) {
-				// TODO: ??
-				console.log(err);
+				callback(err);
 			}
 			else if (rows && rows.length > 0) {
 				doc = rows[0];
 			}
-			callback(doc);
+			callback(null, doc);
 		});		
 	}
 
