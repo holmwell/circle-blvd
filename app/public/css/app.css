@@ -1,19 +1,12 @@
 /* app css stylesheet */
 
 /* global */
-.menu {
-  list-style: none;
-  border-bottom: 0.1em solid black;
+.header {
   margin-bottom: 2em;
-  padding: 0 0 0.5em;
 }
-
-.menu:before {
-  content: "[";
-}
-
-.menu:after {
-  content: "]";
+.menu {
+  margin-top: 1.9em;
+  list-style: none;
 }
 
 .menu > li {
@@ -42,13 +35,25 @@
 }
 
 body {
-    background: #222 !important;     
+  background: #222 !important;     
+}
+
+h2 {
+  font-family: 'Headland One', serif;
+}
+
+.view {
+  clear: left;
+}
+
+.footer {
+  color: #555;
+  text-align: center;
+  margin-top: 1.4em;
 }
 
 
-
 /* admin */
-
 #userList {
   list-style: none;
 }

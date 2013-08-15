@@ -3,24 +3,30 @@
 <head>
   <meta charset="utf-8">
   <title>Burndown</title>
-  <link rel="stylesheet" href="css/app.css"/>
+  
   <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap-combined.min.css" rel="stylesheet">
+  <link href='http://fonts.googleapis.com/css?family=Headland+One' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="css/app.css"/>
+
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
   <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
 </head>
 <body>
 <div class="container">
-  <h1><a href="/">Burndown</a></h1>
-  <ul class="menu">
-    <li><a href="#/signin">Sign in</a></li>
-    <li><a href="#/admin">Admin</a></li>
-  </ul>
 
-  <div ng-view></div>
+  <div class="header row">
+    <h2 class="span3"><a href="/">burndown</a></h2>
+    <ul class="menu span4">
+      <li><a href="#/signin">Sign in</a></li>
+      <li><a href="#/admin">Admin</a></li>
+    </ul>
+  </div>
 
-  <div>Angular seed app: v<span app-version></span></div>
+  <div class="view" ng-view></div>
 
 </div>
+
+<div class="footer">burndown v<span app-version></span></div>
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
   -->
