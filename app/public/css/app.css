@@ -38,7 +38,7 @@ body {
   background: #222 !important;     
 }
 
-h2 {
+h2, h3 {
   font-family: 'Headland One', serif;
 }
 
@@ -56,8 +56,19 @@ h2 {
 /* admin */
 #userList {
   list-style: none;
+  margin-left: 0;
+}
+#userList li {
+
 }
 
+#userList > .odd {
+  background-color: #eee;
+}
+
+#userList  .row {
+  padding: 8px;
+}
 
 
 

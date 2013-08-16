@@ -1,21 +1,23 @@
-<h2>Administration!</h2>
+<h3>Administration!</h3>
 
 <ul id="userList">
-	<li ng-repeat="user in users">
-		<div>
-			<div class="name">{{user.name}}</div>
-			<div class="email">{{user.email}}</div>
-			<div class="roles">{{user.roles}}</div>
+	<li ng-repeat="user in users" ng-class-odd="'odd'">
+		<div class="row">
+			<div class="name span3">{{user.name}}</div>
+			<div class="email span3">{{user.email}}</div>
+			<div class="rolesj span3">{{user.roles}}</div>
 		</div>
 	</li>
 </ul>
 
-<form>
-<input type="text" ng-model="userName" placeholder="Display name"/>
-<input type="email" ng-model="userEmail" placeholder="Email"/>
-<input type="password" ng-model="userPassword" placeholder="Password"/>
+<form >
+	<div class="row">
+		<div class="span3"><input type="text" ng-model="userName" placeholder="Display name"/></div>
+		<div class="span3"><input type="email" ng-model="userEmail" placeholder="Email"/></div>
+		<div class="span3"><input type="password" ng-model="userPassword" placeholder="Password"/></div>
 
-<button class="btn" ng-click="addUser(userName, userEmail, userPassword)">Add user</button>
+		<div class="span2"><button class="btn" ng-click="addUser(userName, userEmail, userPassword)">Add user</button></div>
+	</div>
 </form>
 
 
