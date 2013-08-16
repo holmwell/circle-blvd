@@ -20,7 +20,7 @@ function InitializeCtrl($scope, $location, $http) {
 			var xsrf = $.param(user);
 			var request = {
 				method: 'POST',
-				url: '/login',
+				url: '/auth/signin',
 				data: xsrf,
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 			};		
