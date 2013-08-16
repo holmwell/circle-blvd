@@ -26,6 +26,18 @@ function AdminCtrl($scope, $http) {
 		.error(addUserFailure);
 	};
 
+	$scope.removeUser = function (user) {
+		var data = user;
+
+		$http.put('/data/users/remove', data)
+		.success(function() {
+			getLatestUserData();
+		})
+		.error(function (data) {
+			console.log(data);
+		});
+	};
+
 	var getUsersSuccess = function(data, status, headers, config) {
 		if (data === {}) {
 			// do nothing. 

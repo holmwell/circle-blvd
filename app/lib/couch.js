@@ -141,6 +141,21 @@ var couch = function() {
 		});
 	};
 
+	var removeUser = function (user, callback) {
+		findPasswordById(user.id, function (err, pass) {
+			if (err) {
+				return callback(err);
+			}
+			// TODO: Make this a transaction.
+			database.destroy(pass._id, pass._rev, function (err, body) {
+				if (err) {
+					return callback(err);
+				}
+				database.destroy(user._id, user._rev, callback);
+			});
+		});
+	};
+
 	var updateUser = function(user, callback) {
 		// TODO: ... document conflicts, etc.
 		database.insert(user, callback);
@@ -167,6 +182,7 @@ var couch = function() {
 	return {
 		users: {
 			add: addUser,
+			remove: removeUser,
 			findByEmail: findUserByEmail,
 			findById: findUserById,
 			getAll: getAllUsers,

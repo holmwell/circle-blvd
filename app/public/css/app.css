@@ -70,6 +70,11 @@ h2, h3 {
   padding: 8px;
 }
 
+#userList .removeUser {
+  padding-left: 3.5ex; /* for centering */
+  cursor: pointer;
+}
+
 
 
 

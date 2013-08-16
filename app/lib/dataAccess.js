@@ -48,16 +48,16 @@ var db = function() {
 	};
 	
 	var removeUser = function(user, success, failure) {
-		// 	if (!(user && user.email)) {
-		// 		// Do nothing. TODO: Do what?
-		// 	}
-		// 	else if (this.findById(user.id)) {
-		// 		// TODO: DO THIS ...
-		// 		return success();
-		// 	}
+		if (!(user && user.email)) {
+			return failure("User not found.");
+		}
 
-		// 	// TODO: Error codes.
-		// 	return failure();
+		couch.users.remove(user, function (err, body) {
+			if (err) {
+				return failure(err);
+			}
+			return success();
+		});
 	};
 
 	var updateUser = function(user, success, failure) {
@@ -123,7 +123,7 @@ var db = function() {
 	return {
 		users: { 
 			add: addUser,
-			// remove: removeUser,
+			remove: removeUser,
 			findByEmail: findUserByEmail,
 			findById: findUserById, 
 			update: updateUser,

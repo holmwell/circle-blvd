@@ -131,6 +131,19 @@ app.put("/data/users/add", ensureAuthenticated, function (req, res) {
 	createUser(data.name, data.email, data.password, res);
 });
 
+app.put("/data/users/remove", ensureAuthenticated, function (req, res) {
+	var data = req.body;
+	
+	var onSuccess = function() {
+		res.send(204);
+	};
+	var onError = function(err) {
+		handleError(err, res);
+	};
+
+	db.users.remove(data, onSuccess, onError); 
+});
+
 
 // The secret to bridging Angular and Express in a 
 // way that allows us to pass any path to the client.
