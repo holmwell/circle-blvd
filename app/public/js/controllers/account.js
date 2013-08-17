@@ -7,7 +7,8 @@ function AccountCtrl(session, $scope, $http) {
 	$scope.updateUser = function (user) {
 		$http.put('/data/user', user)
 		.success(function() {
-
+			session.user = user;
+			session.save();
 		})
 		.error(function (data, status) {
 			console.log(data);
