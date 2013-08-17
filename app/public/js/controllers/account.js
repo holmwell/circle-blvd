@@ -2,7 +2,9 @@
 
 function AccountCtrl(session, $scope, $http) {
 
+	var messages = {};
 	$scope.user = session.user;
+	$scope.messages = messages;
 
 	$scope.updateUser = function (user) {
 		$http.put('/data/user', user)
@@ -13,6 +15,24 @@ function AccountCtrl(session, $scope, $http) {
 		.error(function (data, status) {
 			console.log(data);
 		})
+	};
+
+	$scope.updatePassword = function (pass1, pass2) {
+		if (pass1 !== pass2) {
+			messages.password = "Sorry, your passwords don't match."
+			return;
+		}
+
+		var data = {};
+		data.password = pass1;
+		
+		$http.put('/data/user/password', data)
+		.success(function() {
+			messages.password = "Password updated.";
+		})
+		.error(function (data) {
+			console.log(data);
+		});
 	};
 
 	// Get our data as a check to see if we should even be here.

@@ -74,26 +74,16 @@ var db = function() {
 	};
 
 	var updateUserPassword = function(user, password, success, failure) {
-		// 	if (!isValidUser(user) && !this.findById(user.id)) {
-		// 		return failure();
-		// 	}
+		if (!isValidUser(user)) {
+			return failure("Need a valid user. Sorry.");
+		}
 
-		// 	// TODO ...
-		// 	// db.users.findById(user.id, function (err, user) {
-		// 	// 	if (err || !user) {
-		// 	// 		return failure();
-		// 	// 	}
-
-		// 	// 	db.passwords.findById(user.id, function (pass) {
-
-		// 	// 	});
-		// 	// });
-
-		// 	// var salt = uuid.v4();
-		// 	// var hash = hashPassword(password, salt);
-		// 	// passwordList[user.id] = { "hash":hash, "salt":salt };
-
-		// 	return success();
+		couch.users.updatePassword(user, password, function (err) {
+			if (err) {
+				return failure(err);
+			}
+			success();
+		});
 	};
 
 	var validateUserPassword = function(user, password, success, failure) {
@@ -122,7 +112,7 @@ var db = function() {
 			findByEmail: findUserByEmail,
 			findById: findUserById, 
 			update: updateUser,
-			// updatePassword: updateUserPassword,
+			updatePassword: updateUserPassword,
 			validatePassword: validateUserPassword,
 			getAll: function(callback) {
 				couch.users.getAll(callback);

@@ -135,6 +135,22 @@ app.put("/data/user", ensureAuthenticated, function (req, res) {
 	db.users.update(data, onSuccess, onError);
 });
 
+app.put("/data/user/password", ensureAuthenticated, function (req, res) {
+	var data = req.body;
+	if (!data.password) {
+		return res.send(400, "Missing password field.");
+	}
+
+	var onSuccess = function () {
+		res.send(200);
+	};
+	var onError = function (err) {
+		handleError(err, res);
+	}
+
+	db.users.updatePassword(req.user, data.password, onSuccess, onError);
+});
+
 
 app.get("/data/users", ensureAuthenticated, function (req, res) {
 	db.users.getAll(function (err, users) {

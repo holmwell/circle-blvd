@@ -123,20 +123,27 @@ var couch = function() {
 		findOneByKey("passwords/byId", id, callback);
 	};
 
+	var createPasswordDoc = function (userId, password) {
+		var salt = encrypt.salt();
+		var hash = encrypt.hash(password, salt);
+		var pass = {
+			"userId": userId,
+			"hash":hash, 
+			"salt":salt,
+			"type": "password"
+		};
+
+		return pass;
+	};
+
 	var addUser = function(user, password, callback) {
 		user.type = "user";
 		database.insert(user, function (err) {
 			if (err) {
 				return callback(err);
 			}
-			var salt = encrypt.salt();
-			var hash = encrypt.hash(password, salt);
-			var pass = {
-				"userId": user.id,
-				"hash":hash, 
-				"salt":salt,
-				"type": "password"
-			}
+
+			var pass = createPasswordDoc(user.id, password);
 			database.insert(pass, callback);
 		});
 	};
@@ -172,6 +179,20 @@ var couch = function() {
 		});
 	};
 
+	var updateUserPassword = function (user, password, callback) {
+		findPasswordById(user.id, function (err, body) {
+			if (err) {
+				return callback(err);
+			}
+
+			var pass = createPasswordDoc(user.id, password);
+			pass._id = body._id;
+			pass._rev = body._rev;
+
+			database.insert(pass, callback);
+		});
+	};
+
 	var getAllUsers = function(callback) {
 		getView("users/byId", function (err, rows) {
 			callback(err, rows);
@@ -197,7 +218,8 @@ var couch = function() {
 			findByEmail: findUserByEmail,
 			findById: findUserById,
 			getAll: getAllUsers,
-			update: updateUser
+			update: updateUser,
+			updatePassword: updateUserPassword
 		},
 		passwords: {
 			findById: findPasswordById
