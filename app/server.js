@@ -117,6 +117,25 @@ app.get("/data/user", ensureAuthenticated, function (req, res) {
 	res.send(req.user);
 });
 
+app.put("/data/user", ensureAuthenticated, function (req, res) {
+	var data = req.body;
+
+	if (req.user.id !== data.id) {
+		var message = "It doesn't appear that you own the account you are trying to modify.";
+		return res.send(412, message);
+	}
+
+	var onSuccess = function () {
+		res.send(200);
+	};
+	var onError = function (err) {
+		handleError(err, res);
+	};
+
+	db.users.update(data, onSuccess, onError);
+});
+
+
 app.get("/data/users", ensureAuthenticated, function (req, res) {
 	db.users.getAll(function (err, users) {
 		if (err) {
@@ -133,7 +152,7 @@ app.put("/data/users/add", ensureAuthenticated, function (req, res) {
 
 app.put("/data/users/remove", ensureAuthenticated, function (req, res) {
 	var data = req.body;
-	
+
 	var onSuccess = function() {
 		res.send(204);
 	};

@@ -1,0 +1,15 @@
+<h3>Account</h3>
+
+<p ng-show="!isSignedIn()">Please <a href="#/signin">sign in</a>.</p>
+
+<div ng-show="isSignedIn()">
+
+	<div class="row">
+		<div class="span3"><input ng-model="user.name" type="text"/></div>
+		<div class="span3"><input ng-model="user.email" type="text"/></div>
+		<div class="span2"><button class="btn" ng-click="updateUser(user)">Save</button></div>
+	</div>
+
+</div>
+
+

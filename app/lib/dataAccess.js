@@ -65,16 +65,11 @@ var db = function() {
 			return failure();
 		}
 
-		findUserById(user.id, function (err, user) {
+		couch.users.update(user, function (err) {
 			if (err) {
 				return failure(err);
 			}
-			couch.users.update(user, function (err) {
-				if (err) {
-					return failure(err);
-				}
-				success();
-			});
+			success();
 		});
 	};
 

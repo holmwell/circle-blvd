@@ -157,8 +157,19 @@ var couch = function() {
 	};
 
 	var updateUser = function(user, callback) {
-		// TODO: ... document conflicts, etc.
-		database.insert(user, callback);
+		findUserById(user.id, function (err, body) {
+			if (err) {
+				return callback(err);
+			}
+			// TODO: Where is the right place to change the appropriate fields?
+			// As this stands, this method has to be updated whenever there
+			// is a change to the user model.
+			user._id = body._id;
+			user._rev = body._rev;
+			user.type = body.type;
+
+			database.insert(user, callback);
+		});
 	};
 
 	var getAllUsers = function(callback) {

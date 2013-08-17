@@ -51,7 +51,7 @@ function AdminCtrl(session, $scope, $http) {
 		if (status === 401 && $scope.isSignedIn()) {
 			// && is admin ...
 			$scope.signOut();
-			console.log("The server was restarted. Please log in again.");
+			console.log("The server was restarted. Please sign in again.");
 		}
 	};
 
