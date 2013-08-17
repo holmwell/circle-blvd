@@ -1,6 +1,6 @@
 'use strict';
 
-function AdminCtrl($scope, $http) {
+function AdminCtrl(session, $scope, $http) {
 
 	var addUserSuccess = function() {
 		$scope.userName = "";
@@ -48,7 +48,11 @@ function AdminCtrl($scope, $http) {
 	};
 
 	var getUsersFailure = function(data, status, headers, config) { 
-
+		if (status === 401 && $scope.isSignedIn()) {
+			// && is admin ...
+			$scope.signOut();
+			console.log("The server was restarted. Please log in again.");
+		}
 	};
 
 	var getLatestUserData = function() {
@@ -59,4 +63,4 @@ function AdminCtrl($scope, $http) {
 
 	getLatestUserData();
 }
-AdminCtrl.$inject = ['$scope', '$http'];
+AdminCtrl.$inject = ['session', '$scope', '$http'];

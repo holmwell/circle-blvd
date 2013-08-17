@@ -1,5 +1,8 @@
 <h3>Administration!</h3>
 
+<p ng-show="!isSignedIn()">Please <a href="#/signin">sign in</a>.</p>
+
+<div ng-show="isSignedIn()">
 <ul id="userList">
 	<li ng-repeat="user in users" ng-class-odd="'odd'">
 		<div class="row">
@@ -20,5 +23,6 @@
 		<div class="span2"><button class="btn" ng-click="addUser(userName, userEmail, userPassword)">Add user</button></div>
 	</div>
 </form>
+</div>
 
 
