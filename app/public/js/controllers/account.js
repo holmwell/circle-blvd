@@ -11,6 +11,8 @@ function AccountCtrl(session, $scope, $http) {
 		.success(function() {
 			session.user = user;
 			session.save();
+
+			messages.user = "Account updated."
 		})
 		.error(function (data, status) {
 			console.log(data);
@@ -25,7 +27,7 @@ function AccountCtrl(session, $scope, $http) {
 
 		var data = {};
 		data.password = pass1;
-		
+
 		$http.put('/data/user/password', data)
 		.success(function() {
 			messages.password = "Password updated.";
