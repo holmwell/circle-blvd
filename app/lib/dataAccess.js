@@ -1,5 +1,6 @@
-var couch = require('./couch.js');
+var couch 	= require('./couch.js');
 var encrypt = require('./encrypt.js');
+var uuid 	= require('node-uuid');
 
 var db = function() {
 
@@ -15,7 +16,13 @@ var db = function() {
 		couch.users.findById(id, callback);
 	};
 
-	var addUser = function(user, password, success, failure) {
+	var addUser = function(name, email, password, success, failure) {
+		var user = {
+			name: name,
+			email: email,
+			id: uuid.v4()
+		};
+		
 		if (!isValidUser(user)) {
 			return failure("User cannot be null?");
 		}

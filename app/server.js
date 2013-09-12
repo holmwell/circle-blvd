@@ -82,29 +82,15 @@ app.get('/auth/signout', function (req, res) {
 
 // Data API: First-time configuration
 var createUser = function (name, email, password, res) {
-	var createUserById = function (userId) {
-		var user = {
-			name: name,
-			email: email,
-			id: userId
-		};
-
-		var onSuccess = function() {
-			res.send(200);
-		};
-		var onError = function (err) {
-			handleError(err, res);
-		};
-
-		db.users.add(user, password, onSuccess, onError);
+	var onSuccess = function() {
+		res.send(200);
 	};
 
-	db.users.count(function (err, count) {
-		if (err) {
-			return handleError(err, res);
-		}
-		createUserById(count + 1);	
-	});
+	var onError = function (err) {
+		handleError(err, res);
+	};
+
+	db.users.add(name, email, password, onSuccess, onError);
 };
 
 app.put("/data/initialize", function (req, res) {
