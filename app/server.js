@@ -5,6 +5,9 @@ var routes   = require('./routes')
 var auth     = require('./lib/auth.js');
 var db       = require('./lib/dataAccess.js').instance();
 
+var usersRoutes = require('./routes/users');
+var userRoutes 	= require('./routes/user');
+
 var app = express();
 
 var initAuthentication = function () {
@@ -80,91 +83,32 @@ app.get('/auth/signout', function (req, res) {
 	res.send(204); // no content
 });
 
-// Data API: First-time configuration
-var createUser = function (name, email, password, res) {
-	var onSuccess = function() {
-		res.send(200);
-	};
 
-	var onError = function (err) {
-		handleError(err, res);
-	};
+// Data API: Protected by authorization system
 
-	db.users.add(name, email, password, onSuccess, onError);
-};
+// Users routes
+app.get("/data/users", ensureAuthenticated, usersRoutes.list);
+app.post("/data/users/add", ensureAuthenticated, usersRoutes.add);
+app.del("/data/users/remove", ensureAuthenticated, usersRoutes.remove);
+
+// User routes
+app.get("/data/user", ensureAuthenticated, users.user);
+app.put("/data/user", ensureAuthenticated, users.update);
+app.put("/data/user/password", ensureAuthenticated, users.updatePassword);
 
 app.put("/data/initialize", function (req, res) {
 	var data = req.body;
-	createUser("Admin", data.email, data.password, res);
-});
-
-// Data API: Protected by authorization system
-app.get("/data/user", ensureAuthenticated, function (req, res) {
-	res.send(req.user);
-});
-
-app.put("/data/user", ensureAuthenticated, function (req, res) {
-	var data = req.body;
-
-	if (req.user.id !== data.id) {
-		var message = "It doesn't appear that you own the account you are trying to modify.";
-		return res.send(412, message);
-	}
-
-	var onSuccess = function () {
-		res.send(200);
-	};
-	var onError = function (err) {
-		handleError(err, res);
-	};
-
-	db.users.update(data, onSuccess, onError);
-});
-
-app.put("/data/user/password", ensureAuthenticated, function (req, res) {
-	var data = req.body;
-	if (!data.password) {
-		return res.send(400, "Missing password field.");
-	}
-
-	var onSuccess = function () {
-		res.send(200);
-	};
-	var onError = function (err) {
-		handleError(err, res);
-	}
-
-	db.users.updatePassword(req.user, data.password, onSuccess, onError);
-});
-
-
-app.get("/data/users", ensureAuthenticated, function (req, res) {
-	db.users.getAll(function (err, users) {
-		if (err) {
-			return handleError(err, res);
-		}
-		res.send(users);
-	});
-});
-
-app.put("/data/users/add", ensureAuthenticated, function (req, res) {
-	var data = req.body;
-	createUser(data.name, data.email, data.password, res);
-});
-
-app.put("/data/users/remove", ensureAuthenticated, function (req, res) {
-	var data = req.body;
 
 	var onSuccess = function() {
-		res.send(204);
-	};
-	var onError = function(err) {
-		handleError(err, res);
+		res.send(200);
 	};
 
-	db.users.remove(data, onSuccess, onError); 
+	var onError = function (err) {
+		res.send(500, err);
+	};
+
+	db.users.add("Admin", data.email, data.password, onSuccess, onError);
 });
-
 
 // The secret to bridging Angular and Express in a 
 // way that allows us to pass any path to the client.
