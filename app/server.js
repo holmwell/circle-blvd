@@ -7,6 +7,7 @@ var db       = require('./lib/dataAccess.js').instance();
 
 var usersRoutes = require('./routes/users');
 var userRoutes 	= require('./routes/user');
+var initRoutes 	= require('./routes/init');
 
 var app = express();
 
@@ -92,23 +93,12 @@ app.post("/data/users/add", ensureAuthenticated, usersRoutes.add);
 app.del("/data/users/remove", ensureAuthenticated, usersRoutes.remove);
 
 // User routes
-app.get("/data/user", ensureAuthenticated, users.user);
-app.put("/data/user", ensureAuthenticated, users.update);
-app.put("/data/user/password", ensureAuthenticated, users.updatePassword);
+app.get("/data/user", ensureAuthenticated, userRoutes.user);
+app.put("/data/user", ensureAuthenticated, userRoutes.update);
+app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
 
-app.put("/data/initialize", function (req, res) {
-	var data = req.body;
-
-	var onSuccess = function() {
-		res.send(200);
-	};
-
-	var onError = function (err) {
-		res.send(500, err);
-	};
-
-	db.users.add("Admin", data.email, data.password, onSuccess, onError);
-});
+// Init routes
+app.put("/data/initialize", initRoutes.init);
 
 // The secret to bridging Angular and Express in a 
 // way that allows us to pass any path to the client.
