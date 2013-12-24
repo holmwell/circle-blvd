@@ -5,10 +5,10 @@ var encrypt = require('./encrypt.js');
 var couch = function() {
 	var databaseUrl = 'http://localhost:5984';
 	// TODO: Ideally, we want to make the database automatically
-	// if 'burndown' doesn't already exist on first run, and if
+	// if 'circle-blvd' doesn't already exist on first run, and if
 	// it does then ask for a new database name. For now, we're
 	// letting future selves figure that out.
-	var databaseName = 'burndown';
+	var databaseName = 'circle-blvd';
 
 	// Connect to Couch! 
 	var database, nanoMaster;

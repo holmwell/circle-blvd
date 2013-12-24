@@ -1,4 +1,4 @@
-burndown
+circle blvd.
 ========
 
 ### Prerequisites
@@ -6,8 +6,8 @@ burndown
 2. CouchDB
 
 ### Installation
-* `git clone https://github.com/exclsr/burndown.git`
-* `cd burndown/app/`
+* `git clone https://github.com/exclsr/circle-blvd.git`
+* `cd circle-blvd/app/`
 * `npm install`
 * `(start CouchDB)`
 * `node server.js`

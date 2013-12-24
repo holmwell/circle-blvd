@@ -1,6 +1,6 @@
 // views.js
 //
-// The design docs and views specific to Burndown.
+// The design docs and views specific to Circle Blvd.
 // Assumes "database" is an instance of a nano db.
 
 // createViews(nano database, callback)
