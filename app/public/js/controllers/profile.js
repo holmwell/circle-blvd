@@ -1,6 +1,6 @@
 'use strict';
 
-function AccountCtrl(session, $scope, $http) {
+function ProfileCtrl(session, $scope, $http) {
 
 	var messages = {};
 	$scope.user = session.user;
@@ -12,7 +12,7 @@ function AccountCtrl(session, $scope, $http) {
 			session.user = user;
 			session.save();
 
-			messages.user = "Account updated."
+			messages.user = "Profile updated."
 		})
 		.error(function (data, status) {
 			console.log(data);
@@ -52,4 +52,4 @@ function AccountCtrl(session, $scope, $http) {
 		}
 	});
 }
-AccountCtrl.$inject = ['session', '$scope', '$http'];
+ProfileCtrl.$inject = ['session', '$scope', '$http'];
