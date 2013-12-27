@@ -1,12 +1,6 @@
 'use strict';
 
 /* Controllers */
-function HomeCtrl($scope) {
-
-}
-HomeCtrl.$inject = ['$scope'];
-
-
 function InitializeCtrl($scope, $location, $http) {
 
 	$scope.initialize = function() {
