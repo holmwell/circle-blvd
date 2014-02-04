@@ -53,6 +53,18 @@ h2, h3 {
 }
 
 
+/* home */
+.story {
+  border: dotted red 1px;
+  padding: 0.5ex;
+  margin: auto;
+  margin-bottom: 0.5em;
+  cursor: move;
+  width: 50%;
+  min-width: 200px;
+}
+
+
 /* admin */
 #userList {
   list-style: none;
