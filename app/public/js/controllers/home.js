@@ -1,5 +1,6 @@
 function HomeCtrl($scope, $timeout) {
 
+	var selectedStory = undefined;
 	var stories = [];
 	for (var i=0; i < 10; i++) {
 		stories[i] = {
@@ -9,6 +10,15 @@ function HomeCtrl($scope, $timeout) {
 	}
 
 	$scope.stories = stories;
+
+	$scope.select = function (story) {
+		if (selectedStory) {
+			selectedStory.isSelected = false;
+		}
+
+		story.isSelected = true;
+		selectedStory = story;
+	};
 
 	$scope.$on('$viewContentLoaded', function() {
 		// Even though we're waiting for viewContentLoaded, 

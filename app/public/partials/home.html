@@ -1,8 +1,11 @@
 <p>:-)</p>
 
 <div id="backlog">
-	<div class="story" ng-repeat="story in stories">
+	<div class="story" ng-repeat="story in stories" ng-click="select(story)">
 		<span>{{story.id}}</span>
-		<span>{{story.summary}}</span>
+		<span ng-show="story.isSelected">
+			<input type="text" ng-model="story.summary"/>
+		</span>
+		<span ng-show="!story.isSelected">{{story.summary}}</span>
 	</div>
 </div>
