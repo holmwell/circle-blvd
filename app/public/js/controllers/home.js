@@ -1,4 +1,4 @@
-function HomeCtrl($scope, $timeout) {
+function HomeCtrl($scope, $timeout, $document) {
 
 	var selectedStory = undefined;
 	var stories = [];
@@ -18,6 +18,28 @@ function HomeCtrl($scope, $timeout) {
 
 		story.isSelected = true;
 		selectedStory = story;
+
+		var boxId = "boxForStory" + story.id;
+		var foundBox = document.getElementById(boxId);
+		if (foundBox) {
+			// We want this to happen after this method
+			// finishes.
+			$timeout(function() {
+				foundBox.focus();
+			}, 0);
+		}
+	};
+
+	$scope.deselectAll = function () {
+		// TODO: Figure out how to call this only
+		// when we want to. Right now, since it is
+		// attached to the #backlog, it is also called
+		// every time a .story is clicked.
+
+		// if (selectedStory) {
+		// 	selectedStory.isSelected = false;
+		// 	selectedStory = undefined;	
+		// }
 	};
 
 	$scope.$on('$viewContentLoaded', function() {
@@ -121,4 +143,4 @@ function HomeCtrl($scope, $timeout) {
 		}, 0);
 	});
 }
-HomeCtrl.$inject = ['$scope', '$timeout'];
+HomeCtrl.$inject = ['$scope', '$timeout', '$document'];

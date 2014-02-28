@@ -1,11 +1,15 @@
 <p>:-)</p>
 
-<div id="backlog">
-	<div class="story" ng-repeat="story in stories" ng-click="select(story)">
+<div id="backlog" ng-click="deselectAll()">
+	<div class="story" ng-repeat="story in stories" ng-click="select(story)"
+		ng-class="{ 
+			selected: story.isSelected, 
+			'not-selected': !story.isSelected 
+		}">
 		<span>{{story.id}}</span>
-		<span ng-show="story.isSelected">
-			<input type="text" ng-model="story.summary"/>
+		<span class="selected" ng-show="story.isSelected">
+			<input id="boxForStory{{story.id}}" type="text" ng-model="story.summary"/>
 		</span>
-		<span ng-show="!story.isSelected">{{story.summary}}</span>
+		<span class="not-selected" ng-show="!story.isSelected">{{story.summary}}</span>
 	</div>
 </div>

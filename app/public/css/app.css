@@ -54,14 +54,31 @@ h2, h3 {
 
 
 /* home */
+#backlog {
+  background-color: #eee;
+}
 .story {
   border: dotted red 1px;
   padding: 0.5ex;
+  padding-left: 1.5ex;
   margin: auto;
   margin-bottom: 0.5em;
   cursor: move;
   width: 50%;
   min-width: 200px;
+}
+
+#backlog .selected {
+
+}
+
+#backlog .selected input {
+  margin: 0;
+}
+
+#backlog .not-selected {
+  padding-top: 1.1ex;
+  padding-bottom: 1.1ex;
 }
 
 
