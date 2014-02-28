@@ -1,5 +1,13 @@
 <p>:-)</p>
 
+<div id="new-story" class="story">
+	<form>
+		<span>+</span>
+		<input type="text" 
+			ng-model="newStory.summary"/>
+		<button class="btn" ng-click="create(newStory)">Add story</button>
+	</form>
+</div>
 <div id="backlog" ng-click="deselectAll()">
 	<div class="story" ng-repeat="story in stories" ng-click="select(story)"
 		ng-class="{ 

@@ -1,10 +1,23 @@
 function HomeCtrl($scope, $timeout, $document) {
 
+	var nextStoryId = undefined;
+	var getNewStoryId = function() {
+		// TODO: Should move to the server, obvi,
+		// but works for now.
+		if (!nextStoryId) {
+			nextStoryId = 1;
+		}
+		else {
+			nextStoryId++;
+		}
+		return nextStoryId;
+	};
+
 	var selectedStory = undefined;
 	var stories = [];
 	for (var i=0; i < 10; i++) {
 		stories[i] = {
-			id: i,
+			id: getNewStoryId(),
 			summary: "Story"
 		}
 	}
@@ -42,7 +55,16 @@ function HomeCtrl($scope, $timeout, $document) {
 		// }
 	};
 
-	$scope.$on('$viewContentLoaded', function() {
+	$scope.create = function (newStory) {
+		newStory.id = getNewStoryId();
+		stories.unshift(newStory);
+
+		$scope.newStory = undefined;
+		// TODO:
+		// activateDragAndDrop();
+	};
+
+	var activateDragAndDrop = function () {
 		// Even though we're waiting for viewContentLoaded, 
 		// I guess we need to yield to whatever else is happening.
 		$timeout(function () {
@@ -137,10 +159,10 @@ function HomeCtrl($scope, $timeout, $document) {
 				        }
 				    }
 				});
-
-
 			});
 		}, 0);
-	});
+	};
+
+	$scope.$on('$viewContentLoaded', activateDragAndDrop);
 }
 HomeCtrl.$inject = ['$scope', '$timeout', '$document'];

@@ -55,6 +55,7 @@ h2, h3 {
 
 /* home */
 #backlog {
+  margin-top: 2.5em;
   background-color: #eee;
 }
 .story {
@@ -72,13 +73,17 @@ h2, h3 {
 
 }
 
-#backlog .selected input {
+#backlog .selected input, #new-story input {
   margin: 0;
 }
 
-#backlog .not-selected {
+#backlog .not-selected, #new-story {
   padding-top: 1.1ex;
   padding-bottom: 1.1ex;
+}
+
+#new-story form {
+  margin: 0;
 }
 
 
