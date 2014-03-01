@@ -26,6 +26,8 @@ function HomeCtrl($scope, $timeout, $document) {
 	$scope.stories = stories;
 
 	$scope.select = function (story) {
+		// TODO: This does NOT work on the story that
+		// was most recently moved.
 		if (selectedStory) {
 			selectedStory.isSelected = false;
 		}
@@ -36,6 +38,7 @@ function HomeCtrl($scope, $timeout, $document) {
 		var boxId = "boxForStory" + story.id;
 		var foundBox = document.getElementById(boxId);
 		if (foundBox) {
+			console.log(foundBox);
 			// We want this to happen after this method
 			// finishes.
 			$timeout(function() {
