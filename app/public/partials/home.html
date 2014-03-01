@@ -2,7 +2,7 @@
 
 <div id="new-story" class="story">
 	<form>
-		<span>+</span>
+		<span class="span1 story-id">+</span>
 		<input type="text" 
 			ng-model="newStory.summary"/>
 		<button class="btn" ng-click="create(newStory)">Add story</button>
@@ -14,10 +14,13 @@
 			selected: story.isSelected, 
 			'not-selected': !story.isSelected 
 		}">
-		<span>{{story.id}}</span>
-		<span class="selected" ng-show="story.isSelected">
-			<input id="boxForStory{{story.id}}" type="text" ng-model="story.summary"/>
-		</span>
+		<div class="span1 story-id">{{story.id}}</div>
+		<div class="selected" ng-show="story.isSelected">
+			<form ng-submit="save(story)">
+				<input id="boxForStory{{story.id}}" type="text" ng-model="story.summary"/>
+				<button class="btn pull-right" type="button" ng-click="remove(story)">Remove</button>
+			</form>
+		</div>
 		<span class="not-selected" ng-show="!story.isSelected">{{story.summary}}</span>
 	</div>
 </div>

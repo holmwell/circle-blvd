@@ -69,8 +69,17 @@ h2, h3 {
   min-width: 200px;
 }
 
-#backlog .selected {
+.story-id {
+  margin: 0;
+}
 
+#backlog .selected .story-id, #new-story .story-id {
+  /* TODO: Why do we need this hack? */
+  margin-top: 0.6ex;
+}
+
+#backlog .selected form {
+  margin: 0;
 }
 
 #backlog .selected input, #new-story input {
@@ -85,7 +94,10 @@ h2, h3 {
 #new-story form {
   margin: 0;
 }
-
+#new-story {
+  padding: 0.5ex;
+  padding-left: 1.5ex;
+}
 
 /* admin */
 #userList {

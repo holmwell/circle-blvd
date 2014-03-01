@@ -64,6 +64,14 @@ function HomeCtrl($scope, $timeout, $document) {
 		$timeout(makeStoriesDraggable, 0);
 	};
 
+	$scope.save = function (story) {
+		console.log('save');
+	};
+
+	$scope.remove = function (story) {
+		console.log('remove');
+	};
+
 	var attachToDragEvents = function (Y) {
 		// Show a semi-transparent version of the story selected.
 		Y.DD.DDM.on('drag:start', function(e) {
