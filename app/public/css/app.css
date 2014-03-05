@@ -97,6 +97,7 @@ h2, h3 {
 #new-story {
   padding: 0.5ex;
   padding-left: 1.5ex;
+  cursor: default;
 }
 
 /* admin */

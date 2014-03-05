@@ -156,7 +156,14 @@ function HomeCtrl($scope, $timeout, $document) {
 		// a specific item draggable, in the case of adding
 		// a new item to the backlog.
 		var storyElements = Y.Node.all('.story');
+		var newStoryElementId = "new-story";
 		storyElements.each(function (v, k) {
+			var nodeId = v.get("id");
+			if (nodeId === newStoryElementId) {
+				// Do nothing.
+				return;
+			}
+
 			// Only add draggable stuff once
 			var draggableClassName = "cb-draggable";
 			if (!v.hasClass(draggableClassName)) {
