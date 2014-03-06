@@ -100,6 +100,40 @@ app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
 // Init routes
 app.put("/data/initialize", initRoutes.init);
 
+// Story routes
+var nextStoryId = undefined;
+var getNewStoryId = function() {
+	// TODO: Should move to the server, obvi,
+	// but works for now.
+	if (!nextStoryId) {
+		nextStoryId = 1;
+	}
+	else {
+		nextStoryId++;
+	}
+	return nextStoryId;
+};
+
+app.get("/data/stories/newId", function (req, res) {
+	// TODO: "/data/stories/:projectId/create" instead?
+	res.send(200, "" + getNewStoryId());
+});
+
+var tmpStories = [];
+for (var i=0; i < 10; i++) {
+	tmpStories[i] = {
+		id: getNewStoryId(),
+		summary: "Story"
+	}
+}
+
+app.get("/data/stories/:projectId", function (req, res) {
+	var projectId = req.params.projectId;
+	console.log(projectId);
+	res.send(200, tmpStories);
+});
+
+
 // The secret to bridging Angular and Express in a 
 // way that allows us to pass any path to the client.
 // 

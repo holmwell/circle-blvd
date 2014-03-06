@@ -1,29 +1,21 @@
-function HomeCtrl($scope, $timeout, $document) {
+function HomeCtrl($scope, $timeout, $document, $http) {
 
+	var projectId = "1";
 	var thisY = undefined;
-	var nextStoryId = undefined;
-	var getNewStoryId = function() {
-		// TODO: Should move to the server, obvi,
-		// but works for now.
-		if (!nextStoryId) {
-			nextStoryId = 1;
-		}
-		else {
-			nextStoryId++;
-		}
-		return nextStoryId;
-	};
-
 	var selectedStory = undefined;
-	var stories = [];
-	for (var i=0; i < 10; i++) {
-		stories[i] = {
-			id: getNewStoryId(),
-			summary: "Story"
-		}
-	}
+	var stories;
 
-	$scope.stories = stories;
+	$http.get('/data/stories/' + projectId)
+	.success(function (data) {
+		stories = data;
+		$scope.stories = stories;	
+		$timeout(makeStoriesDraggable, 0);
+	})
+	.error(function (data, status) {
+		console.log('failure');
+		console.log(status);
+		console.log(data);
+	});
 
 	$scope.select = function (story) {
 		// TODO: This does NOT work on the story that
@@ -60,11 +52,19 @@ function HomeCtrl($scope, $timeout, $document) {
 	};
 
 	$scope.create = function (newStory) {
-		newStory.id = getNewStoryId();
-		stories.unshift(newStory);
+		$http.get('/data/stories/newId')
+		.success(function (data) {
+			newStory.id = data;
+			stories.unshift(newStory);
 
-		$scope.newStory = undefined;
-		$timeout(makeStoriesDraggable, 0);
+			$scope.newStory = undefined;
+			$timeout(makeStoriesDraggable, 0);
+		})
+		.error(function (data, status) {
+			console.log('failure');
+			console.log(status);
+			console.log(data);
+		});
 	};
 
 	$scope.save = function (story) {
@@ -203,4 +203,4 @@ function HomeCtrl($scope, $timeout, $document) {
 
 	$scope.$on('$viewContentLoaded', activateDragAndDrop);
 }
-HomeCtrl.$inject = ['$scope', '$timeout', '$document'];
+HomeCtrl.$inject = ['$scope', '$timeout', '$document', '$http'];
