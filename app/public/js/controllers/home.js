@@ -166,6 +166,11 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		}
 
 		var oldIndex = story.sortIndex;
+		// TODO: This method of producing new indices results in eventual
+		// destruction of the index, as it gets smaller and smaller until
+		// we run out of float precision. Right now it happens relatively
+		// quickly. After about 18 times of moving an element to the
+		// top of the backlog, the float precision starts to mess things up.
 		var newIndex = (+storyBefore.sortIndex + +storyAfter.sortIndex) / 2.0;		
 
 		if (storyBefore.id === "first") {
