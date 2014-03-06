@@ -13,7 +13,9 @@
 		ng-class="{ 
 			selected: story.isSelected, 
 			'not-selected': !story.isSelected 
-		}">
+		}"
+		data-story-id="{{story.id}}"
+		data-story-sort-index="{{story.sortIndex}}">
 		<div class="span1 story-id">{{story.id}} {{story.sortIndex}}</div>
 		<div class="selected" ng-show="story.isSelected">
 			<form ng-submit="save(story)">

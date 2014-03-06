@@ -7,6 +7,12 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	var stories = {};
 	var usefulStories = {};
 
+	var idAttr = 'data-story-id';
+	var preMoveStoryNode = undefined;
+	var preMoveStoryBefore = undefined;
+	var preMoveStoryAfter = undefined;
+
+
 	$scope.stories = stories;
 
 	// TODO: Ignoring the server side while constructing
@@ -110,11 +116,83 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		console.log('remove');
 	};
 
+	var getStoryFacadeFromNode = function (node) {
+		return {
+			id: node.getAttribute(idAttr),
+			sortIndex: node.getAttribute('data-story-sort-index')
+		};
+	};
+
+	var getStoryBefore = function (node) {
+		var previousNode = node.get('previousSibling');
+		if (previousNode.getAttribute(idAttr)) { 
+			return getStoryFacadeFromNode(node.get('previousSibling'));
+		}
+		else {
+			return {
+				id: "first",
+				sortIndex: 0.0
+			};
+		}
+	};
+
+	var getStoryAfter = function (node) {
+		var nextNode = node.get('nextSibling');
+		if (nextNode.getAttribute(idAttr)) {
+			return getStoryFacadeFromNode(node.get('nextSibling'));
+		}
+		else {
+			return {
+				id: "last",
+				sortIndex: 2.0
+			};
+		}
+	};
+
+	var storyNodeMoved = function (node) {
+		var story = getStoryFacadeFromNode(node);
+		var storyBefore = getStoryBefore(node);
+		var storyAfter = getStoryAfter(node);
+
+		if (preMoveStoryBefore.sortIndex === storyBefore.sortIndex
+		|| preMoveStoryAfter.sortIndex === storyAfter.sortIndex) {
+			// We didn't actually move. Do nothing.
+			return;
+		}
+
+		// If we moved the first story, update it with the new first story.
+		if (usefulStories.first.id === story.id) {
+			usefulStories.first = stories[preMoveStoryAfter.sortIndex];
+		}
+
+		var oldIndex = story.sortIndex;
+		var newIndex = (+storyBefore.sortIndex + +storyAfter.sortIndex) / 2.0;		
+
+		if (storyBefore.id === "first") {
+			insertFirstStory(stories[oldIndex], newIndex);
+		}
+		else {
+			stories[newIndex] = stories[oldIndex];
+			stories[newIndex].sortIndex = newIndex;
+		}
+
+		delete stories[oldIndex];
+		$scope.$apply(function () {
+			// do nothing
+		});	
+	};
+
 	var attachToDragEvents = function (Y) {
 		// Show a semi-transparent version of the story selected.
 		Y.DD.DDM.on('drag:start', function(e) {
 		    //Get our drag object
 		    var drag = e.target;
+	
+			// It's useful to know the state of things before the move.
+		    preMoveStoryNode = drag.get('node');
+			preMoveStoryBefore = getStoryBefore(preMoveStoryNode);
+			preMoveStoryAfter = getStoryAfter(preMoveStoryNode);
+
 		    //Set some styles here
 		    drag.get('node').setStyle('opacity', '.25');
 		    drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
@@ -128,6 +206,10 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		// Revert styles on drag end
 		Y.DD.DDM.on('drag:end', function(e) {
 		    var drag = e.target;
+		    var n = drag.get('node');
+
+		    storyNodeMoved(n);
+
 		    //Put our styles back
 		    drag.get('node').setStyles({
 		        visibility: '',
@@ -166,7 +248,6 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		        }
 		        //Add the node to this list
 		        e.drop.get('node').get('parentNode').insertBefore(drag, drop);
-		        //Resize this nodes shim, so we can drop on it later.
 		        e.drop.sizeShim();
 		    }
 		});
@@ -209,6 +290,8 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 						padding: '0 0 0 20'
 					}
 				}).plug(Y.Plugin.DDProxy, {
+					// need this to keep things in a list 
+					// (vs leaving the element where the cursor is let go)
 					moveOnEnd: false
 				}).plug(Y.Plugin.DDConstrained, {
 					// whatever. no constraints for now. maybe later.
