@@ -3,19 +3,26 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	var projectId = "1";
 	var thisY = undefined;
 	var selectedStory = undefined;
-	var stories;
 
-	$http.get('/data/stories/' + projectId)
-	.success(function (data) {
-		stories = data;
-		$scope.stories = stories;	
-		$timeout(makeStoriesDraggable, 0);
-	})
-	.error(function (data, status) {
-		console.log('failure');
-		console.log(status);
-		console.log(data);
-	});
+	var stories = {};
+	var usefulStories = {};
+
+	$scope.stories = stories;
+
+	// TODO: Ignoring the server side while constructing
+	// the notion of a persistant sort on the client side.
+	//
+	// $http.get('/data/stories/' + projectId)
+	// .success(function (data) {
+	// 	stories = data;
+	// 	$scope.stories = stories;	
+	// 	$timeout(makeStoriesDraggable, 0);
+	// })
+	// .error(function (data, status) {
+	// 	console.log('failure');
+	// 	console.log(status);
+	// 	console.log(data);
+	// });
 
 	$scope.select = function (story) {
 		// TODO: This does NOT work on the story that
@@ -51,11 +58,39 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		// }
 	};
 
+	// TODO: Soon ...
+	// var insertStory = function (story, afterStory, beforeStory) {
+
+	// };
+
+	var insertFirstStory = function (story, sortIndex) {
+		// it's useful to keep track of the first story
+		story.sortIndex = sortIndex;
+		stories[sortIndex] = story;
+		usefulStories.first = story;
+	};
+
+	var insertNewStory = function (newStory) {
+		var newStorySortIndex;
+
+		// base case
+		if (!usefulStories.first) {
+			newStorySortIndex = 1.0;
+			insertFirstStory(newStory, newStorySortIndex);
+			return;
+		}
+		
+		// put our new story halfway between our first story and 0.
+		var firstStory = usefulStories.first;
+		newStorySortIndex = firstStory.sortIndex / 2.0;
+		insertFirstStory(newStory, newStorySortIndex);
+	};
+
 	$scope.create = function (newStory) {
 		$http.get('/data/stories/newId')
 		.success(function (data) {
 			newStory.id = data;
-			stories[newStory.id] = newStory;
+			insertNewStory(newStory);
 
 			$scope.newStory = undefined;
 			$timeout(makeStoriesDraggable, 0);

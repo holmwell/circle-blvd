@@ -14,7 +14,7 @@
 			selected: story.isSelected, 
 			'not-selected': !story.isSelected 
 		}">
-		<div class="span1 story-id">{{story.id}}</div>
+		<div class="span1 story-id">{{story.id}} {{story.sortIndex}}</div>
 		<div class="selected" ng-show="story.isSelected">
 			<form ng-submit="save(story)">
 				<input id="boxForStory{{story.id}}" type="text" ng-model="story.summary"/>
