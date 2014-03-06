@@ -55,7 +55,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		$http.get('/data/stories/newId')
 		.success(function (data) {
 			newStory.id = data;
-			stories.unshift(newStory);
+			stories[newStory.id] = newStory;
 
 			$scope.newStory = undefined;
 			$timeout(makeStoriesDraggable, 0);

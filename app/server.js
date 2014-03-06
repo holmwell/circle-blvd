@@ -119,10 +119,11 @@ app.get("/data/stories/newId", function (req, res) {
 	res.send(200, "" + getNewStoryId());
 });
 
-var tmpStories = [];
+var tmpStories = {};
 for (var i=0; i < 10; i++) {
-	tmpStories[i] = {
-		id: getNewStoryId(),
+	var storyId = getNewStoryId();
+	tmpStories[storyId] = {
+		id: storyId,
 		summary: "Story"
 	}
 }
