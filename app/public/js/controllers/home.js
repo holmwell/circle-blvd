@@ -149,6 +149,57 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		}
 	};
 
+	var getNewIndex = function (beforeIndex, afterIndex) {
+		// TODO: This method of producing new indices results in eventual
+		// destruction of the index, as it gets smaller and smaller until
+		// we run out of float precision. Right now it happens relatively
+		// quickly. After about 18 times of moving an element to the
+		// top of the backlog, the float precision starts to mess things up.
+		
+		beforeIndex = +beforeIndex;
+		afterIndex = +afterIndex;
+		var newIndex = (beforeIndex + afterIndex) / 2.0;
+
+		// TODO: If beforeIndex and afterIndex are too close together,
+		// like 0.125 and 0.12500000000000003, then newIndex will be equal
+		// to afterIndex.
+		if (newIndex === beforeIndex) {
+			// TODO: Tell the caller that some recalculation needs to be done
+			console.log("EQUAL TO BEFORE");
+		}
+		if (newIndex === afterIndex) {
+			// TODO: Tell the caller that some recalculation needs to be done
+			console.log("EQUAL TO AFTER");
+		}
+
+		var beforeIndexString = "" + beforeIndex;
+		var afterIndexString = "" + afterIndex;
+		var newIndexString = "" + newIndex;
+		var significantDigits = 1;
+
+		for (var i=0; i < newIndexString.length; i++) {
+			var currentChar = newIndexString.charAt(i);
+			
+			if (currentChar === (beforeIndexString.charAt(i) || '0') 
+			 || currentChar === (afterIndexString.charAt(i) || '0')) {
+				continue;
+			}
+			else {
+				significantDigits = i + 1;
+				break;
+			}
+		}
+
+		var newSignificantString = newIndexString.substring(0, significantDigits);
+		// TODO: Write some tests so we can remove this instrumentation
+		console.log("before: " + beforeIndex);
+		console.log("after: " + afterIndex);
+		console.log("new: " + newIndex);
+		console.log("final: " + newSignificantString);
+
+		return +newSignificantString;
+	};
+
 	var storyNodeMoved = function (node) {
 		var story = getStoryFacadeFromNode(node);
 		var storyBefore = getStoryBefore(node);
@@ -166,12 +217,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		}
 
 		var oldIndex = story.sortIndex;
-		// TODO: This method of producing new indices results in eventual
-		// destruction of the index, as it gets smaller and smaller until
-		// we run out of float precision. Right now it happens relatively
-		// quickly. After about 18 times of moving an element to the
-		// top of the backlog, the float precision starts to mess things up.
-		var newIndex = (+storyBefore.sortIndex + +storyAfter.sortIndex) / 2.0;		
+		var newIndex = getNewIndex(storyBefore.sortIndex, storyAfter.sortIndex);
 
 		if (storyBefore.id === "first") {
 			insertFirstStory(stories[oldIndex], newIndex);
