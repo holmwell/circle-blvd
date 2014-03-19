@@ -16,7 +16,7 @@
 		}"
 		data-story-id="{{story.id}}"
 		data-story-sort-index="{{story.sortIndex}}">
-		<div class="span1 story-id">{{story.id}} {{story.sortIndex}}</div>
+		<div class="span2 story-id">{{story.id}} {{story.sortIndex}} (next: {{story.nextId}}) </div>
 		<div class="selected" ng-show="story.isSelected">
 			<form ng-submit="save(story)">
 				<input id="boxForStory{{story.id}}" type="text" ng-model="story.summary"/>

@@ -120,18 +120,47 @@ app.get("/data/stories/newId", function (req, res) {
 });
 
 var tmpStories = {};
+var firstStory = undefined;
 for (var i=0; i < 10; i++) {
 	var storyId = getNewStoryId();
 	tmpStories[storyId] = {
 		id: storyId,
 		summary: "Story"
 	}
+
+	if (!firstStory) {
+		firstStory = tmpStories[storyId];
+		tmpStories[storyId].nextId = undefined;
+	}
+	else {
+		tmpStories[storyId].nextId = firstStory.id;
+		firstStory = tmpStories[storyId];
+	}
 }
 
-app.get("/data/stories/:projectId", function (req, res) {
+app.get("/data/:projectId/stories", function (req, res) {
 	var projectId = req.params.projectId;
-	console.log(projectId);
-	res.send(200, tmpStories);
+
+	// Build out our story table based on the 
+	// pseudo-linked-list structure we're using
+	var stories = {};
+	var nextStory = firstStory;
+	while (nextStory) {
+		stories[nextStory.id] = nextStory;
+		var nextStoryId = nextStory.nextId;
+		if (nextStoryId) {
+			nextStory = tmpStories[nextStoryId];
+		}
+		else {
+			nextStory = undefined;
+		}
+	}
+
+	res.send(200, stories);
+});
+
+app.get("/data/:projectId/first-story", function (req, res) {
+	res.send(200, firstStory);
 });
 
 

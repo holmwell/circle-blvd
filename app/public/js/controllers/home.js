@@ -4,7 +4,8 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	var thisY = undefined;
 	var selectedStory = undefined;
 
-	var stories = {};
+	var stories = [];
+	var serverStories = {};
 	var usefulStories = {};
 
 	var idAttr = 'data-story-id';
@@ -12,23 +13,46 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	var preMoveStoryBefore = undefined;
 	var preMoveStoryAfter = undefined;
 
-
 	$scope.stories = stories;
 
-	// TODO: Ignoring the server side while constructing
-	// the notion of a persistant sort on the client side.
-	//
-	// $http.get('/data/stories/' + projectId)
-	// .success(function (data) {
-	// 	stories = data;
-	// 	$scope.stories = stories;	
-	// 	$timeout(makeStoriesDraggable, 0);
-	// })
-	// .error(function (data, status) {
-	// 	console.log('failure');
-	// 	console.log(status);
-	// 	console.log(data);
-	// });
+	$http.get('/data/' + projectId + '/first-story')
+	.success(function (data) {
+		usefulStories.first = data;
+
+		$http.get('/data/' + projectId + '/stories')
+		.success(function (data) {
+
+			stories = [];
+			serverStories = data;
+			// TODO: If we don't have a first story, relax.
+			var firstStory = serverStories[usefulStories.first.id];
+			var currentStory = nextStory = firstStory;
+
+			while (currentStory) {
+				stories.push(currentStory); // <3 pass by reference
+				var nextStoryId = currentStory.nextId;
+				if (nextStoryId) {
+					currentStory = serverStories[nextStoryId];
+				}
+				else {
+					currentStory = undefined;
+				}
+			}
+
+			$scope.stories = stories;
+			$timeout(makeStoriesDraggable, 0);
+		})
+		.error(function (data, status) {
+			console.log('failure');
+			console.log(status);
+			console.log(data);
+		});
+	})
+	.error(function (data, status) {
+		console.log('failure');
+		console.log(status);
+		console.log(data);
+	});
 
 	$scope.select = function (story) {
 		// TODO: This does NOT work on the story that
@@ -69,27 +93,18 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 
 	// };
 
-	var insertFirstStory = function (story, sortIndex) {
-		// it's useful to keep track of the first story
-		story.sortIndex = sortIndex;
-		stories[sortIndex] = story;
+	var insertFirstStory = function (story) {
+		if (usefulStories.first) {
+			story.nextId = usefulStories.first.id;	
+		}
+
+		stories.unshift(story);
 		usefulStories.first = story;
+		// TODO: Push / save to server
 	};
 
 	var insertNewStory = function (newStory) {
-		var newStorySortIndex;
-
-		// base case
-		if (!usefulStories.first) {
-			newStorySortIndex = 1.0;
-			insertFirstStory(newStory, newStorySortIndex);
-			return;
-		}
-		
-		// put our new story halfway between our first story and 0.
-		var firstStory = usefulStories.first;
-		newStorySortIndex = firstStory.sortIndex / 2.0;
-		insertFirstStory(newStory, newStorySortIndex);
+		insertFirstStory(newStory);
 	};
 
 	$scope.create = function (newStory) {
@@ -205,29 +220,46 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		var storyBefore = getStoryBefore(node);
 		var storyAfter = getStoryAfter(node);
 
-		if (preMoveStoryBefore.sortIndex === storyBefore.sortIndex
-		|| preMoveStoryAfter.sortIndex === storyAfter.sortIndex) {
+		if (preMoveStoryBefore.id === storyBefore.id
+		|| preMoveStoryAfter.id === storyAfter.id) {
 			// We didn't actually move. Do nothing.
 			return;
 		}
 
 		// If we moved the first story, update it with the new first story.
 		if (usefulStories.first.id === story.id) {
-			usefulStories.first = stories[preMoveStoryAfter.sortIndex];
+			usefulStories.first = stories[preMoveStoryAfter.id];
 		}
 
-		var oldIndex = story.sortIndex;
-		var newIndex = getNewIndex(storyBefore.sortIndex, storyAfter.sortIndex);
-
+		// We need to update 'nextId' of the following:
+		// 1. The story before the moved story, before it was moved.
+		if (preMoveStoryBefore.id !== "first") {
+			serverStories[preMoveStoryBefore.id].nextId = preMoveStoryAfter.id;	
+		}
+		// 2. The story that was moved.
+		serverStories[story.id].nextId = storyAfter.id;
+		// 3. The story before the moved story, after it was moved.
 		if (storyBefore.id === "first") {
-			insertFirstStory(stories[oldIndex], newIndex);
+			usefulStories.first = serverStories[story.id];
 		}
 		else {
-			stories[newIndex] = stories[oldIndex];
-			stories[newIndex].sortIndex = newIndex;
+			serverStories[storyBefore.id].nextId = story.id;	
 		}
 
-		delete stories[oldIndex];
+
+		// var oldId = story.id;
+		// var newIndex = getNewIndex(storyBefore.sortIndex, storyAfter.sortIndex);
+
+		// if (storyBefore.id === "first") {
+		// 	insertFirstStory(stories[oldId]);
+		// }
+		// else {
+		// 	stories[newIndex] = stories[oldIndex];
+		// 	stories[newIndex].sortIndex = newIndex;
+		// }
+
+		// // TODO: This won't work
+		// delete stories[oldId];
 		$scope.$apply(function () {
 			// do nothing
 		});	
