@@ -174,7 +174,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 
 		// If we moved the first story, update it with the new first story.
 		if (usefulStories.first.id === story.id) {
-			usefulStories.first = stories[preMoveStoryAfter.id];
+			usefulStories.first = serverStories[preMoveStoryAfter.id];
 		}
 
 		// We need to update 'nextId' of the following:
