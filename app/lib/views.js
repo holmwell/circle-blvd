@@ -69,6 +69,25 @@ var createViews = function(database, callback) {
 	designDocs.push(passwordsDesignDoc);
 
 
+	var storiesDesignDoc = {
+		url: '_design/stories',
+		body: 
+		{
+			version: "1.0.0",
+			language: "javascript",
+			views: {
+				byProjectId: {
+					map: function(doc) {
+						if (doc.type === "story" && doc.projectId) {
+							emit(doc.projectId, doc);
+						}
+					}
+				}
+			}
+		}
+	};
+	designDocs.push(storiesDesignDoc);
+
 	var saveDesignDocs = function () {
 		var saveDoc = function (doc) {
 			database.insert(doc.body, doc.url, function (err, body) {

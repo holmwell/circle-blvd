@@ -199,6 +199,15 @@ var couch = function() {
 		});
 	};
 
+	var findStoriesByProjectId = function (projectId, callback) {
+		var options = {
+			key: projectId
+		};
+		getView("stories/byProjectId", options, function (err, rows) {
+			callback(err, rows);
+		});
+	};
+
 	// TODO: Note, this causes the database to be
 	// created immediately, which we might not want
 	// to necessarily do.
@@ -212,6 +221,12 @@ var couch = function() {
 	});
 
 	return {
+		projects: {
+			// TODO: Do we want a projects data API?
+		},
+		stories: {
+			findByProjectId: findStoriesByProjectId
+		},
 		users: {
 			add: addUser,
 			remove: removeUser,

@@ -121,44 +121,43 @@ app.get("/data/stories/newId", function (req, res) {
 
 var tmpStories = {};
 var firstStory = undefined;
-for (var i=0; i < 10; i++) {
-	var storyId = getNewStoryId();
-	tmpStories[storyId] = {
-		id: storyId,
-		summary: "Story"
-	}
 
-	if (!firstStory) {
-		firstStory = tmpStories[storyId];
-		tmpStories[storyId].nextId = undefined;
-	}
-	else {
-		tmpStories[storyId].nextId = firstStory.id;
-		firstStory = tmpStories[storyId];
-	}
-}
+db.stories.findByProjectId("1", function (err, dbStories) {
+	var stories = {};
+	dbStories.forEach(function (story, index, array) {
+		// TODO: Put this in dataAccess.js?
+		var modelStory = {
+			id: story.storyId,
+			summary: story.summary,
+			projectId: story.projectId,
+			nextId: story.nextId
+		};
+
+		stories[modelStory.id] = modelStory;
+		// save the first story
+		if (story.isFirstStory) {
+			firstStory = modelStory;
+		}
+		console.log(story);
+		// If there is nothing 'next', we're done.
+		if (!modelStory.nextId) {
+			return false;
+		}
+
+		return true;
+	});
+
+	tmpStories = stories;
+});
+
 
 app.get("/data/:projectId/stories", function (req, res) {
 	var projectId = req.params.projectId;
-
-	// Build out our story table based on the 
-	// pseudo-linked-list structure we're using
-	var stories = {};
-	var nextStory = firstStory;
-	while (nextStory) {
-		stories[nextStory.id] = nextStory;
-		var nextStoryId = nextStory.nextId;
-		if (nextStoryId) {
-			nextStory = tmpStories[nextStoryId];
-		}
-		else {
-			nextStory = undefined;
-		}
-	}
-
-	res.send(200, stories);
+	res.send(200, tmpStories);
 });
 
+// TODO: combine this with /stories to return one object with 
+// both the story list and the first story (in two different things)
 app.get("/data/:projectId/first-story", function (req, res) {
 	res.send(200, firstStory);
 });

@@ -4,9 +4,13 @@ var uuid 	= require('node-uuid');
 
 var db = function() {
 
+	var findStoriesByProjectId = function (projectId, callback) {
+		couch.stories.findByProjectId(projectId, callback);
+	};
+
 	var isValidUser = function(user) {
 		return user && user.email && user.id;
-	}
+	};
 
 	var findUserByEmail = function(userEmail, callback) {
 		couch.users.findByEmail(userEmail, callback);
@@ -113,6 +117,9 @@ var db = function() {
 	};
 
 	return {
+		stories: {
+			findByProjectId: findStoriesByProjectId
+		},
 		users: { 
 			add: addUser,
 			remove: removeUser,
