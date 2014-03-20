@@ -5,8 +5,27 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	var selectedStory = undefined;
 
 	var stories = [];
-	var serverStories = {};
 	var usefulStories = {};
+
+	// wrap around getting and setting the server-side stories,
+	// so we can push to the server when we set things. there's
+	// probably a better way / pattern for doing this. feel free
+	// to implement it, future self.
+	var serverStories = function() {
+		var s = {};
+
+		return {
+			init: function (data) {
+				s = data;
+			},
+			get: function (storyId) {
+				return s[storyId];
+			},
+			set: function (storyId, story) {
+				s[storyId] = story;
+			}
+		};
+	}(); // closure;
 
 	var idAttr = 'data-story-id';
 	var preMoveStoryNode = undefined;
@@ -23,16 +42,16 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		.success(function (data) {
 
 			stories = [];
-			serverStories = data;
+			serverStories.init(data);
 			// TODO: If we don't have a first story, relax.
-			var firstStory = serverStories[usefulStories.first.id];
+			var firstStory = serverStories.get(usefulStories.first.id);
 			var currentStory = nextStory = firstStory;
 
 			while (currentStory) {
 				stories.push(currentStory); // <3 pass by reference
 				var nextStoryId = currentStory.nextId;
 				if (nextStoryId) {
-					currentStory = serverStories[nextStoryId];
+					currentStory = serverStories.get(nextStoryId);
 				}
 				else {
 					currentStory = undefined;
@@ -165,6 +184,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		var story = getStoryFacadeFromNode(node);
 		var storyBefore = getStoryBefore(node);
 		var storyAfter = getStoryAfter(node);
+		var tmpStory;
 
 		if (preMoveStoryBefore.id === storyBefore.id
 		|| preMoveStoryAfter.id === storyAfter.id) {
@@ -174,22 +194,31 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 
 		// If we moved the first story, update it with the new first story.
 		if (usefulStories.first.id === story.id) {
-			usefulStories.first = serverStories[preMoveStoryAfter.id];
+			usefulStories.first = serverStories.get(preMoveStoryAfter.id);
 		}
 
 		// We need to update 'nextId' of the following:
 		// 1. The story before the moved story, before it was moved.
 		if (preMoveStoryBefore.id !== "first") {
-			serverStories[preMoveStoryBefore.id].nextId = preMoveStoryAfter.id;	
+			tmpStory = serverStories.get(preMoveStoryBefore.id);
+			tmpStory.nextId = preMoveStoryAfter.id;
+			console.log("pre");
+			serverStories.set(preMoveStoryBefore.id, tmpStory);
 		}
+		
 		// 2. The story that was moved.
-		serverStories[story.id].nextId = storyAfter.id;
+		tmpStory = serverStories.get(story.id);
+		tmpStory.nextId = storyAfter.id;
+		serverStories.set(story.id, tmpStory);
+		
 		// 3. The story before the moved story, after it was moved.
 		if (storyBefore.id === "first") {
-			usefulStories.first = serverStories[story.id];
+			usefulStories.first = serverStories.get(story.id);
 		}
 		else {
-			serverStories[storyBefore.id].nextId = story.id;	
+			tmpStory = serverStories.get(storyBefore.id);
+			tmpStory.nextId = story.id;
+			serverStories.set(storyBefore.id, tmpStory);
 		}
 
 		$scope.$apply(function () {
