@@ -8,6 +8,15 @@ var db = function() {
 		couch.stories.findByProjectId(projectId, callback);
 	};
 
+	var updateStory = function(story, success, failure) {
+		couch.stories.update(story, function (err) {
+			if (err) {
+				return failure(err);
+			}
+			success();
+		});
+	};
+
 	var isValidUser = function(user) {
 		return user && user.email && user.id;
 	};
@@ -118,7 +127,8 @@ var db = function() {
 
 	return {
 		stories: {
-			findByProjectId: findStoriesByProjectId
+			findByProjectId: findStoriesByProjectId,
+			update: updateStory
 		},
 		users: { 
 			add: addUser,

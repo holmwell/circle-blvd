@@ -111,6 +111,11 @@ var couch = function() {
 		});		
 	}
 
+	var findStoryByIds = function (projectId, storyId, callback) {
+		var key = projectId + "," + storyId;
+		findOneByKey("stories/byIds", key, callback);
+	};
+
 	var findUserByEmail = function(email, callback) {
 		findOneByKey("users/byEmail", email, callback);
 	};
@@ -208,6 +213,23 @@ var couch = function() {
 		});
 	};
 
+	var updateStory = function (story, callback) {
+		findStoryByIds(story.projectId, story.id, function (err, body) {
+			if (err) {
+				return callback(err);
+			}
+
+			// TODO: Where is the right place to change the appropriate fields?
+			// As this stands, this method has to be updated whenever there
+			// is a change to the user model.
+			story._id = body._id;
+			story._rev = body._rev;
+			story.type = body.type;
+
+			database.insert(story, callback);
+		});
+	};
+
 	// TODO: Note, this causes the database to be
 	// created immediately, which we might not want
 	// to necessarily do.
@@ -225,7 +247,8 @@ var couch = function() {
 			// TODO: Do we want a projects data API?
 		},
 		stories: {
-			findByProjectId: findStoriesByProjectId
+			findByProjectId: findStoriesByProjectId,
+			update: updateStory
 		},
 		users: {
 			add: addUser,

@@ -82,6 +82,16 @@ var createViews = function(database, callback) {
 							emit(doc.projectId, doc);
 						}
 					}
+				},
+
+				byIds: {
+					map: function (doc) {
+						if (doc.type === "story" && doc.projectId && doc.id) {
+							// composite key using project and story id.
+							var key = doc.projectId + "," + doc.id; 
+							emit(key, doc);
+						}
+					}
 				}
 			}
 		}
