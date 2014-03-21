@@ -7,14 +7,10 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	var stories = [];
 	var usefulStories = {};
 
-	// wrap around getting and setting the server-side stories,
-	// so we can push to the server when we set things. there's
-	// probably a better way / pattern for doing this. feel free
-	// to implement it, future self.
 	var saveStory = function (story) {
 		$http.put('/data/story/', story)
 		.success(function (data) {
-			console.log(data);
+			// do nothing
 		})
 		.error(function (data, status) {
 			console.log(status);
@@ -22,6 +18,10 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		});
 	};
 
+	// wrap around getting and setting the server-side stories,
+	// so we can push to the server when we set things. there's
+	// probably a better way / pattern for doing this. feel free
+	// to implement it, future self.
 	var serverStories = function() {
 		var s = {};
 
@@ -34,7 +34,6 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			},
 			set: function (storyId, story) {
 				s[storyId] = story;
-				// console.log(story);
 				saveStory(story);
 			},
 			all: function() {
@@ -50,14 +49,10 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		return {
 			setFirst: function (story) {
 				if (s.first) {
-					// console.log(s.first);
-					// console.log('blah');
 					s.first.isFirstStory = false;
 				}
-				// console.log(story);
 				s.first = story;
 				s.first.isFirstStory = true;
-				// console.log(story);
 			},
 			getFirst: function () {
 				return s.first;
@@ -74,7 +69,6 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	}(); // closure
 
 	var idAttr = 'data-story-id';
-	var preMoveStoryNode = undefined;
 	var preMoveStoryBefore = undefined;
 	var preMoveStoryAfter = undefined;
 
@@ -91,7 +85,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			usefulStories.setFirst(serverStories.get(firstStory.id));
 
 			// TODO: If we don't have a first story, relax.
-			var currentStory = nextStory = usefulStories.getFirst();
+			var currentStory = usefulStories.getFirst();
 
 			while (currentStory) {
 				stories.push(currentStory); // <3 pass by reference
@@ -300,7 +294,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		    var drag = e.target;
 	
 			// It's useful to know the state of things before the move.
-		    preMoveStoryNode = drag.get('node');
+		    var preMoveStoryNode = drag.get('node');
 			preMoveStoryBefore = getStoryBefore(preMoveStoryNode);
 			preMoveStoryAfter = getStoryAfter(preMoveStoryNode);
 
@@ -430,18 +424,18 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		}, 0);
 	};
 
-	$scope.debug = function() {
-		console.log("Array: ");
-		stories.forEach(function (el) {
-			console.log(el);
-		});
+	// $scope.debug = function() {
+	// 	console.log("Array: ");
+	// 	stories.forEach(function (el) {
+	// 		console.log(el);
+	// 	});
 
-		console.log("Assoc array: ");
-		var ss = serverStories.all();
-		for (var storyId in ss) {
-			console.log(ss[storyId]);
-		};
-	};
+	// 	console.log("Assoc array: ");
+	// 	var ss = serverStories.all();
+	// 	for (var storyId in ss) {
+	// 		console.log(ss[storyId]);
+	// 	};
+	// };
 
 	$scope.$on('$viewContentLoaded', activateDragAndDrop);
 }
