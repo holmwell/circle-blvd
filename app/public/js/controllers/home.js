@@ -204,6 +204,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		// If we moved the first story, update it with the new first story.
 		var isNewFirstStory = false;
 		if (usefulStories.first.id === story.id) {
+			usefulStories.first.isFirstStory = false;
 			usefulStories.first = serverStories.get(preMoveStoryAfter.id);
 			usefulStories.first.isFirstStory = true;
 			isNewFirstStory = true;
@@ -220,6 +221,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		// 2. The story before the moved story, after it was moved.
 		if (storyBefore.id === "first") {
 			console.log("Story before === first");
+			usefulStories.first.isFirstStory = false;
 			usefulStories.first = serverStories.get(story.id);
 			usefulStories.first.isFirstStory = true;
 			isNewFirstStory = true;
@@ -232,8 +234,10 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 
 		// 3. The story that was moved.
 		tmpStory = serverStories.get(story.id);
-		tmpStory.isFirstStory = false;
 		tmpStory.nextId = storyAfter.id;
+		if (usefulStories.first.id !== story.id) {
+			tmpStory.isFirstStory = false;	
+		}
 		if (!(isNewFirstStory && usefulStories.first.id === story.id)) {
 			serverStories.set(story.id, tmpStory);	
 		}

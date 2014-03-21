@@ -119,48 +119,68 @@ app.get("/data/stories/newId", function (req, res) {
 	res.send(200, "" + getNewStoryId());
 });
 
-var tmpStories = {};
-var firstStory = undefined;
-
-db.stories.findByProjectId("1", function (err, dbStories) {
-	var stories = {};
-	dbStories.forEach(function (story, index, array) {
-		// TODO: Put this in dataAccess.js?
-		var modelStory = {
-			id: story.id,
-			summary: story.summary,
-			projectId: story.projectId,
-			nextId: story.nextId,
-			isFirstStory: story.isFirstStory
-		};
-
-		stories[modelStory.id] = modelStory;
-		// save the first story
-		if (story.isFirstStory) {
-			firstStory = modelStory;
-		}
-		console.log(story);
-		// If there is nothing 'next', we're done.
-		if (!modelStory.nextId) {
-			return false;
-		}
-
-		return true;
-	});
-
-	tmpStories = stories;
-});
-
 
 app.get("/data/:projectId/stories", function (req, res) {
 	var projectId = req.params.projectId;
-	res.send(200, tmpStories);
+
+	db.stories.findByProjectId(projectId, function (err, dbStories) {
+		var stories = {};
+		dbStories.forEach(function (story, index, array) {
+			// TODO: Put this in dataAccess.js?
+			var modelStory = {
+				id: story.id,
+				summary: story.summary,
+				projectId: story.projectId,
+				nextId: story.nextId,
+				isFirstStory: story.isFirstStory
+			};
+
+			stories[modelStory.id] = modelStory;
+
+			// If there is nothing 'next', we're done.
+			if (!modelStory.nextId || modelStory.nextId === "last") {
+				return false;
+			}
+
+			return true;
+		});
+
+		res.send(200, stories);
+	});
 });
 
 // TODO: combine this with /stories to return one object with 
 // both the story list and the first story (in two different things)
 app.get("/data/:projectId/first-story", function (req, res) {
-	res.send(200, firstStory);
+	var projectId = req.params.projectId;
+
+	db.stories.findByProjectId(projectId, function (err, dbStories) {
+		var firstStory = undefined;
+		dbStories.forEach(function (story, index, array) {
+			// TODO: Put this in dataAccess.js?
+			var modelStory = {
+				id: story.id,
+				summary: story.summary,
+				projectId: story.projectId,
+				nextId: story.nextId,
+				isFirstStory: story.isFirstStory
+			};
+
+			// save the first story
+			if (story.isFirstStory) {
+				firstStory = modelStory;
+			}
+
+			// If there is nothing 'next', we're done.
+			if (!modelStory.nextId || modelStory.nextId === "last") {
+				return false;
+			}
+
+			return true;
+		});
+
+		res.send(200, firstStory);
+	});
 });
 
 app.put("/data/story/", function (req, res) {

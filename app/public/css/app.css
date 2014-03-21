@@ -69,6 +69,10 @@ h2, h3 {
   min-width: 200px;
 }
 
+.first {
+  background-color: yellow;
+}
+
 .story-id {
   margin: 0;
 }

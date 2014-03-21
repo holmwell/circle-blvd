@@ -12,7 +12,8 @@
 	<div class="story" ng-repeat="story in stories" ng-click="select(story)"
 		ng-class="{ 
 			selected: story.isSelected, 
-			'not-selected': !story.isSelected 
+			'not-selected': !story.isSelected,
+			first: story.isFirstStory 
 		}"
 		data-story-id="{{story.id}}">
 		<div class="span2 story-id">{{story.id}} (next: {{story.nextId}}) </div>
