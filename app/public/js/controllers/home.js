@@ -23,6 +23,15 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			},
 			set: function (storyId, story) {
 				s[storyId] = story;
+				console.log(story);
+				$http.put('/data/story/', story)
+				.success(function (data) {
+					console.log(data);
+				})
+				.error(function (data, status) {
+					console.log(status);
+					console.log(data);
+				})
 			}
 		};
 	}(); // closure;
@@ -193,8 +202,11 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		}
 
 		// If we moved the first story, update it with the new first story.
+		var isNewFirstStory = false;
 		if (usefulStories.first.id === story.id) {
 			usefulStories.first = serverStories.get(preMoveStoryAfter.id);
+			usefulStories.first.isFirstStory = true;
+			isNewFirstStory = true;
 		}
 
 		// We need to update 'nextId' of the following:
@@ -202,23 +214,35 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		if (preMoveStoryBefore.id !== "first") {
 			tmpStory = serverStories.get(preMoveStoryBefore.id);
 			tmpStory.nextId = preMoveStoryAfter.id;
-			console.log("pre");
 			serverStories.set(preMoveStoryBefore.id, tmpStory);
 		}
 		
-		// 2. The story that was moved.
-		tmpStory = serverStories.get(story.id);
-		tmpStory.nextId = storyAfter.id;
-		serverStories.set(story.id, tmpStory);
-		
-		// 3. The story before the moved story, after it was moved.
+		// 2. The story before the moved story, after it was moved.
 		if (storyBefore.id === "first") {
+			console.log("Story before === first");
 			usefulStories.first = serverStories.get(story.id);
+			usefulStories.first.isFirstStory = true;
+			isNewFirstStory = true;
 		}
 		else {
 			tmpStory = serverStories.get(storyBefore.id);
 			tmpStory.nextId = story.id;
 			serverStories.set(storyBefore.id, tmpStory);
+		}
+
+		// 3. The story that was moved.
+		tmpStory = serverStories.get(story.id);
+		tmpStory.isFirstStory = false;
+		tmpStory.nextId = storyAfter.id;
+		if (!(isNewFirstStory && usefulStories.first.id === story.id)) {
+			serverStories.set(story.id, tmpStory);	
+		}
+		
+		// only save this story if necessary, to avoid two calls when
+		// only one is needed
+		if (storyBefore.id !== preMoveStoryAfter.id
+		&& isNewFirstStory) {
+			serverStories.set(usefulStories.first.id, usefulStories.first);
 		}
 
 		$scope.$apply(function () {

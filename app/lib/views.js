@@ -73,7 +73,7 @@ var createViews = function(database, callback) {
 		url: '_design/stories',
 		body: 
 		{
-			version: "1.0.0",
+			version: "1.0.3",
 			language: "javascript",
 			views: {
 				byProjectId: {

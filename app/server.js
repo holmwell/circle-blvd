@@ -127,10 +127,11 @@ db.stories.findByProjectId("1", function (err, dbStories) {
 	dbStories.forEach(function (story, index, array) {
 		// TODO: Put this in dataAccess.js?
 		var modelStory = {
-			id: story.storyId,
+			id: story.id,
 			summary: story.summary,
 			projectId: story.projectId,
-			nextId: story.nextId
+			nextId: story.nextId,
+			isFirstStory: story.isFirstStory
 		};
 
 		stories[modelStory.id] = modelStory;
@@ -162,6 +163,18 @@ app.get("/data/:projectId/first-story", function (req, res) {
 	res.send(200, firstStory);
 });
 
+app.put("/data/story/", function (req, res) {
+	var story = req.body;
+	db.stories.update(story, 
+		function () {
+			res.send(200);
+		},
+		function (err) {
+			console.log(err);
+			res.send(500);
+		}
+	);
+});
 
 // The secret to bridging Angular and Express in a 
 // way that allows us to pass any path to the client.
