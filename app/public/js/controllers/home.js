@@ -11,6 +11,17 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	// so we can push to the server when we set things. there's
 	// probably a better way / pattern for doing this. feel free
 	// to implement it, future self.
+	var saveStory = function (story) {
+		$http.put('/data/story/', story)
+		.success(function (data) {
+			console.log(data);
+		})
+		.error(function (data, status) {
+			console.log(status);
+			console.log(data);
+		});
+	};
+
 	var serverStories = function() {
 		var s = {};
 
@@ -24,14 +35,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			set: function (storyId, story) {
 				s[storyId] = story;
 				// console.log(story);
-				$http.put('/data/story/', story)
-				.success(function (data) {
-					console.log(data);
-				})
-				.error(function (data, status) {
-					console.log(status);
-					console.log(data);
-				})
+				saveStory(story);
 			},
 			all: function() {
 				return s;
@@ -226,57 +230,62 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		var story = getStoryFacadeFromNode(node);
 		var storyBefore = getStoryBefore(node);
 		var storyAfter = getStoryAfter(node);
-		var tmpStory;
 
-		if (preMoveStoryBefore.id === storyBefore.id
-		|| preMoveStoryAfter.id === storyAfter.id) {
+		var movedStory = serverStories.get(story.id);
+		
+		var preMove = {
+			storyBefore: serverStories.get(preMoveStoryBefore.id),
+			storyAfter: serverStories.get(preMoveStoryAfter.id)
+		};
+
+		var postMove = {
+			storyBefore: serverStories.get(storyBefore.id),
+			storyAfter: serverStories.get(storyAfter.id)
+		};
+
+		if (preMove.storyBefore === postMove.storyBefore
+		|| preMove.storyAfter === postMove.storyAfter) {
 			// We didn't actually move. Do nothing.
 			return;
 		}
 
-		// If we moved the first story, update it with the new first story.
-		var isNewFirstStory = false;
-		if (usefulStories.getFirst().id === story.id) {
-			usefulStories.setFirst(serverStories.get(preMoveStoryAfter.id));
-			isNewFirstStory = true;
+		// If the moved story was the first story, the preMove.storyAfter
+		// is now the first story (if it exists).
+		var storiesToSave = [];
+		if (usefulStories.getFirst().id === movedStory.id && preMove.storyAfter) {
+		 	usefulStories.setFirst(preMove.storyAfter);
+		 	storiesToSave[preMove.storyAfter.id] = preMove.storyAfter;
 		}
 
 		// We need to update 'nextId' of the following:
-		// 1. The story before the moved story, before it was moved.
-		if (preMoveStoryBefore.id !== "first") {
-			tmpStory = serverStories.get(preMoveStoryBefore.id);
-			tmpStory.nextId = preMoveStoryAfter.id;
-			serverStories.set(preMoveStoryBefore.id, tmpStory);
+		// 1. The story before the moved story, before it was moved.		
+		if (preMove.storyBefore) {
+			preMove.storyBefore.nextId = preMove.storyAfter ? preMove.storyAfter.id : undefined;
+			storiesToSave[preMove.storyBefore.id] = preMove.storyBefore;
 		}
 		
 		// 2. The story before the moved story, after it was moved.
-		if (storyBefore.id === "first") {
-			console.log("Story before === first");
-			console.log(usefulStories.getFirst());
-			usefulStories.setFirst(serverStories.get(story.id));
-			isNewFirstStory = true;
+		if (postMove.storyBefore) {
+			postMove.storyBefore.nextId = movedStory.id;
+			storiesToSave[postMove.storyBefore.id] = postMove.storyBefore;
 		}
 		else {
-			tmpStory = serverStories.get(storyBefore.id);
-			tmpStory.nextId = story.id;
-			serverStories.set(storyBefore.id, tmpStory);
+			// No need to set the "nextId" on the "storyBefore," because 
+			// there isn't one. Instead, we know that the moved story
+			// is now the first story.
+			storiesToSave[usefulStories.getFirst().id] = usefulStories.getFirst();
+			usefulStories.setFirst(movedStory);
+			storiesToSave[movedStory.id] = movedStory;
 		}
 
-		// 3. The story that was moved.
-		tmpStory = serverStories.get(story.id);
-		tmpStory.nextId = storyAfter.id;
-		// if (usefulStories.getFirst().id !== story.id) {
-		// 	tmpStory.isFirstStory = false;	
-		// }
-		if (!(isNewFirstStory && usefulStories.getFirst().id === story.id)) {
-			serverStories.set(story.id, tmpStory);	
-		}
+		// 3. The story that was moved, unless it's now the last story.
+		movedStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : undefined;
+		storiesToSave[movedStory.id] = movedStory;	
 		
-		// only save this story if necessary, to avoid two calls when
-		// only one is needed
-		if (storyBefore.id !== preMoveStoryAfter.id
-		&& isNewFirstStory) {
-			serverStories.set(usefulStories.getFirst().id, usefulStories.getFirst());
+		// if a story is to be saved, only do it once, to avoid
+		// simple document conflicts.
+		for (var storyId in storiesToSave) {
+			saveStory(storiesToSave[storyId]);
 		}
 
 		$scope.$apply(function () {
