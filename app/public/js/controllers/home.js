@@ -23,7 +23,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			},
 			set: function (storyId, story) {
 				s[storyId] = story;
-				console.log(story);
+				// console.log(story);
 				$http.put('/data/story/', story)
 				.success(function (data) {
 					console.log(data);
@@ -32,9 +32,42 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 					console.log(status);
 					console.log(data);
 				})
+			},
+			all: function() {
+				return s;
 			}
 		};
 	}(); // closure;
+
+	var usefulStories = function() {
+		var s = {};
+		s.first = undefined;
+
+		return {
+			setFirst: function (story) {
+				if (s.first) {
+					// console.log(s.first);
+					// console.log('blah');
+					s.first.isFirstStory = false;
+				}
+				// console.log(story);
+				s.first = story;
+				s.first.isFirstStory = true;
+				// console.log(story);
+			},
+			getFirst: function () {
+				return s.first;
+			},
+			hasFirst: function() {
+				if (s.first) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		};
+	}(); // closure
 
 	var idAttr = 'data-story-id';
 	var preMoveStoryNode = undefined;
@@ -44,17 +77,17 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	$scope.stories = stories;
 
 	$http.get('/data/' + projectId + '/first-story')
-	.success(function (data) {
-		usefulStories.first = data;
-
+	.success(function (firstStory) {
+		
 		$http.get('/data/' + projectId + '/stories')
 		.success(function (data) {
 
 			stories = [];
 			serverStories.init(data);
+			usefulStories.setFirst(serverStories.get(firstStory.id));
+
 			// TODO: If we don't have a first story, relax.
-			var firstStory = serverStories.get(usefulStories.first.id);
-			var currentStory = nextStory = firstStory;
+			var currentStory = nextStory = usefulStories.getFirst();
 
 			while (currentStory) {
 				stories.push(currentStory); // <3 pass by reference
@@ -122,12 +155,12 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	// };
 
 	var insertFirstStory = function (story) {
-		if (usefulStories.first) {
-			story.nextId = usefulStories.first.id;	
+		if (usefulStories.hasFirst()) {
+			story.nextId = usefulStories.getFirst().id;	
 		}
 
 		stories.unshift(story);
-		usefulStories.first = story;
+		usefulStories.setFirst(story);
 		// TODO: Push / save to server
 	};
 
@@ -203,10 +236,8 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 
 		// If we moved the first story, update it with the new first story.
 		var isNewFirstStory = false;
-		if (usefulStories.first.id === story.id) {
-			usefulStories.first.isFirstStory = false;
-			usefulStories.first = serverStories.get(preMoveStoryAfter.id);
-			usefulStories.first.isFirstStory = true;
+		if (usefulStories.getFirst().id === story.id) {
+			usefulStories.setFirst(serverStories.get(preMoveStoryAfter.id));
 			isNewFirstStory = true;
 		}
 
@@ -221,9 +252,8 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		// 2. The story before the moved story, after it was moved.
 		if (storyBefore.id === "first") {
 			console.log("Story before === first");
-			usefulStories.first.isFirstStory = false;
-			usefulStories.first = serverStories.get(story.id);
-			usefulStories.first.isFirstStory = true;
+			console.log(usefulStories.getFirst());
+			usefulStories.setFirst(serverStories.get(story.id));
 			isNewFirstStory = true;
 		}
 		else {
@@ -235,10 +265,10 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		// 3. The story that was moved.
 		tmpStory = serverStories.get(story.id);
 		tmpStory.nextId = storyAfter.id;
-		if (usefulStories.first.id !== story.id) {
-			tmpStory.isFirstStory = false;	
-		}
-		if (!(isNewFirstStory && usefulStories.first.id === story.id)) {
+		// if (usefulStories.getFirst().id !== story.id) {
+		// 	tmpStory.isFirstStory = false;	
+		// }
+		if (!(isNewFirstStory && usefulStories.getFirst().id === story.id)) {
 			serverStories.set(story.id, tmpStory);	
 		}
 		
@@ -246,7 +276,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		// only one is needed
 		if (storyBefore.id !== preMoveStoryAfter.id
 		&& isNewFirstStory) {
-			serverStories.set(usefulStories.first.id, usefulStories.first);
+			serverStories.set(usefulStories.getFirst().id, usefulStories.getFirst());
 		}
 
 		$scope.$apply(function () {
@@ -389,6 +419,19 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 				attachToDragEvents(thisY);
 			});
 		}, 0);
+	};
+
+	$scope.debug = function() {
+		console.log("Array: ");
+		stories.forEach(function (el) {
+			console.log(el);
+		});
+
+		console.log("Assoc array: ");
+		var ss = serverStories.all();
+		for (var storyId in ss) {
+			console.log(ss[storyId]);
+		};
 	};
 
 	$scope.$on('$viewContentLoaded', activateDragAndDrop);
