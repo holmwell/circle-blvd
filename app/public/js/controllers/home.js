@@ -262,8 +262,9 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			// Nothing is set as the first story.
 			var previousStory = getPreviousStory(story);
 			if (!previousStory) {
-
 				usefulStories.setFirst(nextStory);
+				// TODO: Should this be saveStory()?
+				serverStories.set(nextStory.id, nextStory);
 			}
 			else {
 				previousStory.nextId = nextStory ? nextStory.id : "last";
