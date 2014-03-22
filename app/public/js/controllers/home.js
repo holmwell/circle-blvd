@@ -76,7 +76,9 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 					s.first.isFirstStory = false;
 				}
 				s.first = story;
-				s.first.isFirstStory = true;
+				if (s.first) {
+					s.first.isFirstStory = true;	
+				}
 			},
 			getFirst: function () {
 				return s.first;
@@ -264,7 +266,9 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			if (!previousStory) {
 				usefulStories.setFirst(nextStory);
 				// TODO: Should this be saveStory()?
-				serverStories.set(nextStory.id, nextStory);
+				if (nextStory) {
+					serverStories.set(nextStory.id, nextStory);	
+				}
 			}
 			else {
 				previousStory.nextId = nextStory ? nextStory.id : "last";
