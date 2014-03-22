@@ -233,6 +233,19 @@ app.put("/data/story/", function (req, res) {
 	);
 });
 
+app.put("/data/story/remove", function (req, res) {
+	var story = req.body;
+	db.stories.remove(story, 
+		function () {
+			res.send(200);
+		},
+		function (err) {
+			console.log(err);
+			res.send(500);
+		}
+	);
+});
+
 // The secret to bridging Angular and Express in a 
 // way that allows us to pass any path to the client.
 // 

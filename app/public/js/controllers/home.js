@@ -55,6 +55,13 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			},
 			all: function() {
 				return s;
+			},
+			remove: function (storyId) {
+				// TODO: Right now the server-side is handled outside of
+				// this class. Should probably make things be consistent. 
+				if (s[storyId]) {
+					delete s[storyId];
+				}
 			}
 		};
 	}(); // closure;
@@ -143,7 +150,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		var boxId = "boxForStory" + story.id;
 		var foundBox = document.getElementById(boxId);
 		if (foundBox) {
-			console.log(foundBox);
+			// console.log(foundBox);
 			// We want this to happen after this method
 			// finishes.
 			$timeout(function() {
@@ -222,7 +229,59 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	};
 
 	$scope.remove = function (story) {
-		console.log('remove');
+		var storyToRemove = serverStories.get(story.id);
+		var nextStory = serverStories.get(storyToRemove.nextId);
+
+		var getPreviousStory = function (story) {
+			var previousStory = story;
+			if (usefulStories.getFirst().id === story.id) {
+				return undefined;
+			}
+
+			var currentStory = usefulStories.getFirst();
+			while (currentStory) {
+				if (currentStory.nextId === storyToRemove.id) {
+					previousStory = currentStory;
+					return previousStory;
+				}
+				currentStory = serverStories.get(currentStory.nextId);
+			}
+
+			// TODO: If we get here, the story doesn't exist.
+			return previousStory;
+		};
+
+		$http.put('/data/story/remove', storyToRemove)
+		.success(function (data) {
+			if (story.isSelected) {
+				story.isSelected = false;
+				selectedStory = undefined;
+			}
+
+			// TODO: Removing the first story does not work.
+			// Nothing is set as the first story.
+			var previousStory = getPreviousStory(story);
+			if (!previousStory) {
+
+				usefulStories.setFirst(nextStory);
+			}
+			else {
+				previousStory.nextId = nextStory ? nextStory.id : "last";
+				serverStories.set(previousStory.id, previousStory);
+			}
+
+			var storyIndex = stories.indexOf(storyToRemove);
+			stories.splice(storyIndex, 1);
+			serverStories.remove(story.id);
+
+			// TODO: Do we need this for 'remove'?
+			$timeout(makeStoriesDraggable, 0);
+		})
+		.error(function (data, status) {
+			console.log('failure');
+			console.log(status);
+			console.log(data);
+		});
 	};
 
 	var getStoryFacadeFromNode = function (node) {
@@ -459,18 +518,18 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		}, 0);
 	};
 
-	// $scope.debug = function() {
-	// 	console.log("Array: ");
-	// 	stories.forEach(function (el) {
-	// 		console.log(el);
-	// 	});
+	$scope.debug = function() {
+		console.log("Array: ");
+		stories.forEach(function (el) {
+			console.log(el);
+		});
 
-	// 	console.log("Assoc array: ");
-	// 	var ss = serverStories.all();
-	// 	for (var storyId in ss) {
-	// 		console.log(ss[storyId]);
-	// 	};
-	// };
+		console.log("Assoc array: ");
+		var ss = serverStories.all();
+		for (var storyId in ss) {
+			console.log(ss[storyId]);
+		};
+	};
 
 	$scope.$on('$viewContentLoaded', activateDragAndDrop);
 }

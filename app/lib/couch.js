@@ -217,6 +217,23 @@ var couch = function() {
 		});
 	};
 
+	var removeStory = function(story, callback) {
+		findStoryByIds(story.projectId, story.id, function (err, body) {
+			if (err) {
+				return callback(err);
+			}
+
+			console.log(story);
+			// TODO: If story is not found.
+			story._id = body._id;
+			story._rev = body._rev;
+
+			database.destroy(story._id, story._rev, function (err, body) {
+				callback(err, body);
+			});
+		});
+	};
+
 	var findStoriesByProjectId = function (projectId, callback) {
 		var options = {
 			key: projectId
@@ -230,6 +247,10 @@ var couch = function() {
 		findStoryByIds(story.projectId, story.id, function (err, body) {
 			if (err) {
 				return callback(err);
+			}
+
+			if (body === null) {
+				// TODO: Not found. Error ...
 			}
 
 			// TODO: Where is the right place to change the appropriate fields?
@@ -261,6 +282,7 @@ var couch = function() {
 		},
 		stories: {
 			add: addStory,
+			remove: removeStory,
 			findByProjectId: findStoriesByProjectId,
 			update: updateStory
 		},

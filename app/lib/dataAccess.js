@@ -18,6 +18,15 @@ var db = function() {
 		});
 	};
 
+	var removeStory = function (story, success, failure) {
+		couch.stories.remove(story, function (err) {
+			if (err) {
+				return failure(err);
+			}
+			success();
+		});
+	};
+
 	var updateStory = function(story, success, failure) {
 		couch.stories.update(story, function (err) {
 			if (err) {
@@ -138,6 +147,7 @@ var db = function() {
 	return {
 		stories: {
 			add: addStory,
+			remove: removeStory,
 			findByProjectId: findStoriesByProjectId,
 			update: updateStory
 		},
