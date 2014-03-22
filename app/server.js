@@ -4,6 +4,7 @@ var path     = require('path');
 var routes   = require('./routes')
 var auth     = require('./lib/auth.js');
 var db       = require('./lib/dataAccess.js').instance();
+var uuid 	 = require('node-uuid');
 
 var usersRoutes = require('./routes/users');
 var userRoutes 	= require('./routes/user');
@@ -101,22 +102,44 @@ app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
 app.put("/data/initialize", initRoutes.init);
 
 // Story routes
-var nextStoryId = undefined;
-var getNewStoryId = function() {
-	// TODO: Should move to the server, obvi,
-	// but works for now.
-	if (!nextStoryId) {
-		nextStoryId = 1;
-	}
-	else {
-		nextStoryId++;
-	}
-	return nextStoryId;
-};
+app.get("/data/uuid", function (req, res) {
+	var id = uuid.v4();
+	res.send(200, id);
+});
 
-app.get("/data/stories/newId", function (req, res) {
-	// TODO: "/data/stories/:projectId/create" instead?
-	res.send(200, "" + getNewStoryId());
+app.get("/data/:projectId/new-story-id", function (req, res) {
+	var projectId = req.params.projectId;
+
+	db.stories.findByProjectId(projectId, function (err, dbStories) {
+		var newStoryId = "1";
+		dbStories.forEach(function (story, index, array) {
+			// TODO: Put this in dataAccess.js?
+			var modelStory = {
+				id: story.id,
+				summary: story.summary,
+				projectId: story.projectId,
+				nextId: story.nextId,
+				isFirstStory: story.isFirstStory
+			};
+
+			var newStoryIdNumber = +newStoryId;
+			if (+modelStory.id > newStoryIdNumber) {
+				newStoryId = modelStory.id;
+			}
+
+			// If there is nothing 'next', we're done.
+			if (!modelStory.nextId || modelStory.nextId === "last") {
+				return false;
+			}
+
+			return true;
+		});
+
+		// TODO: Save new-story-ids in an array or something? 
+		// Or maybe this is just for testing?
+		newStoryId = "" + (+newStoryId + 1);
+		res.send(200, newStoryId);
+	});
 });
 
 
@@ -154,6 +177,7 @@ app.get("/data/:projectId/stories", function (req, res) {
 app.get("/data/:projectId/first-story", function (req, res) {
 	var projectId = req.params.projectId;
 
+	// TODO: Could make a view to get the first story for a project.
 	db.stories.findByProjectId(projectId, function (err, dbStories) {
 		var firstStory = undefined;
 		dbStories.forEach(function (story, index, array) {
@@ -181,6 +205,19 @@ app.get("/data/:projectId/first-story", function (req, res) {
 
 		res.send(200, firstStory);
 	});
+});
+
+app.post("/data/story/", function (req, res) {
+	var story = req.body;
+	db.stories.add(story, 
+		function (story) {
+			res.send(200);
+		},
+		function (err) {
+			console.log(err);
+			res.send(500);
+		}
+	);
 });
 
 app.put("/data/story/", function (req, res) {

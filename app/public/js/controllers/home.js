@@ -33,8 +33,24 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 				return s[storyId];
 			},
 			set: function (storyId, story) {
-				s[storyId] = story;
-				saveStory(story);
+				if (s[storyId]) {
+					s[storyId] = story;
+					// update story
+					saveStory(story);	
+				}
+				else {
+					s[storyId] = story;
+					// create story
+					$http.post('/data/story/', story)
+					.success(function (data) {
+						// do nothing
+					})
+					.error(function (data, status) {
+						console.log(status);
+						console.log(data);
+					});
+				}
+				
 			},
 			all: function() {
 				return s;
@@ -153,13 +169,24 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	// };
 
 	var insertFirstStory = function (story) {
-		if (usefulStories.hasFirst()) {
+		var hadFirstStoryPreviously = usefulStories.hasFirst();
+		if (hadFirstStoryPreviously) {
 			story.nextId = usefulStories.getFirst().id;	
 		}
 
-		stories.unshift(story);
+		story.projectId = projectId;
+		story.type = "story";
+
 		usefulStories.setFirst(story);
-		// TODO: Push / save to server
+		serverStories.set(story.id, story);
+		var serverStory = serverStories.get(story.id);
+
+		stories.unshift(serverStory);
+		usefulStories.setFirst(serverStory);
+		// Save the previously-first story.
+		if (hadFirstStoryPreviously) {
+			saveStory(serverStories.get(serverStory.nextId));	
+		}
 	};
 
 	var insertNewStory = function (newStory) {
@@ -167,7 +194,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	};
 
 	$scope.create = function (newStory) {
-		$http.get('/data/stories/newId')
+		$http.get('/data/' + projectId + '/new-story-id')
 		.success(function (data) {
 			newStory.id = data;
 			insertNewStory(newStory);

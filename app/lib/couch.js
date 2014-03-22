@@ -204,6 +204,19 @@ var couch = function() {
 		});
 	};
 
+
+	var addStory = function(story, callback) {
+		// TODO: If we keep this (setting the story.type), 
+		// we want a way to tell the client how we modified it.
+		story.type = "story";
+		database.insert(story, function (err) {
+			if (err) {
+				return callback(err);
+			}
+			callback();
+		});
+	};
+
 	var findStoriesByProjectId = function (projectId, callback) {
 		var options = {
 			key: projectId
@@ -247,6 +260,7 @@ var couch = function() {
 			// TODO: Do we want a projects data API?
 		},
 		stories: {
+			add: addStory,
 			findByProjectId: findStoriesByProjectId,
 			update: updateStory
 		},

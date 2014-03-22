@@ -17,7 +17,7 @@
 			first: story.isFirstStory 
 		}"
 		data-story-id="{{story.id}}">
-		<div class="span2 story-id">{{story.id}} (next: {{story.nextId}}) </div>
+		<div class="span2 story-id">{{story.id | slice:5 }} (next: {{story.nextId | slice:5}}) </div>
 		<div class="selected" ng-show="story.isSelected">
 			<form ng-submit="save(story)">
 				<input id="boxForStory{{story.id}}" type="text" ng-model="story.summary"/>

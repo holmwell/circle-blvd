@@ -8,6 +8,16 @@ var db = function() {
 		couch.stories.findByProjectId(projectId, callback);
 	};
 
+	var addStory = function(story, success, failure) {
+		// TODO: Data validation / gating?
+		couch.stories.add(story, function (err) {
+			if (err) {
+				return failure(err);
+			}
+			success();
+		});
+	};
+
 	var updateStory = function(story, success, failure) {
 		couch.stories.update(story, function (err) {
 			if (err) {
@@ -127,6 +137,7 @@ var db = function() {
 
 	return {
 		stories: {
+			add: addStory,
 			findByProjectId: findStoriesByProjectId,
 			update: updateStory
 		},
