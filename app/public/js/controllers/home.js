@@ -32,6 +32,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			get: function (storyId) {
 				return s[storyId];
 			},
+			// TODO: Might want to use callbacks.
 			set: function (storyId, story) {
 				if (s[storyId]) {
 					s[storyId] = story;
@@ -210,7 +211,14 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	};
 
 	$scope.save = function (story) {
-		console.log('save');
+		var storyToSave = serverStories.get(story.id);
+		
+		storyToSave.summary = story.summary;
+		// TODO: Probably want a callback here
+		saveStory(storyToSave);
+
+		storyToSave.isSelected = false;
+		selectedStory = undefined;
 	};
 
 	$scope.remove = function (story) {
