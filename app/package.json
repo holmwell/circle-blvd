@@ -9,5 +9,10 @@
     "request": ">= 0.0.0",
     "node-uuid": ">=0.0.0",
     "nano": "4.1"
+  },
+  "devDependencies": {
+    "karma-jasmine": "~0.1.5",
+    "karma": "~0.12.1",
+    "karma-chrome-launcher": "~0.1.2"
   }
 }

@@ -12,3 +12,7 @@ circle blvd.
 * `(start CouchDB)`
 * `node server.js`
 * `Go to http://localhost:3000`
+
+### Testing
+* Uses `karma` and `jasmine` for now.
+* `scripts/test.sh`
