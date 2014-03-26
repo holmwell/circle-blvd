@@ -7,6 +7,10 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	var stories = [];
 	var usefulStories = {};
 
+	var idAttr = 'data-story-id';
+	var preMoveStoryBefore = undefined;
+	var preMoveStoryAfter = undefined;
+
 	var saveStory = function (story) {
 		$http.put('/data/story/', story)
 		.success(function (data) {
@@ -94,50 +98,6 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		};
 	}(); // closure
 
-	var idAttr = 'data-story-id';
-	var preMoveStoryBefore = undefined;
-	var preMoveStoryAfter = undefined;
-
-	$scope.stories = stories;
-
-	$http.get('/data/' + projectId + '/first-story')
-	.success(function (firstStory) {
-		
-		$http.get('/data/' + projectId + '/stories')
-		.success(function (data) {
-
-			stories = [];
-			serverStories.init(data);
-			usefulStories.setFirst(serverStories.get(firstStory.id));
-
-			// TODO: If we don't have a first story, relax.
-			var currentStory = usefulStories.getFirst();
-
-			while (currentStory) {
-				stories.push(currentStory); // <3 pass by reference
-				var nextStoryId = currentStory.nextId;
-				if (nextStoryId) {
-					currentStory = serverStories.get(nextStoryId);
-				}
-				else {
-					currentStory = undefined;
-				}
-			}
-
-			$scope.stories = stories;
-			$timeout(makeStoriesDraggable, 0);
-		})
-		.error(function (data, status) {
-			console.log('failure');
-			console.log(status);
-			console.log(data);
-		});
-	})
-	.error(function (data, status) {
-		console.log('failure');
-		console.log(status);
-		console.log(data);
-	});
 
 	$scope.select = function (story) {
 		// TODO: This does NOT work on the story that
@@ -536,6 +496,51 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		};
 	};
 
-	$scope.$on('$viewContentLoaded', activateDragAndDrop);
+	var init = function() {
+		$scope.stories = stories;
+
+		$http.get('/data/' + projectId + '/first-story')
+		.success(function (firstStory) {
+			
+			$http.get('/data/' + projectId + '/stories')
+			.success(function (data) {
+
+				stories = [];
+				serverStories.init(data);
+				usefulStories.setFirst(serverStories.get(firstStory.id));
+
+				// TODO: If we don't have a first story, relax.
+				var currentStory = usefulStories.getFirst();
+
+				while (currentStory) {
+					stories.push(currentStory); // <3 pass by reference
+					var nextStoryId = currentStory.nextId;
+					if (nextStoryId) {
+						currentStory = serverStories.get(nextStoryId);
+					}
+					else {
+						currentStory = undefined;
+					}
+				}
+
+				$scope.stories = stories;
+				$timeout(makeStoriesDraggable, 0);
+			})
+			.error(function (data, status) {
+				console.log('failure');
+				console.log(status);
+				console.log(data);
+			});
+		})
+		.error(function (data, status) {
+			console.log('failure');
+			console.log(status);
+			console.log(data);
+		});
+
+		$scope.$on('$viewContentLoaded', activateDragAndDrop);
+	};
+
+	init();
 }
 HomeCtrl.$inject = ['$scope', '$timeout', '$document', '$http'];
