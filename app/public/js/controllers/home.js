@@ -499,6 +499,12 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		};
 	};
 
+	$scope._test = function() {
+		return {
+			firstStory: usefulStories.getFirst()
+		}
+	};
+
 	var init = function() {
 		$scope.stories = stories;
 

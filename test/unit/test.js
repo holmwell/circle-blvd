@@ -112,6 +112,7 @@ describe('HomeCtrl', function(){
 		expectedStoryCount += 2;
 
 		expect($scope.stories.length).toBe(expectedStoryCount);
+		expect($scope._test().firstStory).toBe(story2);
 		expectValidStories($scope.stories);
 	});
 
@@ -128,6 +129,7 @@ describe('HomeCtrl', function(){
 		expectedStoryCount++;
 
 		expect($scope.stories.length).toBe(expectedStoryCount);
+		expect($scope._test().firstStory).toBe(newStory);
 		expectValidStories($scope.stories);	
 	});
 
