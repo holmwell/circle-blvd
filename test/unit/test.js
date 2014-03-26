@@ -11,24 +11,20 @@ describe('HomeCtrl', function(){
 	
 	var initHttpBackend = function($injector) {
 		var $httpBackend = $injector.get('$httpBackend'); 
-
-		$httpBackend.when('GET', '/data/1/first-story')
-		.respond({
-			"id": "2",
-			"summary": "two",
-			"projectId": "1",
-			"nextId": "3",
-			"isFirstStory": true
-		});
-
-		$httpBackend.when('GET', '/data/1/stories')
-		.respond({
+		var stories = {
+			"1": {
+				"id": "1",
+    			"summary": "one",
+    			"projectId": "1",
+    			"nextId": "2",
+    			"isFirstStory": true
+			},
   			"2": {
     			"id": "2",
     			"summary": "two",
     			"projectId": "1",
     			"nextId": "3",
-    			"isFirstStory": true
+    			"isFirstStory": false
   			},
   			"3": {
     			"id": "3",
@@ -36,9 +32,16 @@ describe('HomeCtrl', function(){
     			"projectId": "1",
     			"isFirstStory": false
   			}
-		});
+		};
 
-		var newStoryId = 2;
+
+		$httpBackend.when('GET', '/data/1/first-story')
+		.respond(stories["1"]);
+
+		$httpBackend.when('GET', '/data/1/stories')
+		.respond(stories);
+
+		var newStoryId = 3;
 		var getNextId = function() {
 			newStoryId++;
 			return [200, "" + newStoryId, {}];
@@ -48,6 +51,9 @@ describe('HomeCtrl', function(){
 		.respond(getNextId);
 
 		$httpBackend.when('PUT', '/data/story/')
+		.respond(200);
+
+		$httpBackend.when('PUT', '/data/story/remove')
 		.respond(200);
 
 		$httpBackend.when('POST', '/data/story/')
@@ -92,7 +98,37 @@ describe('HomeCtrl', function(){
 		expectOneFirstStory($scope.stories);
 	};
 
+	var getFirstStory = function() {
+		return $scope._test().firstStory;
+	};
+
 	// tests
+	it('can remove two stories at once', function () {
+		var expectedStoryCount = $scope.stories.length;
+		var storyToRemove1 = $scope.stories[0];
+		var storyToRemove2 = $scope.stories[1];
+
+		$scope.remove(storyToRemove1);
+		$scope.remove(storyToRemove2);
+		$httpBackend.flush();
+
+		expectedStoryCount -= 2;
+		expect($scope.stories.length).toBe(expectedStoryCount);
+		expectValidStories($scope.stories);
+	});
+
+	it('can remove a story', function () {
+		var expectedStoryCount = $scope.stories.length;
+		var storyToRemove = $scope.stories[0];
+
+		$scope.remove(storyToRemove);
+		$httpBackend.flush();
+
+		expectedStoryCount--;
+		expect($scope.stories.length).toBe(expectedStoryCount);
+		expectValidStories($scope.stories);
+	});
+
 	it('can create two stories at once', function () {
 		var expectedStoryCount = $scope.stories.length;
 
@@ -112,7 +148,7 @@ describe('HomeCtrl', function(){
 		expectedStoryCount += 2;
 
 		expect($scope.stories.length).toBe(expectedStoryCount);
-		expect($scope._test().firstStory).toBe(story2);
+		expect(getFirstStory()).toBe(story2);
 		expectValidStories($scope.stories);
 	});
 
@@ -129,7 +165,7 @@ describe('HomeCtrl', function(){
 		expectedStoryCount++;
 
 		expect($scope.stories.length).toBe(expectedStoryCount);
-		expect($scope._test().firstStory).toBe(newStory);
+		expect(getFirstStory()).toBe(newStory);
 		expectValidStories($scope.stories);	
 	});
 
