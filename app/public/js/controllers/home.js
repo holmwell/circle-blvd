@@ -504,7 +504,8 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 
 	$scope._test = function() {
 		return {
-			firstStory: usefulStories.getFirst()
+			firstStory: usefulStories.getFirst(),
+			storiesTable: serverStories
 		}
 	};
 
