@@ -259,9 +259,9 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	};
 
 	var getStoryBefore = function (node) {
-		var previousNode = node.get('previousSibling');
-		if (previousNode.getAttribute(idAttr)) { 
-			return getStoryFacadeFromNode(node.get('previousSibling'));
+		var previousNode = node.previous();
+		if (previousNode !== null && previousNode.getAttribute(idAttr)) { 
+			return getStoryFacadeFromNode(node.previous());
 		}
 		else {
 			return {
@@ -271,9 +271,9 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	};
 
 	var getStoryAfter = function (node) {
-		var nextNode = node.get('nextSibling');
-		if (nextNode.getAttribute(idAttr)) {
-			return getStoryFacadeFromNode(node.get('nextSibling'));
+		var nextNode = node.next();
+		if (nextNode !== null && nextNode.getAttribute(idAttr)) {
+			return getStoryFacadeFromNode(node.next());
 		}
 		else {
 			return {
@@ -497,6 +497,9 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		for (var storyId in ss) {
 			console.log(ss[storyId]);
 		};
+
+		console.log("First story: ");
+		console.log(usefulStories.getFirst());
 	};
 
 	$scope._test = function() {
