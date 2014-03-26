@@ -163,7 +163,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		insertFirstStory(newStory);
 	};
 
-	$scope.create = function (newStory) {
+	$scope.create = function (newStory, callback) {
 		$http.get('/data/' + projectId + '/new-story-id')
 		.success(function (data) {
 			newStory.id = data;
@@ -171,6 +171,9 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 
 			$scope.newStory = undefined;
 			$timeout(makeStoriesDraggable, 0);
+			if (callback) {
+				callback(newStory);
+			}
 		})
 		.error(function (data, status) {
 			console.log('failure');

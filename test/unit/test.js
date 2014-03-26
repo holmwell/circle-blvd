@@ -41,13 +41,16 @@ describe('HomeCtrl', function(){
 		var newStoryId = 2;
 		var getNextId = function() {
 			newStoryId++;
-			return "" + newStoryId;
+			return [200, "" + newStoryId, {}];
 		};
 
 		$httpBackend.when('GET', '/data/1/new-story-id')
-		.respond(getNextId());
+		.respond(getNextId);
 
 		$httpBackend.when('PUT', '/data/story/')
+		.respond(200);
+
+		$httpBackend.when('POST', '/data/story/')
 		.respond(200);
 
 		return $httpBackend;
@@ -90,8 +93,30 @@ describe('HomeCtrl', function(){
 	};
 
 	// tests
+	it('can create two stories at once', function () {
+		var expectedStoryCount = $scope.stories.length;
+
+		var story1 = {
+			summary: "first",
+			projectId: "1"
+		};
+
+		var story2 = {
+			summary: "second",
+			projectId: "1"
+		};
+
+		$scope.create(story1);
+		$scope.create(story2);
+		$httpBackend.flush();
+		expectedStoryCount += 2;
+
+		expect($scope.stories.length).toBe(expectedStoryCount);
+		expectValidStories($scope.stories);
+	});
+
 	it('can create a new story', function () {
-		var initStoryCount = $scope.stories.length;
+		var expectedStoryCount = $scope.stories.length;
 
 		var newStory = {
 			summary: "new",
@@ -100,9 +125,26 @@ describe('HomeCtrl', function(){
 
 		$scope.create(newStory);
 		$httpBackend.flush();
+		expectedStoryCount++;
 
-		expect($scope.stories.length).toBe(initStoryCount + 1);
-		expectValidStories($scope.stories);
+		expect($scope.stories.length).toBe(expectedStoryCount);
+		expectValidStories($scope.stories);	
+	});
+
+	it('mock of new-story-id works', function () {
+		var expectedStoryId = $scope.stories.length;
+		var newStory = {
+			summary: "new",
+			projectId: "1"
+		};
+
+		for (var i=0; i < 5; i++) {
+			$scope.create(newStory, function (story) {
+				expectedStoryId++;
+				expect(story.id).toBe("" + expectedStoryId);
+			});
+			$httpBackend.flush();
+		}
 	});
 
 	it('has mocked stories after init', function () {
