@@ -38,6 +38,18 @@ describe('HomeCtrl', function(){
   			}
 		});
 
+		var newStoryId = 2;
+		var getNextId = function() {
+			newStoryId++;
+			return "" + newStoryId;
+		};
+
+		$httpBackend.when('GET', '/data/1/new-story-id')
+		.respond(getNextId());
+
+		$httpBackend.when('PUT', '/data/story/')
+		.respond(200);
+
 		return $httpBackend;
 	};
 
@@ -60,13 +72,45 @@ describe('HomeCtrl', function(){
 		$httpBackend.flush();
 	}));
 
+	var expectOneFirstStory = function (stories) {
+		var firstStoryCount = 0;
+		stories.forEach(function (story) {
+			if (story.isFirstStory) {
+				firstStoryCount++;
+			}
+		}); 
+		expect(firstStoryCount).toBe(1);
+	};
+
+	var expectValidStories = function(stories) {
+		if (stories.length === 0) {
+			return;
+		}
+		expectOneFirstStory($scope.stories);
+	};
+
 	// tests
+	it('can create a new story', function () {
+		var initStoryCount = $scope.stories.length;
+
+		var newStory = {
+			summary: "new",
+			projectId: "1"
+		};
+
+		$scope.create(newStory);
+		$httpBackend.flush();
+
+		expect($scope.stories.length).toBe(initStoryCount + 1);
+		expectValidStories($scope.stories);
+	});
+
+	it('has mocked stories after init', function () {
+		expect($scope.stories.length).toBeGreaterThan(0);
+		expectValidStories($scope.stories);
+	});
+
 	it('should be instantiable', function () {
 		expect(ctrl).not.toBe(null);
 	});
-
-	iit('has mocked stories after init', function () {
-		expect($scope.stories.length).toBe(2);
-	});
-
 });
