@@ -5,16 +5,12 @@ describe('HomeCtrl', function(){
 
 	// angular services
 	var $scope;
-	// var $document;
+	var $httpBackend;
 	// var $timeout;
-	// var $httpBackend;
-
-	beforeEach(inject(function ($injector) {
-		$scope = $injector.get('$rootScope').$new();
-
-		// var $timeout = $injector.get('$timeout');
-		// var $document = $injector.get('$document');
-		var $httpBackend = $injector.get('$httpBackend'); // TODO: httpBackend
+	// var $document;
+	
+	var initHttpBackend = function($injector) {
+		var $httpBackend = $injector.get('$httpBackend'); 
 
 		$httpBackend.when('GET', '/data/1/first-story')
 		.respond({
@@ -42,16 +38,26 @@ describe('HomeCtrl', function(){
   			}
 		});
 
+		return $httpBackend;
+	};
+
+	beforeEach(inject(function ($injector) {
+		$scope = $injector.get('$rootScope').$new();
+		$httpBackend = initHttpBackend($injector);
+
 		var params = {
-			'$scope': $scope,
-			// Angular takes care of injecting these:
-			// '$timeout': $timeout,
-			// '$document': $document,
-			// '$http': $httpBackend
+		 	'$scope': $scope,
+		// Angular takes care of injecting these:
+		 	// '$timeout': $timeout,
+		 	// '$document': $document,
+		 	// '$http': $httpBackend
 		};
 
 		var $controller = $injector.get('$controller');
 		ctrl = $controller(HomeCtrl, params);
+
+		// Actually be ready to test
+		$httpBackend.flush();
 	}));
 
 	// tests
@@ -59,12 +65,8 @@ describe('HomeCtrl', function(){
 		expect(ctrl).not.toBe(null);
 	});
 
-	// it('whatever', function () {
-	// 	// console.log('ok!')
-	// 	// var s = $scope.stories;
-	// 	// for (var story in s) {
-	// 	// 	console.log(story);
-	// 	// }
-	// });
+	iit('has mocked stories after init', function () {
+		expect($scope.stories.length).toBe(2);
+	});
 
 });

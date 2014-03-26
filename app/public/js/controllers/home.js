@@ -501,7 +501,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 
 		$http.get('/data/' + projectId + '/first-story')
 		.success(function (firstStory) {
-			
+
 			$http.get('/data/' + projectId + '/stories')
 			.success(function (data) {
 
