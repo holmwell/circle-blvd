@@ -502,6 +502,28 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		console.log(usefulStories.getFirst());
 	};
 
+	$scope.resetStories = function() {
+		// var storyCount = stories.length;
+		// for (var i=storyCount; i > 0; i--) {
+		// 	$scope.remove(stories[i - 1]);
+		// }
+
+		$scope.create({
+   			"summary": "one",
+   			"projectId": "1"
+		}, function () { 
+			$scope.create({
+   				"summary": "two",
+   				"projectId": "1"
+			}, function () {
+				$scope.create({
+   					"summary": "three",
+    				"projectId": "1"
+				});
+			});
+		});	
+	};
+
 	$scope._test = function() {
 		return {
 			firstStory: usefulStories.getFirst(),
