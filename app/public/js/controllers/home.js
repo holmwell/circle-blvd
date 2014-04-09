@@ -148,16 +148,17 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		story.type = "story";
 
 		usefulStories.setFirst(story);
-
 		serverStories.add(story, function (newStory) {
-			var serverStory = serverStories.get(newStory.id);
 
-			stories.unshift(serverStory);
+			var serverStory = serverStories.get(newStory.id);
 			usefulStories.setFirst(serverStory);
 			// Save the previously-first story.
 			if (hadFirstStoryPreviously) {
 				saveStory(serverStories.get(serverStory.nextId));	
 			}
+
+			// add the new story to the front of the backlog.
+			stories.unshift(serverStory);
 
 			if (callback) {
 				callback();
@@ -175,7 +176,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			$timeout(makeStoriesDraggable, 0);
 			if (callback) {
 				callback(newStory);
-			}	
+			}
 		});
 	};
 
@@ -286,7 +287,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		var storyAfter = getStoryAfter(node);
 
 		var movedStory = serverStories.get(story.id);
-		
+
 		var preMove = {
 			storyBefore: serverStories.get(preMoveStoryBefore.id),
 			storyAfter: serverStories.get(preMoveStoryAfter.id)
@@ -342,9 +343,30 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			saveStory(storiesToSave[storyId]);
 		}
 
+		// Reset the scope-data binding. The YUI drag-and-drop stuff
+		// manipulates the DOM, and we need to update our stories array
+		// somehow to reflect the new order of things.
+		//
+		// TODO: This code is almost certainly the wrong way to do things
+		// if we want to be fast with a lot of elements. It seems to work, 
+		// though, and it's all done on the client side.
 		$scope.$apply(function () {
-			// do nothing
+			stories = [];
+			$scope.stories = stories;
+		});
+
+		$scope.$apply(function () {
+			var firstStory = usefulStories.getFirst();
+			var currentStory = firstStory;
+			while (currentStory) {
+				stories.push(currentStory);
+				currentStory = serverStories.get(currentStory.nextId);
+			}
+
+			$scope.stories = stories;
 		});	
+
+		$timeout(makeStoriesDraggable, 0);
 	};
 
 	var attachToDragEvents = function (Y) {
@@ -485,8 +507,15 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	};
 
 	$scope.debug = function() {
+		console.log("Scope array: ");
+		$scope.stories.forEach(function (el, index) {
+			console.log(index);
+			console.log(el);
+		});
+
 		console.log("Array: ");
-		stories.forEach(function (el) {
+		stories.forEach(function (el, index) {
+			console.log(index);
 			console.log(el);
 		});
 
