@@ -5,16 +5,55 @@ var uuid 	= require('node-uuid');
 var db = function() {
 
 	var findStoriesByProjectId = function (projectId, callback) {
-		couch.stories.findByProjectId(projectId, callback);
+
+		var prepareStories = function (err, dbStories) {
+			if (err) {
+				return callback(err);
+			}
+
+			var stories = {};
+			dbStories.forEach(function (story, index, array) {
+				// TODO: Not sure we need this modelStory
+				// business, except to cause more work
+				// in the future.
+				var modelStory = {
+					id: story.id,
+					summary: story.summary,
+					projectId: story.projectId,
+					nextId: story.nextId,
+					isFirstStory: story.isFirstStory
+				};
+
+				stories[modelStory.id] = modelStory;
+
+				// If there is nothing 'next', we're done.
+				// TODO: Maybe. 
+				// TODO: This assumes our data is all valid.
+				if (!modelStory.nextId || modelStory.nextId === "last") {
+					return false;
+				}
+
+				return true;
+			});
+
+			callback(err, stories);
+		};
+
+		couch.stories.findByProjectId(projectId, prepareStories);
 	};
 
 	var addStory = function(story, success, failure) {
-		// TODO: Data validation / gating?
-		couch.stories.add(story, function (err) {
+
+		// var stories = findStoriesByProjectId(story.projectId, 
+		// 	function (err, dbStories) {
+
+		// 	});
+
+		couch.stories.add(story, function (err, story) {
 			if (err) {
 				return failure(err);
 			}
-			success();
+			success(story);
 		});
 	};
 

@@ -209,12 +209,12 @@ var couch = function() {
 		// TODO: If we keep this (setting the story.type), 
 		// we want a way to tell the client how we modified it.
 		story.type = "story";
-		database.insert(story, function (err) {
-			if (err) {
-				return callback(err);
-			}
-			callback();
-		});
+		var onFailure = callback;
+		var onSuccess = function (story) {
+			callback(null, story);
+		};
+
+		database.insert(story, onFailure, onSuccess);
 	};
 
 	var removeStory = function(story, callback) {
