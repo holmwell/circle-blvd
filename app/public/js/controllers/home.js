@@ -33,6 +33,19 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			init: function (data) {
 				s = data;
 			},
+			add: function (story, callback) {
+				$http.post('/data/story/', story)
+				.success(function (newStory) {
+					s[newStory.id] = newStory;
+					// TODO: At this point some stories
+					// might have new IDs. Do we care?
+					callback(newStory);
+				})
+				.error(function (data, status) {
+					console.log(status);
+					console.log(data);
+				});
+			},
 			get: function (storyId) {
 				return s[storyId];
 			},
@@ -42,20 +55,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 					s[storyId] = story;
 					// update story
 					saveStory(story);	
-				}
-				else {
-					s[storyId] = story;
-					// create story
-					$http.post('/data/story/', story)
-					.success(function (data) {
-						// do nothing
-					})
-					.error(function (data, status) {
-						console.log(status);
-						console.log(data);
-					});
-				}
-				
+				}				
 			},
 			all: function() {
 				return s;
@@ -138,7 +138,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 
 	// };
 
-	var insertFirstStory = function (story) {
+	var insertFirstStory = function (story, callback) {
 		var hadFirstStoryPreviously = usefulStories.hasFirst();
 		if (hadFirstStoryPreviously) {
 			story.nextId = usefulStories.getFirst().id;	
@@ -148,39 +148,37 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		story.type = "story";
 
 		usefulStories.setFirst(story);
-		serverStories.set(story.id, story);
-		var serverStory = serverStories.get(story.id);
 
-		stories.unshift(serverStory);
-		usefulStories.setFirst(serverStory);
-		// Save the previously-first story.
-		if (hadFirstStoryPreviously) {
-			saveStory(serverStories.get(serverStory.nextId));	
-		}
+		serverStories.add(story, function (newStory) {
+			var serverStory = serverStories.get(newStory.id);
+
+			stories.unshift(serverStory);
+			usefulStories.setFirst(serverStory);
+			// Save the previously-first story.
+			if (hadFirstStoryPreviously) {
+				saveStory(serverStories.get(serverStory.nextId));	
+			}
+
+			if (callback) {
+				callback();
+			}
+		});
 	};
 
-	var insertNewStory = function (newStory) {
-		insertFirstStory(newStory);
+	var insertNewStory = function (newStory, callback) {
+		insertFirstStory(newStory, callback);
 	};
 
 	$scope.create = function (newStory, callback) {
-		$http.get('/data/' + projectId + '/new-story-id')
-		.success(function (data) {
-			newStory.id = data;
-			insertNewStory(newStory);
-
+		insertNewStory(newStory, function () {
 			$scope.newStory = undefined;
 			$timeout(makeStoriesDraggable, 0);
 			if (callback) {
 				callback(newStory);
-			}
-		})
-		.error(function (data, status) {
-			console.log('failure');
-			console.log(status);
-			console.log(data);
+			}	
 		});
 	};
+
 
 	$scope.save = function (story) {
 		var storyToSave = serverStories.get(story.id);

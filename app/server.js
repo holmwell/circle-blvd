@@ -167,6 +167,7 @@ app.post("/data/story/", function (req, res) {
 	story.projectId = data.projectId;
 	story.summary = data.summary;
 	story.nextId = data.nextId;
+	story.isFirstStory = data.isFirstStory;
 
 	db.stories.add(story, 
 		function (story) {

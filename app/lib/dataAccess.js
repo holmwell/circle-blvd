@@ -17,7 +17,7 @@ var db = function() {
 				// business, except to cause more work
 				// in the future.
 				var modelStory = {
-					id: story.id,
+					id: story._id,
 					summary: story.summary,
 					projectId: story.projectId,
 					nextId: story.nextId,
@@ -49,10 +49,11 @@ var db = function() {
 
 		// 	});
 
-		couch.stories.add(story, function (err, story) {
+		couch.stories.add(story, function (err, body) {
 			if (err) {
 				return failure(err);
 			}
+			story.id = body.id;
 			success(story);
 		});
 	};

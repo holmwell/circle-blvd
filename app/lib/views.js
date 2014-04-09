@@ -73,7 +73,7 @@ var createViews = function(database, callback) {
 		url: '_design/stories',
 		body: 
 		{
-			version: "1.0.3",
+			version: "1.0.4",
 			language: "javascript",
 			views: {
 				byProjectId: {
@@ -86,9 +86,9 @@ var createViews = function(database, callback) {
 
 				byIds: {
 					map: function (doc) {
-						if (doc.type === "story" && doc.projectId && doc.id) {
+						if (doc.type === "story" && doc.projectId && doc._id) {
 							// composite key using project and story id.
-							var key = doc.projectId + "," + doc.id; 
+							var key = doc.projectId + "," + doc._id; 
 							emit(key, doc);
 						}
 					}
