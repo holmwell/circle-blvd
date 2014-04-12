@@ -209,23 +209,41 @@ var couch = function() {
 		// TODO: If we keep this (setting the story.type), 
 		// we want a way to tell the client how we modified it.
 		story.type = "story";
+		console.log("Adding ...");
+		console.log(story);
 		database.insert(story, callback);
 	};
 
 	var removeStory = function(story, callback) {
-		findStoryByIds(story.projectId, story.id, function (err, body) {
+		findStoryByIds(story.projectId, (story.id || story._id), function (err, body) {
 			if (err) {
 				return callback(err);
 			}
 
 			console.log(story);
-			// TODO: If story is not found.
+			// TODO: If story is not found. (We're fine!)
 			story._id = body._id;
 			story._rev = body._rev;
 
 			database.destroy(story._id, story._rev, function (err, body) {
 				callback(err, body);
 			});
+		});
+	};
+
+	var findStoryById = function (storyId, callback) {
+		getView("stories/byId", {key: storyId}, function (err, rows) {
+			if (err) {
+				callback(err);
+			}
+			else {
+				if (rows.length > 0) {
+					callback(null, rows[0]);
+				}
+				else {
+					callback(null, null);
+				}
+			}
 		});
 	};
 
@@ -238,14 +256,23 @@ var couch = function() {
 		});
 	};
 
+	var findStoriesByNextId = function (nextId, callback) {
+		// this works since nextIds are universal-unique ids.
+		// in other words, we don't need a projectId.
+		getView("stories/byNextId", {key: nextId}, callback);
+	}
+
 	var updateStory = function (story, callback) {
-		findStoryByIds(story.projectId, story.id, function (err, body) {
+		findStoryByIds(story.projectId, (story.id || story._id), function (err, body) {
 			if (err) {
 				return callback(err);
 			}
 
 			if (body === null) {
-				// TODO: Not found. Error ...
+				return callback({
+					message: "Update: Story not found",
+					story: story
+				});
 			}
 
 			// TODO: Where is the right place to change the appropriate fields?
@@ -255,7 +282,14 @@ var couch = function() {
 			story._rev = body._rev;
 			story.type = body.type;
 
-			database.insert(story, callback);
+			console.log("Updating ...");
+			console.log(story);
+			database.insert(story, function (err, body) {
+				if (err) {
+					console.log("Error.");
+				}
+				callback(err, body);
+			});
 		});
 	};
 
@@ -278,7 +312,9 @@ var couch = function() {
 		stories: {
 			add: addStory,
 			remove: removeStory,
+			findById: findStoryById,
 			findByProjectId: findStoriesByProjectId,
+			findByNextId: findStoriesByNextId,
 			update: updateStory
 		},
 		users: {

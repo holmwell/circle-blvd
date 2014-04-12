@@ -73,13 +73,21 @@ var createViews = function(database, callback) {
 		url: '_design/stories',
 		body: 
 		{
-			version: "1.0.5",
+			version: "1.0.6",
 			language: "javascript",
 			views: {
 				byProjectId: {
 					map: function(doc) {
 						if (doc.type === "story" && doc.projectId) {
 							emit(doc.projectId, doc);
+						}
+					}
+				},
+
+				byId: {
+					map: function (doc) {
+						if (doc.type === "story") {
+							emit(doc._id, doc);
 						}
 					}
 				},
@@ -95,6 +103,8 @@ var createViews = function(database, callback) {
 				},
 
 				byNextId: {
+					// TODO: Account for 'last' stories, so we can distinguish
+					// them from 'first' stories
 					map: function (doc) {
 						if (doc.type === "story" && doc.nextId) {
 							emit(doc.nextId, doc);

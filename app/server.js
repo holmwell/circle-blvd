@@ -166,8 +166,16 @@ app.post("/data/story/", function (req, res) {
 	var story = {};	
 	story.projectId = data.projectId;
 	story.summary = data.summary;
+
+	// TODO: Really, we don't need both of these.
+	//
+	// Either we specify what the 'next story' is
+	// or that the new story is going to be the
+	// first story, but both distinctions are
+	// unnecessary.
 	story.nextId = data.nextId;
-	story.isFirstStory = data.isFirstStory;
+	// The dataAccess layer takes care of this.
+	// story.isFirstStory = true; // data.isFirstStory;
 
 	db.stories.add(story, 
 		function (story) {

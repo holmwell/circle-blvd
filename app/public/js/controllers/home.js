@@ -151,12 +151,14 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		serverStories.add(story, function (newStory) {
 
 			var serverStory = serverStories.get(newStory.id);
-			usefulStories.setFirst(serverStory);
-			// Save the previously-first story.
-			if (hadFirstStoryPreviously) {
-				saveStory(serverStories.get(serverStory.nextId));	
+			if (newStory.isFirstStory) {
+				usefulStories.setFirst(serverStory);	
 			}
-
+			else {
+				// TODO: Probably want to refresh the whole list 
+				// from the server.
+			}
+			
 			// add the new story to the front of the backlog.
 			stories.unshift(serverStory);
 
