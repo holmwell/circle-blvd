@@ -220,8 +220,12 @@ var couch = function() {
 				return callback(err);
 			}
 
-			console.log(story);
-			// TODO: If story is not found. (We're fine!)
+			if (story === null) {
+				// Tried to remove a story that already is gone. 
+				// Relax.
+				return callback(null, null);
+			}
+
 			story._id = body._id;
 			story._rev = body._rev;
 
