@@ -266,6 +266,20 @@ var couch = function() {
 		getView("stories/byNextId", {key: nextId}, callback);
 	}
 
+	var n = function(s) {
+		return s || "";
+	}
+
+	var areStoriesEqual = function (a, b) {
+		// TODO: a 'for in' loop
+		return n(a.id) === n(b.id)
+		&& n(a.type) === n(b.type)
+		&& n(a.nextId) === n(b.nextId)
+		&& n(a.isFirstStory) === n(b.isFirstStory)
+		&& n(a.projectId) === n(b.projectId)
+		&& n(a.summary) === n(b.summary);
+	};
+
 	var updateStory = function (story, callback) {
 		findStoryByIds(story.projectId, (story.id || story._id), function (err, body) {
 			if (err) {
@@ -286,14 +300,26 @@ var couch = function() {
 			story._rev = body._rev;
 			story.type = body.type;
 
-			console.log("Updating ...");
-			console.log(story);
-			database.insert(story, function (err, body) {
-				if (err) {
-					console.log("Error.");
-				}
-				callback(err, body);
-			});
+			if (areStoriesEqual(body, story)) {
+				// Do nothing
+				console.log("Skipping update ...");
+				console.log(story);
+				callback(null, story);
+			}
+			else {
+				console.log("Updating ...");
+				console.log("From: ");
+				console.log(body);
+				console.log("To: ");
+				console.log(story);
+
+				database.insert(story, function (err, body) {
+					if (err) {
+						console.log("Error.");
+					}
+					callback(err, body);
+				});	
+			}
 		});
 	};
 

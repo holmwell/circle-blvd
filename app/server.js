@@ -190,15 +190,32 @@ app.post("/data/story/", function (req, res) {
 
 app.put("/data/story/", function (req, res) {
 	var story = req.body;
-	db.stories.update(story, 
-		function () {
-			res.send(200);
-		},
-		function (err) {
-			console.log(err);
-			res.send(500);
-		}
-	);
+	// TODO: Deprecate
+	res.send(200);
+	// db.stories.update(story, 
+	// 	function () {
+	// 		res.send(200);
+	// 	},
+	// 	function (err) {
+	// 		console.log(err);
+	// 		res.send(500);
+	// 	}
+	// );
+});
+
+app.put("/data/story/move", function (req, res) {
+	var body = req.body;
+	var story = body.story;
+	var newNextId = body.newNextId;
+	console.log("Moving ...");
+
+	db.stories.move(story, newNextId, function (response) {
+		res.send(200, response);
+	},
+	function (err) {
+		console.log(err);
+		res.send(500);
+	});
 });
 
 app.put("/data/story/remove", function (req, res) {

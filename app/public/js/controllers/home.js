@@ -46,6 +46,29 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 					console.log(data);
 				});
 			},
+			move: function (story, newNextStory, callback) {
+				var body = {};
+				body.story = story;
+
+				if (newNextStory) {
+					body.newNextId = newNextStory.id;
+				}
+				else {
+					body.newNextId = null;
+				}
+
+				$http.put('/data/story/move', body)
+				.success(function (response) {
+					// TODO: Move stuff around or something
+					callback(null, response);
+				})
+				.error(function (data, status) {
+					callback({
+						status: status,
+						data: data
+					});
+				});
+			},
 			get: function (storyId) {
 				return s[storyId];
 			},
@@ -156,9 +179,10 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			}
 			else {
 				// TODO: Probably want to refresh the whole list 
-				// from the server.
+				// from the server, because some crazy things are
+				// happening!
 			}
-			
+
 			// add the new story to the front of the backlog.
 			stories.unshift(serverStory);
 
@@ -306,69 +330,78 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			return;
 		}
 
-		// If the moved story was the first story, the preMove.storyAfter
-		// is now the first story (if it exists).
-		var storiesToSave = [];
-		if (usefulStories.getFirst().id === movedStory.id && preMove.storyAfter) {
-		 	usefulStories.setFirst(preMove.storyAfter);
-		 	storiesToSave[preMove.storyAfter.id] = preMove.storyAfter;
-		}
-
-		// We need to update 'nextId' of the following:
-		// 1. The story before the moved story, before it was moved.		
-		if (preMove.storyBefore) {
-			preMove.storyBefore.nextId = preMove.storyAfter ? preMove.storyAfter.id : undefined;
-			storiesToSave[preMove.storyBefore.id] = preMove.storyBefore;
-		}
-		
-		// 2. The story before the moved story, after it was moved.
-		if (postMove.storyBefore) {
-			postMove.storyBefore.nextId = movedStory.id;
-			storiesToSave[postMove.storyBefore.id] = postMove.storyBefore;
-		}
-		else {
-			// No need to set the "nextId" on the "storyBefore," because 
-			// there isn't one. Instead, we know that the moved story
-			// is now the first story.
-			storiesToSave[usefulStories.getFirst().id] = usefulStories.getFirst();
-			usefulStories.setFirst(movedStory);
-			storiesToSave[movedStory.id] = movedStory;
-		}
-
-		// 3. The story that was moved, unless it's now the last story.
-		movedStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : undefined;
-		storiesToSave[movedStory.id] = movedStory;	
-		
-		// if a story is to be saved, only do it once, to avoid
-		// simple document conflicts.
-		for (var storyId in storiesToSave) {
-			saveStory(storiesToSave[storyId]);
-		}
-
-		// Reset the scope-data binding. The YUI drag-and-drop stuff
-		// manipulates the DOM, and we need to update our stories array
-		// somehow to reflect the new order of things.
-		//
-		// TODO: This code is almost certainly the wrong way to do things
-		// if we want to be fast with a lot of elements. It seems to work, 
-		// though, and it's all done on the client side.
-		$scope.$apply(function () {
-			stories = [];
-			$scope.stories = stories;
-		});
-
-		$scope.$apply(function () {
-			var firstStory = usefulStories.getFirst();
-			var currentStory = firstStory;
-			while (currentStory) {
-				stories.push(currentStory);
-				currentStory = serverStories.get(currentStory.nextId);
+		var newNextId = storyAfter.id;
+		serverStories.move(movedStory, postMove.storyAfter, function (err, response) {
+			// If the moved story was the first story, the preMove.storyAfter
+			// is now the first story (if it exists).
+			var storiesToSave = [];
+			if (usefulStories.getFirst().id === movedStory.id && preMove.storyAfter) {
+			 	usefulStories.setFirst(preMove.storyAfter);
+			 	storiesToSave[preMove.storyAfter.id] = preMove.storyAfter;
 			}
 
-			$scope.stories = stories;
-		});	
+			// We need to update 'nextId' of the following:
+			// 1. The story before the moved story, before it was moved.		
+			if (preMove.storyBefore) {
+				preMove.storyBefore.nextId = preMove.storyAfter ? preMove.storyAfter.id : "last";
+				storiesToSave[preMove.storyBefore.id] = preMove.storyBefore;
+			}
+			
+			// 2. The story before the moved story, after it was moved.
+			if (postMove.storyBefore) {
+				postMove.storyBefore.nextId = movedStory.id;
+				storiesToSave[postMove.storyBefore.id] = postMove.storyBefore;
+			}
+			else {
+				// No need to set the "nextId" on the "storyBefore," because 
+				// there isn't one. Instead, we know that the moved story
+				// is now the first story.
+				storiesToSave[usefulStories.getFirst().id] = usefulStories.getFirst();
+				usefulStories.setFirst(movedStory);
+				storiesToSave[movedStory.id] = movedStory;
+			}
 
-		$timeout(makeStoriesDraggable, 0);
+			// 3. The story that was moved, unless it's now the last story.
+			movedStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : "last";
+			storiesToSave[movedStory.id] = movedStory;	
+			
+			// if a story is to be saved, only do it once, to avoid
+			// simple document conflicts.
+			for (var storyId in storiesToSave) {
+				saveStory(storiesToSave[storyId]);
+			}
+
+			// Reset the scope-data binding. The YUI drag-and-drop stuff
+			// manipulates the DOM, and we need to update our stories array
+			// somehow to reflect the new order of things.
+			//
+			// TODO: This code is almost certainly the wrong way to do things
+			// if we want to be fast with a lot of elements. It seems to work, 
+			// though, and it's all done on the client side.			
+			var applyThings = function () {
+				$scope.$apply(function () {
+					stories = [];
+					$scope.stories = stories;
+				});
+
+				$scope.$apply(function () {
+					var firstStory = usefulStories.getFirst();
+					var currentStory = firstStory;
+					while (currentStory) {
+						stories.push(currentStory);
+						currentStory = serverStories.get(currentStory.nextId);
+					}
+
+					$scope.stories = stories;
+				});	
+
+				$timeout(makeStoriesDraggable, 0);
+			};
+
+			// We do this to make sure that $apply isn't
+			// already being called, which happens for fun sometimes.
+			$timeout(applyThings, 0);
+		});
 	};
 
 	var attachToDragEvents = function (Y) {

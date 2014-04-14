@@ -73,12 +73,13 @@ var createViews = function(database, callback) {
 		url: '_design/stories',
 		body: 
 		{
-			version: "1.0.6",
+			version: "1.0.7",
 			language: "javascript",
 			views: {
 				byProjectId: {
 					map: function(doc) {
 						if (doc.type === "story" && doc.projectId) {
+							doc.nextId = doc.nextId || "last";
 							emit(doc.projectId, doc);
 						}
 					}
@@ -87,6 +88,7 @@ var createViews = function(database, callback) {
 				byId: {
 					map: function (doc) {
 						if (doc.type === "story") {
+							doc.nextId = doc.nextId || "last";
 							emit(doc._id, doc);
 						}
 					}
@@ -97,17 +99,16 @@ var createViews = function(database, callback) {
 						if (doc.type === "story" && doc.projectId && doc._id) {
 							// composite key using project and story id.
 							var key = doc.projectId + "," + doc._id; 
+							doc.nextId = doc.nextId || "last";
 							emit(key, doc);
 						}
 					}
 				},
 
 				byNextId: {
-					// TODO: Account for 'last' stories, so we can distinguish
-					// them from 'first' stories
 					map: function (doc) {
-						if (doc.type === "story" && doc.nextId) {
-							emit(doc.nextId, doc);
+						if (doc.type === "story") {
+							emit(doc.nextId || "last", doc);	
 						}
 					}
 				}
