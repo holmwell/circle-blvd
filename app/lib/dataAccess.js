@@ -417,10 +417,68 @@ var db = function() {
 	// 	step1(story);
 	// };
 
+	var getFirstStory = function (projectId, callback) {
+		if (!projectId) {
+			callback(null, null);
+		}
+
+		couch.stories.findFirst(projectId, callback);
+	};
+
 
 	var moveStory = function (story, newNextId, success, failure) {
-		// storyA ---> storyToMove ---> ... ---> storyC --> newLocation
-		// TODO: We can parallelize this
+		var storiesToSave = {};
+		var addToStoriesToSave = function (s) {
+			if (s) {
+				if (storiesToSave[s.id]) {
+					console.log("DUPLICATE SAVE. DOC CONFLICT. INTEGRITY BROKEN.");
+					console.log(storiesToSave[s.id]);
+					console.log(s);
+				}
+				storiesToSave[s.id] = s;
+			}
+		};
+
+		var saveStories = function () {
+			var areWeDone = {};
+			var hadAsyncFailure = false;
+
+			var maybeSuccess = function () {
+				console.log(areWeDone);
+
+				for (var doneId in areWeDone) {
+					if (!areWeDone[doneId]) {
+						console.log("Not done with " + storiesToSave[doneId].summary);
+						return;
+					}
+				}
+				console.log("Move success.");
+				success(story);
+			};
+
+			for (var storyId in storiesToSave) {
+				areWeDone[storyId] = false;
+			}
+
+			for (var storyId in storiesToSave) {
+				var storyToSave = storiesToSave[storyId];
+				console.log("Saving " + storyToSave.summary + " ...");
+
+				couch.stories.update(storyToSave, function (err, updateResponse) {
+					if (err && !hadAsyncFailure) {
+						hadAsyncFailure = true;
+						console.log(err);
+						failure(err);
+					}
+					else {
+						areWeDone[updateResponse.id] = true;
+						console.log("Saved " + storiesToSave[updateResponse.id].summary + ".");
+						maybeSuccess();	
+					}
+				});
+			}
+		};
+
 		couch.stories.findById(story.id, function (err, storyToMove) {
 			if (err) {
 				return failure(err);
@@ -433,40 +491,74 @@ var db = function() {
 					if (err) {
 						return failure(err);
 					}
-
-					// Assume everything is found how we want it.
-					storyA = storyA[0];
-					storyC = storyC[0];
-
-					// This is the base case. It does not account for situations
-					// where the first or the last story are involved.
-					storyA.nextId = storyToMove.nextId;						
-					storyToMove.nextId = newNextId;
-					storyC.nextId = storyToMove.id;
-
-					couch.stories.update(storyA, function (err) {
+					couch.stories.findById(newNextId, function (err, storyE) {
 						if (err) {
 							return failure(err);
 						}
-						couch.stories.update(storyToMove, function (err) {
+						couch.stories.findById(storyToMove.nextId, function (err, nextStory) {
 							if (err) {
 								return failure(err);
-							}
-							couch.stories.update(storyC, function (err) {
+							}						
+							getFirstStory(storyToMove.projectId, function (err, firstStory) {
 								if (err) {
-									return failure(err);
+									return (failure);
+								}
+
+								// storyA ---> storyToMove ---> ... ---> storyC --> newLocation
+								// TODO: We can parallelize this
+
+								// Assume everything is found how we want it.
+								storyA = storyA ? storyA[0] : null;
+								storyC = storyC ? storyC[0] : null;
+								storyE = storyE ? storyE[0] : null;
+
+								if (storyA) {
+									// base case
+									storyA.nextId = storyToMove.nextId;	
+									addToStoriesToSave(storyA);
 								}
 								else {
-									success(storyToMove);
+									// storyToMove is moved from the first spot
+									// (at move-start, nothing is pointing to it)
+									storyToMove.isFirstStory = false;
+									nextStory.isFirstStory = true;
+									addToStoriesToSave(nextStory);
 								}
+								
+								storyToMove.nextId = newNextId;
+
+								if (storyC) {
+									// base case
+									storyC.nextId = storyToMove.id;
+									if (storiesToSave[storyC.id]) {
+										storiesToSave[storyC.id].nextId = storyToMove.id;
+									}
+									else {
+										storyC.nextId = storyToMove.id;
+										addToStoriesToSave(storyC);	
+									}
+								}
+								else {
+									// storyToMove is moved to the first spot
+									storyToMove.isFirstStory = true;
+									// Sometimes StoryA and FirstStory are the same.
+									if (storiesToSave[firstStory.id]) {
+										storiesToSave[firstStory.id].isFirstStory = false;
+									}
+									else {
+										firstStory.isFirstStory = false;
+										addToStoriesToSave(firstStory);	
+									}
+								}
+
+								addToStoriesToSave(storyToMove);
+								saveStories();
 							});
 						});
 					});
 				});
 			});
 		});
-
-		success(story);
 	};
 
 	var removeStory = function (story, success, failure) {

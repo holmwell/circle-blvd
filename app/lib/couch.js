@@ -235,6 +235,7 @@ var couch = function() {
 		});
 	};
 
+
 	var findStoryById = function (storyId, callback) {
 		getView("stories/byId", {key: storyId}, function (err, rows) {
 			if (err) {
@@ -263,8 +264,32 @@ var couch = function() {
 	var findStoriesByNextId = function (nextId, callback) {
 		// this works since nextIds are universal-unique ids.
 		// in other words, we don't need a projectId.
+		//
+		// TODO: LIES, each project has a story with a "last" nextId
 		getView("stories/byNextId", {key: nextId}, callback);
 	}
+
+	var findFirstByProjectId = function (projectId, callback) {
+		getView(
+			"stories/firstsByProjectId",
+			{key: projectId}, 
+			function (err, rows) {
+				if (err) {
+					callback(err);
+				}
+				else {
+					if (rows.length > 0) {
+						// TODO: If rows.length > 1 then we
+						// have a data integrity issue.
+						callback(null, rows[0]);
+					}
+					else {
+						callback(null, null);
+					}
+				}
+			}
+		);
+	};
 
 	var n = function(s) {
 		return s || "";
@@ -281,6 +306,10 @@ var couch = function() {
 	};
 
 	var updateStory = function (story, callback) {
+		if (!story) {
+			return callback();
+		}
+
 		findStoryByIds(story.projectId, (story.id || story._id), function (err, body) {
 			if (err) {
 				return callback(err);
@@ -345,6 +374,7 @@ var couch = function() {
 			findById: findStoryById,
 			findByProjectId: findStoriesByProjectId,
 			findByNextId: findStoriesByNextId,
+			findFirst: findFirstByProjectId,
 			update: updateStory
 		},
 		users: {

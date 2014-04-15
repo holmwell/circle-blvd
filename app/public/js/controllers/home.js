@@ -54,7 +54,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 					body.newNextId = newNextStory.id;
 				}
 				else {
-					body.newNextId = null;
+					body.newNextId = "last";
 				}
 
 				$http.put('/data/story/move', body)
