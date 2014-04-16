@@ -483,7 +483,7 @@ var db = function() {
 			if (err) {
 				return failure(err);
 			}
-			couch.stories.findByNextId(storyToMove.id, function (err, storyA) {
+			couch.stories.findByNextId(storyToMove.id, function (err, preMovePreviousStory) {
 				if (err) {
 					return failure(err);
 				}
@@ -495,7 +495,7 @@ var db = function() {
 						if (err) {
 							return failure(err);
 						}
-						couch.stories.findById(storyToMove.nextId, function (err, nextStory) {
+						couch.stories.findById(storyToMove.nextId, function (err, preMoveNextStory) {
 							if (err) {
 								return failure(err);
 							}						
@@ -504,25 +504,27 @@ var db = function() {
 									return (failure);
 								}
 
-								// storyA ---> storyToMove ---> ... ---> storyC --> newLocation
+								// preMovePreviousStory ---> storyToMove ---> ... ---> storyC --> newLocation
 								// TODO: We can parallelize this
 
 								// Assume everything is found how we want it.
-								storyA = storyA ? storyA[0] : null;
+								preMovePreviousStory = preMovePreviousStory ? preMovePreviousStory[0] : null;
 								storyC = storyC ? storyC[0] : null;
 								storyE = storyE ? storyE[0] : null;
 
-								if (storyA) {
+								if (preMovePreviousStory) {
 									// base case
-									storyA.nextId = storyToMove.nextId;	
-									addToStoriesToSave(storyA);
+									preMovePreviousStory.nextId = storyToMove.nextId;	
+									addToStoriesToSave(preMovePreviousStory);
 								}
-								else {
-									// storyToMove is moved from the first spot
-									// (at move-start, nothing is pointing to it)
+								else if (preMoveNextStory) {
+									// if there is no preMovePreviousStory, that
+									// means storyToMove is the first story.
+									//
+									// So, the new first story is the preMoveNextStory.
 									storyToMove.isFirstStory = false;
-									nextStory.isFirstStory = true;
-									addToStoriesToSave(nextStory);
+									preMoveNextStory.isFirstStory = true;
+									addToStoriesToSave(preMoveNextStory);									
 								}
 								
 								storyToMove.nextId = newNextId;
@@ -541,7 +543,7 @@ var db = function() {
 								else {
 									// storyToMove is moved to the first spot
 									storyToMove.isFirstStory = true;
-									// Sometimes StoryA and FirstStory are the same.
+									// Sometimes preMovePreviousStory and FirstStory are the same.
 									if (storiesToSave[firstStory.id]) {
 										storiesToSave[firstStory.id].isFirstStory = false;
 									}
