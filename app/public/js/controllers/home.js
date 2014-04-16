@@ -327,6 +327,15 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 
 		var newNextId = storyAfter.id;
 		serverStories.move(movedStory, postMove.storyAfter, function (err, response) {
+			if (err) {
+				// We failed. Probably because of a data integrity issue
+				// on the server that we need to wait out. 
+				//
+				// TODO: Get the latest list of stories, and notify
+				// the guest what's up.
+				console.log(err);
+				return;
+			}
 			// If the moved story was the first story, the preMove.storyAfter
 			// is now the first story (if it exists).
 			var storiesToSave = [];

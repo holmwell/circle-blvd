@@ -431,6 +431,9 @@ var db = function() {
 		var addToStoriesToSave = function (s) {
 			if (s) {
 				if (storiesToSave[s.id]) {
+					// This is a coding error and if it happens
+					// there is a fixable issue below. Or maybe
+					// rewrite this function so it is better.
 					console.log("DUPLICATE SAVE. DOC CONFLICT. INTEGRITY BROKEN.");
 					console.log(storiesToSave[s.id]);
 					console.log(s);
@@ -483,6 +486,12 @@ var db = function() {
 			if (err) {
 				return failure(err);
 			}
+			if (!storyToMove) {
+				return failure({
+					message: "Sorry, the story you're trying to move was deleted by someone else.",
+					story: story
+				});
+			}
 			couch.stories.findByNextId(storyToMove.id, function (err, preMovePreviousStory) {
 				if (err) {
 					return failure(err);
@@ -495,10 +504,27 @@ var db = function() {
 						if (err) {
 							return failure(err);
 						}
+						if (!storyE) {
+							return failure({
+								message: "Someone deleted the story you're trying "
+								+ "to put this one in front of. Maybe refresh your story list "
+								+ "and try again.",
+								story: story
+							});
+						}
 						couch.stories.findById(storyToMove.nextId, function (err, preMoveNextStory) {
 							if (err) {
 								return failure(err);
-							}						
+							}
+							// This might happen if there is a ton of activity, I guess.
+							if (!preMoveNextStory && storyToMove.nextId !== "last") {
+								return failure({
+									message: "There is a lot of activity on the project. " +
+									"Wait a little bit and try again.",
+									story: story
+								});
+							}
+
 							getFirstStory(storyToMove.projectId, function (err, firstStory) {
 								if (err) {
 									return (failure);
