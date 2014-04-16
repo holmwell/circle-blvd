@@ -143,19 +143,7 @@ app.get("/data/:projectId/stories", function (req, res) {
 // both the story list and the first story (in two different things)
 app.get("/data/:projectId/first-story", function (req, res) {
 	var projectId = req.params.projectId;
-
-	// TODO: Could make a view to get the first story for a project.
-	db.stories.findByProjectId(projectId, function (err, stories) {
-		var firstStory = undefined;
-		for (var key in stories) {
-			var story = stories[key];
-			// save the first story
-			if (story.isFirstStory) {
-				firstStory = story;
-				break;
-			}
-		};
-
+	db.stories.getFirstByProjectId(projectId, function (err, firstStory) {
 		res.send(200, firstStory);
 	});
 });

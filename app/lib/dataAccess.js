@@ -698,6 +698,8 @@ var db = function() {
 			move: moveStory,
 			remove: removeStory,
 			findByProjectId: findStoriesByProjectId,
+			// TODO: Maybe don't return the raw database object
+			getFirstByProjectId: getFirstStory,
 			update: updateStory
 		},
 		users: { 
