@@ -605,9 +605,23 @@ var db = function() {
 				if (err) {
 					return failure(err);
 				}
+
 				couch.stories.findById(storyToRemove.nextId, function (err, nextStory) {
 					if (err) {
 						return failure(err);
+					}
+
+					if (storyToRemove.nextId === "last") {
+						nextStory = {};
+						nextStory.id = "last";
+					}
+					else if (!nextStory) {
+						// Someone deleted the nextStory before we could access it.
+						// Server usage is heavy.
+						return failure({
+							message: "There is a lot of activity on the server right now. " 
+							+ "Wait a little and try again."
+						});
 					}
 
 					previousStory = previousStory ? previousStory[0] : null;
