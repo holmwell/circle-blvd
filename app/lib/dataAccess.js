@@ -569,6 +569,12 @@ var db = function() {
 			if (err) {
 				return failure(err);
 			}
+
+			if (!storyToRemove) {
+				// Story is already gone!
+				return success();			
+			}
+
 			couch.stories.findByNextId(storyToRemove.id, function (err, previousStory) {
 				if (err) {
 					return failure(err);
@@ -593,7 +599,7 @@ var db = function() {
 					}
 					else {
 						// nothing to do.
-						success();
+						return success();
 					}
 
 					couch.stories.update(storyToSave, function (err) {
@@ -604,7 +610,7 @@ var db = function() {
 							if (err) {
 								return failure(err);
 							}
-							success();
+							return success();
 						});
 					});
 				});
