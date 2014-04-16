@@ -564,11 +564,51 @@ var db = function() {
 	};
 
 	var removeStory = function (story, success, failure) {
-		couch.stories.remove(story, function (err) {
+
+		couch.stories.findById(story.id, function (err, storyToRemove) {
 			if (err) {
 				return failure(err);
 			}
-			success();
+			couch.stories.findByNextId(storyToRemove.id, function (err, previousStory) {
+				if (err) {
+					return failure(err);
+				}
+				couch.stories.findById(storyToRemove.nextId, function (err, nextStory) {
+					if (err) {
+						return failure(err);
+					}
+
+					previousStory = previousStory ? previousStory[0] : null;
+
+					var storyToSave;
+					if (previousStory) {
+						// most-common case
+						previousStory.nextId = nextStory.id;
+						storyToSave = previousStory;
+					}
+					else if (nextStory) {
+						// TODO: assert(storyToRemove.isFirstStory);
+						nextStory.isFirstStory = true;
+						storyToSave = nextStory;
+					}
+					else {
+						// nothing to do.
+						success();
+					}
+
+					couch.stories.update(storyToSave, function (err) {
+						if (err) {
+							return failure(err);
+						}
+						couch.stories.remove(story, function (err) {
+							if (err) {
+								return failure(err);
+							}
+							success();
+						});
+					});
+				});
+			});
 		});
 	};
 

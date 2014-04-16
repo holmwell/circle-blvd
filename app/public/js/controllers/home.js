@@ -253,14 +253,9 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			var previousStory = getPreviousStory(story);
 			if (!previousStory) {
 				usefulStories.setFirst(nextStory);
-				// TODO: Should this be saveStory()?
-				if (nextStory) {
-					serverStories.set(nextStory.id, nextStory);	
-				}
 			}
 			else {
 				previousStory.nextId = nextStory ? nextStory.id : "last";
-				serverStories.set(previousStory.id, previousStory);
 			}
 
 			var storyIndex = stories.indexOf(storyToRemove);
