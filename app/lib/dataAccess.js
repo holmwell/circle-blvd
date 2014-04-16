@@ -504,7 +504,7 @@ var db = function() {
 						if (err) {
 							return failure(err);
 						}
-						if (!storyE) {
+						if (!storyE && newNextId !== "last") {
 							return failure({
 								message: "Someone deleted the story you're trying "
 								+ "to put this one in front of. Maybe refresh your story list "
