@@ -367,9 +367,13 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			
 			// if a story is to be saved, only do it once, to avoid
 			// simple document conflicts.
-			for (var storyId in storiesToSave) {
-				saveStory(storiesToSave[storyId]);
-			}
+			//
+			// This functionality has moved to the server side.
+			// TODO: We'll want to react to the server response.
+			//
+			// for (var storyId in storiesToSave) {
+			// 	saveStory(storiesToSave[storyId]);
+			// }
 
 			// Reset the scope-data binding. The YUI drag-and-drop stuff
 			// manipulates the DOM, and we need to update our stories array
