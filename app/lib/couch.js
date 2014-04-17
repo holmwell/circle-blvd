@@ -1,6 +1,7 @@
 var nano = require('nano');
 var views = require('./views.js');
 var encrypt = require('./encrypt.js');
+var uuid 	= require('node-uuid');
 
 var couch = function() {
 	var databaseUrl = 'http://localhost:5984';
@@ -352,6 +353,73 @@ var couch = function() {
 		});
 	};
 
+	var storiesTransaction = function (stories, callback) {
+
+		var transaction = {};
+		transaction.id = uuid.v4();
+		transaction.docs = [];
+
+		for (var storyIndex in stories) {
+			var story = stories[storyIndex];
+			transaction.docs.push({
+				id: story._id,
+				rev: story._rev
+			});
+		}
+
+		for (var storyIndex in stories) {
+			stories[storyIndex].transaction = transaction;
+		}
+
+		var options = {
+			"all_or_nothing": true
+		};
+
+		var bulkDoc = {};
+		bulkDoc.docs = [];
+		for (var storyIndex in stories) {
+			bulkDoc.docs.push(stories[storyIndex]);
+		}
+
+		database.bulk(bulkDoc, options, function (err, response) {
+			if (err) {
+				return callback(err);
+			}
+
+			var transResponse = {};
+			transResponse.id = transaction.id;
+			transResponse.docs = response;
+
+			for (var docIndex in response) {
+				if (!response[docIndex].ok) {
+					return callback({
+						message: "Response not ok.",
+						response: response
+					});
+				}
+			}
+
+			for (var docIndex in response) {
+				for (var storyIndex in stories) {
+					if (stories[storyIndex]._id === response[docIndex].id) {
+						stories[storyIndex]._rev = response[docIndex].rev;
+						stories[storyIndex].transaction = undefined;
+						stories[storyIndex].lastTransactionId = transaction.id;	
+					}
+				}
+			}
+
+			bulkDoc = {};
+			bulkDoc.docs = [];
+			for (var storyIndex in stories) {
+				bulkDoc.docs.push(stories[storyIndex]);
+			}
+
+			database.bulk(bulkDoc, options, callback);
+		});
+	};
+
+
 	// TODO: Note, this causes the database to be
 	// created immediately, which we might not want
 	// to necessarily do.
@@ -375,6 +443,7 @@ var couch = function() {
 			findByProjectId: findStoriesByProjectId,
 			findByNextId: findStoriesByNextId,
 			findFirst: findFirstByProjectId,
+			transaction: storiesTransaction,
 			update: updateStory
 		},
 		users: {

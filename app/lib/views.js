@@ -73,7 +73,7 @@ var createViews = function(database, callback) {
 		url: '_design/stories',
 		body: 
 		{
-			version: "1.0.8",
+			version: "1.0.10",
 			language: "javascript",
 			views: {
 				byProjectId: {
@@ -120,6 +120,60 @@ var createViews = function(database, callback) {
 								emit(doc.projectId, doc);
 							}
 						}
+					}
+				}
+			},
+
+			validate_doc_update: function (newDoc, oldDoc, userCtx) {
+				
+				// Someone is trying to start a transaction involving
+				// a list of documents.
+				if (newDoc.transaction && !oldDoc.transaction) {	
+					var transactionDocs = newDoc.transaction.docs;
+					var isAllowed = false;
+					var message = "Document is not part of the transaction.";
+
+					for (var docIndex in transactionDocs) {
+						if (transactionDocs[docIndex].id === newDoc._id) {
+							if (transactionDocs[docIndex].rev === oldDoc._rev) {
+								isAllowed = true;
+								break;
+							}
+							else {
+								message = "Document revision is not the latest.";
+								throw({forbidden: message});
+							}
+						}
+					}
+
+					if (!isAllowed) {
+						throw({forbidden: message});
+					}
+				}
+
+				// Someone is in the middle of a transaction. 
+				//
+				// We are not doing ACID transactions. In other words,
+				// transactions are not isolated, and only one is allowed
+				// on a document at a time.
+				if (newDoc.transaction && oldDoc.transaction) {
+					if (newDoc.transaction.id === oldDoc.transaction.id) {
+						// We're fine.
+					}
+					else {
+						throw({forbidden: "A different transaction is in progress. Wait a little."})
+					}
+				}
+
+				// Someone is trying to finish a transaction.
+				// Or someone is trying to perform an operation on an
+				// older document while we're doing a transaction.
+				if (oldDoc.transaction && !newDoc.transaction) {
+					if (newDoc.lastTransactionId === oldDoc.transaction.id) {
+						// We're fine.
+					}
+					else {
+						throw({forbidden: "Another transaction is in progress. Wait a little."});
 					}
 				}
 			}

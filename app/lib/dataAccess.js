@@ -443,43 +443,19 @@ var db = function() {
 		};
 
 		var saveStories = function () {
-			var areWeDone = {};
-			var hadAsyncFailure = false;
-
-			var maybeSuccess = function () {
-				console.log(areWeDone);
-
-				for (var doneId in areWeDone) {
-					if (!areWeDone[doneId]) {
-						console.log("Not done with " + storiesToSave[doneId].summary);
-						return;
-					}
+			couch.stories.transaction(storiesToSave, function (err, response) {
+				if (err) {
+					return failure(err);
 				}
-				console.log("Move success.");
+
+				// TODO: The response is a list of documents, and it might
+				// be possible (is it?) that some document conflicts occurred,
+				// in which case our data no longer has integrity and we need
+				// to fix that.
+				console.log(response);
+				console.log("Move success?");
 				success(story);
-			};
-
-			for (var storyId in storiesToSave) {
-				areWeDone[storyId] = false;
-			}
-
-			for (var storyId in storiesToSave) {
-				var storyToSave = storiesToSave[storyId];
-				console.log("Saving " + storyToSave.summary + " ...");
-
-				couch.stories.update(storyToSave, function (err, updateResponse) {
-					if (err && !hadAsyncFailure) {
-						hadAsyncFailure = true;
-						console.log(err);
-						failure(err);
-					}
-					else {
-						areWeDone[updateResponse.id] = true;
-						console.log("Saved " + storiesToSave[updateResponse.id].summary + ".");
-						maybeSuccess();	
-					}
-				});
-			}
+			});
 		};
 
 		couch.stories.findById(story.id, function (err, storyToMove) {
