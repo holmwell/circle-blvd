@@ -55,11 +55,11 @@ h2, h3 {
 
 /* home */
 #backlog {
-  margin-top: 2.5em;
-  background-color: #eee;
+  margin-top: 3.5em;
 }
 .story {
-  border: dotted red 1px;
+  /*border: solid #ccc 1px;*/
+  background-color: #eee;
   padding: 0.5ex;
   padding-left: 1.5ex;
   margin: auto;
@@ -68,9 +68,12 @@ h2, h3 {
   width: 50%;
   min-width: 200px;
 }
+.story:hover {
+  background-color: #f9f9f9;
+}
 
 .first {
-  background-color: yellow;
+  background-color: #f5f5f5;
 }
 
 .story-id {
@@ -102,6 +105,14 @@ h2, h3 {
   padding: 0.5ex;
   padding-left: 1.5ex;
   cursor: default;
+}
+#new-story:hover {
+  background-color: #eee;
+}
+
+input:focus {
+  border-color: #999 !important;
+  box-shadow: none !important;
 }
 
 /* admin */
