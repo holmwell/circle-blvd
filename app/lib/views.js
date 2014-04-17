@@ -73,7 +73,7 @@ var createViews = function(database, callback) {
 		url: '_design/stories',
 		body: 
 		{
-			version: "1.0.10",
+			version: "1.0.11",
 			language: "javascript",
 			views: {
 				byProjectId: {
@@ -125,7 +125,11 @@ var createViews = function(database, callback) {
 			},
 
 			validate_doc_update: function (newDoc, oldDoc, userCtx) {
-				
+				if (!newDoc || !oldDoc) {
+					// do nothing.
+					return;
+				}
+
 				// Someone is trying to start a transaction involving
 				// a list of documents.
 				if (newDoc.transaction && !oldDoc.transaction) {	
