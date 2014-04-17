@@ -298,12 +298,16 @@ var couch = function() {
 
 	var areStoriesEqual = function (a, b) {
 		// TODO: a 'for in' loop
+		// Also, do we even need this?
 		return n(a.id) === n(b.id)
 		&& n(a.type) === n(b.type)
 		&& n(a.nextId) === n(b.nextId)
 		&& n(a.isFirstStory) === n(b.isFirstStory)
 		&& n(a.projectId) === n(b.projectId)
-		&& n(a.summary) === n(b.summary);
+		&& n(a.summary) === n(b.summary)
+		&& n(a.description) === n(b.description)
+		&& n(a.status) === n(b.status)
+		&& n(a.owner) === n(b.owner);
 	};
 
 	var updateStory = function (story, callback) {

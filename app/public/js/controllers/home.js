@@ -22,6 +22,12 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		});
 	};
 
+	var apply = function () {
+		$scope.$apply(function () {
+
+		});
+	};
+
 	// wrap around getting and setting the server-side stories,
 	// so we can push to the server when we set things. there's
 	// probably a better way / pattern for doing this. feel free
@@ -125,22 +131,44 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	$scope.select = function (story) {
 		// TODO: This does NOT work on the story that
 		// was most recently moved.
-		if (selectedStory) {
-			selectedStory.isSelected = false;
+		
+		if (story.justDeselected) {
+			// HACK: So right now whenever we call deselect,
+			// the click event also bubbles up (or whatever)
+			// to this method.
+			story.justDeselected = undefined;
+			return;
 		}
 
-		story.isSelected = true;
-		selectedStory = story;
+		// Do not refocus stuff if we're already on this story.
+		if (!story.isSelected) {
+			if (selectedStory) {
+				selectedStory.isSelected = false;
+			}
 
-		var boxId = "boxForStory" + story.id;
-		var foundBox = document.getElementById(boxId);
-		if (foundBox) {
-			// console.log(foundBox);
-			// We want this to happen after this method
-			// finishes.
-			$timeout(function() {
-				foundBox.focus();
-			}, 0);
+			story.isSelected = true;
+			selectedStory = story;
+
+			var boxId = "boxForStory" + story.id;
+			var foundBox = document.getElementById(boxId);
+			if (foundBox) {
+				// console.log(foundBox);
+				// We want this to happen after this method
+				// finishes.
+				$timeout(function() {
+					foundBox.focus();
+				}, 0);
+			}	
+		}	
+	};
+
+	$scope.deselect = function (story) {
+
+		if (story && story.isSelected) {
+			story.isSelected = false;
+			story.justDeselected = true;
+			
+			selectedStory = undefined;
 		}
 	};
 
@@ -210,7 +238,14 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	$scope.save = function (story) {
 		var storyToSave = serverStories.get(story.id);
 		
+		// TODO: We can probably just have this on the 
+		// server side, but it's nice to have clean
+		// traffic I guess.
 		storyToSave.summary = story.summary;
+		storyToSave.owner = story.owner;
+		storyToSave.status = story.status;
+		storyToSave.description = story.description;
+
 		// TODO: Probably want a callback here
 		saveStory(storyToSave);
 

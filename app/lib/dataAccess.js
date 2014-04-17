@@ -26,10 +26,14 @@ var db = function() {
 				// in the future.
 				var modelStory = {
 					id: story._id,
-					summary: story.summary,
 					projectId: story.projectId,
 					nextId: story.nextId || "last",
-					isFirstStory: story.isFirstStory
+					isFirstStory: story.isFirstStory,
+
+					summary: story.summary,
+					owner: story.owner,
+					status: story.status,
+					description: story.description
 				};
 
 				stories[modelStory.id] = modelStory;
@@ -437,6 +441,9 @@ var db = function() {
 		couch.stories.findById(story.id, function (err, storyToSave) {
 
 			storyToSave.summary = story.summary;
+			storyToSave.owner = story.owner;
+			storyToSave.status = story.status || "";
+			storyToSave.description = story.description;
 
 			updateStory(storyToSave, success, failure);
 		});

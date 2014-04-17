@@ -110,10 +110,41 @@ h2, h3 {
   background-color: #eee;
 }
 
-input:focus {
+input:focus, textarea:focus {
   border-color: #999 !important;
   box-shadow: none !important;
 }
+
+/* story details */
+.summary {
+
+}
+
+.summary .deselect {
+  cursor: pointer;
+  margin-top: 0.5ex;
+  margin-right: 1ex;
+}
+
+.summary .deselect, .summary .deselect a {
+  color: #bbb;
+}
+
+.top-info {
+  background-color: red;
+}
+
+.owner, .status {
+  width: 48%;
+  margin-top: 1ex;
+  float: left;
+}
+
+.description textarea {
+  width: 95%;
+  height: 6em;
+}
+
 
 /* admin */
 #userList {
