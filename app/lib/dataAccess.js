@@ -420,12 +420,25 @@ var db = function() {
 	var updateStory = function(story, success, failure) {
 		couch.stories.update(story, function (err) {
 			if (err) {
+				// TODO: Clean this up
 				console.log("Update-Story: Failure to update.");
 				Error.stackTraceLimit = Infinity;
 				throw new Error("whwwwttat");
 				return failure(err);
 			}
 			success(story);
+		});
+	};
+
+	// 'Saving' a story is for persisting the things that a guest
+	// would consider part of a story, like the summary and who
+	// it is assigned to. Not for saving internal data.
+	var saveStory = function (story, success, failure) {
+		couch.stories.findById(story.id, function (err, storyToSave) {
+
+			storyToSave.summary = story.summary;
+
+			updateStory(storyToSave, success, failure);
 		});
 	};
 
@@ -545,7 +558,7 @@ var db = function() {
 			findByProjectId: findStoriesByProjectId,
 			// TODO: Maybe don't return the raw database object
 			getFirstByProjectId: getFirstStory,
-			update: updateStory
+			save: saveStory
 		},
 		users: { 
 			add: addUser,

@@ -178,17 +178,15 @@ app.post("/data/story/", function (req, res) {
 
 app.put("/data/story/", function (req, res) {
 	var story = req.body;
-	// TODO: Deprecate
-	res.send(200);
-	// db.stories.update(story, 
-	// 	function () {
-	// 		res.send(200);
-	// 	},
-	// 	function (err) {
-	// 		console.log(err);
-	// 		res.send(500);
-	// 	}
-	// );
+	db.stories.save(story, 
+		function () {
+			res.send(200);
+		},
+		function (err) {
+			console.log(err);
+			res.send(500);
+		}
+	);
 });
 
 app.put("/data/story/move", function (req, res) {
