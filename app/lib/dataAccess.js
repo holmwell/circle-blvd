@@ -33,7 +33,8 @@ var db = function() {
 					summary: story.summary,
 					owner: story.owner,
 					status: story.status,
-					description: story.description
+					description: story.description,
+					isDeadline: story.isDeadline
 				};
 
 				stories[modelStory.id] = modelStory;
@@ -444,6 +445,8 @@ var db = function() {
 			storyToSave.owner = story.owner;
 			storyToSave.status = story.status || "";
 			storyToSave.description = story.description;
+			// isDeadline should not be changed
+			// storyToSave.isDeadline = story.isDeadline;
 
 			updateStory(storyToSave, success, failure);
 		});

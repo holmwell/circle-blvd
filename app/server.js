@@ -154,6 +154,7 @@ app.post("/data/story/", function (req, res) {
 	var story = {};	
 	story.projectId = data.projectId;
 	story.summary = data.summary;
+	story.isDeadline = data.isDeadline;
 
 	// TODO: Really, we don't need both of these.
 	//
@@ -178,6 +179,7 @@ app.post("/data/story/", function (req, res) {
 
 app.put("/data/story/", function (req, res) {
 	var story = req.body;
+
 	db.stories.save(story, 
 		function () {
 			res.send(200);

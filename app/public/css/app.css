@@ -110,6 +110,15 @@ h2, h3 {
   background-color: #eee;
 }
 
+.deadline {
+  color: white;
+  background-color: #666;
+}
+.deadline:hover {
+  background-color: #444 !important;
+}
+
+
 input:focus, textarea:focus {
   border-color: #999 !important;
   box-shadow: none !important;

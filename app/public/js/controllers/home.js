@@ -234,6 +234,13 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		});
 	};
 
+	$scope.createDeadline = function (newDeadline) {
+		newDeadline.isDeadline = true;
+		insertNewStory(newDeadline, function () {
+			$scope.newDeadline = undefined;
+			$timeout(makeStoriesDraggable, 0);
+		});
+	};
 
 	$scope.save = function (story) {
 		var storyToSave = serverStories.get(story.id);

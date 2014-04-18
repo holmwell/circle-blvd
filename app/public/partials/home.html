@@ -10,16 +10,27 @@
 		<button class="btn" ng-click="create(newStory)">Add story</button>
 	</form>
 </div>
+
+<div id="new-story" class="deadline story">
+	<form>
+		<span class="span1 story-id">=</span>
+		<input type="text" 
+			ng-model="newDeadline.summary"/>
+		<button class="btn" ng-click="createDeadline(newDeadline)">Add deadline</button>
+	</form>
+</div>
+
 <div id="backlog" ng-click="deselectAll()">
 	<div class="story" ng-repeat="story in stories" ng-click="select(story)"
 		ng-class="{ 
-			selected: story.isSelected, 
-			'not-selected': !story.isSelected,
-			first: story.isFirstStory 
+			selected: story.isSelected && !story.isDeadline, 
+			'not-selected': !story.isSelected && !story.isDeadline,
+			first: story.isFirstStory,
+			deadline: story.isDeadline 
 		}"
 		data-story-id="{{story.id}}">
 <!-- 		<div class="span2 story-id">{{story.id | slice:5 }} (next: {{story.nextId | slice:5}}) </div> -->
-		<div class="selected" ng-show="story.isSelected">
+		<div class="selected" ng-show="story.isSelected && !story.isDeadline">
 			<form>
 				<div class="summary">
 					<input id="boxForStory{{story.id}}" type="text" ng-model="story.summary"/>
@@ -49,6 +60,18 @@
 				<button class="pull-right removeBtn" type="button" ng-click="remove(story)">Remove</button>
 			</form>
 		</div>
-		<span class="not-selected" ng-show="!story.isSelected">{{story.summary}}</span>
+		<span class="not-selected" ng-show="!story.isSelected && !story.isDeadline">{{story.summary}}</span>
+		
+		<!-- Deadlines -->
+		<div class="not-selected" ng-show="story.isDeadline && !story.isSelected">
+			<div>{{story.summary}}</div>
+		</div>
+
+		<div class="not-selected" ng-show="story.isSelected && story.isDeadline">
+			<form>
+				<div class="pull-left">{{story.summary}}</div>
+				<button class="pull-right removeBtn" type="button" ng-click="remove(story)">Remove</button>
+			</form>
+		</div>
 	</div>
 </div>

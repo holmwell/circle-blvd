@@ -307,7 +307,8 @@ var couch = function() {
 		&& n(a.summary) === n(b.summary)
 		&& n(a.description) === n(b.description)
 		&& n(a.status) === n(b.status)
-		&& n(a.owner) === n(b.owner);
+		&& n(a.owner) === n(b.owner)
+		&& n(a.isDeadline) === n(b.isDeadline);
 	};
 
 	var updateStory = function (story, callback) {
