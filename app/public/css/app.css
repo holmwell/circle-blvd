@@ -145,6 +145,16 @@ input:focus, textarea:focus {
   height: 6em;
 }
 
+.removeBtn {
+  margin-right: 5px;
+  color: #bbb;
+  border-style: none;
+  background-color: inherit;
+}
+.removeBtn:hover {
+  text-decoration: underline;
+}
+
 
 /* admin */
 #userList {

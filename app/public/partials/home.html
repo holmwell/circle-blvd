@@ -23,10 +23,9 @@
 			<form>
 				<div class="summary">
 					<input id="boxForStory{{story.id}}" type="text" ng-model="story.summary"/>
-					<div class="deselect pull-right">(<a ng-click="deselect(story)">hide details</a>)</div>
+					<div class="deselect pull-right"><a ng-click="deselect(story)">Hide details</a></div>
 				</div>
-<!-- 				<button class="btn pull-right" type="button" ng-click="remove(story)">Remove</button>
- -->
+
 				<div class="top-info">
 					<div class="owner">Who's probably doing this?
 						<input type="text" ng-model="story.owner"/>
@@ -47,6 +46,7 @@
 				</div>
 
 				<button class="" type="submit" ng-click="save(story)">Save</button>
+				<button class="pull-right removeBtn" type="button" ng-click="remove(story)">Remove</button>
 			</form>
 		</div>
 		<span class="not-selected" ng-show="!story.isSelected">{{story.summary}}</span>
