@@ -31,14 +31,14 @@
 		}"
 		data-story-id="{{story.id}}">
 <!-- 		<div class="span2 story-id">{{story.id | slice:5 }} (next: {{story.nextId | slice:5}}) </div> -->
-		<div class="selected" ng-show="story.isSelected && !story.isDeadline">
+		<div class="selected" ng-show="story.isSelected">
 			<form>
 				<div class="summary">
 					<input id="boxForStory{{story.id}}" type="text" ng-model="story.summary"/>
 					<div class="deselect pull-right"><a ng-click="deselect(story)">Hide details</a></div>
 				</div>
 
-				<div class="top-info" ng-hide="story.isNextMeeting">
+				<div class="top-info" ng-hide="story.isNextMeeting || story.isDeadline">
 					<div class="owner">Who's probably doing this?
 						<input type="text" ng-model="story.owner"/>
 					</div>
@@ -66,13 +66,6 @@
 		<!-- Deadlines -->
 		<div class="not-selected" ng-show="story.isDeadline && !story.isSelected">
 			<div>{{story.summary}}</div>
-		</div>
-
-		<div class="not-selected" ng-show="story.isSelected && story.isDeadline">
-			<form>
-				<div class="pull-left">{{story.summary}}</div>
-				<button class="pull-right removeBtn" type="button" ng-click="remove(story)">Remove</button>
-			</form>
 		</div>
 	</div>
 </div>
