@@ -436,9 +436,21 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 				});
 
 				$scope.$apply(function () {
+					// TODO: Refactor this duplicate code with the init stuff.
 					var firstStory = usefulStories.getFirst();
 					var currentStory = firstStory;
+					var isAfterNextMeeting = false;
 					while (currentStory) {
+						if (isAfterNextMeeting) {
+							currentStory.isAfterNextMeeting = true;
+						}
+						else if (currentStory.isNextMeeting) {				
+							isAfterNextMeeting = true;
+						}
+						else {
+							currentStory.isAfterNextMeeting = false;
+						}
+
 						stories.push(currentStory);
 						currentStory = serverStories.get(currentStory.nextId);
 					}
@@ -682,9 +694,18 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 
 				// TODO: If we don't have a first story, relax.
 				var currentStory = usefulStories.getFirst();
+				var isAfterNextMeeting = false;
 
 				while (currentStory) {
 					stories.push(currentStory); // <3 pass by reference
+
+					if (isAfterNextMeeting) {
+						currentStory.isAfterNextMeeting = true;
+					}
+					else if (currentStory.isNextMeeting) {					
+						isAfterNextMeeting = true;
+					}
+
 					var nextStoryId = currentStory.nextId;
 					if (nextStoryId) {
 						currentStory = serverStories.get(nextStoryId);

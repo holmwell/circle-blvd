@@ -27,7 +27,8 @@
 			'not-selected': !story.isSelected && !story.isDeadline,
 			first: story.isFirstStory,
 			deadline: story.isDeadline,
-			'next-meeting': story.isNextMeeting 
+			'next-meeting': story.isNextMeeting,
+			'after-meeting': story.isAfterNextMeeting
 		}"
 		data-story-id="{{story.id}}">
 <!-- 		<div class="span2 story-id">{{story.id | slice:5 }} (next: {{story.nextId | slice:5}}) </div> -->

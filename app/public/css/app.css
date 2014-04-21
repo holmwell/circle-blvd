@@ -110,6 +110,24 @@ h2, h3 {
   background-color: #eee;
 }
 
+
+.next-meeting {
+  color: #eee;
+  background-color: black;
+}
+.next-meeting:hover {
+  background-color:  black;
+}
+
+.after-meeting {
+  color: #333;
+  background: white;
+}
+.after-meeting:hover {
+  color: #666;
+  background: #eee;
+}
+
 .deadline {
   color: white;
   background-color: #666;
@@ -117,14 +135,11 @@ h2, h3 {
 .deadline:hover {
   background-color: #444 !important;
 }
+/*.after-meeting.deadline {
+  background-color: #FFF1A8;
+  color: #333;
+}*/
 
-.next-meeting {
-  color: white;
-  background-color: #048;
-}
-.next-meeting:hover {
-  background-color:  #059 !important;
-}
 
 input:focus, textarea:focus {
   border-color: #999 !important;
