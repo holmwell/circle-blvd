@@ -11,10 +11,12 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	var preMoveStoryBefore = undefined;
 	var preMoveStoryAfter = undefined;
 
-	var saveStory = function (story) {
+	var saveStory = function (story, callback) {
 		$http.put('/data/story/', story)
 		.success(function (data) {
-			// do nothing
+			if (callback) {
+				callback();
+			}
 		})
 		.error(function (data, status) {
 			console.log(status);
@@ -254,10 +256,9 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		storyToSave.description = story.description;
 
 		// TODO: Probably want a callback here
-		saveStory(storyToSave);
-
-		storyToSave.isSelected = false;
-		selectedStory = undefined;
+		saveStory(storyToSave, function () {
+			$scope.deselect(story);
+		});		
 	};
 
 	$scope.remove = function (story) {
