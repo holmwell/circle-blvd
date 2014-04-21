@@ -592,6 +592,29 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		}, 0);
 	};
 
+	$scope.createNextMeeting = function () {
+		var nextMeeting = {};
+		nextMeeting.summary = "Next meeting";
+		nextMeeting.isNextMeeting = true;
+		insertNewStory(nextMeeting, function () {
+			// $scope.newDeadline = undefined;
+			$timeout(makeStoriesDraggable, 0);
+		});
+	};
+
+	// $scope.showNextMeeting = function () {
+	// 	var body = {};
+	// 	body.showNextMeeting = true;
+	// 	$http.put("/data/1/settings/show-next-meeting", body)
+	// 	.success(function (data) {
+	// 		console.log(":-)");
+	// 	})
+	// 	.error(function (data, status) {
+	// 		console.log(status);
+	// 		console.log(data);
+	// 	});
+	// };
+
 	$scope.debug = function() {
 		console.log("Scope array: ");
 		$scope.stories.forEach(function (el, index) {

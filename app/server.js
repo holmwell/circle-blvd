@@ -148,6 +148,18 @@ app.get("/data/:projectId/first-story", function (req, res) {
 	});
 });
 
+var addStory = function (story, res) {
+	db.stories.add(story, 
+		function (story) {
+			res.send(200, story);
+		},
+		function (err) {
+			console.log(err);
+			res.send(500);
+		}
+	);
+};
+
 app.post("/data/story/", function (req, res) {
 	var data = req.body;
 
@@ -155,6 +167,7 @@ app.post("/data/story/", function (req, res) {
 	story.projectId = data.projectId;
 	story.summary = data.summary;
 	story.isDeadline = data.isDeadline;
+	story.isNextMeeting = data.isNextMeeting;
 
 	// TODO: Really, we don't need both of these.
 	//
@@ -166,15 +179,7 @@ app.post("/data/story/", function (req, res) {
 	// The dataAccess layer takes care of this.
 	// story.isFirstStory = true; // data.isFirstStory;
 
-	db.stories.add(story, 
-		function (story) {
-			res.send(200, story);
-		},
-		function (err) {
-			console.log(err);
-			res.send(500);
-		}
-	);
+	addStory(story, res);
 });
 
 app.put("/data/story/", function (req, res) {
@@ -206,8 +211,7 @@ app.put("/data/story/move", function (req, res) {
 	});
 });
 
-app.put("/data/story/remove", function (req, res) {
-	var story = req.body;
+var removeStory = function (story, res) {
 	db.stories.remove(story, 
 		function () {
 			res.send(200);
@@ -217,6 +221,40 @@ app.put("/data/story/remove", function (req, res) {
 			res.send(500);
 		}
 	);
+};
+
+app.put("/data/story/remove", function (req, res) {
+	var story = req.body;
+	removeStory(story, res);
+});
+
+app.put("/data/:projectId/settings/show-next-meeting", function (req, res) {
+	var showNextMeeting = req.body.showNextMeeting;
+	var projectId = req.params.projectId;
+
+	var handleNextMeeting = function (err, nextMeeting) {
+		if (err) {
+			console.log(err);
+			res.send(500);
+		}
+		else {
+			if (showNextMeeting) {
+				// TODO: Should probably be in the data access layer.
+				// TODO: Consider passing in the summary from the client,
+				// as 'meeting' should be a configurable word.
+				var story = {};
+				story.summary = "Next meeting";
+				story.isNextMeeting = true;
+
+				addStory(story, res);
+			}
+			else {
+				removeStory(nextMeeting, res);
+			}
+		}
+	};
+
+	var nextMeeting = db.stories.getNextMeetingByProjectId(projectId, handleNextMeeting);
 });
 
 // The secret to bridging Angular and Express in a 

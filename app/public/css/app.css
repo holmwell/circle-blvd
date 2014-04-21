@@ -118,6 +118,13 @@ h2, h3 {
   background-color: #444 !important;
 }
 
+.next-meeting {
+  color: white;
+  background-color: #048;
+}
+.next-meeting:hover {
+  background-color:  #059 !important;
+}
 
 input:focus, textarea:focus {
   border-color: #999 !important;

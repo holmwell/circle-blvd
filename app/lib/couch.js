@@ -292,6 +292,30 @@ var couch = function() {
 		);
 	};
 
+	var findNextMeetingByProjectId = function (projectId, callback) {
+		// TODO: Combine with the method above.
+		getView(
+			"stories/nextMeetingByProjectId",
+			{key: projectId}, 
+			function (err, rows) {
+				if (err) {
+					callback(err);
+				}
+				else {
+					if (rows.length > 0) {
+						// TODO: If rows.length > 1 then we
+						// have a data integrity issue.
+						callback(null, rows[0]);
+					}
+					else {
+						callback(null, null);
+					}
+				}
+			}
+		);
+	};
+
+
 	var n = function(s) {
 		return s || "";
 	}
@@ -308,7 +332,8 @@ var couch = function() {
 		&& n(a.description) === n(b.description)
 		&& n(a.status) === n(b.status)
 		&& n(a.owner) === n(b.owner)
-		&& n(a.isDeadline) === n(b.isDeadline);
+		&& n(a.isDeadline) === n(b.isDeadline)
+		&& n(a.isNextMeeting) === n(b.isNextMeeting);
 	};
 
 	var updateStory = function (story, callback) {
@@ -448,6 +473,7 @@ var couch = function() {
 			findByProjectId: findStoriesByProjectId,
 			findByNextId: findStoriesByNextId,
 			findFirst: findFirstByProjectId,
+			findNextMeeting: findNextMeetingByProjectId,
 			transaction: storiesTransaction,
 			update: updateStory
 		},

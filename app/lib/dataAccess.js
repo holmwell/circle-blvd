@@ -34,7 +34,8 @@ var db = function() {
 					owner: story.owner,
 					status: story.status,
 					description: story.description,
-					isDeadline: story.isDeadline
+					isDeadline: story.isDeadline,
+					isNextMeeting: story.isNextMeeting
 				};
 
 				stories[modelStory.id] = modelStory;
@@ -211,6 +212,14 @@ var db = function() {
 		}
 
 		couch.stories.findFirst(projectId, callback);
+	};
+
+	var getNextMeeting = function (projectId, callback) {
+		if (!projectId) {
+			callback(null, null);
+		}
+
+		couch.stories.findNextMeeting(projectId, callback);
 	};
 
 
@@ -568,6 +577,7 @@ var db = function() {
 			findByProjectId: findStoriesByProjectId,
 			// TODO: Maybe don't return the raw database object
 			getFirstByProjectId: getFirstStory,
+			getNextMeetingByProjectId: getNextMeeting,
 			save: saveStory
 		},
 		users: { 
