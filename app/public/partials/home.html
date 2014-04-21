@@ -24,7 +24,7 @@
 	<div class="story" ng-repeat="story in stories" ng-click="select(story)"
 		ng-class="{ 
 			selected: story.isSelected && !story.isDeadline, 
-			'not-selected': !story.isSelected && !story.isDeadline,
+			'not-selected': !story.isSelected,
 			first: story.isFirstStory,
 			deadline: story.isDeadline,
 			'next-meeting': story.isNextMeeting,
@@ -62,12 +62,7 @@
 				<button ng-hide="story.isNextMeeting" class="pull-right removeBtn" type="button" ng-click="remove(story)">Remove</button>
 			</form>
 		</div>
-		<span class="not-selected" ng-show="!story.isSelected && !story.isDeadline">{{story.summary}}</span>
-		
-		<!-- Deadlines -->
-		<div class="not-selected" ng-show="story.isDeadline && !story.isSelected">
-			<div>{{story.summary}}</div>
-		</div>
+		<span class="not-selected" ng-show="!story.isSelected">{{story.summary}}</span>
 	</div>
 </div>
 

@@ -113,10 +113,10 @@ h2, h3 {
 
 .next-meeting {
   color: #eee;
-  background-color: black;
+  background-color: #333;
 }
 .next-meeting:hover {
-  background-color:  black;
+  background-color:  #333;
 }
 
 .after-meeting {
