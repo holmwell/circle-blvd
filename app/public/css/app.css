@@ -198,6 +198,9 @@ input:focus, textarea:focus {
 
   margin-left: 5px;
 }
+.backlog-owner.after {
+  color: #bbb;
+}
 
 .backlog-owner, .story, .not-selected, .storyWrapper, #backlog {
   /*border: solid 1px red;*/
