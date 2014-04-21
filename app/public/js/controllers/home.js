@@ -556,7 +556,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		// TODO: We should probably make a method for making
 		// a specific item draggable, in the case of adding
 		// a new item to the backlog.
-		var storyElements = Y.Node.all('.story');
+		var storyElements = Y.Node.all('.storyWrapper');
 		var newStoryElementId = "new-story";
 		storyElements.each(function (v, k) {
 			var nodeId = v.get("id");

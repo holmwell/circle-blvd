@@ -2,69 +2,74 @@
 <!-- <button ng-click="debug()">Debug</button>
 <button ng-click="resetStories()">Reset stories</button> -->
 
-<div id="new-story" class="after-meeting story">
-	<form>
-		<span class="span1 story-id">+</span>
-		<input type="text" 
-			ng-model="newStory.summary"/>
-		<button class="btn" ng-click="create(newStory)">Add story</button>
-	</form>
-</div>
+<div class="row">
+	<div id="new-story" class="after-meeting story offset3 span6">
+		<form>
+			<span class="span1 story-id">+</span>
+			<input type="text" 
+				ng-model="newStory.summary"/>
+			<button class="btn" ng-click="create(newStory)">Add story</button>
+		</form>
+	</div>
 
-<div id="new-story" class="after-meeting deadline story">
-	<form>
-		<span class="span1 story-id">=</span>
-		<input type="text" 
-			ng-model="newDeadline.summary"/>
-		<button class="btn" ng-click="createDeadline(newDeadline)">Add deadline</button>
-	</form>
+	<div id="new-story" class="after-meeting deadline story offset3 span6">
+		<form>
+			<span class="span1 story-id">=</span>
+			<input type="text" 
+				ng-model="newDeadline.summary"/>
+			<button class="btn" ng-click="createDeadline(newDeadline)">Add deadline</button>
+		</form>
+	</div>
 </div>
 
 <div id="backlog" ng-click="deselectAll()">
-	<div class="story" ng-repeat="story in stories" ng-click="select(story)"
-		ng-class="{ 
+	<div class="storyWrapper row" ng-repeat="story in stories" ng-click="select(story)" data-story-id="{{story.id}}">
+		
+		<div class="story offset3 span6" ng-class="{ 
 			selected: story.isSelected && !story.isDeadline, 
 			'not-selected': !story.isSelected,
 			first: story.isFirstStory,
 			deadline: story.isDeadline,
 			'next-meeting': story.isNextMeeting,
 			'after-meeting': story.isAfterNextMeeting
-		}"
-		data-story-id="{{story.id}}">
-<!-- 		<div class="span2 story-id">{{story.id | slice:5 }} (next: {{story.nextId | slice:5}}) </div> -->
-		<div class="selected" ng-show="story.isSelected">
-			<form>
-				<div class="summary">
-					<input id="boxForStory{{story.id}}" type="text" ng-model="story.summary"/>
-					<div class="deselect pull-right"><a ng-click="deselect(story)">Hide details</a></div>
-				</div>
+		}">
 
-				<div class="top-info" ng-hide="story.isNextMeeting || story.isDeadline">
-					<div class="owner">Who's probably doing this?
-						<input type="text" ng-model="story.owner"/>
+	<!-- 		<div class="span2 story-id">{{story.id | slice:5 }} (next: {{story.nextId | slice:5}}) </div> -->
+			<div class="selected" ng-show="story.isSelected">
+				<form>
+					<div class="summary">
+						<input id="boxForStory{{story.id}}" type="text" ng-model="story.summary"/>
+						<div class="deselect pull-right"><a ng-click="deselect(story)">Hide details</a></div>
 					</div>
-					<div class="status">What's up?
-						<select ng-model="story.status">
-							<option value="">(I don't know)</option>
-							<option value="assigned">I've seen this task</option>
-							<option value="open">I'm working on it</option>
-							<option value="done">It's done</option>
-						</select>
+
+					<div class="top-info" ng-hide="story.isNextMeeting || story.isDeadline">
+						<div class="owner">Who's probably doing this?
+							<input type="text" ng-model="story.owner"/>
+						</div>
+						<div class="status">What's up?
+							<select ng-model="story.status">
+								<option value="">(I don't know)</option>
+								<option value="assigned">I've seen this task</option>
+								<option value="open">I'm working on it</option>
+								<option value="done">It's done</option>
+							</select>
+						</div>
 					</div>
-				</div>
 
-				<div class="description">
-					<div>What should we know?</div>
-					<textarea ng-model="story.description" />
-				</div>
+					<div class="description">
+						<div>What should we know?</div>
+						<textarea ng-model="story.description" />
+					</div>
 
-				<button class="" type="submit" ng-click="save(story)">Save</button>
-				<button ng-hide="story.isNextMeeting" class="pull-right removeBtn" type="button" ng-click="remove(story)">Remove</button>
-			</form>
+					<button class="" type="submit" ng-click="save(story)">Save</button>
+					<button ng-hide="story.isNextMeeting" class="pull-right removeBtn" type="button" ng-click="remove(story)">Remove</button>
+				</form>
+			</div>
+			<span class="not-selected" ng-show="!story.isSelected">{{story.summary}}</span>
 		</div>
-		<span class="not-selected" ng-show="!story.isSelected">{{story.summary}}</span>
-	</div>
-</div>
+		<div class="backlog-owner span2">{{story.owner}}</div>
+	</div> <!-- ng-repeat -->
+</div> <!-- backlog -->
 
 <button ng-click="createNextMeeting()">Create next meeting</button>
 
