@@ -23,7 +23,7 @@
 </div>
 
 <div id="backlog" ng-click="deselectAll()">
-	<div class="storyWrapper row" ng-repeat="story in stories" ng-click="select(story)" data-story-id="{{story.id}}">
+	<div class="storyWrapper row" ng-repeat="story in stories" data-story-id="{{story.id}}">
 		
 		<div class="story offset3 span6" ng-class="{ 
 			selected: story.isSelected && !story.isDeadline, 
@@ -32,7 +32,8 @@
 			deadline: story.isDeadline,
 			'next-meeting': story.isNextMeeting,
 			'after-meeting': story.isAfterNextMeeting
-		}">
+		}"
+		ng-click="select(story)">
 
 	<!-- 		<div class="span2 story-id">{{story.id | slice:5 }} (next: {{story.nextId | slice:5}}) </div> -->
 			<div class="selected" ng-show="story.isSelected">
@@ -67,7 +68,7 @@
 			</div>
 			<span class="not-selected" ng-show="!story.isSelected">{{story.summary}}</span>
 		</div>
-		<div class="backlog-owner span2">{{story.owner}}</div>
+		<div class="backlog-owner span2" ng-click="select(story)">{{story.owner}}</div>
 	</div> <!-- ng-repeat -->
 </div> <!-- backlog -->
 
