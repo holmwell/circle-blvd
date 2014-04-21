@@ -262,6 +262,11 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	};
 
 	$scope.remove = function (story) {
+		// TODO: This one time all the stories after the
+		// removed story were no longer shown, but the
+		// data was fine on the server so a refresh 
+		// took care of everything. Look into this data
+		// display issue.
 		var storyToRemove = serverStories.get(story.id);
 		var nextStory = serverStories.get(storyToRemove.nextId);
 
@@ -291,8 +296,6 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 				selectedStory = undefined;
 			}
 
-			// TODO: Removing the first story does not work.
-			// Nothing is set as the first story.
 			var previousStory = getPreviousStory(story);
 			if (!previousStory) {
 				usefulStories.setFirst(nextStory);
