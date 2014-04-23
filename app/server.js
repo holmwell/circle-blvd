@@ -154,8 +154,7 @@ var addStory = function (story, res) {
 			res.send(200, story);
 		},
 		function (err) {
-			console.log(err);
-			res.send(500);
+			handleError(err, res);
 		}
 	);
 };
@@ -190,8 +189,7 @@ app.put("/data/story/", function (req, res) {
 			res.send(200);
 		},
 		function (err) {
-			console.log(err);
-			res.send(500);
+			handleError(err, res);
 		}
 	);
 });
@@ -206,8 +204,7 @@ app.put("/data/story/move", function (req, res) {
 		res.send(200, response);
 	},
 	function (err) {
-		console.log(err);
-		res.send(500);
+		handleError(err, res);
 	});
 });
 
@@ -217,8 +214,7 @@ var removeStory = function (story, res) {
 			res.send(200);
 		},
 		function (err) {
-			console.log(err);
-			res.send(500);
+			handleError(err, res);
 		}
 	);
 };
@@ -234,8 +230,7 @@ app.put("/data/:projectId/settings/show-next-meeting", function (req, res) {
 
 	var handleNextMeeting = function (err, nextMeeting) {
 		if (err) {
-			console.log(err);
-			res.send(500);
+			handleError(err, res);
 		}
 		else {
 			if (showNextMeeting) {
