@@ -3,6 +3,20 @@
 <p ng-show="!isSignedIn()">Please <a href="#/signin">sign in</a>.</p>
 
 <div ng-show="isSignedIn()">
+<h4>Add user</h4>
+<form>
+	<div class="row">
+		<div class="span3">
+			<input type="text" ng-model="userName" placeholder="Display name"/>
+			<input type="email" ng-model="userEmail" placeholder="Email"/>
+			<input type="password" ng-model="userPassword" placeholder="Password"/>
+		</div>
+
+		<div class="span2"><button class="btn" ng-click="addUser(userName, userEmail, userPassword)">Add user</button></div>
+	</div>
+</form>
+
+<h4>User list</h4>
 <ul id="userList">
 	<li ng-repeat="user in users" ng-class-odd="'odd'">
 		<div class="row">
@@ -13,16 +27,6 @@
 		</div>
 	</li>
 </ul>
-
-<form >
-	<div class="row">
-		<div class="span3"><input type="text" ng-model="userName" placeholder="Display name"/></div>
-		<div class="span3"><input type="email" ng-model="userEmail" placeholder="Email"/></div>
-		<div class="span3"><input type="password" ng-model="userPassword" placeholder="Password"/></div>
-
-		<div class="span2"><button class="btn" ng-click="addUser(userName, userEmail, userPassword)">Add user</button></div>
-	</div>
-</form>
 </div>
 
 
