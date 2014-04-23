@@ -229,10 +229,9 @@ input:focus, textarea:focus {
   cursor: pointer;
 }
 
-
-
-
-
+#groupList input {
+  margin-top: 10px;
+}
 
 
 

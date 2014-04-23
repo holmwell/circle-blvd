@@ -2,6 +2,8 @@
 
 function AdminCtrl(session, $scope, $http) {
 
+	var defaultProjectId = "1";
+
 	var addUserSuccess = function() {
 		$scope.userName = "";
 		$scope.userEmail = "";
@@ -16,9 +18,9 @@ function AdminCtrl(session, $scope, $http) {
 
 	$scope.addUser = function(userName, userEmail, userPassword) {
 		var data = {
-			name : userName,
-			email : userEmail,
-			password : userPassword
+			name: userName,
+			email: userEmail,
+			password: userPassword
 		};
 
 		$http.put('/data/users/add', data)
@@ -61,6 +63,53 @@ function AdminCtrl(session, $scope, $http) {
 		.error(getUsersFailure);
 	};
 
-	getLatestUserData();
+
+	var getGroupsSuccess = function(data, status, headers, config) {
+		if (data === {}) {
+			// do nothing. 
+		}
+		else {
+			$scope.groups = data;
+		}
+	};
+
+	var getLatestGroupData = function() {
+		$http.get('/data/' + defaultProjectId + '/groups')
+		.success(getGroupsSuccess)
+		.error(function (data, status) {
+			console.log(data);
+			console.log(status);
+		});
+	};
+
+	var addGroupSuccess = function() {
+		$scope.groupName = "";
+		getLatestGroupData();
+	};
+
+	var addGroupFailure = function(things, status) {
+		console.log(things);
+		console.log(status);
+		console.log("Sad inside add group. :(");
+	};
+
+	$scope.addGroup = function (groupName) {
+		var data = {
+			name: groupName,
+			projectId: defaultProjectId // TODO: Notion of projects inside groups, yes?
+		};
+
+		$http.post('/data/group', data)
+		.success(addGroupSuccess)
+		.error(addGroupFailure);
+	};
+
+
+	var init = function () {
+		getLatestUserData();
+		getLatestGroupData();
+	}
+
+	init();
 }
 AdminCtrl.$inject = ['session', '$scope', '$http'];

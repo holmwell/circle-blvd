@@ -85,7 +85,6 @@ app.get('/auth/signout', function (req, res) {
 	res.send(204); // no content
 });
 
-
 // Data API: Protected by authorization system
 
 // Users routes
@@ -101,6 +100,42 @@ app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
 
 // Init routes
 app.put("/data/initialize", initRoutes.init);
+
+
+// Groups!
+app.get("/data/:projectId/groups", ensureAuthenticated, function (req, res) {
+	var projectId = req.params.projectId;
+
+	db.groups.findByProjectId(projectId, function (err, groups) {
+		if (err) {
+			return handleError(err, res);
+		}
+		
+		res.send(200, groups);
+	});
+});
+
+var addGroup = function (group, res) {
+	db.groups.add(group, 
+		function (group) {
+			res.send(200, group);
+		},
+		function (err) {
+			handleError(err, res);
+		}
+	);
+};
+
+app.post("/data/group", ensureAuthenticated, function (req, res) {
+	var data = req.body;
+
+	var group = {};	
+	group.projectId = data.projectId;
+	group.name = data.name;
+
+	addGroup(group, res);
+});
+
 
 // Story routes
 app.get("/data/uuid", function (req, res) {

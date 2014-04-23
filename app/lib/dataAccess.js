@@ -4,6 +4,47 @@ var uuid 	= require('node-uuid');
 
 var db = function() {
 
+	var addGroup = function(group, success, failure) {
+		var newGroup = {
+			name: group.name,
+			projectId: group.projectId
+		};
+		
+		couch.groups.add(newGroup, function (err, body) {
+			if (err) {
+				return failure(err);
+			}
+			// TODO: what to return?
+			success(body);	
+		});
+	};
+
+	var findGroupsByProjectId = function (projectId, callback) {
+
+		var prepareGroups = function (err, dbGroups) {
+			if (err) {
+				return callback(err);
+			}
+
+			var groups = [];
+			dbGroups.forEach(function (group, index, array) {
+				// TODO: Not sure we need this modelGroup
+				// business, except to cause more work
+				// in the future.
+				var modelGroup = {
+					id: group._id,
+					projectId: group.projectId,
+					name: group.name
+				};
+
+				groups.push(modelGroup);
+			});
+
+			callback(err, groups);
+		};
+
+		couch.groups.findByProjectId(projectId, prepareGroups);
+	};
 	var isFirstStoryCreated = function (story) {
 		return !story.nextId;
 	};
@@ -570,6 +611,10 @@ var db = function() {
 	};
 
 	return {
+		groups: {
+			add: addGroup,
+			findByProjectId: findGroupsByProjectId
+		},
 		stories: {
 			add: addStory,
 			move: moveStory,

@@ -206,6 +206,23 @@ var couch = function() {
 	};
 
 
+	var addGroup = function(group, callback) {
+		group.type = "group";
+		console.log("Adding ...");
+		console.log(group);
+		database.insert(group, callback);
+	};
+
+	var findGroupsByProjectId = function (projectId, callback) {
+		var options = {
+			key: projectId
+		};
+		getView("groups/byProjectId", options, function (err, rows) {
+			callback(err, rows);
+		});
+	};
+
+
 	var addStory = function(story, callback) {
 		// TODO: If we keep this (setting the story.type), 
 		// we want a way to tell the client how we modified it.
@@ -465,6 +482,10 @@ var couch = function() {
 	return {
 		projects: {
 			// TODO: Do we want a projects data API?
+		},
+		groups: {
+			add: addGroup,
+			findByProjectId: findGroupsByProjectId
 		},
 		stories: {
 			add: addStory,

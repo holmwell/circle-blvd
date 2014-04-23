@@ -69,6 +69,26 @@ var createViews = function(database, callback) {
 	designDocs.push(passwordsDesignDoc);
 
 
+	var groupsDesignDoc = {
+		url: '_design/groups',
+		body: 
+		{
+			version: "1.0.0",
+			language: "javascript",
+			views: {
+				byProjectId: {
+					map: function(doc) {
+						if (doc.type === "group" && doc.projectId) {
+							emit(doc.projectId, doc);
+						}
+					}
+				}
+			}
+		}
+	};
+	designDocs.push(groupsDesignDoc);
+
+
 	var storiesDesignDoc = {
 		url: '_design/stories',
 		body: 
