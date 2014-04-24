@@ -19,7 +19,7 @@
 </form>
 
 <h4>Users</h4>
-<ul id="userList">
+<ul class="adminList">
 	<li ng-repeat="user in users" ng-class-odd="'odd'">
 		<div class="row">
 			<div class="name span3">{{user.name}}</div>
@@ -32,11 +32,16 @@
 
 <form id="groupForm">
 	<h4>Groups</h4>
-	<ul id="groupList">
-		<li><input type="text" ng-model="groupName" placeholder="Group name"/>
-			<button class="btn" ng-click="addGroup(groupName)">Add group</button></li>
+	<div class="row">
+		<div class="span3"><input type="text" ng-model="groupName" placeholder="Name"/></div>
+		<div class="span2"><button class="btn" ng-click="addGroup(groupName)">Add group</button></div>
+	</div>
+	<ul class="adminList">
 		<li ng-repeat="group in groups" ng-class-odd="'odd'">
-			{{group.name}}
+			<div class="row">
+				<div class="name span3">{{group.name}}</div>
+				<div class="removeUser span2" ng-click="removeGroup(group)" title="remove group"><i class="icon-trash"></i></div>
+			</div>
 		</li>
 	</ul>
 </form>

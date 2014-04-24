@@ -208,29 +208,25 @@ input:focus, textarea:focus {
 
 
 /* admin */
-#userList {
+.adminList {
   list-style: none;
   margin-left: 0;
 }
-#userList li {
+.adminList li {
 
 }
 
-#userList > .odd {
+.adminList > .odd {
   background-color: #eee;
 }
 
-#userList  .row {
+.adminList  .row {
   padding: 8px;
 }
 
-#userList .removeUser {
+.adminList .removeUser {
   padding-left: 3.5ex; /* for centering */
   cursor: pointer;
-}
-
-#groupList input {
-  margin-top: 10px;
 }
 
 #groupForm {
