@@ -19,6 +19,16 @@ var db = function() {
 		});
 	};
 
+	var removeGroup = function(group, success, failure) {
+		couch.groups.remove(group, function (err, body) {
+			if (err) {
+				return failure(err);
+			}
+
+			return success();
+		});
+	};
+
 	var findGroupsByProjectId = function (projectId, callback) {
 
 		var prepareGroups = function (err, dbGroups) {
@@ -613,6 +623,7 @@ var db = function() {
 	return {
 		groups: {
 			add: addGroup,
+			remove: removeGroup,
 			findByProjectId: findGroupsByProjectId
 		},
 		stories: {

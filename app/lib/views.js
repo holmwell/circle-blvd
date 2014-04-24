@@ -73,13 +73,21 @@ var createViews = function(database, callback) {
 		url: '_design/groups',
 		body: 
 		{
-			version: "1.0.0",
+			version: "1.0.1",
 			language: "javascript",
 			views: {
 				byProjectId: {
 					map: function(doc) {
 						if (doc.type === "group" && doc.projectId) {
 							emit(doc.projectId, doc);
+						}
+					}
+				},
+
+				byId: {
+					map: function (doc) {
+						if (doc.type === "group") {
+							emit(doc._id, doc);
 						}
 					}
 				}

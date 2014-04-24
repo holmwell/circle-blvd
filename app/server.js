@@ -136,6 +136,19 @@ app.post("/data/group", ensureAuthenticated, function (req, res) {
 	addGroup(group, res);
 });
 
+app.put("/data/group/remove", ensureAuthenticated, function (req, res) {
+	var group = req.body;
+
+	db.groups.remove(group, 
+		function () {
+			res.send(200);
+		},
+		function (err) {
+			handleError(err, res);
+		}
+	);
+});
+
 
 // Story routes
 app.get("/data/uuid", function (req, res) {

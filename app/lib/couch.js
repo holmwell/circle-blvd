@@ -213,6 +213,31 @@ var couch = function() {
 		database.insert(group, callback);
 	};
 
+	var findGroupById = function (groupId, callback) {
+		var key = groupId;
+		findOneByKey("groups/byId", key, callback);
+	};
+
+	var removeGroup = function (group, callback) {
+		console.log("Removing ...");
+		console.log(group);
+
+		findGroupById(group.id, function (err, groupToRemove) {
+			if (err) {
+				return callback(err);
+			}
+
+			database.destroy(groupToRemove._id, groupToRemove._rev, function (err, body) {
+				if (err) {
+					return callback(err);
+				}
+				else {
+					return callback();
+				}
+			});
+		});
+	};
+
 	var findGroupsByProjectId = function (projectId, callback) {
 		var options = {
 			key: projectId
@@ -485,6 +510,8 @@ var couch = function() {
 		},
 		groups: {
 			add: addGroup,
+			remove: removeGroup,
+			findById: findGroupById,
 			findByProjectId: findGroupsByProjectId
 		},
 		stories: {

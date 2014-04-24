@@ -104,6 +104,15 @@ function AdminCtrl(session, $scope, $http) {
 		.error(addGroupFailure);
 	};
 
+	$scope.removeGroup = function (group) {
+		$http.put('/data/group/remove', group)
+		.success(function() {
+			getLatestGroupData();
+		})
+		.error(function (data) {
+			console.log(data);
+		});
+	};
 
 	var init = function () {
 		getLatestUserData();
