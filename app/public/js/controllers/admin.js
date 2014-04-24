@@ -41,7 +41,7 @@ function AdminCtrl(session, $scope, $http) {
 	$scope.removeUser = function (user) {
 		var data = user;
 
-		$http.put('/data/users/remove', data)
+		$http.put('/data/user/remove', data)
 		.success(function() {
 			getLatestUserData();
 		})
