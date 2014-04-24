@@ -52,7 +52,7 @@
 		<li ng-repeat="group in groups" ng-class-odd="'odd'">
 			<div class="row">
 				<div class="name span3">{{group.name}}</div>
-				<div class="removeUser span2" ng-click="removeGroup(group)" title="remove group"><i class="icon-trash"></i></div>
+				<div class="removeUser span2" ng-hide="group.isPermanent" ng-click="removeGroup(group)" title="remove group"><i class="icon-trash"></i></div>
 			</div>
 		</li>
 	</ul>

@@ -45,7 +45,8 @@ var db = function() {
 				var modelGroup = {
 					id: group._id,
 					projectId: group.projectId,
-					name: group.name
+					name: group.name,
+					isPermanent: group.isPermanent
 				};
 
 				groups.push(modelGroup);
