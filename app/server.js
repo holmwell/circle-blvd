@@ -89,7 +89,7 @@ app.get('/auth/signout', function (req, res) {
 
 // Users routes
 app.get("/data/users", ensureAuthenticated, usersRoutes.list);
-app.post("/data/users/add", ensureAuthenticated, usersRoutes.add);
+app.post("/data/user", ensureAuthenticated, usersRoutes.add);
 // TODO: Does this even work?
 app.del("/data/users/remove", ensureAuthenticated, usersRoutes.remove);
 

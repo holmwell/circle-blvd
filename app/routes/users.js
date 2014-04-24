@@ -29,7 +29,13 @@ exports.add = function (req, res) {
 		res.send(500, err);
 	};
 
-	db.users.add(data.name, data.email, data.password, onSuccess, onError);
+	db.users.add(
+		data.name, 
+		data.email, 
+		data.password, 
+		data.memberships,
+		onSuccess, onError
+	);
 };
 
 /*

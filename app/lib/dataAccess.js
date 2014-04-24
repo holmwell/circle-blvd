@@ -524,11 +524,12 @@ var db = function() {
 		couch.users.findById(id, callback);
 	};
 
-	var addUser = function(name, email, password, success, failure) {
+	var addUser = function(name, email, password, memberships, success, failure) {
 		var user = {
 			name: name,
 			email: email,
-			id: uuid.v4()
+			id: uuid.v4(),
+			memberships: memberships
 		};
 		
 		if (!isValidUser(user)) {

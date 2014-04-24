@@ -4,16 +4,24 @@
 
 <div ng-show="isSignedIn()">
 <form>
-	<h4>Add user</h4>
+	
 	<div class="row">
 		<div class="span3">
+			<h4>Add user</h4>
 			<input type="text" ng-model="userName" placeholder="Display name"/>
 			<input type="email" ng-model="userEmail" placeholder="Email"/>
 			<input type="password" ng-model="userPassword" placeholder="Password"/>
+			<button class="btn" ng-click="addUser(userName, userEmail, userPassword, userGroups)">Add user</button>
 		</div>
 
-		<div class="span2">
-			<button class="btn" ng-click="addUser(userName, userEmail, userPassword)">Add user</button>
+		<div class="span3">
+			<div style="margin-bottom: 1ex; margin-top: 1em">Groups</div>
+			<div ng-repeat="group in groups">
+				<div class="checkbox">
+					<label><input type="checkbox" ng-model="userGroups[group.id]"> {{group.name}}</label>
+				</div>
+			</div>
+			
 		</div>
 	</div>
 </form>
@@ -24,7 +32,11 @@
 		<div class="row">
 			<div class="name span3">{{user.name}}</div>
 			<div class="email span3">{{user.email}}</div>
-			<div class="roles span3">{{user.roles}}</div>
+			<div class="roles span3">
+				<span ng-repeat="membership in user.memberships">
+					{{getGroupName(membership.group)}}
+				</span>
+			</div>
 			<div class="removeUser span2" ng-click="removeUser(user)" title="remove user"><i class="icon-trash"></i></div>
 		</div>
 	</li>

@@ -16,14 +16,24 @@ function AdminCtrl(session, $scope, $http) {
 		console.log("Sad inside add user. :(");
 	};
 
-	$scope.addUser = function(userName, userEmail, userPassword) {
+	$scope.addUser = function(userName, userEmail, userPassword, userGroups) {
 		var data = {
 			name: userName,
 			email: userEmail,
-			password: userPassword
+			password: userPassword,
+			memberships: []
 		};
 
-		$http.put('/data/users/add', data)
+		for (var groupId in userGroups) {
+			if (userGroups[groupId] === true) {
+				data.memberships.push({
+					group: groupId,
+					level: "member"
+				});
+			}
+		}
+
+		$http.post('/data/user', data)
 		.success(addUserSuccess)
 		.error(addUserFailure);
 	};
@@ -64,12 +74,26 @@ function AdminCtrl(session, $scope, $http) {
 	};
 
 
+	var groupNames = {};
+	$scope.getGroupName = function (groupId) {
+		var group = groupNames[groupId];
+		if (group) {
+			return group.name;
+		}
+	};
+
 	var getGroupsSuccess = function(data, status, headers, config) {
 		if (data === {}) {
 			// do nothing. 
 		}
 		else {
 			$scope.groups = data;
+
+			groupNames = {};
+			for (var groupKey in data) {
+				var group = data[groupKey];
+				groupNames[group.id] = group;
+			}
 		}
 	};
 
@@ -115,6 +139,8 @@ function AdminCtrl(session, $scope, $http) {
 	};
 
 	var init = function () {
+		$scope.userGroups = {};
+
 		getLatestUserData();
 		getLatestGroupData();
 	}
