@@ -1,8 +1,6 @@
 var db = require('../lib/dataAccess.js').instance();
 
 exports.init = function (req, res) {
-	var data = req.body;
-
 	var onSuccess = function() {
 		res.send(200);
 	};
@@ -11,5 +9,28 @@ exports.init = function (req, res) {
 		res.send(500, err);
 	};
 
-	db.users.add("Admin", data.email, data.password, onSuccess, onError);
+	var adminGroup = {
+		name: "Administrative",
+		projectId: "1",
+		isPermanent: true
+	};
+
+	var addAdminUser = function (userGroup) {
+		var data = req.body;
+
+		var memberships = [{
+			group: userGroup.id, // TODO: Config?
+			level: "member"
+		}];
+
+		db.users.add(
+			"Admin", 
+			data.email, 
+			data.password, 
+			memberships,
+			onSuccess, onError
+		);
+	};
+
+	db.groups.add(adminGroup, addAdminUser, onError);
 };

@@ -7,7 +7,8 @@ var db = function() {
 	var addGroup = function(group, success, failure) {
 		var newGroup = {
 			name: group.name,
-			projectId: group.projectId
+			projectId: group.projectId,
+			isPermanent: group.isPermanent
 		};
 		
 		couch.groups.add(newGroup, function (err, body) {
@@ -15,7 +16,7 @@ var db = function() {
 				return failure(err);
 			}
 			// TODO: what to return?
-			success(body);	
+			success(body);
 		});
 	};
 

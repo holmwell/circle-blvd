@@ -227,6 +227,12 @@ var couch = function() {
 				return callback(err);
 			}
 
+			if (groupToRemove.isPermanent) {
+				return callback({
+					message: "Cannot remove group. It is marked as permanent."
+				});
+			}
+
 			database.destroy(groupToRemove._id, groupToRemove._rev, function (err, body) {
 				if (err) {
 					return callback(err);
