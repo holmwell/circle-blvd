@@ -233,6 +233,9 @@ input:focus, textarea:focus {
   margin-top: 10px;
 }
 
+#groupForm {
+  margin-top: 2em;
+}
 
 
 
