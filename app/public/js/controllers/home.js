@@ -607,6 +607,18 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		}, 0);
 	};
 
+	$scope.isStoryNew = function (story) {
+		if (!story || story.isDeadline || story.isNextMeeting) {
+			return false;
+		}
+
+		if (!story.status || story.status === "") {
+			return true;
+		}
+
+		return false;
+	};
+
 	$scope.createNextMeeting = function () {
 		var nextMeeting = {};
 		nextMeeting.summary = "Next meeting";

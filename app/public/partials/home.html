@@ -71,7 +71,7 @@
 		<div class="backlog-owner span2" ng-class="{ 
 			'after': story.isAfterNextMeeting
 		}"
-		ng-click="select(story)">{{story.owner}}</div>
+		ng-click="select(story)">{{story.owner}}<span ng-show="isStoryNew(story)">?</span></div>
 	</div> <!-- ng-repeat -->
 </div> <!-- backlog -->
 
