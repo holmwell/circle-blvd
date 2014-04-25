@@ -23,6 +23,10 @@
   padding: 0;
 }
 
+.jsLink {
+  cursor: pointer;
+}
+
 .container, .container-fluid {
     background: white;
     padding: 3em;
