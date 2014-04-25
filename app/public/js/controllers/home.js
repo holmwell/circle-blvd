@@ -482,13 +482,11 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			preMoveStoryAfter = getStoryAfter(preMoveStoryNode);
 
 		    //Set some styles here
-		    drag.get('node').setStyle('opacity', '.25');
-		    drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
-		    drag.get('dragNode').setStyles({
-		        opacity: '.5',
-		        borderColor: drag.get('node').getStyle('borderColor'),
-		        backgroundColor: drag.get('node').getStyle('backgroundColor')
-		    });
+		    drag.get('node').addClass('placeholder-story'); // applied to the storyWrapper
+
+		    drag.get('dragNode').addClass('dragging-row'); // applied to the storyWrapper
+			drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
+		    drag.get('dragNode').one('.story').addClass('dragging-story');
 		});
 
 		// Revert styles on drag end
@@ -499,10 +497,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		    storyNodeMoved(n);
 
 		    //Put our styles back
-		    drag.get('node').setStyles({
-		        visibility: '',
-		        opacity: '1'
-		    });
+		    drag.get('node').removeClass('placeholder-story');
 		});
 
 

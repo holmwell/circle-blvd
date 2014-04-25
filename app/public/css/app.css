@@ -69,6 +69,20 @@ h2, h3 {
 .story:hover {
   background-color: #eee;
 }
+.placeholder-story {
+  opacity: 0.25;
+}
+
+.dragging-row {
+  border: none !important;
+  opacity: 0.75;
+}
+
+.dragging-story {
+  padding-top: 1.1ex;
+  padding-bottom: 1.1ex;
+}
+
 
 .first {
   background-color: #e3e3e3;
