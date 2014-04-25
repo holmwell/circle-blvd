@@ -41,15 +41,6 @@ describe('HomeCtrl', function(){
 		$httpBackend.when('GET', '/data/1/stories')
 		.respond(stories);
 
-		var newStoryId = 3;
-		var getNextId = function() {
-			newStoryId++;
-			return [200, "" + newStoryId, {}];
-		};
-
-		$httpBackend.when('GET', '/data/1/new-story-id')
-		.respond(getNextId);
-
 		$httpBackend.when('PUT', '/data/story/')
 		.respond(200);
 
@@ -173,22 +164,6 @@ describe('HomeCtrl', function(){
 		expect($scope.stories.length).toBe(expectedStoryCount);
 		expect(getFirstStory()).toBe(newStory);
 		expectValidStories($scope.stories);	
-	});
-
-	it('mock of new-story-id works', function () {
-		var expectedStoryId = $scope.stories.length;
-		var newStory = {
-			summary: "new",
-			projectId: "1"
-		};
-
-		for (var i=0; i < 5; i++) {
-			$scope.create(newStory, function (story) {
-				expectedStoryId++;
-				expect(story.id).toBe("" + expectedStoryId);
-			});
-			$httpBackend.flush();
-		}
 	});
 
 	it('has mocked stories after init', function () {

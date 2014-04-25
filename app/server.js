@@ -4,7 +4,6 @@ var path     = require('path');
 var routes   = require('./routes')
 var auth     = require('./lib/auth.js');
 var db       = require('./lib/dataAccess.js').instance();
-var uuid 	 = require('node-uuid');
 
 var usersRoutes = require('./routes/users');
 var userRoutes 	= require('./routes/user');
@@ -170,33 +169,6 @@ app.put("/data/group/remove", ensureAdministrator, function (req, res) {
 
 
 // Story routes
-app.get("/data/uuid", function (req, res) {
-	var id = uuid.v4();
-	res.send(200, id);
-});
-
-app.get("/data/:projectId/new-story-id", function (req, res) {
-	var projectId = req.params.projectId;
-
-	db.stories.findByProjectId(projectId, function (err, stories) {
-		var newStoryId = "1";
-
-		for (var key in stories) {
-			var story = stories[key];
-			var newStoryIdNumber = +newStoryId;
-			if (+story.id > newStoryIdNumber) {
-				newStoryId = story.id;
-			}
-		};
-
-		// TODO: Save new-story-ids in an array or something? 
-		// Or maybe this is just for testing?
-		newStoryId = "" + (+newStoryId + 1);
-		res.send(200, newStoryId);
-	});
-});
-
-
 app.get("/data/:projectId/stories", function (req, res) {
 	var projectId = req.params.projectId;
 
