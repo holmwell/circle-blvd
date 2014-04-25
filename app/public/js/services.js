@@ -19,7 +19,7 @@ Date.prototype.toJSON = function (key) {
 
 /* Services */
 angular.module('myApp.services', []).
-  value('version', '0.2'). // a simple value service
+  value('version', '0.3'). // a simple value service
   factory('session', function() {
 		// session: use localStorage to maintain session
 		// state across visits to the page and refreshes.
