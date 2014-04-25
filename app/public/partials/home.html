@@ -1,8 +1,10 @@
-<p>:-)</p>
 <!-- <button ng-click="debug()">Debug</button>
 <button ng-click="resetStories()">Reset stories</button> -->
+<div ng-hide="isAddingNew">
+	+ <a ng-click="startNewStories()" class="jsLink">Add story</a>
+</div>
 
-<div class="row">
+<div class="row" ng-show="isAddingNew">
 	<div id="new-story" class="after-meeting story offset3 span6">
 		<form>
 			<span class="span1 story-id">+</span>
@@ -19,6 +21,10 @@
 				ng-model="newDeadline.summary"/>
 			<button class="btn" ng-click="createDeadline(newDeadline)">Add deadline</button>
 		</form>
+	</div>
+
+	<div class="span6">
+		<div class="pull-right"><a ng-click="stopNewStories()" class="jsLink">Done adding stories</a></div>
 	</div>
 </div>
 

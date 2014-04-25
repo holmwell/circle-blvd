@@ -130,6 +130,14 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	}(); // closure
 
 
+	$scope.startNewStories = function () {
+		$scope.isAddingNew = true;
+	};
+	$scope.stopNewStories = function () {
+		$scope.isAddingNew = undefined;
+	};
+
+
 	$scope.select = function (story) {
 		// TODO: This does NOT work on the story that
 		// was most recently moved.
