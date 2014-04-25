@@ -179,6 +179,12 @@ input:focus, textarea:focus {
   height: 6em;
 }
 
+.saveBtn { 
+  margin: 5px;
+  margin-right: 10px;
+  margin-top: 0;
+}
+
 .removeBtn {
   margin-right: 5px;
   color: #bbb;

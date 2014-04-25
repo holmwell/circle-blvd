@@ -65,8 +65,8 @@
 						<textarea ng-model="story.description" />
 					</div>
 
-					<button class="" type="submit" ng-click="save(story)">Save</button>
-					<button ng-hide="story.isNextMeeting" class="pull-right removeBtn" type="button" ng-click="remove(story)">Remove</button>
+					<button ng-hide="story.isNextMeeting" class="removeBtn" type="button" ng-click="remove(story)">Remove</button>
+					<button class="saveBtn pull-right" type="submit" ng-click="save(story)">Save</button>
 				</form>
 			</div>
 			<span class="not-selected" ng-show="!story.isSelected">{{story.summary}}</span>
