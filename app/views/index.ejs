@@ -22,7 +22,7 @@
 
     <ul class="menu span4" ng-show="isSignedIn()">
       <li><a href="#/profile">Profile</a></li>
-      <li><a href="#/admin">Admin</a></li>
+      <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
       <li><a ng-click="signOut()">Sign out</a></li>
     </ul>
   </div>

@@ -84,6 +84,7 @@ var authenticateLocal = function(req, res, next) {
 		publicUser.id = dbUser.id;
 		publicUser.email = dbUser.email;
 		publicUser.name = dbUser.name;
+		publicUser.memberships = dbUser.memberships;
 
 		res.send(200, publicUser);
 	};

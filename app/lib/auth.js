@@ -6,26 +6,30 @@ var db = require('./dataAccess.js').instance();
 var usernameField = 'username';
 var passwordField = 'password';
 
+var getUserWithFriendlyGroups = function (user, callback) {
+	db.groups.findByUser(user, function (err, groups) {
+		// Populate the user's membership data with the
+		// names of the memberships.
+		for (var membershipKey in user.memberships) {
+			var membership = user.memberships[membershipKey];
+			for (var groupKey in groups) {
+				if (membership.group === groups[groupKey]._id) {
+					// TODO: Might just want to throw all the group
+					// data in there.
+					user.memberships[membershipKey].name = groups[groupKey].name;
+				}
+			}
+		};
+
+		return callback(null, user);
+	});
+};
+
 // callback = fn(error, user);
 var findUserById = function(id, callback) {
 	db.users.findById(id, function (err, user) {
 		if (user) {
-			db.groups.findByUser(user, function (err, groups) {
-				// Populate the user's membership data with the
-				// names of the memberships.
-				for (var membershipKey in user.memberships) {
-					var membership = user.memberships[membershipKey];
-					for (var groupKey in groups) {
-						if (membership.group === groups[groupKey]._id) {
-							// TODO: Might just want to throw all the group
-							// data in there.
-							user.memberships[membershipKey].name = groups[groupKey].name;
-						}
-					}
-				};
-
-				return callback(null, user);
-			});
+			getUserWithFriendlyGroups(user, callback);
 		} 
 		else {
 			// TODO: Use error codes
@@ -49,7 +53,7 @@ var verify = function(email, password, callback) {
 		}
 
 		var success = function () {
-			callback(null, user);
+			getUserWithFriendlyGroups(user, callback);
 		}
 
 		var failure = function() {

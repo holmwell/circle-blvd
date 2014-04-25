@@ -10,6 +10,18 @@ function TopLevelCtrl(session, $scope, $http) {
 		return false;
 	};
 
+	$scope.isAdmin = function () {
+		if ($scope.isSignedIn()) {
+			var memberships = session.user.memberships;
+			for (var membershipKey in memberships) {
+				if (memberships[membershipKey].name === "Administrative") {
+					return true;
+				}
+			}
+		}
+		return false;
+	};
+
 	var resetSession = function () {
 		// clear out the logged in user
 		session.user = {};
