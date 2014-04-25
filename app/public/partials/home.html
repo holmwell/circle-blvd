@@ -24,8 +24,11 @@
 
 <div id="backlog" ng-click="deselectAll()">
 	<div class="storyWrapper row" ng-repeat="story in stories" data-story-id="{{story.id}}">
-		
-		<div class="story offset3 span6" ng-class="{ 
+		<div class="backlog-status offset2 span1">
+			<i class="icon-ok" ng-show="isStoryDone(story)"></i>
+			<i class="icon-play" ng-show="isStoryActive(story)"></i>
+		</div>
+		<div class="story span6" ng-class="{ 
 			selected: story.isSelected && !story.isDeadline, 
 			'not-selected': !story.isSelected,
 			first: story.isFirstStory,
@@ -51,7 +54,7 @@
 							<select ng-model="story.status">
 								<option value="">(I don't know)</option>
 								<option value="assigned">I've seen this task</option>
-								<option value="open">I'm working on it</option>
+								<option value="active">I'm working on it</option>
 								<option value="done">It's done</option>
 							</select>
 						</div>

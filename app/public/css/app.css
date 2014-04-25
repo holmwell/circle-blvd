@@ -61,6 +61,7 @@ h2, h3 {
   background-color: #ddd;
   padding: 0.5ex;
   padding-left: 1.5ex;
+  margin-left: 5px;
   margin-bottom: 0.5em;
   cursor: move;
   min-width: 200px;
@@ -200,6 +201,15 @@ input:focus, textarea:focus {
 }
 .backlog-owner.after {
   color: #bbb;
+}
+
+.backlog-status {
+  padding: 0.5ex;
+  padding-top: 1.1ex;
+  padding-bottom: 1.1ex;
+
+  text-align: right;
+  opacity: 0.6;
 }
 
 .backlog-owner, .story, .not-selected, .storyWrapper, #backlog {

@@ -607,8 +607,28 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		}, 0);
 	};
 
-	$scope.isStoryNew = function (story) {
+	var isStory = function (story) {
 		if (!story || story.isDeadline || story.isNextMeeting) {
+			return false;
+		}
+
+		return true;
+	};
+
+	var isStoryStatus = function (story, status) {
+		if (!isStory(story)) {
+			return false;
+		}
+
+		if (story.status === status) {
+			return true;
+		}
+
+		return false;
+	}
+
+	$scope.isStoryNew = function (story) {
+		if (!isStory(story)) {
 			return false;
 		}
 
@@ -618,6 +638,14 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 
 		return false;
 	};
+
+	$scope.isStoryActive = function (story) {
+		return isStoryStatus(story, "active");
+	}
+
+	$scope.isStoryDone = function (story) {
+		return isStoryStatus(story, "done");
+	}
 
 	$scope.createNextMeeting = function () {
 		var nextMeeting = {};
