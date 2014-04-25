@@ -56,6 +56,27 @@ var ensureAuthenticated = function (req, res, next) {
 	res.send(401, "Please authenticate with the server and try again.");
 };
 
+var ensureAdministrator = function (req, res, next) {
+	var nope = function () {
+		res.send(403, "User is not in the Administrative group.")
+	}
+
+	var isAdministrator = function () {
+		if (req.user.memberships) {
+			var groups = req.user.memberships;
+			for (var groupKey in groups) {
+				if (groups[groupKey].name === "Administrative") {
+					return next();
+				}
+			}
+		}
+
+		return nope();
+	};
+
+	ensureAuthenticated(req, res, isAdministrator);
+};
+
 var authenticateLocal = function(req, res, next) {
 	var success = function() {
 		var dbUser = req.user;
@@ -87,19 +108,18 @@ app.get('/auth/signout', function (req, res) {
 
 // Data API: Protected by authorization system
 
-// Users routes
-app.get("/data/users", ensureAuthenticated, usersRoutes.list);
-app.post("/data/user", ensureAuthenticated, usersRoutes.add);
-app.put("/data/user/remove", ensureAuthenticated, usersRoutes.remove);
+// Users routes (global actions. requires admin access)
+app.get("/data/users", ensureAdministrator, usersRoutes.list);
+app.post("/data/user", ensureAdministrator, usersRoutes.add);
+app.put("/data/user/remove", ensureAdministrator, usersRoutes.remove);
 
-// User routes
+// User routes (account actions. requires login access)
 app.get("/data/user", ensureAuthenticated, userRoutes.user);
 app.put("/data/user", ensureAuthenticated, userRoutes.update);
 app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
 
 // Init routes
 app.put("/data/initialize", initRoutes.init);
-
 
 // Groups!
 app.get("/data/:projectId/groups", ensureAuthenticated, function (req, res) {
@@ -125,7 +145,7 @@ var addGroup = function (group, res) {
 	);
 };
 
-app.post("/data/group", ensureAuthenticated, function (req, res) {
+app.post("/data/group", ensureAdministrator, function (req, res) {
 	var data = req.body;
 
 	var group = {};	
@@ -135,7 +155,7 @@ app.post("/data/group", ensureAuthenticated, function (req, res) {
 	addGroup(group, res);
 });
 
-app.put("/data/group/remove", ensureAuthenticated, function (req, res) {
+app.put("/data/group/remove", ensureAdministrator, function (req, res) {
 	var group = req.body;
 
 	db.groups.remove(group, 
