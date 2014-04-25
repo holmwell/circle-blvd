@@ -169,7 +169,7 @@ app.put("/data/group/remove", ensureAdministrator, function (req, res) {
 
 
 // Story routes
-app.get("/data/:projectId/stories", function (req, res) {
+app.get("/data/:projectId/stories", ensureAuthenticated, function (req, res) {
 	var projectId = req.params.projectId;
 
 	db.stories.findByProjectId(projectId, function (err, stories) {
@@ -180,7 +180,7 @@ app.get("/data/:projectId/stories", function (req, res) {
 
 // TODO: combine this with /stories to return one object with 
 // both the story list and the first story (in two different things)
-app.get("/data/:projectId/first-story", function (req, res) {
+app.get("/data/:projectId/first-story", ensureAuthenticated, function (req, res) {
 	var projectId = req.params.projectId;
 	db.stories.getFirstByProjectId(projectId, function (err, firstStory) {
 		res.send(200, firstStory);
@@ -198,7 +198,7 @@ var addStory = function (story, res) {
 	);
 };
 
-app.post("/data/story/", function (req, res) {
+app.post("/data/story/", ensureAuthenticated, function (req, res) {
 	var data = req.body;
 
 	var story = {};	
@@ -220,7 +220,7 @@ app.post("/data/story/", function (req, res) {
 	addStory(story, res);
 });
 
-app.put("/data/story/", function (req, res) {
+app.put("/data/story/", ensureAuthenticated, function (req, res) {
 	var story = req.body;
 
 	db.stories.save(story, 
@@ -233,7 +233,7 @@ app.put("/data/story/", function (req, res) {
 	);
 });
 
-app.put("/data/story/move", function (req, res) {
+app.put("/data/story/move", ensureAuthenticated, function (req, res) {
 	var body = req.body;
 	var story = body.story;
 	var newNextId = body.newNextId;
@@ -258,12 +258,12 @@ var removeStory = function (story, res) {
 	);
 };
 
-app.put("/data/story/remove", function (req, res) {
+app.put("/data/story/remove", ensureAuthenticated, function (req, res) {
 	var story = req.body;
 	removeStory(story, res);
 });
 
-app.put("/data/:projectId/settings/show-next-meeting", function (req, res) {
+app.put("/data/:projectId/settings/show-next-meeting", ensureAuthenticated, function (req, res) {
 	var showNextMeeting = req.body.showNextMeeting;
 	var projectId = req.params.projectId;
 
