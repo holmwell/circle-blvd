@@ -20,7 +20,7 @@ Date.prototype.toJSON = function (key) {
 /* Services */
 angular.module('myApp.services', []).
   value('version', '0.3'). // a simple value service
-  factory('session', function() {
+  factory('session', function () {
 		// session: use localStorage to maintain session
 		// state across visits to the page and refreshes.
 
@@ -54,7 +54,7 @@ angular.module('myApp.services', []).
 
 		var getSession = function() {
 			var session = store.get(sessionKey);
-			
+
 			if (!session) {
 				return session;
 			}
@@ -68,13 +68,14 @@ angular.module('myApp.services', []).
 		};
 
 		var session = getSession();
-		if (!session 
-		 || !session.expirationDate
-		 || session.expirationDate < today) {
+		if (!session || !session.expirationDate) {
 			// Load the default session if we don't have
-			// one in the local store, or if the one
-			// in the local store is stale.
+			// one in the local store 
 			session = defaultSession;
+		}
+		else if (session.expirationDate < today) {
+			// the session is expired?
+			session.isExpired = true;			
 		}
 		else {
 			// There is a non-stale session in local storage,
@@ -89,6 +90,7 @@ angular.module('myApp.services', []).
 		if (!session.save) {
 			session.save = function() {
 				var now = new Date();
+				session.isExpired = undefined;
 				session.expirationDate = getExpirationDate(now);
 				store.set(sessionKey, session);
 			};

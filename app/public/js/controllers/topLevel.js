@@ -4,19 +4,22 @@ function TopLevelCtrl(session, $scope, $http) {
 
 	$scope.isSignedIn = function() {
 		if (session && session.user && session.user.email) {
-			return true;	
+			return true;
 		}
 
 		return false;
 	};
 
+	var resetSession = function () {
+		// clear out the logged in user
+		session.user = {};
+		session.save();
+	};
 
 	$scope.signOut = function() {
 		$http.get('/auth/signout')
 		.success(function () {
-			// clear out the logged in user
-			session.user = {};
-			session.save();
+			resetSession();
 		})
 		.error(function (data, status, headers, config) {
 			// TODO: Is there anything to do?
@@ -41,5 +44,21 @@ function TopLevelCtrl(session, $scope, $http) {
 	$scope.$on('$viewContentLoaded', function() {
 		scrollToTop();
 	});
+
+
+	var init = function() {
+		if (session.isExpired) {
+			$http.get('/data/user')
+			.success(function (user) {
+				session.user = user;
+				session.save();
+			})
+			.error(function (data, status, headers, config) {
+				resetSession();
+			});
+		}
+	};
+
+	init();
 }
 TopLevelCtrl.$inject = ['session', '$scope', '$http'];
