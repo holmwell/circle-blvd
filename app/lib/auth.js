@@ -10,10 +10,27 @@ var passwordField = 'password';
 var findUserById = function(id, callback) {
 	db.users.findById(id, function (err, user) {
 		if (user) {
-			return callback(null, user);
+			db.groups.findByUser(user, function (err, groups) {
+				// Populate the user's membership data with the
+				// names of the memberships.
+				for (var membershipKey in user.memberships) {
+					var membership = user.memberships[membershipKey];
+					for (var groupKey in groups) {
+						if (membership.group === groups[groupKey]._id) {
+							// TODO: Might just want to throw all the group
+							// data in there.
+							user.memberships[membershipKey].name = groups[groupKey].name;
+						}
+					}
+				};
+
+				return callback(null, user);
+			});
 		} 
-		// TODO: Use error codes
-		callback(new Error('User ' + id + ' does not exist'));
+		else {
+			// TODO: Use error codes
+			callback(new Error('User ' + id + ' does not exist'));	
+		}
 	});
 };
 

@@ -57,6 +57,11 @@ var db = function() {
 
 		couch.groups.findByProjectId(projectId, prepareGroups);
 	};
+
+	var findGroupsByUser = function(user, callback) {
+		couch.groups.findByUser(user, callback);
+	};
+
 	var isFirstStoryCreated = function (story) {
 		return !story.nextId;
 	};
@@ -627,7 +632,8 @@ var db = function() {
 		groups: {
 			add: addGroup,
 			remove: removeGroup,
-			findByProjectId: findGroupsByProjectId
+			findByProjectId: findGroupsByProjectId,
+			findByUser: findGroupsByUser
 		},
 		stories: {
 			add: addStory,

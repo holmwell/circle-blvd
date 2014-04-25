@@ -253,6 +253,35 @@ var couch = function() {
 		});
 	};
 
+	var findGroupsByUser = function (user, callback) {
+		var query = {};
+		var groupIds = [];
+		var groupsFound = [];
+
+		for (var membershipKey in user.memberships) {
+			var membership = user.memberships[membershipKey];
+			groupIds.push(membership.group);
+		}
+
+		if (groupIds.length > 0) {
+			query["keys"] = groupIds;
+			database.fetch(query, function (err, body) {
+				if (err) {
+					return callback(err);
+				}
+				else {
+					for (var rowIndex in body.rows) {
+						groupsFound.push(body.rows[rowIndex].doc);
+					}
+					return callback(null, groupsFound);
+				}
+			});
+		}
+		else {
+			callback(null, groupsFound);
+		}
+	};
+
 
 	var addStory = function(story, callback) {
 		// TODO: If we keep this (setting the story.type), 
@@ -518,7 +547,8 @@ var couch = function() {
 			add: addGroup,
 			remove: removeGroup,
 			findById: findGroupById,
-			findByProjectId: findGroupsByProjectId
+			findByProjectId: findGroupsByProjectId,
+			findByUser: findGroupsByUser
 		},
 		stories: {
 			add: addStory,
