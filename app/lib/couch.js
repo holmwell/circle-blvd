@@ -179,6 +179,7 @@ var couch = function() {
 			// is a change to the user model.
 			user._id = body._id;
 			user._rev = body._rev;
+			user.memberships = body.memberships;
 			user.type = body.type;
 
 			database.insert(user, callback);
