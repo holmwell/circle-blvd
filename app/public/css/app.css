@@ -27,6 +27,10 @@
   cursor: pointer;
 }
 
+.clear {
+  clear: left;
+}
+
 .container, .container-fluid {
     background: white;
     padding: 3em;
@@ -59,7 +63,7 @@ h2, h3 {
 
 /* home */
 #backlog {
-  margin-top: 3.5em;
+  margin-top: 1.5em;
 }
 .story {
   background-color: #ddd;
@@ -96,7 +100,7 @@ h2, h3 {
   margin: 0;
 }
 
-#backlog .selected .story-id, #new-story .story-id {
+#backlog .selected .story-id, .new-story .story-id {
   /* TODO: Why do we need this hack? */
   margin-top: 0.6ex;
 }
@@ -105,27 +109,46 @@ h2, h3 {
   margin: 0;
 }
 
-#backlog .selected input, #new-story input {
+#backlog .selected input, .new-story input {
   margin: 0;
 }
 
-#backlog .not-selected, #new-story {
+#backlog .not-selected, .new-story {
   padding-top: 1.1ex;
   padding-bottom: 1.1ex;
 }
 
-#new-story form {
+.entry-nav {
+  margin: 0;
+  margin-left: -8px;
+  margin-right: -8px;
+}
+
+.new-story form {
   margin: 0;
 }
-#new-story {
+.new-story {
   padding: 0.5ex;
   padding-left: 1.5ex;
   cursor: default;
+
+  margin-top: 1ex;
+  margin-left: -8px;
+  margin-right: -8px;
 }
-#new-story:hover {
+.new-story:hover {
   background-color: #eee;
 }
-
+.subtle {
+  color: #ccc;
+}
+.subtle:hover {
+  color: #aaa;
+}
+.show-entry {
+  padding: 0.5ex;
+  text-align: right;
+}
 
 .next-meeting {
   color: #eee;

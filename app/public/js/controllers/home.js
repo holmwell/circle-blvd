@@ -30,6 +30,17 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		});
 	};
 
+	var focusElement = function (elementId) {
+		var element = document.getElementById(elementId);
+		if (element) {
+			// We want this to happen after this method
+			// finishes.
+			$timeout(function() {
+				element.focus();
+			}, 0);
+		}
+	};	
+
 	// wrap around getting and setting the server-side stories,
 	// so we can push to the server when we set things. there's
 	// probably a better way / pattern for doing this. feel free
@@ -130,10 +141,25 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	}(); // closure
 
 
-	$scope.startNewStories = function () {
-		$scope.isAddingNew = true;
+	$scope.isAdding = [];
+	$scope.isAdding['story'] = false;
+	$scope.isAdding['deadline'] = false;
+
+	$scope.showEntry = function (panelName) {
+		if (!panelName) {
+			$scope.isAddingNew = true;
+			$scope.showEntry('story');
+			// TODO: Focus for all the story types
+			focusElement('defaultEntry');
+		}
+		else {
+			for (var pName in $scope.isAdding) {
+				$scope.isAdding[pName] = false;
+			}
+			$scope.isAdding[panelName] = true;
+		}
 	};
-	$scope.stopNewStories = function () {
+	$scope.hideEntry = function () {
 		$scope.isAddingNew = undefined;
 	};
 
@@ -777,6 +803,7 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 		});
 
 		$scope.$on('$viewContentLoaded', activateDragAndDrop);
+		// $scope.showEntry();
 	};
 
 	init();

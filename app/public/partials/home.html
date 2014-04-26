@@ -1,30 +1,48 @@
 <!-- <button ng-click="debug()">Debug</button>
 <button ng-click="resetStories()">Reset stories</button> -->
-<div ng-hide="isAddingNew">
-	+ <a ng-click="startNewStories()" class="jsLink">Add story</a>
+<div class="row entry" ng-hide="isAddingNew">
+	<div class="offset3 span6 show-entry">
+	+ <a ng-click="showEntry()" class="jsLink">Add story</a>
+	</div>
 </div>
 
-<div class="row" ng-show="isAddingNew">
-	<div id="new-story" class="after-meeting story offset3 span6">
-		<form>
-			<span class="span1 story-id">+</span>
-			<input type="text" 
-				ng-model="newStory.summary"/>
-			<button class="btn" ng-click="create(newStory)">Add story</button>
-		</form>
-	</div>
+<div class="row entry" ng-show="isAddingNew">
+	<div class="offset3 span6">
+		<ul class="entry-nav nav nav-pills">
+			<li ng-class="{ active: isAdding['story'] }">
+				<a class="jsLink" ng-click="showEntry('story')">Story</a>
+			</li>
+			<li ng-class="{ active: isAdding['deadline'] }">
+				<a class="jsLink" ng-click="showEntry('deadline')">Deadline</a>
+			</li>
+			<!-- <li><a class="jsLink">Discussion</a></li> -->
+			<li class="pull-right">
+				<a ng-click="hideEntry()" class="jsLink subtle">Hide entry</a>
+			</li>
+		</ul>
 
-	<div id="new-story" class="after-meeting deadline story offset3 span6">
-		<form>
-			<span class="span1 story-id">=</span>
-			<input type="text" 
-				ng-model="newDeadline.summary"/>
-			<button class="btn" ng-click="createDeadline(newDeadline)">Add deadline</button>
-		</form>
-	</div>
+		<div ng-show="isAdding['story']" class="new-story">
+			<form>
+				<div class="input-group">
+					<input id="defaultEntry" type="text" class="input-xlarge" ng-model="newStory.summary"/>
+					<span class="input-group-btn">
+						<button class="btn pull-right" ng-click="create(newStory)">Add story</button>
+					</span>
+				</div>
+			</form>
+		</div>
 
-	<div class="span6">
-		<div class="pull-right"><a ng-click="stopNewStories()" class="jsLink">Done adding stories</a></div>
+		<div ng-show="isAdding['deadline']" 
+			class="new-story after-meeting deadline" >
+			<form>
+				<input type="text" class="input-xlarge" ng-model="newDeadline.summary"/>
+				<button class="btn pull-right" ng-click="createDeadline(newDeadline)">Add deadline</button>
+			</form>
+		</div>
+
+	<!-- 	<div class="span6">
+			<div class="pull-right"><a ng-click="hideEntry()" class="jsLink">Done adding stories</a></div>
+		</div> -->
 	</div>
 </div>
 
