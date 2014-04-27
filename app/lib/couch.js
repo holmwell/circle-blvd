@@ -206,6 +206,9 @@ var couch = function() {
 		});
 	};
 
+	var getSettings = function (callback) {
+		getView("settings/public", callback);
+	};
 
 	var addGroup = function(group, callback) {
 		group.type = "group";
@@ -543,6 +546,9 @@ var couch = function() {
 	return {
 		projects: {
 			// TODO: Do we want a projects data API?
+		},
+		settings: {
+			get: getSettings
 		},
 		groups: {
 			add: addGroup,

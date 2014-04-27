@@ -121,6 +121,19 @@ app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
 // Init routes
 app.put("/data/initialize", initRoutes.init);
 
+// Settings!
+app.get("/data/settings", function (req, res) { // public
+	var onSuccess = function (settings) {
+		res.send(200, settings);
+	};
+
+	onFailure = function (err) {
+		handleError(err, res);
+	};
+
+	db.settings.get(onSuccess, onFailure);
+});
+
 // Groups!
 app.get("/data/:projectId/groups", ensureAuthenticated, function (req, res) {
 	var projectId = req.params.projectId;

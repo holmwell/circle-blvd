@@ -69,6 +69,28 @@ var createViews = function(database, callback) {
 	designDocs.push(passwordsDesignDoc);
 
 
+	var settingsDesignDoc = {
+		url: '_design/settings',
+		body: 
+		{
+			version: "1.0.1",
+			language: "javascript",
+			views: {
+				'public': {
+					map: function(doc) {
+						if (doc.type === "setting") {
+							if (doc.visibility === "public") {
+								emit(doc.name, doc);	
+							}
+						}
+					}
+				}
+			}
+		}
+	};
+	designDocs.push(settingsDesignDoc);
+
+
 	var groupsDesignDoc = {
 		url: '_design/groups',
 		body: 

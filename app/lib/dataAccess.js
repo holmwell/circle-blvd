@@ -4,6 +4,17 @@ var uuid 	= require('node-uuid');
 
 var db = function() {
 
+	var getSettings = function (success, failure) {
+		couch.settings.get(function (err, settings) {
+			if (err) {
+				return failure(err);
+			}
+			else {
+				return success(settings);
+			}
+		});
+	};
+
 	var addGroup = function(group, success, failure) {
 		var newGroup = {
 			name: group.name,
@@ -629,6 +640,9 @@ var db = function() {
 	};
 
 	return {
+		settings: {
+			get: getSettings
+		},
 		groups: {
 			add: addGroup,
 			remove: removeGroup,
