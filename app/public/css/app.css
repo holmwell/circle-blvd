@@ -98,7 +98,7 @@ h2, h3 {
 
 
 .first {
-  background-color: #e3e3e3;
+  /*background-color: #e3e3e3;*/
 }
 
 .story-id {
@@ -125,7 +125,7 @@ h2, h3 {
 
 .entry {
   /* This is the width of the backlog-status panel */
-  margin-left: 35px;
+  margin-left: 31px;
 }
 
 .entry-nav {
@@ -138,7 +138,10 @@ h2, h3 {
   margin: 0;
 }
 .new-story {
+  background-color: #ddd;
   padding: 0.5ex;
+  padding-top: 1ex;
+  padding-bottom: 1ex;
   padding-left: 1.5ex;
   cursor: default;
 
