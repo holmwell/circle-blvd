@@ -63,7 +63,12 @@ h2, h3 {
 
 /* home */
 #backlog {
-  margin-top: 1.5em;
+  padding-top: 1.5em;
+}
+.storyWrapper {
+  /* Make the width of the draggable piece
+     as small as it can be */
+  float: left;
 }
 .story {
   background-color: #ddd;
@@ -116,6 +121,11 @@ h2, h3 {
 #backlog .not-selected, .new-story {
   padding-top: 1.1ex;
   padding-bottom: 1.1ex;
+}
+
+.entry {
+  /* This is the width of the backlog-status panel */
+  margin-left: 35px;
 }
 
 .entry-nav {
@@ -239,10 +249,11 @@ input:focus, textarea:focus {
 /* outside the story but in the backlog */
 .backlog-owner {
   color: #999;
-  padding: 0.5ex;
 
   padding-top: 1.1ex;
   padding-bottom: 1.1ex;
+  padding-left: 0.5ex;
+  padding-right: 0;
 
   margin-left: 5px;
 }
@@ -257,12 +268,12 @@ input:focus, textarea:focus {
 
   text-align: right;
   opacity: 0.6;
+  width: 10px;
 }
 
 .backlog-owner, .story, .not-selected, .storyWrapper, #backlog {
   /*border: solid 1px red;*/
 }
-
 
 /* admin */
 .adminList {

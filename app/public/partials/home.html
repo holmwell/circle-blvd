@@ -1,13 +1,13 @@
 <!-- <button ng-click="debug()">Debug</button>
 <button ng-click="resetStories()">Reset stories</button> -->
-<div class="row entry" ng-hide="isAddingNew">
-	<div class="offset3 span6 show-entry">
+<div class="entry" ng-hide="isAddingNew">
+	<div class="offset2 span6 show-entry">
 	+ <a ng-click="showEntry()" class="jsLink">Add story</a>
 	</div>
 </div>
 
-<div class="row entry" ng-show="isAddingNew">
-	<div class="offset3 span6">
+<div class="entry" ng-show="isAddingNew">
+	<div class="offset2 span6">
 		<ul class="entry-nav nav nav-pills">
 			<li ng-class="{ active: isAdding['story'] }">
 				<a class="jsLink" ng-click="showEntry('story')">Story</a>
@@ -46,9 +46,9 @@
 	</div>
 </div>
 
-<div id="backlog" ng-click="deselectAll()">
+<div id="backlog" ng-click="deselectAll()" class="offset2 clear">
 	<div class="storyWrapper row" ng-repeat="story in stories" data-story-id="{{story.id}}">
-		<div class="backlog-status offset2 span1">
+		<div class="backlog-status span1">
 			<i class="icon-ok" ng-show="isStoryDone(story)"></i>
 			<i class="icon-play" ng-show="isStoryActive(story)"></i>
 		</div>
@@ -95,6 +95,7 @@
 			</div>
 			<span class="not-selected" ng-show="!story.isSelected">{{story.summary}}</span>
 		</div>
+		
 		<div class="backlog-owner span2" ng-class="{ 
 			'after': story.isAfterNextMeeting
 		}"
