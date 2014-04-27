@@ -300,10 +300,17 @@ input:focus, textarea:focus {
   cursor: pointer;
 }
 
-#groupForm {
+#groupForm, #settingForm {
   margin-top: 2em;
 }
 
+.setting-row {
+  padding-top: 12px;
+}
+.setting-row input, .setting-row .btn {
+  margin-top: -4px;
+}
 
-
-
+.setting-row form {
+  margin: 0;
+}

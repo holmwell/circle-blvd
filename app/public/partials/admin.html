@@ -56,6 +56,24 @@
 	</ul>
 </form>
 
+<h4 id="settingForm">Settings</h4>
+<div class="adminList">
+	<div ng-repeat="setting in settings" class="setting-row" ng-class-odd="'odd'">
+		<form>
+			<div class="row">
+				<label class="name span2">{{setting.name}}</label>
+				<div class="span3">
+					<input type="text" ng-model="setting.value" placeholder="Value"/>
+				</div>
+				<div class="name span2">{{setting.visibility}}</div>
+				<div class="span2">
+					<button class="btn" ng-click="updateSetting(setting)">Save</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
 </div>
 
 

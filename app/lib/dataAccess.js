@@ -4,6 +4,32 @@ var uuid 	= require('node-uuid');
 
 var db = function() {
 
+	var addSetting = function(setting, success, failure) {
+		var newSetting = {
+			name: setting.name,
+			value: setting.value,
+			visibility: setting.visibility
+		};
+		
+		couch.settings.add(newSetting, function (err, body) {
+			if (err) {
+				return failure(err);
+			}
+			// TODO: what to return?
+			success(body);
+		});
+	};
+
+	var saveSetting = function(setting, success, failure) {
+		couch.settings.update(setting, function (err, body) {
+			if (err) {
+				return failure(err);
+			}
+
+			return success();
+		});
+	};
+
 	var getSettings = function (success, failure) {
 		couch.settings.get(function (err, settings) {
 			if (err) {
@@ -641,7 +667,9 @@ var db = function() {
 
 	return {
 		settings: {
-			get: getSettings
+			add: addSetting,
+			get: getSettings,
+			save: saveSetting
 		},
 		groups: {
 			add: addGroup,

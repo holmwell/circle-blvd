@@ -86,11 +86,19 @@ var couch = function() {
 				return;
 			}
 			
-			var docs = [];
-			body.rows.forEach(function (doc) {
-				docs.push(doc.value);
-			});
-
+			if (viewGenerationOptions.returnKeys) {
+				var docs = {};
+				body.rows.forEach(function (doc) {
+					docs[doc.key] = doc.value;
+				});
+			}
+			else {
+				var docs = [];
+				body.rows.forEach(function (doc) {
+					docs.push(doc.value);
+				});	
+			}
+			
 			callback(null, docs);
 		});
 	};
@@ -207,8 +215,46 @@ var couch = function() {
 	};
 
 	var getSettings = function (callback) {
-		getView("settings/public", callback);
+		// TODO: If there are two settings with the same name,
+		// things might not behave well.
+		var options = {
+			returnKeys: true
+		};
+		getView("settings/public", options, callback);
 	};
+
+	var addSetting = function(setting, callback) {
+		setting.type = "setting";
+		console.log("Adding ...");
+		console.log(setting);
+		database.insert(setting, callback);
+	};
+
+	var updateSetting = function (setting, callback) {
+		console.log("Updating ...");
+		console.log(setting);
+		database.get(setting._id, function (err, settingToUpdate) {
+
+			if (settingToUpdate.type !== "setting") {
+				console.log(settingToUpdate);
+				return callback({
+					message: "Attempt to update a non-setting."
+				});
+			}
+
+			var doc = {};
+			doc._id = settingToUpdate._id;
+			doc._rev = settingToUpdate._rev;
+			doc.type = settingToUpdate.type;
+
+			doc.name = setting.name || settingToUpdate.name;
+			doc.value = setting.value || settingToUpdate.value;
+			doc.visibility = setting.visibility || settingToUpdate.visibility;
+
+			database.insert(doc, callback);
+		});
+	};
+
 
 	var addGroup = function(group, callback) {
 		group.type = "group";
@@ -548,7 +594,9 @@ var couch = function() {
 			// TODO: Do we want a projects data API?
 		},
 		settings: {
-			get: getSettings
+			add: addSetting,
+			get: getSettings,
+			update: updateSetting
 		},
 		groups: {
 			add: addGroup,

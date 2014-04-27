@@ -134,6 +134,18 @@ app.get("/data/settings", function (req, res) { // public
 	db.settings.get(onSuccess, onFailure);
 });
 
+app.put("/data/setting", ensureAdministrator, function (req, res) {
+	var data = req.body;
+	db.settings.save(data, 
+		function (setting) {
+			res.send(200);
+		},
+		function (err) {
+			handleError(err, res);
+		}
+	);
+});
+
 // Groups!
 app.get("/data/:projectId/groups", ensureAuthenticated, function (req, res) {
 	var projectId = req.params.projectId;

@@ -138,11 +138,44 @@ function AdminCtrl(session, $scope, $http) {
 		});
 	};
 
+
+	$scope.updateSetting = function (setting) {
+		$http.put('/data/setting', setting)
+		.success(function() {
+			// TODO: Show a fading smiley face or something
+			// to indicate success.
+			getLatestSettingData();
+		})
+		.error(function (data) {
+			console.log(data);
+		});
+	};
+
+	var getSettingsSuccess = function(data, status, headers, config) {
+		if (data === {}) {
+			// do nothing. 
+		}
+		else {
+			$scope.settings = data;
+		}
+	};
+
+	var getLatestSettingData = function() {
+		$http.get('/data/settings')
+		.success(getSettingsSuccess)
+		.error(function (data, status) {
+			console.log(data);
+			console.log(status);
+		});
+	};
+
+
 	var init = function () {
 		$scope.userGroups = {};
 
 		getLatestUserData();
 		getLatestGroupData();
+		getLatestSettingData();
 	}
 
 	init();
