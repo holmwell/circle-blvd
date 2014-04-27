@@ -800,6 +800,11 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 			console.log('failure');
 			console.log(status);
 			console.log(data);
+
+			if (status === 401 && $scope.isSignedIn()) {
+				// We're not actually signed in.
+				$scope.signOut();
+			}
 		});
 
 		$scope.$on('$viewContentLoaded', activateDragAndDrop);
