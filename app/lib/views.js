@@ -73,15 +73,22 @@ var createViews = function(database, callback) {
 		url: '_design/settings',
 		body: 
 		{
-			version: "1.0.1",
+			version: "1.0.2",
 			language: "javascript",
 			views: {
 				'public': {
-					map: function(doc) {
+					map: function (doc) {
 						if (doc.type === "setting") {
 							if (doc.visibility === "public") {
 								emit(doc.name, doc);	
 							}
+						}
+					}
+				},
+				'all': {
+					map: function (doc) {
+						if (doc.type === "setting") {
+							emit(doc.name, doc);	
 						}
 					}
 				}

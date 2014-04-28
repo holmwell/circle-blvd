@@ -17,6 +17,7 @@ var couch = function() {
 	databaseOptions.url = databaseUrl;
 	var nanoMaster = nano(databaseOptions);
 	var database = nanoMaster.use(databaseName);
+	var isDatabaseReady = false;
 
 	var databaseExists = function (callback) {
 		var opts = {
@@ -221,6 +222,15 @@ var couch = function() {
 			returnKeys: true
 		};
 		getView("settings/public", options, callback);
+	};
+
+	var getAllSettings = function (callback) {
+		// TODO: If there are two settings with the same name,
+		// things might not behave well.
+		var options = {
+			returnKeys: true
+		};
+		getView("settings/all", options, callback);
 	};
 
 	var addSetting = function(setting, callback) {
@@ -594,17 +604,39 @@ var couch = function() {
 			console.log(err);
 		}
 		else {
-			// database ready.	
+			// database ready.
+			isDatabaseReady = true;
 		}
 	});
 
+	var whenDatabaseReady = function (callback, timeout) {
+		var timeSpent = 0;
+		var intervalId = setInterval(function () {
+			if (isDatabaseReady) {
+				clearInterval(intervalId);
+				callback();
+			}
+
+			if (timeout && timeSpent > timeout) {
+				clearInterval(intervalId);
+				callback("Reached timeout before database was ready.")
+			}
+
+			timeSpent += 100;
+		}, 100);
+	};
+
 	return {
+		database: {
+			whenReady: whenDatabaseReady
+		},
 		projects: {
 			// TODO: Do we want a projects data API?
 		},
 		settings: {
 			add: addSetting,
 			get: getSettings,
+			getAll: getAllSettings,
 			update: updateSetting
 		},
 		groups: {

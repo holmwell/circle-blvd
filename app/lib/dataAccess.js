@@ -532,6 +532,7 @@ var db = function() {
 		couch.users.findById(id, callback);
 	};
 
+	// TODO: Refactor this to have one parameter for the user.
 	var addUser = function(name, email, password, memberships, isReadOnly, success, failure) {
 		var user = {
 			name: name,
@@ -696,11 +697,24 @@ var db = function() {
 		});
 	};
 
+	var getAllSettings = function (success, failure) {
+		couch.settings.getAll(function (err, settings) {
+			if (err) {
+				return failure(err);
+			}
+			else {
+				return success(settings);
+			}
+		});
+	};
+
 
 	return {
+		whenReady: couch.database.whenReady,
 		settings: {
 			add: addSetting,
 			get: getSettings,
+			getAll: getAllSettings,
 			save: saveSetting
 		},
 		groups: {

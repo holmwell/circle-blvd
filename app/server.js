@@ -20,22 +20,6 @@ var initAuthentication = function () {
 	app.use(auth.session());
 };
 
-// configure Express
-app.configure(function() {
-	// TODO: Put port in config
-	app.set('port', process.env.PORT || 3000);
-	app.set('views', __dirname + '/views');
-	app.set('view engine', 'ejs');
-	app.use(express.static(path.join(__dirname, 'public')));
-	app.use(express.logger('dev'));
-	app.use(express.cookieParser());
-	app.use(express.bodyParser());
-	app.use(express.methodOverride());
-	app.use(express.session({ secret: 'what? ok!' }));
-	initAuthentication();	
-	app.use(app.router);
-});
-
 // Error handling.
 var logError = function (err) {
 	console.log(err);
@@ -98,273 +82,305 @@ var authenticateLocal = function(req, res, next) {
 	middleware(req, res, next);
 };
 
-// TODO: Require https (for passwords)
-app.post('/auth/signin', authenticateLocal);
+var configureSuccessful = function () {
+	// TODO: Require https (for passwords)
+	app.post('/auth/signin', authenticateLocal);
 
-app.get('/auth/signout', function (req, res) {
-	req.logout();
-	res.send(204); // no content
-});
-
-// Data API: Protected by authorization system
-
-// Users routes (global actions. requires admin access)
-app.get("/data/users", ensureAdministrator, usersRoutes.list);
-app.post("/data/user", ensureAdministrator, usersRoutes.add);
-app.put("/data/user/remove", ensureAdministrator, usersRoutes.remove);
-
-// User routes (account actions. requires login access)
-app.get("/data/user", ensureAuthenticated, userRoutes.user);
-app.put("/data/user", ensureAuthenticated, userRoutes.update);
-app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
-
-// Init routes
-app.put("/data/initialize", initRoutes.init);
-
-// Settings!
-app.get("/data/settings", function (req, res) { // public
-	var onSuccess = function (settings) {
-		res.send(200, settings);
-	};
-
-	onFailure = function (err) {
-		handleError(err, res);
-	};
-
-	db.settings.get(onSuccess, onFailure);
-});
-
-app.put("/data/setting", ensureAdministrator, function (req, res) {
-	var data = req.body;
-	db.settings.save(data, 
-		function (setting) {
-			res.send(200);
-		},
-		function (err) {
-			handleError(err, res);
-		}
-	);
-});
-
-// Groups!
-app.get("/data/:projectId/groups", ensureAuthenticated, function (req, res) {
-	var projectId = req.params.projectId;
-
-	db.groups.findByProjectId(projectId, function (err, groups) {
-		if (err) {
-			return handleError(err, res);
-		}
-		
-		res.send(200, groups);
+	app.get('/auth/signout', function (req, res) {
+		req.logout();
+		res.send(204); // no content
 	});
-});
 
-var addGroup = function (group, res) {
-	db.groups.add(group, 
-		function (group) {
-			res.send(200, group);
-		},
-		function (err) {
-			handleError(err, res);
-		}
-	);
-};
+	// Data API: Protected by authorization system
 
-app.post("/data/group", ensureAdministrator, function (req, res) {
-	var data = req.body;
+	// Users routes (global actions. requires admin access)
+	app.get("/data/users", ensureAdministrator, usersRoutes.list);
+	app.post("/data/user", ensureAdministrator, usersRoutes.add);
+	app.put("/data/user/remove", ensureAdministrator, usersRoutes.remove);
 
-	var group = {};	
-	group.projectId = data.projectId;
-	group.name = data.name;
+	// User routes (account actions. requires login access)
+	app.get("/data/user", ensureAuthenticated, userRoutes.user);
+	app.put("/data/user", ensureAuthenticated, userRoutes.update);
+	app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
 
-	addGroup(group, res);
-});
+	// Init routes
+	app.put("/data/initialize", initRoutes.init);
 
-app.put("/data/group/remove", ensureAdministrator, function (req, res) {
-	var group = req.body;
-
-	db.groups.remove(group, 
-		function () {
-			res.send(200);
-		},
-		function (err) {
-			handleError(err, res);
-		}
-	);
-});
-
-
-// Story routes
-app.get("/data/:projectId/stories", ensureAuthenticated, function (req, res) {
-	var projectId = req.params.projectId;
-
-	db.stories.findByProjectId(projectId, function (err, stories) {
-		// TODO: And if we err?
-		res.send(200, stories);
-	});
-});
-
-// TODO: combine this with /stories to return one object with 
-// both the story list and the first story (in two different things)
-app.get("/data/:projectId/first-story", ensureAuthenticated, function (req, res) {
-	var projectId = req.params.projectId;
-	db.stories.getFirstByProjectId(projectId, function (err, firstStory) {
-		res.send(200, firstStory);
-	});
-});
-
-var addStory = function (story, res) {
-	db.stories.add(story, 
-		function (story) {
-			res.send(200, story);
-		},
-		function (err) {
-			handleError(err, res);
-		}
-	);
-};
-
-app.post("/data/story/", ensureAuthenticated, function (req, res) {
-	var data = req.body;
-
-	var story = {};	
-	story.projectId = data.projectId;
-	story.summary = data.summary;
-	story.isDeadline = data.isDeadline;
-	story.isNextMeeting = data.isNextMeeting;
-
-	if (req.user) {
-		story.createdBy = {
-			name: req.user.name,
-			id: req.user._id
+	// Settings!
+	app.get("/data/settings", function (req, res) { // public
+		var onSuccess = function (settings) {
+			res.send(200, settings);
 		};
-	}
 
-	// TODO: Really, we don't need both of these.
-	//
-	// Either we specify what the 'next story' is
-	// or that the new story is going to be the
-	// first story, but both distinctions are
-	// unnecessary.
-	story.nextId = data.nextId;
-	// The dataAccess layer takes care of this.
-	// story.isFirstStory = true; // data.isFirstStory;
-
-	addStory(story, res);
-});
-
-app.put("/data/story/", ensureAuthenticated, function (req, res) {
-	var story = req.body;
-
-	db.stories.save(story, 
-		function () {
-			res.send(200);
-		},
-		function (err) {
+		onFailure = function (err) {
 			handleError(err, res);
-		}
-	);
-});
+		};
 
-app.put("/data/story/move", ensureAuthenticated, function (req, res) {
-	var body = req.body;
-	var story = body.story;
-	var newNextId = body.newNextId;
-	console.log("Moving ...");
-
-	db.stories.move(story, newNextId, function (response) {
-		res.send(200, response);
-	},
-	function (err) {
-		handleError(err, res);
+		db.settings.get(onSuccess, onFailure);
 	});
-});
 
-var removeStory = function (story, res) {
-	db.stories.remove(story, 
-		function () {
-			res.send(200);
-		},
-		function (err) {
-			handleError(err, res);
-		}
-	);
-};
-
-app.put("/data/story/remove", ensureAuthenticated, function (req, res) {
-	var story = req.body;
-	removeStory(story, res);
-});
-
-app.put("/data/:projectId/settings/show-next-meeting", ensureAuthenticated, function (req, res) {
-	var showNextMeeting = req.body.showNextMeeting;
-	var projectId = req.params.projectId;
-
-	var handleNextMeeting = function (err, nextMeeting) {
-		if (err) {
-			handleError(err, res);
-		}
-		else {
-			if (showNextMeeting) {
-				// TODO: Should probably be in the data access layer.
-				// TODO: Consider passing in the summary from the client,
-				// as 'meeting' should be a configurable word.
-				var story = {};
-				story.summary = "Next meeting";
-				story.isNextMeeting = true;
-
-				addStory(story, res);
+	app.put("/data/setting", ensureAdministrator, function (req, res) {
+		var data = req.body;
+		db.settings.save(data, 
+			function (setting) {
+				res.send(200);
+			},
+			function (err) {
+				handleError(err, res);
 			}
-			else {
-				removeStory(nextMeeting, res);
+		);
+	});
+
+	// Groups!
+	app.get("/data/:projectId/groups", ensureAuthenticated, function (req, res) {
+		var projectId = req.params.projectId;
+
+		db.groups.findByProjectId(projectId, function (err, groups) {
+			if (err) {
+				return handleError(err, res);
 			}
-		}
+			
+			res.send(200, groups);
+		});
+	});
+
+	var addGroup = function (group, res) {
+		db.groups.add(group, 
+			function (group) {
+				res.send(200, group);
+			},
+			function (err) {
+				handleError(err, res);
+			}
+		);
 	};
 
-	var nextMeeting = db.stories.getNextMeetingByProjectId(projectId, handleNextMeeting);
-});
+	app.post("/data/group", ensureAdministrator, function (req, res) {
+		var data = req.body;
 
-// The secret to bridging Angular and Express in a 
-// way that allows us to pass any path to the client.
-// 
-// Also, this depends on the static middleware being
-// near the top of the stack.
-app.get('*', function (req, res) {
-	// Redirect to 'initialize' on first-time use.
-	//
-	// Use a cookie to control flow and prevent redirect loops.
-	// Maybe not the best idea; feel free to have a better one.
-	var usersExist = function(callback) {
-		db.users.count(function (err, count) {
-			if (err) {
-				callback(err);
+		var group = {};	
+		group.projectId = data.projectId;
+		group.name = data.name;
+
+		addGroup(group, res);
+	});
+
+	app.put("/data/group/remove", ensureAdministrator, function (req, res) {
+		var group = req.body;
+
+		db.groups.remove(group, 
+			function () {
+				res.send(200);
+			},
+			function (err) {
+				handleError(err, res);
 			}
-			else if (count > 0) {
-				callback(null, true);
+		);
+	});
+
+
+	// Story routes
+	app.get("/data/:projectId/stories", ensureAuthenticated, function (req, res) {
+		var projectId = req.params.projectId;
+
+		db.stories.findByProjectId(projectId, function (err, stories) {
+			// TODO: And if we err?
+			res.send(200, stories);
+		});
+	});
+
+	// TODO: combine this with /stories to return one object with 
+	// both the story list and the first story (in two different things)
+	app.get("/data/:projectId/first-story", ensureAuthenticated, function (req, res) {
+		var projectId = req.params.projectId;
+		db.stories.getFirstByProjectId(projectId, function (err, firstStory) {
+			res.send(200, firstStory);
+		});
+	});
+
+	var addStory = function (story, res) {
+		db.stories.add(story, 
+			function (story) {
+				res.send(200, story);
+			},
+			function (err) {
+				handleError(err, res);
+			}
+		);
+	};
+
+	app.post("/data/story/", ensureAuthenticated, function (req, res) {
+		var data = req.body;
+
+		var story = {};	
+		story.projectId = data.projectId;
+		story.summary = data.summary;
+		story.isDeadline = data.isDeadline;
+		story.isNextMeeting = data.isNextMeeting;
+
+		if (req.user) {
+			story.createdBy = {
+				name: req.user.name,
+				id: req.user._id
+			};
+		}
+
+		// TODO: Really, we don't need both of these.
+		//
+		// Either we specify what the 'next story' is
+		// or that the new story is going to be the
+		// first story, but both distinctions are
+		// unnecessary.
+		story.nextId = data.nextId;
+		// The dataAccess layer takes care of this.
+		// story.isFirstStory = true; // data.isFirstStory;
+
+		addStory(story, res);
+	});
+
+	app.put("/data/story/", ensureAuthenticated, function (req, res) {
+		var story = req.body;
+
+		db.stories.save(story, 
+			function () {
+				res.send(200);
+			},
+			function (err) {
+				handleError(err, res);
+			}
+		);
+	});
+
+	app.put("/data/story/move", ensureAuthenticated, function (req, res) {
+		var body = req.body;
+		var story = body.story;
+		var newNextId = body.newNextId;
+		console.log("Moving ...");
+
+		db.stories.move(story, newNextId, function (response) {
+			res.send(200, response);
+		},
+		function (err) {
+			handleError(err, res);
+		});
+	});
+
+	var removeStory = function (story, res) {
+		db.stories.remove(story, 
+			function () {
+				res.send(200);
+			},
+			function (err) {
+				handleError(err, res);
+			}
+		);
+	};
+
+	app.put("/data/story/remove", ensureAuthenticated, function (req, res) {
+		var story = req.body;
+		removeStory(story, res);
+	});
+
+	app.put("/data/:projectId/settings/show-next-meeting", ensureAuthenticated, function (req, res) {
+		var showNextMeeting = req.body.showNextMeeting;
+		var projectId = req.params.projectId;
+
+		var handleNextMeeting = function (err, nextMeeting) {
+			if (err) {
+				handleError(err, res);
 			}
 			else {
-				callback(null, false);
+				if (showNextMeeting) {
+					// TODO: Should probably be in the data access layer.
+					// TODO: Consider passing in the summary from the client,
+					// as 'meeting' should be a configurable word.
+					var story = {};
+					story.summary = "Next meeting";
+					story.isNextMeeting = true;
+
+					addStory(story, res);
+				}
+				else {
+					removeStory(nextMeeting, res);
+				}
+			}
+		};
+
+		var nextMeeting = db.stories.getNextMeetingByProjectId(projectId, handleNextMeeting);
+	});
+
+	// The secret to bridging Angular and Express in a 
+	// way that allows us to pass any path to the client.
+	// 
+	// Also, this depends on the static middleware being
+	// near the top of the stack.
+	app.get('*', function (req, res) {
+		// Redirect to 'initialize' on first-time use.
+		//
+		// Use a cookie to control flow and prevent redirect loops.
+		// Maybe not the best idea; feel free to have a better one.
+		var usersExist = function(callback) {
+			db.users.count(function (err, count) {
+				if (err) {
+					callback(err);
+				}
+				else if (count > 0) {
+					callback(null, true);
+				}
+				else {
+					callback(null, false);
+				}
+			});
+		};
+
+		usersExist(function (err, exist) {
+			if (err) {
+				return handleError(err, res);
+			}
+			
+			if (!exist && !req.cookies.initializing) {
+				res.cookie('initializing', 'yep');
+				res.redirect('/#/initialize');
+			}
+			else {
+				res.clearCookie('initializing');
+				routes.index(req, res);			
 			}
 		});
-	};
-
-	usersExist(function (err, exist) {
-		if (err) {
-			return handleError(err, res);
-		}
-		
-		if (!exist && !req.cookies.initializing) {
-			res.cookie('initializing', 'yep');
-			res.redirect('/#/initialize');
-		}
-		else {
-			res.clearCookie('initializing');
-			routes.index(req, res);			
-		}
 	});
-});
 
-app.listen(app.get('port'), function() {
-	console.log("Express server listening on port " + app.get('port'));
-	console.log("Ready.");
+	app.listen(app.get('port'), function() {
+		console.log("Express server listening on port " + app.get('port'));
+		console.log("Ready.");
+	});
+};
+
+
+// configure Express
+app.configure(function() {
+	// TODO: Put port in config
+	app.set('port', process.env.PORT || 3000);
+	app.set('views', __dirname + '/views');
+	app.set('view engine', 'ejs');
+	app.use(express.static(path.join(__dirname, 'public')));
+	app.use(express.logger('dev'));
+	app.use(express.cookieParser());
+	app.use(express.bodyParser());
+	app.use(express.methodOverride());
+
+	var tenSeconds = 10000;
+	db.whenReady(function () {
+		db.settings.getAll(
+			function (settings) {
+				app.use(express.session({ secret: 'what? ok!' }));
+				initAuthentication();	
+				app.use(app.router);
+				configureSuccessful();
+			},
+			function (err) {
+				console.log("Failed to start. Could not get settings.");
+				console.log(err);
+			}
+		);
+	}, tenSeconds);
 });
