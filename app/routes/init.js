@@ -9,10 +9,13 @@ exports.init = function (req, res) {
 		res.send(500, err);
 	};
 
-	var adminGroup = {
-		name: "Administrative",
-		projectId: "1",
-		isPermanent: true
+	var addNextMeeting = function () {
+		var story = {};	
+		story.projectId = "1";
+		story.summary = "Next meeting";
+		story.isNextMeeting = true;
+
+		db.stories.add(story, onSuccess, onError);
 	};
 
 	var addDemoMode = function () {
@@ -22,7 +25,7 @@ exports.init = function (req, res) {
 			visibility: "public"
 		};
 
-		db.settings.add(demoSetting, onSuccess, onError);
+		db.settings.add(demoSetting, addNextMeeting, onError);
 	};
 
 	var addAdminUser = function (userGroup) {
@@ -33,13 +36,21 @@ exports.init = function (req, res) {
 			level: "member"
 		}];
 
+		var isReadOnly = false;
 		db.users.add(
 			"Admin", 
 			data.email, 
 			data.password, 
 			memberships,
+			isReadOnly,
 			addDemoMode, onError
 		);
+	};
+
+	var adminGroup = {
+		name: "Administrative",
+		projectId: "1",
+		isPermanent: true
 	};
 
 	db.groups.add(adminGroup, addAdminUser, onError);

@@ -56,8 +56,6 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 				$http.post('/data/story/', story)
 				.success(function (newStory) {
 					s[newStory.id] = newStory;
-					// TODO: At this point some stories
-					// might have new IDs. Do we care?
 					callback(newStory);
 				})
 				.error(function (data, status) {
@@ -675,16 +673,6 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 	$scope.isStoryDone = function (story) {
 		return isStoryStatus(story, "done");
 	}
-
-	$scope.createNextMeeting = function () {
-		var nextMeeting = {};
-		nextMeeting.summary = "Next meeting";
-		nextMeeting.isNextMeeting = true;
-		insertNewStory(nextMeeting, function () {
-			// $scope.newDeadline = undefined;
-			$timeout(makeStoriesDraggable, 0);
-		});
-	};
 
 	// $scope.showNextMeeting = function () {
 	// 	var body = {};
