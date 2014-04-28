@@ -1,4 +1,4 @@
-function HomeCtrl($scope, $timeout, $document, $http) {
+function HomeCtrl($scope, $timeout, $http, $location) {
 
 	var projectId = "1";
 	var thisY = undefined;
@@ -752,6 +752,12 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 	};
 
 	var init = function() {
+		// TODO: Possibly put this at the TopLevelCtrl?
+		if (!$scope.isSignedIn()) {
+			$location.path('/signin');
+			return;
+		}
+
 		$scope.stories = stories;
 
 		$http.get('/data/' + projectId + '/first-story')
@@ -813,4 +819,4 @@ function HomeCtrl($scope, $timeout, $document, $http) {
 
 	init();
 }
-HomeCtrl.$inject = ['$scope', '$timeout', '$document', '$http'];
+HomeCtrl.$inject = ['$scope', '$timeout', '$http', '$location'];
