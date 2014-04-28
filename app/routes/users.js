@@ -34,6 +34,7 @@ exports.add = function (req, res) {
 		data.email, 
 		data.password, 
 		data.memberships,
+		data.isReadOnly,
 		onSuccess, onError
 	);
 };

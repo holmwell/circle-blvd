@@ -18,6 +18,11 @@ exports.update = function (req, res) {
 		return res.send(412, message);
 	}
 
+	if (req.user.isReadOnly) {
+		var message = "Sorry, the details of this account cannot be changed.";
+		return res.send(403, message);
+	}
+
 	var onSuccess = function () {
 		res.send(200);
 	};
@@ -34,6 +39,12 @@ exports.update = function (req, res) {
  */
 exports.updatePassword = function (req, res) {
 	var data = req.body;
+
+	if (req.user.isReadOnly) {
+		var message = "Sorry, the details of this account cannot be changed.";
+		return res.send(403, message);
+	}
+
 	if (!data.password) {
 		return res.send(400, "Missing password field.");
 	}

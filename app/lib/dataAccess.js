@@ -531,12 +531,13 @@ var db = function() {
 		couch.users.findById(id, callback);
 	};
 
-	var addUser = function(name, email, password, memberships, success, failure) {
+	var addUser = function(name, email, password, memberships, isReadOnly, success, failure) {
 		var user = {
 			name: name,
 			email: email,
 			id: uuid.v4(),
-			memberships: memberships
+			memberships: memberships,
+			isReadOnly: isReadOnly
 		};
 		
 		if (!isValidUser(user)) {
@@ -651,8 +652,8 @@ var db = function() {
 		var demoEmail = "demo@circleblvd.org";
 		if (newValue) {
 			// Demo mode is turned on!
-			// name, email, password, memberships, success, failure
-			addUser("Public Demo", demoEmail, "public", [], success, failure);
+			// name, email, password, memberships, isReadOnly, success, failure
+			addUser("Public Demo", demoEmail, "public", [], true, success, failure);
 		}
 		else {
 			// Demo mode is turned off!
