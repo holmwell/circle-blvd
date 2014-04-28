@@ -70,6 +70,16 @@ function TopLevelCtrl(session, $scope, $http, $route) {
 				resetSession();
 			});
 		}
+
+		// TODO: What's an efficient way of doing this?
+		// Does CouchDB take care of that? (ish?)
+		$http.get('/data/settings')
+		.success(function (settings) {
+			session.settings = settings;
+		})
+		.error(function (data, status) {
+			// Do nothing.
+		});
 	};
 
 	init();

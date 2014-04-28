@@ -34,5 +34,10 @@ function SignInCtrl(session, $scope, $location, $http) {
 
 		signIn($scope.user, success, failure);
 	};
+
+	if (session.settings && session.settings['demo']) {
+		console.log(session.settings);
+		$scope.isDemo = session.settings['demo'].value;	
+	}
 }
 SignInCtrl.$inject = ['session', '$scope', '$location', '$http'];

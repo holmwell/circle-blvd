@@ -15,6 +15,16 @@ exports.init = function (req, res) {
 		isPermanent: true
 	};
 
+	var addDemoMode = function () {
+		var demoSetting = {
+			name: "demo",
+			value: false,
+			visibility: "public"
+		};
+
+		db.settings.add(demoSetting, onSuccess, onError);
+	};
+
 	var addAdminUser = function (userGroup) {
 		var data = req.body;
 
@@ -28,7 +38,7 @@ exports.init = function (req, res) {
 			data.email, 
 			data.password, 
 			memberships,
-			onSuccess, onError
+			addDemoMode, onError
 		);
 	};
 

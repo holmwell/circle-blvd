@@ -246,12 +246,21 @@ var couch = function() {
 			doc._id = settingToUpdate._id;
 			doc._rev = settingToUpdate._rev;
 			doc.type = settingToUpdate.type;
+			doc.name = settingToUpdate.name;
 
-			doc.name = setting.name || settingToUpdate.name;
-			doc.value = setting.value || settingToUpdate.value;
+			doc.value = setting.value;
 			doc.visibility = setting.visibility || settingToUpdate.visibility;
 
-			database.insert(doc, callback);
+			database.insert(doc, function (err, body) {
+				if (err) {
+					callback(err);
+				}
+				else {
+					doc._id = body._id;
+					doc._rev = body._rev;
+					callback(null, doc);
+				}
+			});
 		});
 	};
 

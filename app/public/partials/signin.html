@@ -1,8 +1,19 @@
-<form>
-	<div><input type="text" ng-model="user.email" placeholder="Email address"/></div>
-	<div><input type="password" ng-model="user.password" placeholder="Password"/></div>
-	<div>
-		<button class="btn" type="submit" ng-click="signIn()">Sign in</button> 
-		{{message}}
+<div class="row">
+	<form class="span4">
+		<p>Welcome to Circle Boulevard.</p>
+		<div><input type="text" ng-model="user.email" placeholder="Email address"/></div>
+		<div><input type="password" ng-model="user.password" placeholder="Password"/></div>
+		<div>
+			<button class="btn" type="submit" ng-click="signIn()">Sign in</button> 
+			{{message}}
+		</div>
+	</form>
+
+	<div class="span6" ng-show="isDemo">
+		<p>To preview the site, please sign in:</p>
+		<ul>
+			<li>demo@circleblvd.org</li>
+			<li>Password: public</li>
+		</ul>
 	</div>
-</form>
+</div>

@@ -160,6 +160,13 @@ function AdminCtrl(session, $scope, $http) {
 		}
 	};
 
+	$scope.isBooleanSetting = function(setting) {
+		if (typeof(setting.value) === "boolean") {
+			return true;
+		}
+		return false;
+	};
+
 	var getLatestSettingData = function() {
 		$http.get('/data/settings')
 		.success(getSettingsSuccess)
