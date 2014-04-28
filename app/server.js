@@ -356,6 +356,40 @@ var configureSuccessful = function () {
 	});
 };
 
+var setSessionSecret = function (callback) {
+	db.settings.getAll(
+		function (settings) {
+			var sessionSecret = settings['session-secret'];
+
+			if (!sessionSecret) {
+				var secretSetting = {};
+				secretSetting.name = 'session-secret';
+				secretSetting.value = uuid.v4();
+				secretSetting.visibility = "secret";
+
+				db.settings.add(secretSetting, 
+					function (body) {
+						callback(null, secretSetting);
+					}, 
+					function (err) {
+						callback({
+							message: "Failed to start. Could not set session secret." 
+						});
+					}
+				);
+			}
+			else {
+				callback(null, sessionSecret);
+			}
+		},
+		function (err) {
+			callback({
+				message: "Failed to start. Could not get settings."
+			})
+		}
+	);
+};
+
 
 // configure Express
 app.configure(function() {
@@ -369,43 +403,22 @@ app.configure(function() {
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 
+	var sessionSecretOk = function (setting) {
+		app.use(express.session({ secret: setting.value }));
+		initAuthentication();
+		app.use(app.router);
+		configureSuccessful();
+	};
+
 	var tenSeconds = 10000;
 	db.whenReady(function () {
-		var sessionSecretOk = function (setting) {
-			app.use(express.session({ secret: setting.value }));
-			initAuthentication();
-			app.use(app.router);
-			configureSuccessful();
-		};
-
-		db.settings.getAll(
-			function (settings) {
-				var sessionSecret = settings['session-secret'];
-
-				if (!sessionSecret) {
-					var secretSetting = {};
-					secretSetting.name = 'session-secret';
-					secretSetting.value = uuid.v4();
-					secretSetting.visibility = "secret";
-
-					db.settings.add(secretSetting, 
-						function (body) {
-							sessionSecretOk(secretSetting);
-						}, 
-						function (err) {
-							console.log("Failed to start. Could not set session secret.");
-							console.log(err);
-						}
-					);
-				}
-				else {
-					sessionSecretOk(sessionSecret);
-				}
-			},
-			function (err) {
-				console.log("Failed to start. Could not get settings.");
+		setSessionSecret(function (err, setting) {
+			if (err) {
 				console.log(err);
 			}
-		);
+			else {
+				sessionSecretOk(setting);
+			}
+		});
 	}, tenSeconds);
 });
