@@ -36,7 +36,6 @@ function SignInCtrl(session, $scope, $location, $http) {
 	};
 
 	if (session.settings && session.settings['demo']) {
-		console.log(session.settings);
 		$scope.isDemo = session.settings['demo'].value;	
 	}
 }
