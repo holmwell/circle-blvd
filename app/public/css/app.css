@@ -58,6 +58,14 @@ h2, h3 {
   color: #555;
   text-align: center;
   margin-top: 1.4em;
+  margin-bottom: 1.8em;
+}
+
+.footer a {
+  color: #666;
+}
+.footer a:hover {
+  color: #888;
 }
 
 
