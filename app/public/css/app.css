@@ -208,14 +208,17 @@ input:focus, textarea:focus {
 
 }
 
-.summary .deselect {
+.summary .deselect  {
   cursor: pointer;
   margin-top: 0.5ex;
-  margin-right: 1ex;
 }
 
 .summary .deselect, .summary .deselect a {
   color: #bbb;
+}
+
+.summary .deselect, .created-by {
+  margin-right: 1ex;
 }
 
 .top-info {
@@ -231,6 +234,19 @@ input:focus, textarea:focus {
 .description textarea {
   width: 95%;
   height: 6em;
+  margin-bottom: 0;
+}
+
+.created-by {
+  text-align: left;
+  font-size: smaller;
+  margin-top: 0.5ex;
+  margin-left: 0.25ex;
+  color: #888;
+}
+
+.action-buttons {
+  margin-top: 1ex;
 }
 
 .saveBtn { 
@@ -240,8 +256,12 @@ input:focus, textarea:focus {
 }
 
 .removeBtn {
-  margin-right: 5px;
   color: #bbb;
+
+  margin-right: 5px;
+  margin-left: 0.25ex;
+  padding-left: 0;
+  
   border-style: none;
   background-color: inherit;
 }

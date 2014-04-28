@@ -233,6 +233,13 @@ app.post("/data/story/", ensureAuthenticated, function (req, res) {
 	story.isDeadline = data.isDeadline;
 	story.isNextMeeting = data.isNextMeeting;
 
+	if (req.user) {
+		story.createdBy = {
+			name: req.user.name,
+			id: req.user._id
+		};
+	}
+
 	// TODO: Really, we don't need both of these.
 	//
 	// Either we specify what the 'next story' is

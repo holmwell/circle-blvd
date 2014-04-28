@@ -90,8 +90,12 @@
 						<textarea ng-model="story.description" />
 					</div>
 
-					<button ng-hide="story.isNextMeeting" class="removeBtn" type="button" ng-click="remove(story)">Remove</button>
-					<button class="saveBtn pull-right" type="submit" ng-click="save(story)">Save</button>
+					<div class="created-by" ng-show="story.createdBy">story created by {{story.createdBy.name}}</div>
+
+					<div class="action-buttons">
+						<button ng-hide="story.isNextMeeting" class="removeBtn" type="button" ng-click="remove(story)">Remove</button>
+						<button class="saveBtn pull-right" type="submit" ng-click="save(story)">Save</button>
+					</div>
 				</form>
 			</div>
 			<span class="not-selected" ng-show="!story.isSelected">{{story.summary}}</span>

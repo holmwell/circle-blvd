@@ -93,7 +93,8 @@ var db = function() {
 					status: story.status,
 					description: story.description,
 					isDeadline: story.isDeadline,
-					isNextMeeting: story.isNextMeeting
+					isNextMeeting: story.isNextMeeting,
+					createdBy: story.createdBy
 				};
 
 				stories[modelStory.id] = modelStory;
