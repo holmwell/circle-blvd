@@ -1,6 +1,7 @@
 var express  = require('express');
 var request  = require('request');
 var path     = require('path');
+var uuid     = require('node-uuid');
 var routes   = require('./routes')
 var auth     = require('./lib/auth.js');
 var db       = require('./lib/dataAccess.js').instance();
@@ -370,12 +371,36 @@ app.configure(function() {
 
 	var tenSeconds = 10000;
 	db.whenReady(function () {
+		var sessionSecretOk = function (setting) {
+			app.use(express.session({ secret: setting.value }));
+			initAuthentication();
+			app.use(app.router);
+			configureSuccessful();
+		};
+
 		db.settings.getAll(
 			function (settings) {
-				app.use(express.session({ secret: 'what? ok!' }));
-				initAuthentication();	
-				app.use(app.router);
-				configureSuccessful();
+				var sessionSecret = settings['session-secret'];
+
+				if (!sessionSecret) {
+					var secretSetting = {};
+					secretSetting.name = 'session-secret';
+					secretSetting.value = uuid.v4();
+					secretSetting.visibility = "secret";
+
+					db.settings.add(secretSetting, 
+						function (body) {
+							sessionSecretOk(secretSetting);
+						}, 
+						function (err) {
+							console.log("Failed to start. Could not set session secret.");
+							console.log(err);
+						}
+					);
+				}
+				else {
+					sessionSecretOk(sessionSecret);
+				}
 			},
 			function (err) {
 				console.log("Failed to start. Could not get settings.");

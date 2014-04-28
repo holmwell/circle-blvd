@@ -235,8 +235,6 @@ var couch = function() {
 
 	var addSetting = function(setting, callback) {
 		setting.type = "setting";
-		console.log("Adding ...");
-		console.log(setting);
 		database.insert(setting, callback);
 	};
 
