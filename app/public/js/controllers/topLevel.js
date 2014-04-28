@@ -1,6 +1,6 @@
 'use strict';
 
-function TopLevelCtrl(session, $scope, $http, $route) {
+function TopLevelCtrl(session, $scope, $http, $location) {
 
 	$scope.isSignedIn = function() {
 		if (session && session.user && session.user.email) {
@@ -32,7 +32,7 @@ function TopLevelCtrl(session, $scope, $http, $route) {
 		$http.get('/auth/signout')
 		.success(function () {
 			resetSession();
-			$route.reload();
+			$location.path("/signin");
 		})
 		.error(function (data, status, headers, config) {
 			// TODO: Is there anything to do?
@@ -84,4 +84,4 @@ function TopLevelCtrl(session, $scope, $http, $route) {
 
 	init();
 }
-TopLevelCtrl.$inject = ['session', '$scope', '$http', '$route'];
+TopLevelCtrl.$inject = ['session', '$scope', '$http', '$location'];
