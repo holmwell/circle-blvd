@@ -2,7 +2,7 @@ circle blvd.
 ========
 
 ### Prerequisites
-1. Node 0.8
+1. Node 0.8 or 0.10
 2. CouchDB
 
 ### Installation
