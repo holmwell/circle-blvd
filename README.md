@@ -41,5 +41,8 @@ might like to know:
 ### Deployment
 There is an assume-it-all-works deployment outline here: [https://gist.github.com/exclsr/ab5b674d6d15b335d60f][2]
 
+### License
+BSD, 2-clause. See the LICENSE.txt file for details.
+
 [1]: https://gist.github.com/exclsr/6cd72c7815e0ea1ab74e "Running"
 [2]: https://gist.github.com/exclsr/ab5b674d6d15b335d60f "Deploy"
