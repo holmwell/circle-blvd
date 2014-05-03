@@ -6,10 +6,10 @@ circle blvd.
 2. CouchDB
 
 ### Installation
+* `(start CouchDB)`
 * `git clone https://github.com/secret-project/circle-blvd.git`
 * `cd circle-blvd/app/`
-* `npm install`
-* `(start CouchDB)`
+* `npm install --production`
 * `node server.js`
 * `Go to http://localhost:3000`
 
