@@ -309,7 +309,6 @@ var configureSuccessful = function () {
 		var body = req.body;
 		var story = body.story;
 		var newNextId = body.newNextId;
-		console.log("Moving ...");
 
 		db.stories.move(story, newNextId, function (response) {
 			res.send(200, response);

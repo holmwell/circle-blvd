@@ -301,15 +301,10 @@ var db = function() {
 		var saveStories = function () {
 			couch.stories.transaction(storiesToSave, function (err, response) {
 				if (err) {
+					// We maybe had some document conflicts and should
+					// probably just try again.
 					return failure(err);
 				}
-
-				// TODO: The response is a list of documents, and it might
-				// be possible (is it?) that some document conflicts occurred,
-				// in which case our data no longer has integrity and we need
-				// to fix that.
-				console.log(response);
-				console.log("Move success?");
 				success(story);
 			});
 		};
