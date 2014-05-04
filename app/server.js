@@ -1,4 +1,7 @@
 var express  = require('express');
+var http     = require('http');
+var https    = require('https');
+var fs       = require('fs');
 var request  = require('request');
 var path     = require('path');
 var uuid     = require('node-uuid');
@@ -350,10 +353,14 @@ var configureSuccessful = function () {
 		});
 	});
 
-	app.listen(app.get('port'), function() {
-		console.log("Express server listening on port " + app.get('port'));
-		console.log("Ready.");
+	http.createServer(app).listen(app.get('port'), function () {
+		console.log("Express http server listening on port " + app.get('port'));
 	});
+
+	// var options = {};
+	// https.createServer(options, app).listen(app.get('ssl-port'), function () {
+	// 	console.log("Express https server listening on port " + app.get('ssl-port'));
+	// });
 };
 
 var setSessionSecret = function (callback) {
@@ -395,6 +402,7 @@ var setSessionSecret = function (callback) {
 app.configure(function() {
 	// TODO: Put port in config
 	app.set('port', process.env.PORT || 3000);
+	app.set('ssl-port', process.env.SSL_PORT || 4000);
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'ejs');
 	app.use(express.static(path.join(__dirname, 'public')));
