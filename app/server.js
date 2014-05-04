@@ -86,6 +86,40 @@ var authenticateLocal = function(req, res, next) {
 	middleware(req, res, next);
 };
 
+var httpsServer = undefined;
+var tryToCreateHttpsServer = function (callback) {
+	db.settings.getAll(function (settings) {
+		var sslKeyPath = settings['ssl-key-path'] ? settings['ssl-key-path'].value : undefined;
+		var sslCertPath = settings['ssl-cert-path'] ? settings['ssl-cert-path'].value : undefined;
+		
+		if (sslKeyPath && sslCertPath) {
+			var options = {
+				key: fs.readFileSync(sslKeyPath),
+				cert: fs.readFileSync(sslCertPath)
+			};
+
+			// TODO: It would be nice to turn off the https server when new settings are
+			// presented. For now, just turning on is good enough.
+			if (httpsServer) {
+				if (callback) {
+					callback("The https server is already running. It's best to restart the app.");
+					return;
+				}
+			}
+
+			httpsServer = https.createServer(options, app);
+			httpsServer.listen(app.get('ssl-port'), function () {
+				if (callback) {
+					callback(null, "Express https server listening on port " + app.get('ssl-port'));
+				}
+			});
+		}
+		else if (callback) {
+			callback("No SSL settings found. Did not create https server.");
+		}
+	});	
+};
+
 var configureSuccessful = function () {
 	// TODO: Require https (for passwords)
 	app.post('/auth/signin', authenticateLocal);
@@ -139,6 +173,10 @@ var configureSuccessful = function () {
 		var data = req.body;
 		db.settings.save(data, 
 			function (setting) {
+				if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
+					// TODO: Tell the client if we started the server?
+					tryToCreateHttpsServer();
+				}
 				res.send(200);
 			},
 			function (err) {
@@ -370,22 +408,12 @@ var configureSuccessful = function () {
 	});
 		
 	// Run an https server if we can.
-	db.settings.getAll(function (settings) {
-		var sslKeyPath = settings['ssl-key-path'] ? settings['ssl-key-path'].value : undefined;
-		var sslCertPath = settings['ssl-cert-path'] ? settings['ssl-cert-path'].value : undefined;
-		
-		if (sslKeyPath && sslCertPath) {
-			var options = {
-				key: fs.readFileSync(sslKeyPath),
-				cert: fs.readFileSync(sslCertPath)
-			};
-
-			https.createServer(options, app).listen(app.get('ssl-port'), function () {
-				console.log("Express https server listening on port " + app.get('ssl-port'));
-			});
+	tryToCreateHttpsServer(function (err, success) {
+		if (err) {
+			console.log(err);
 		}
 		else {
-			console.log("No SSL settings found. Only running http server.");
+			console.log(success);
 		}
 	});
 };
