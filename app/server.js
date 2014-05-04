@@ -368,11 +368,26 @@ var configureSuccessful = function () {
 	http.createServer(app).listen(app.get('port'), function () {
 		console.log("Express http server listening on port " + app.get('port'));
 	});
+		
+	// Run an https server if we can.
+	db.settings.getAll(function (settings) {
+		var sslKeyPath = settings['ssl-key-path'] ? settings['ssl-key-path'].value : undefined;
+		var sslCertPath = settings['ssl-cert-path'] ? settings['ssl-cert-path'].value : undefined;
+		
+		if (sslKeyPath && sslCertPath) {
+			var options = {
+				key: fs.readFileSync(sslKeyPath),
+				cert: fs.readFileSync(sslCertPath)
+			};
 
-	// var options = {};
-	// https.createServer(options, app).listen(app.get('ssl-port'), function () {
-	// 	console.log("Express https server listening on port " + app.get('ssl-port'));
-	// });
+			https.createServer(options, app).listen(app.get('ssl-port'), function () {
+				console.log("Express https server listening on port " + app.get('ssl-port'));
+			});
+		}
+		else {
+			console.log("No SSL settings found. Only running http server.");
+		}
+	});
 };
 
 var setSessionSecret = function (callback) {
