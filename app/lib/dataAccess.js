@@ -697,6 +697,17 @@ var db = function() {
 		});
 	};
 
+	var getPrivateSettings = function (success, failure) {
+		couch.settings.getPrivate(function (err, settings) {
+			if (err) {
+				return failure(err);
+			}
+			else {
+				return success(settings);
+			}
+		});
+	};
+
 	var getAllSettings = function (success, failure) {
 		couch.settings.getAll(function (err, settings) {
 			if (err) {
@@ -714,6 +725,7 @@ var db = function() {
 		settings: {
 			add: addSetting,
 			get: getSettings,
+			getPrivate: getPrivateSettings,
 			getAll: getAllSettings,
 			save: saveSetting
 		},

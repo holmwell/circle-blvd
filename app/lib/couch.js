@@ -224,6 +224,15 @@ var couch = function() {
 		getView("settings/public", options, callback);
 	};
 
+	var getPrivateSettings = function (callback) {
+		// TODO: If there are two settings with the same name,
+		// things might not behave well.
+		var options = {
+			returnKeys: true
+		};
+		getView("settings/private", options, callback);
+	};
+
 	var getAllSettings = function (callback) {
 		// TODO: If there are two settings with the same name,
 		// things might not behave well.
@@ -634,6 +643,7 @@ var couch = function() {
 		settings: {
 			add: addSetting,
 			get: getSettings,
+			getPrivate: getPrivateSettings,
 			getAll: getAllSettings,
 			update: updateSetting
 		},

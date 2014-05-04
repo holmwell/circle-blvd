@@ -151,12 +151,18 @@ function AdminCtrl(session, $scope, $http) {
 		});
 	};
 
-	var getSettingsSuccess = function(data, status, headers, config) {
+	var appendSettings = function(data, status, headers, config) {
 		if (data === {}) {
 			// do nothing. 
 		}
 		else {
-			$scope.settings = data;
+			if (!$scope.settings) {
+				$scope.settings = {};
+			}
+
+			for (var key in data) {
+				$scope.settings[key] = data[key];
+			}
 		}
 	};
 
@@ -167,13 +173,20 @@ function AdminCtrl(session, $scope, $http) {
 		return false;
 	};
 
+	var getSettingsError = function (data, status) {
+		console.log(data);
+		console.log(status);
+	};
+
 	var getLatestSettingData = function() {
 		$http.get('/data/settings')
-		.success(getSettingsSuccess)
-		.error(function (data, status) {
-			console.log(data);
-			console.log(status);
-		});
+		.success(function (settings) {
+			appendSettings(settings);
+			$http.get('/data/settings/private')
+			.success(appendSettings)
+			.error(getSettingsError);
+		})
+		.error(getSettingsError);
 	};
 
 

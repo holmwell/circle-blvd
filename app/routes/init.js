@@ -18,14 +18,33 @@ exports.init = function (req, res) {
 		db.stories.add(story, onSuccess, onError);
 	};
 
-	var addDemoMode = function () {
+	var addSettings = function () {
 		var demoSetting = {
 			name: "demo",
 			value: false,
 			visibility: "public"
 		};
 
-		db.settings.add(demoSetting, addNextMeeting, onError);
+		var sslKeySetting = {
+			name: "ssl-key-path",
+			value: null,
+			visibility: "private"
+		};
+
+		var sslCertSetting = {
+			name: "ssl-cert-path",
+			value: null,
+			visibility: "private"
+		};
+
+		// TODO: It would be nice to make this sane.
+		db.settings.add(demoSetting, function () {
+				db.settings.add(sslKeySetting, function () {
+					db.settings.add(sslCertSetting, function () {
+						addNextMeeting();
+					}, onError);
+				}, onError);
+			}, onError);
 	};
 
 	var addAdminUser = function (userGroup) {
@@ -43,7 +62,7 @@ exports.init = function (req, res) {
 			data.password, 
 			memberships,
 			isReadOnly,
-			addDemoMode, onError
+			addSettings, onError
 		);
 	};
 

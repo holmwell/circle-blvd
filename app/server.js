@@ -123,6 +123,18 @@ var configureSuccessful = function () {
 		db.settings.get(onSuccess, onFailure);
 	});
 
+	app.get("/data/settings/private", ensureAdministrator, function (req, res) {
+		var onSuccess = function (settings) {
+			res.send(200, settings);
+		};
+
+		onFailure = function (err) {
+			handleError(err, res);
+		};
+
+		db.settings.getPrivate(onSuccess, onFailure);
+	});
+
 	app.put("/data/setting", ensureAdministrator, function (req, res) {
 		var data = req.body;
 		db.settings.save(data, 
