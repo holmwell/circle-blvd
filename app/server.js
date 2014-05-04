@@ -418,6 +418,20 @@ var configureSuccessful = function () {
 	});
 };
 
+var forceHttps = function(req, res, next) {
+	if (!httpsServer) {
+		// Don't do anything if we can't do anything.
+		return next();
+	}
+
+	if(req.secure 
+		|| req.headers['x-forwarded-proto'] === 'https' 
+		|| req.host === "localhost") {
+		return next();	
+	}
+	res.redirect('https://' + req.get('Host') + req.url);
+};
+
 var setSessionSecret = function (callback) {
 	db.settings.getAll(
 		function (settings) {
@@ -460,6 +474,7 @@ app.configure(function() {
 	app.set('ssl-port', process.env.SSL_PORT || 4000);
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'ejs');
+	app.use(forceHttps);
 	app.use(express.static(path.join(__dirname, 'public')));
 	app.use(express.logger('dev'));
 	app.use(express.cookieParser());
