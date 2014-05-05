@@ -96,15 +96,17 @@
 
 					<div class="commentArea" ng-hide="story.isNextMeeting || story.isDeadline">
 						<div class="commentHeading">Questions or comments?</div>
-						<div class="comment" ng-repeat="comment in story.comments" ng-class-odd="'odd'">
+						<textarea placeholder="Add comment or link ..." ng-model="story.newComment"/>
+
+						<button class="saveBtn pull-right topSaveBtn" type="submit" ng-click="save(story)">Save</button>
+						<div class="comment" ng-repeat="comment in story.comments | reverse" ng-class-odd="'odd'">
 							<div class="text" parse-url-hack ng-model="comment.text"><span class="name">{{comment.createdBy.name}}: </span></div>
 						</div>
-						<textarea placeholder="Add comment or link ..." ng-model="story.newComment"/>
 					</div>
 
 					<div class="action-buttons">
 						<button ng-hide="story.isNextMeeting" class="removeBtn" type="button" ng-click="remove(story)">Remove</button>
-						<button class="saveBtn pull-right" type="submit" ng-click="save(story)">Save</button>
+						<!-- <button class="saveBtn pull-right" type="submit" ng-click="save(story)">Save</button> -->
 					</div>
 				</form>
 			</div>

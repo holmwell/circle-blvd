@@ -277,6 +277,7 @@ input:focus, textarea:focus {
 }
 .comment {
   margin: 0.5ex;
+  margin-top: 1ex;
   margin-bottom: 1ex;
   margin-left: 2ex;
 }
@@ -312,6 +313,9 @@ input:focus, textarea:focus {
   margin: 5px;
   margin-right: 10px;
   margin-top: 0;
+}
+.topSaveBtn {
+  margin-top: 1ex;
 }
 
 .removeBtn {

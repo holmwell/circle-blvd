@@ -12,6 +12,15 @@ angular.module('myApp.filters', []).
       return String(text).replace(/\%VERSION\%/mg, version);
     }
   }]).
+  filter('reverse', function() {
+    return function (items) {
+    	if (!items) {
+    		return items;	
+    	}
+
+    	return items.slice().reverse();
+    };
+  }).
   filter('slice', function() {
   	// This is just "limitTo" in the latest version of Angular.
 	  return function(input, limit) {
