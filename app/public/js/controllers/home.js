@@ -454,6 +454,8 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 			movedStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : "last";
 			storiesToSave[movedStory.id] = movedStory;	
 			
+			// TODO: We don't need these 'storiesToSave' any more.
+			//
 			// if a story is to be saved, only do it once, to avoid
 			// simple document conflicts.
 			//
@@ -464,48 +466,66 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 			// 	saveStory(storiesToSave[storyId]);
 			// }
 
-			// Reset the scope-data binding. The YUI drag-and-drop stuff
-			// manipulates the DOM, and we need to update our stories array
-			// somehow to reflect the new order of things.
-			//
-			// TODO: This code is almost certainly the wrong way to do things
-			// if we want to be fast with a lot of elements. It seems to work, 
-			// though, and it's all done on the client side.			
-			var applyThings = function () {
-				$scope.$apply(function () {
-					stories = [];
-					$scope.stories = stories;
-				});
-
-				$scope.$apply(function () {
-					// TODO: Refactor this duplicate code with the init stuff.
-					var firstStory = usefulStories.getFirst();
-					var currentStory = firstStory;
-					var isAfterNextMeeting = false;
-					while (currentStory) {
-						if (isAfterNextMeeting) {
-							currentStory.isAfterNextMeeting = true;
-						}
-						else if (currentStory.isNextMeeting) {				
-							isAfterNextMeeting = true;
-						}
-						else {
-							currentStory.isAfterNextMeeting = false;
-						}
-
-						stories.push(currentStory);
-						currentStory = serverStories.get(currentStory.nextId);
+			// The YUI drag-and-drop stuff manipulates the DOM, 
+			// but doesn't touch our view-model, so we need to 
+			// update our stories array to reflect the new order
+			//  of things.
+			var applyNextMeeting = function (stories) {
+				var isAfterNextMeeting = false;
+				for (var key in stories) {
+					if (isAfterNextMeeting) {
+						stories[key].isAfterNextMeeting = true;
 					}
-
-					$scope.stories = stories;
-				});	
-
-				$timeout(makeStoriesDraggable, 0);
+					else if (stories[key].isNextMeeting) {				
+						isAfterNextMeeting = true;
+					}
+					else {
+						stories[key].isAfterNextMeeting = false;
+					}
+				}
+				return stories;
 			};
 
-			// We do this to make sure that $apply isn't
-			// already being called, which happens for fun sometimes.
-			$timeout(applyThings, 0);
+			// TODO: Use this in a future optimization
+			var findStoryIndex = function (story) {
+				// O(n)
+				for (var index in $scope.stories) {
+					if ($scope.stories[index].id === story.id) {
+						return index;
+					}
+				}
+
+				return -1;
+			};
+
+			var updateViewModelStoryOrder = function () {
+				var storiesInNewOrder = [];
+
+				var firstStory = usefulStories.getFirst();
+				var currentStory = firstStory;
+				
+				while (currentStory) {
+					storiesInNewOrder.push(currentStory);
+					currentStory = serverStories.get(currentStory.nextId);
+				}
+
+				if (storiesInNewOrder.length === stories.length) {
+					// Update isAfterNextMeeting for all stories
+					storiesInNewOrder = applyNextMeeting(storiesInNewOrder);
+
+					// Update our view with the proper story order
+					//
+					// TODO: We really only need to update the range of
+					// stories affected, not all of them, but that can 
+					// be a performance optimization later.
+					for (var key in storiesInNewOrder) {
+						stories[key] = serverStories.get(storiesInNewOrder[key].id);
+					}
+				}
+				else {
+					console.log("Something unknown happened with the move. Need to refresh page.")
+				}
+			}(); // closure
 		});
 	};
 
@@ -566,7 +586,7 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 		    if (drop.get('tagName').toLowerCase() === 'div') {
 		        //Are we not going up?
 		        if (!goingUp) {
-		            drop = drop.get('nextSibling');
+		            drop = drop.next();
 		        }
 		        //Add the node to this list
 		        e.drop.get('node').get('parentNode').insertBefore(drag, drop);
@@ -697,24 +717,32 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 	$scope.debug = function() {
 		console.log("Scope array: ");
 		$scope.stories.forEach(function (el, index) {
-			console.log(index);
-			console.log(el);
+			if (index < 7) {
+				console.log(index);
+				console.log(el);	
+			}
 		});
 
 		console.log("Array: ");
 		stories.forEach(function (el, index) {
-			console.log(index);
-			console.log(el);
+			if (index < 7) {
+				console.log(index);
+				console.log(el);	
+			}
 		});
 
-		console.log("Assoc array: ");
-		var ss = serverStories.all();
-		for (var storyId in ss) {
-			console.log(ss[storyId]);
-		};
+		// console.log("Assoc array: ");
+		// var ss = serverStories.all();
+		// var counter = 0;
+		// for (var storyId in ss) {
+		// 	if (counter < 7) {
+		// 		console.log(ss[storyId]);
+		// 		counter++;	
+		// 	}
+		// };
 
-		console.log("First story: ");
-		console.log(usefulStories.getFirst());
+		// console.log("First story: ");
+		// console.log(usefulStories.getFirst());
 	};
 
 	$scope.resetStories = function() {
