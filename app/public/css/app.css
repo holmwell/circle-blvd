@@ -173,9 +173,20 @@ h2, h3 {
   text-align: right;
 }
 
+#backlog textarea, 
+#backlog input, 
+#backlog select {
+  background-color: #ddd;
+}
+#backlog textarea:hover, #backlog textarea:focus,
+#backlog input:hover, #backlog input:focus, 
+#backlog select:hover, #backlog select:focus {
+  background-color: white;
+}
+
 .next-meeting {
   color: #eee;
-  background-color: #333;
+  background-color: #333 !important;
 }
 .next-meeting:hover {
   background-color:  #333;
@@ -241,6 +252,10 @@ input:focus, textarea:focus {
   float: left;
 }
 
+.description {
+  margin-top: 1ex;
+}
+
 .description textarea, .commentArea textarea {
   width: 95%;
   height: 6em;
@@ -248,16 +263,7 @@ input:focus, textarea:focus {
   background-color: #ddd;
 }
 
-#backlog textarea, 
-#backlog input, 
-#backlog select {
-  background-color: #ddd;
-}
-#backlog textarea:hover, #backlog textarea:focus,
-#backlog input:hover, #backlog input:focus, 
-#backlog select:hover, #backlog select:focus {
-  background-color: white;
-}
+
 
 .commentArea {
   margin-top: 1ex;

@@ -63,7 +63,7 @@
 		ng-click="select(story)">
 
 	<!-- 		<div class="span2 story-id">{{story.id | slice:5 }} (next: {{story.nextId | slice:5}}) </div> -->
-			<div class="selected" ng-show="story.isSelected">
+			<div ng-show="story.isSelected">
 				<form>
 					<div class="summary">
 						<input id="boxForStory{{story.id}}" class="input-xlarge"
@@ -94,7 +94,7 @@
 						<textarea ng-model="story.description" />
 					</div>
 
-					<div class="commentArea">
+					<div class="commentArea" ng-hide="story.isNextMeeting || story.isDeadline">
 						<div class="commentHeading">Questions or comments?</div>
 						<div class="comment" ng-repeat="comment in story.comments" ng-class-odd="'odd'">
 							<span class="name">{{comment.createdBy.name}}</span>: {{comment.text}}
