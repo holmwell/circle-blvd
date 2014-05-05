@@ -9,7 +9,7 @@ angular.module('myApp.directives', []).
       elm.text(version);
     };
   }]).
-  directive('parseUrl', function() {
+  directive('parseUrlHack', function() {
   	  // Source: http://jsfiddle.net/bmleite/FyGen/
   	  // Reference: http://stackoverflow.com/questions/14692640/angularjs-directive-to-replace-text
 	  var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/gi;
@@ -39,7 +39,9 @@ angular.module('myApp.directives', []).
 	            angular.forEach(normalize(value.match(urlPattern)), function(url) {                                    
 	                value = value.replace(new RegExp(url, 'g'), '<a href="'+ url + '">' + url +'</a>');     
 	            });
-	            element.html(value);
+	            // This is a hack to prepend whatever is in this block
+	            // at the start. (e.g. the name in a comment)
+	            element.html(element.html() + value);
 	          });                
 	    }
 	  };  
