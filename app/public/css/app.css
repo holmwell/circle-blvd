@@ -279,7 +279,15 @@ input:focus, textarea:focus {
   margin: 0.5ex;
   margin-left: 2ex;
 }
-.comment.odd .name {
+.comment .text {
+  /* From 2006: http://longren.io/wrapping-text-inside-pre-tags/ */
+  white-space: pre-wrap;       /* css-3 */
+  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+  white-space: -pre-wrap;      /* Opera 4-6 */
+  white-space: -o-pre-wrap;    /* Opera 7 */
+  word-wrap: break-word;       /* Internet Explorer 5.5+ */
+}
+.comment.odd .name, .comment.odd .text {
   color: #888;
 }
 

@@ -97,8 +97,8 @@
 					<div class="commentArea" ng-hide="story.isNextMeeting || story.isDeadline">
 						<div class="commentHeading">Questions or comments?</div>
 						<div class="comment" ng-repeat="comment in story.comments" ng-class-odd="'odd'">
-							<span class="name">{{comment.createdBy.name}}</span>: 
-							<span parse-url ng-model="comment.text"></span>
+							<span class="name">{{comment.createdBy.name}}:</span>
+							<span class="text" parse-url ng-model="comment.text"></span>
 						</div>
 						<textarea placeholder="Add comment or link ..." ng-model="story.newComment"/>
 					</div>
