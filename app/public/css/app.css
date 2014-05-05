@@ -87,7 +87,7 @@ h2, h3 {
   cursor: move;
   min-width: 200px;
 }
-.story:hover {
+.story:hover, .selected {
   background-color: #eee;
 }
 .placeholder-story {
@@ -117,6 +117,8 @@ h2, h3 {
   /* TODO: Why do we need this hack? */
   margin-top: 0.6ex;
 }
+
+
 
 #backlog .selected form {
   margin: 0;
@@ -243,6 +245,18 @@ input:focus, textarea:focus {
   width: 95%;
   height: 6em;
   margin-bottom: 0;
+  background-color: #ddd;
+}
+
+#backlog textarea, 
+#backlog input, 
+#backlog select {
+  background-color: #ddd;
+}
+#backlog textarea:hover, #backlog textarea:focus,
+#backlog input:hover, #backlog input:focus, 
+#backlog select:hover, #backlog select:focus {
+  background-color: white;
 }
 
 .commentArea {
