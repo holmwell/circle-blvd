@@ -251,6 +251,9 @@ input:focus, textarea:focus {
   margin-top: 1ex;
   float: left;
 }
+.status {
+  margin-left: 10px;
+}
 
 .description {
   margin-top: 1ex;
