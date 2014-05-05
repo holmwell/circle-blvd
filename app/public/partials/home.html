@@ -91,12 +91,12 @@
 								story created by {{story.createdBy.name}}
 							</div>
 						</div>
-						<textarea ng-model="story.description" />
+						<textarea autosize ng-model="story.description" />
 					</div>
 
 					<div class="commentArea" ng-hide="story.isNextMeeting || story.isDeadline">
 						<div class="commentHeading">Questions or comments?</div>
-						<textarea placeholder="Add comment or link ..." ng-model="story.newComment"/>
+						<textarea autosize placeholder="Add comment or link ..." ng-model="story.newComment"/>
 
 						<button class="saveBtn pull-right topSaveBtn" type="submit" ng-click="save(story)">Save</button>
 						<div class="comment" ng-repeat="comment in story.comments | reverse" ng-class-odd="'odd'">

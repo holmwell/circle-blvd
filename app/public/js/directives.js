@@ -45,4 +45,13 @@ angular.module('myApp.directives', []).
 	          });                
 	    }
 	  };  
+}).
+directive('autosize', function () {
+	return {
+		restrict: 'A',
+		link: function(scope, elem, attr, ctrl) {
+			// Uses: https://github.com/jackmoore/autosize
+			elem.autosize();
+		}
+	};
 });
