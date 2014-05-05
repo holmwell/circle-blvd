@@ -94,7 +94,8 @@ var db = function() {
 					description: story.description,
 					isDeadline: story.isDeadline,
 					isNextMeeting: story.isNextMeeting,
-					createdBy: story.createdBy
+					createdBy: story.createdBy,
+					comments: story.comments
 				};
 
 				stories[modelStory.id] = modelStory;
@@ -510,6 +511,11 @@ var db = function() {
 			storyToSave.description = story.description;
 			// isDeadline should not be changed
 			// storyToSave.isDeadline = story.isDeadline;
+
+			if (story.newComment) {
+				storyToSave.comments = storyToSave.comments || [];
+				storyToSave.comments.push(story.newComment);
+			}
 
 			updateStory(storyToSave, success, failure);
 		});

@@ -13,9 +13,9 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 
 	var saveStory = function (story, callback) {
 		$http.put('/data/story/', story)
-		.success(function (data) {
+		.success(function (savedStory) {
 			if (callback) {
-				callback();
+				callback(savedStory);
 			}
 		})
 		.error(function (data, status) {
@@ -89,12 +89,16 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 			get: function (storyId) {
 				return s[storyId];
 			},
-			// TODO: Might want to use callbacks.
-			set: function (storyId, story) {
+			set: function (storyId, story, callback) {
 				if (s[storyId]) {
 					s[storyId] = story;
 					// update story
-					saveStory(story);	
+					saveStory(story, function (savedStory) {
+						s[storyId] = savedStory;
+						if (callback) {
+							callback(savedStory);
+						}
+					});	
 				}				
 			},
 			all: function() {
@@ -287,10 +291,13 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 		storyToSave.status = story.status;
 		storyToSave.description = story.description;
 
-		// TODO: Probably want a callback here
-		saveStory(storyToSave, function () {
+		storyToSave.newComment = story.newComment;
+		
+		serverStories.set(story.id, storyToSave, function (savedStory) {
+			story.newComment = undefined;
+			story.comments = savedStory.comments;
 			$scope.deselect(story);
-		});		
+		});
 	};
 
 	$scope.remove = function (story) {

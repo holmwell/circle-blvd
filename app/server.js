@@ -263,6 +263,18 @@ var configureSuccessful = function () {
 		);
 	};
 
+	var getCreatedBy = function (req) {
+		var createdBy = undefined;
+		if (req.user) {
+			createdBy = {
+				name: req.user.name,
+				id: req.user._id
+			};
+		}
+
+		return createdBy;
+	};
+
 	app.post("/data/story/", ensureAuthenticated, function (req, res) {
 		var data = req.body;
 
@@ -272,12 +284,7 @@ var configureSuccessful = function () {
 		story.isDeadline = data.isDeadline;
 		story.isNextMeeting = data.isNextMeeting;
 
-		if (req.user) {
-			story.createdBy = {
-				name: req.user.name,
-				id: req.user._id
-			};
-		}
+		story.createdBy = getCreatedBy(req);
 
 		// TODO: Really, we don't need both of these.
 		//
@@ -294,10 +301,23 @@ var configureSuccessful = function () {
 
 	app.put("/data/story/", ensureAuthenticated, function (req, res) {
 		var story = req.body;
+		var commentText = undefined;
+
+		// TODO: This is an opportunity to clean up the API?
+		// In other words, add /data/story/comment? Maybe.
+		if (story.newComment) {
+			var comment = {
+				text: story.newComment,
+				createdBy: getCreatedBy(req),
+				timestamp: Date.now()
+			};
+
+			story.newComment = comment;
+		}
 
 		db.stories.save(story, 
-			function () {
-				res.send(200);
+			function (savedStory) {
+				res.send(200, savedStory);
 			},
 			function (err) {
 				handleError(err, res);

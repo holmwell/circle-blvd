@@ -239,18 +239,38 @@ input:focus, textarea:focus {
   float: left;
 }
 
-.description textarea {
+.description textarea, .commentArea textarea {
   width: 95%;
   height: 6em;
   margin-bottom: 0;
 }
+
+.commentArea {
+  margin-top: 1ex;
+}
+.commentArea textarea {
+  height: 3em;
+}
+.commentHeading {
+  margin-right: 10px;
+  /*border-bottom: solid 1px #fff;*/
+}
+.comment {
+  margin: 0.5ex;
+  margin-left: 2ex;
+}
+.comment.odd .name {
+  color: #888;
+}
+
 
 .created-by {
   text-align: left;
   font-size: smaller;
   margin-top: 0.5ex;
   margin-left: 0.25ex;
-  color: #888;
+  margin-right: 10px;
+  /*color: #bbb;*/
 }
 
 .action-buttons {

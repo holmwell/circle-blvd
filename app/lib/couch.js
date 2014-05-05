@@ -486,7 +486,8 @@ var couch = function() {
 		&& n(a.status) === n(b.status)
 		&& n(a.owner) === n(b.owner)
 		&& n(a.isDeadline) === n(b.isDeadline)
-		&& n(a.isNextMeeting) === n(b.isNextMeeting);
+		&& n(a.isNextMeeting) === n(b.isNextMeeting)
+		&& n(a.comments).length === n(b.comments).length;
 	};
 
 	var updateStory = function (story, callback) {

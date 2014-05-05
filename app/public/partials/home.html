@@ -1,5 +1,5 @@
-<!-- <button ng-click="debug()">Debug</button>
-<button ng-click="resetStories()">Reset stories</button> -->
+<!-- <button ng-click="debug()">Debug</button> -->
+<!-- <button ng-click="resetStories()">Reset stories</button> -->
 <div class="entry" ng-hide="isAddingNew">
 	<div class="offset2 span6 show-entry">
 	+ <a ng-click="showEntry()" class="jsLink">Add story</a>
@@ -86,11 +86,21 @@
 					</div>
 
 					<div class="description">
-						<div>What should we know?</div>
+						<div>What should we know?
+							<div class="created-by pull-right" ng-show="story.createdBy">
+								story created by {{story.createdBy.name}}
+							</div>
+						</div>
 						<textarea ng-model="story.description" />
 					</div>
 
-					<div class="created-by" ng-show="story.createdBy">story created by {{story.createdBy.name}}</div>
+					<div class="commentArea">
+						<div class="commentHeading">Questions or comments?</div>
+						<div class="comment" ng-repeat="comment in story.comments" ng-class-odd="'odd'">
+							<span class="name">{{comment.createdBy.name}}</span>: {{comment.text}}
+						</div>
+						<textarea placeholder="Add comment ..." ng-model="story.newComment"/>
+					</div>
 
 					<div class="action-buttons">
 						<button ng-hide="story.isNextMeeting" class="removeBtn" type="button" ng-click="remove(story)">Remove</button>
