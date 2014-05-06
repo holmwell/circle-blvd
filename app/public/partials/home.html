@@ -94,7 +94,7 @@
 						<textarea autosize ng-model="story.description" />
 					</div>
 
-					<div class="commentArea" ng-hide="story.isNextMeeting || story.isDeadline">
+					<div class="commentArea" ng-if="!(story.isNextMeeting || story.isDeadline)">
 						<div class="commentHeading">Questions or comments?</div>
 						<textarea autosize placeholder="Add comment or link ..." ng-model="story.newComment"/>
 
