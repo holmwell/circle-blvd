@@ -781,6 +781,7 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 			return;
 		}
 
+		$scope.owners = [];
 		$scope.stories = stories;
 
 		$http.get('/data/' + projectId + '/first-story')
@@ -834,6 +835,16 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 				// We're not actually signed in.
 				$scope.signOut();
 			}
+		});
+
+		$http.get("/data/x/users/names")
+		.success(function (names) {
+			$scope.owners = names;
+		})
+		.error(function (data, status) {
+			console.log('get names failure');
+			console.log(status);
+			console.log(data);			
 		});
 
 		$scope.$on('$viewContentLoaded', activateDragAndDrop);

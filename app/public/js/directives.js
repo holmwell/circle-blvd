@@ -44,4 +44,17 @@ directive('autosize', function () {
 			elem.autosize();
 		}
 	};
+}).
+directive('typeaheadOwners', function () {
+	return {
+		restrict: 'A',
+		link: function(scope, elem, attr, ctrl) {
+			// Uses: http://getbootstrap.com/2.3.2/javascript.html#typeahead
+			var array = scope.owners; 
+			var options = {
+				source: array
+			};
+			elem.typeahead(options);
+		}
+	};
 });

@@ -141,6 +141,40 @@ var configureSuccessful = function () {
 	app.put("/data/user", ensureAuthenticated, userRoutes.update);
 	app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
 
+	// TODO: This gets all the user's names on the server. We need
+	// to associate users with projects.
+	app.get("/data/x/users/names", ensureAuthenticated, function (req, res) {
+		db.users.getAll(function (err, users) {
+			if (err) {
+				return handleError(err, res);
+			}
+
+			var user;
+			var names = [];
+			for (var index in users) {
+				user = users[index];
+				if (user.name) {
+					names.push(user.name);
+				}
+			}
+
+			var ignoreCase = function (a, b) {
+				a = a.toLowerCase();
+				b = b.toLowerCase();
+				if (a < b) {
+					return -1;
+				}
+				if (a > b) {
+					return 1;
+				}
+				return 0;
+			};
+
+			names = names.sort(ignoreCase);
+			res.send(200, names);
+		});
+	});
+
 	// Init routes
 	app.put("/data/initialize", initRoutes.init);
 

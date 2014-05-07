@@ -73,7 +73,7 @@
 
 					<div class="top-info" ng-hide="story.isNextMeeting || story.isDeadline">
 						<div class="owner">Who's probably doing this?
-							<input type="text" ng-model="story.owner"/>
+							<input type="text" ng-model="story.owner" typeahead-owners autocomplete="off" />
 						</div>
 						<div class="status">What's up?
 							<select ng-model="story.status">
