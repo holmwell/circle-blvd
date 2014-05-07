@@ -13,7 +13,8 @@ var getUserWithFriendlyGroups = function (user, callback) {
 		for (var membershipKey in user.memberships) {
 			var membership = user.memberships[membershipKey];
 			for (var groupKey in groups) {
-				if (membership.group === groups[groupKey]._id) {
+				var group = groups[groupKey];
+				if (group && membership.group === group._id) {
 					// TODO: Might just want to throw all the group
 					// data in there.
 					user.memberships[membershipKey].name = groups[groupKey].name;
