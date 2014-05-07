@@ -679,7 +679,11 @@ var db = function() {
 				// TODO: The transactional nature of this code
 				// has the potential to break things, but they 
 				// can probably be fixed through the admin panel.
-				return handleNewDemoSetting(newSetting.value, success, failure);
+				return handleNewDemoSetting(newSetting.value, 
+					function() {
+						success(setting);
+					},
+					failure);
 			}
 			else {
 				return success(newSetting);
