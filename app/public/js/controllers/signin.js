@@ -1,10 +1,14 @@
-function SignInCtrl(session, $scope, $location, $http) {
+function SignInCtrl(signInName, session, $scope, $location, $http) {
 
 	$scope.signIn = function() {
 		var success = function(data, status, headers, config) {
 			$scope.message = "Success!";
 
 			var user = data;
+			if ($scope.rememberMe) {
+				signInName.set(user.email);	
+			}
+
 			session.user = user;
 			session.save();
 
@@ -35,8 +39,21 @@ function SignInCtrl(session, $scope, $location, $http) {
 		signIn($scope.user, success, failure);
 	};
 
-	if (session.settings && session.settings['demo']) {
-		$scope.isDemo = session.settings['demo'].value;	
-	}
+	var init = function () {
+		$scope.user = {};
+
+		if (session.settings && session.settings['demo']) {
+			$scope.isDemo = session.settings['demo'].value;	
+		}
+
+		var name = signInName.get();
+		if (name) {
+			$scope.user.email = name;
+		}
+
+		$scope.rememberMe = true;
+	};
+
+	init();	
 }
-SignInCtrl.$inject = ['session', '$scope', '$location', '$http'];
+SignInCtrl.$inject = ['signInName', 'session', '$scope', '$location', '$http'];

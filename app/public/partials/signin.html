@@ -3,9 +3,11 @@
 		<p>Welcome to Circle Boulevard.</p>
 		<div><input type="text" ng-model="user.email" placeholder="Email address"/></div>
 		<div><input type="password" ng-model="user.password" placeholder="Password"/></div>
-		<div>
-			<button class="btn" type="submit" ng-click="signIn()">Sign in</button> 
-			{{message}}
+		<div class="span3 actionRow">
+			<div class="checkbox pull-left remember">
+				<label><input type="checkbox" ng-model="rememberMe"/>Remember me</label>
+			</div>
+			<button class="btn pull-right" type="submit" ng-click="signIn()">Sign in</button> 
 		</div>
 	</form>
 
@@ -17,3 +19,4 @@
 		</ul>
 	</div>
 </div>
+<div>{{message}}</div>

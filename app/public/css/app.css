@@ -364,6 +364,15 @@ input:focus, textarea:focus {
   /*border: solid 1px red;*/
 }
 
+/* sign in */
+.actionRow {
+  margin-left: 0;
+}
+.actionRow .remember {
+  padding-top: 0.6ex;
+}
+
+
 /* admin */
 .adminList {
   list-style: none;
