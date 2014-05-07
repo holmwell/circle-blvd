@@ -1,6 +1,20 @@
 'use strict';
 
 /* Directives */
+var entityMap = {
+	"&": "&amp;",
+	"<": "&lt;",
+	">": "&gt;",
+	'"': '&quot;',
+	"'": '&#39;',
+	"/": '&#x2F;'
+};
+
+function escapeHtml(string) {
+	return String(string).replace(/[&<>"'\/]/g, function (s) {
+		return entityMap[s];
+	});
+}
 
 
 angular.module('myApp.directives', []).
@@ -12,7 +26,7 @@ angular.module('myApp.directives', []).
   directive('parseUrlHack', function() {
   	  // Source: http://jsfiddle.net/bmleite/FyGen/
   	  // Reference: http://stackoverflow.com/questions/14692640/angularjs-directive-to-replace-text
-	  var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/gi;
+	  var urlPattern = /(http|ftp|https):&#x2F;&#x2F;[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/gi;
 	    
 	  var normalize = function (arr) {
 	  	if (!arr) {
@@ -27,7 +41,7 @@ angular.module('myApp.directives', []).
 	       }
 	       return result;
 	  };
-	  
+
 	  return {    
 	    restrict: 'A',    
 	    require: 'ngModel',
@@ -35,9 +49,10 @@ angular.module('myApp.directives', []).
 	    // scope: { props: '=parseurl', ngModel: '=ngModel' },
 	    scope: { ngModel: '=ngModel' },
 	    link: function compile(scope, element, attrs, controller) {
-	        scope.$watch('ngModel', function(value) {                     
-	            angular.forEach(normalize(value.match(urlPattern)), function(url) {                                    
-	                value = value.replace(new RegExp(url, 'g'), '<a href="'+ url + '">' + url +'</a>');     
+	        scope.$watch('ngModel', function(value) {
+	        	value = escapeHtml(value);
+	            angular.forEach(normalize(value.match(urlPattern)), function(url) {
+	                value = value.replace(new RegExp(url, 'g'), '<a href="'+ url + '">' + url +'</a>');
 	            });
 	            // This is a hack to prepend whatever is in this block
 	            // at the start. (e.g. the name in a comment)
