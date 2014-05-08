@@ -106,6 +106,7 @@
 
 					<div class="action-buttons">
 						<button ng-hide="story.isNextMeeting" class="removeBtn" type="button" ng-click="remove(story)">Remove story</button>
+						<button ng-hide="story.isNextMeeting" class="removeBtn" type="button" ng-click="archive(story)">Archive story</button>
 						<button ng-show="story.isNextMeeting || story.isDeadline" class="saveBtn pull-right" type="submit" ng-click="save(story)">Save</button>
 					</div>
 				</form>

@@ -383,10 +383,28 @@ var configureSuccessful = function () {
 		);
 	};
 
+	app.put("/data/story/archive", ensureAuthenticated, function (req, res) {
+		var story = req.body;
+		var stories = [];
+		stories.push(story);
+
+		db.archives.addStories(stories, 
+		function (body) {
+			// TODO: If this breaks then we have a data
+			// integrity issue, because we have an archive
+			// of a story that has not been deleted.
+			removeStory(story, res);
+		}, 
+		function (err) {
+			handleError(err, res);
+		});
+	});
+
 	app.put("/data/story/remove", ensureAuthenticated, function (req, res) {
 		var story = req.body;
 		removeStory(story, res);
 	});
+
 
 	app.put("/data/:projectId/settings/show-next-meeting", ensureAuthenticated, function (req, res) {
 		var showNextMeeting = req.body.showNextMeeting;

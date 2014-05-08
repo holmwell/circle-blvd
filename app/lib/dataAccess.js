@@ -521,6 +521,64 @@ var db = function() {
 		});
 	};
 
+
+	var addStoriesToArchive = function (stories, success, failure) {
+		var count = 0;
+		var archives = [];
+
+		var storyIds = [];
+		stories.forEach(function (story) {
+			storyIds.push(story.id);
+		});
+
+		couch.stories.findMany(storyIds, function (err, body) {
+			if (err) {
+				return failure(err);
+			}
+
+			var storiesToArchive = [];
+			body.rows.forEach(function (record) {
+				if (record.doc.type === "story") {
+					storiesToArchive.push(record.doc);	
+				}
+			});;
+
+			storiesToArchive.forEach(function (story) {
+				var archive = {};
+
+				archive.storyId = story.id;
+				archive.projectId = story.projectId;
+				archive.summary = story.summary;
+				archive.owner = story.owner;
+				archive.status = story.status;
+				archive.description = story.description;
+				archive.comments = story.comments || [];
+
+				archive.isDeadline = story.isDeadline;
+				archive.createdBy = story.createdBy;
+
+				archive.timestamp = Date.now();
+				archive.sortIndex = "" + archive.timestamp + "." + count;
+				count++;
+
+				archives.push(archive);
+			});
+
+			couch.archives.add(archives, function (err, body) {
+				if (err) {
+					return failure(err);
+				}
+
+				return success(body);
+			});
+		});
+	};
+
+	var findArchivesByProjectId = function (projectId, callback) {
+		couch.archives.findByProjectId(projectId, callback);
+	};
+
+
 	var isValidUser = function(user) {
 		return user && user.email && user.id;
 	};
@@ -749,6 +807,10 @@ var db = function() {
 			getFirstByProjectId: getFirstStory,
 			getNextMeetingByProjectId: getNextMeeting,
 			save: saveStory
+		},
+		archives: {
+			addStories: addStoriesToArchive,
+			findByProjectId: findArchivesByProjectId
 		},
 		users: { 
 			add: addUser,

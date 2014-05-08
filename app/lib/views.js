@@ -191,7 +191,7 @@ var createViews = function(database, callback) {
 
 				nextMeetingByProjectId: {
 					map: function (doc) {
-						if (doc.stype === "story" && doc.projectId) {
+						if (doc.type === "story" && doc.projectId) {
 							if (doc.isNextMeeting) {
 								emit(doc.projectId, doc);
 							}
@@ -260,6 +260,27 @@ var createViews = function(database, callback) {
 		}
 	};
 	designDocs.push(storiesDesignDoc);
+
+
+	var archivesDesignDoc = {
+		url: '_design/archives',
+		body: 
+		{
+			version: "1.0.0",
+			language: "javascript",
+			views: {
+				byProjectId: {
+					map: function (doc) {
+						if (doc.type === "archive" && doc.projectId) {
+							emit([doc.projectId, doc.sortIndex], doc);
+						}
+					}
+				}
+			}
+		}
+	};
+	designDocs.push(archivesDesignDoc);
+
 
 	var saveDesignDocs = function () {
 		var saveDoc = function (doc) {

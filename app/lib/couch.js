@@ -359,6 +359,28 @@ var couch = function() {
 	};
 
 
+	var addArchives = function(archives, callback) {
+		var bulkDoc = {};
+		var options = {};
+		bulkDoc.docs = [];
+
+		archives.forEach(function (archive) {
+			archive.type = "archive";
+			bulkDoc.docs.push(archive);
+		});
+		database.bulk(bulkDoc, options, callback);
+	};
+
+	var findArchivesByProjectId = function (projectId, callback) {
+		var options = {
+			keys: [projectId]
+		};
+		getView("archives/byProjectId", options, function (err, rows) {
+			callback(err, rows);
+		});
+	};
+
+
 	var addStory = function(story, callback) {
 		// TODO: If we keep this (setting the story.type), 
 		// we want a way to tell the client how we modified it.
@@ -404,6 +426,12 @@ var couch = function() {
 				}
 			}
 		});
+	};
+
+	var findStoriesById = function (keys, callback) {
+		var query = {};
+		query["keys"] = keys;
+		database.fetch(query, callback);
 	};
 
 	var findStoriesByProjectId = function (projectId, callback) {
@@ -658,6 +686,7 @@ var couch = function() {
 		stories: {
 			add: addStory,
 			remove: removeStory,
+			findMany: findStoriesById,
 			findById: findStoryById,
 			findByProjectId: findStoriesByProjectId,
 			findByNextId: findStoriesByNextId,
@@ -665,6 +694,10 @@ var couch = function() {
 			findNextMeeting: findNextMeetingByProjectId,
 			transaction: storiesTransaction,
 			update: updateStory
+		},
+		archives: {
+			add: addArchives,
+			findByProjectId: findArchivesByProjectId
 		},
 		users: {
 			add: addUser,

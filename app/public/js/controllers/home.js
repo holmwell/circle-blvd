@@ -300,15 +300,9 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 		});
 	};
 
-	$scope.remove = function (story) {
-		// TODO: This one time all the stories after the
-		// removed story were no longer shown, but the
-		// data was fine on the server so a refresh 
-		// took care of everything. Look into this data
-		// display issue.
-		var storyToRemove = serverStories.get(story.id);
-		var nextStory = serverStories.get(storyToRemove.nextId);
-
+	var removeFromView = function (viewStory, serverStory) {
+		var nextStory = serverStories.get(serverStory.nextId);
+		
 		var getPreviousStory = function (story) {
 			var previousStory = story;
 			if (usefulStories.getFirst().id === story.id) {
@@ -317,7 +311,7 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 
 			var currentStory = usefulStories.getFirst();
 			while (currentStory) {
-				if (currentStory.nextId === storyToRemove.id) {
+				if (currentStory.nextId === serverStory.id) {
 					previousStory = currentStory;
 					return previousStory;
 				}
@@ -328,27 +322,49 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 			return previousStory;
 		};
 
+		if (viewStory.isSelected) {
+			viewStory.isSelected = false;
+			selectedStory = undefined;
+		}
+
+		var previousStory = getPreviousStory(viewStory);
+		if (!previousStory) {
+			usefulStories.setFirst(nextStory);
+		}
+		else {
+			previousStory.nextId = nextStory ? nextStory.id : "last";
+		}
+
+		var storyIndex = stories.indexOf(serverStory);
+		stories.splice(storyIndex, 1);
+		serverStories.remove(viewStory.id);
+
+		// TODO: Do we need this for 'remove'?
+		$timeout(makeStoriesDraggable, 0);
+	};
+
+	$scope.archive = function (story) {
+		var storyToArchive = serverStories.get(story.id);
+		$http.put('/data/story/archive', storyToArchive)
+		.success(function (data) {
+			removeFromView(story, storyToArchive);
+		})
+		.error(function (data) {
+			console.log(data);
+		});
+	};
+
+	$scope.remove = function (story) {
+		// TODO: This one time all the stories after the
+		// removed story were no longer shown, but the
+		// data was fine on the server so a refresh 
+		// took care of everything. Look into this data
+		// display issue.
+		var storyToRemove = serverStories.get(story.id);
+		
 		$http.put('/data/story/remove', storyToRemove)
 		.success(function (data) {
-			if (story.isSelected) {
-				story.isSelected = false;
-				selectedStory = undefined;
-			}
-
-			var previousStory = getPreviousStory(story);
-			if (!previousStory) {
-				usefulStories.setFirst(nextStory);
-			}
-			else {
-				previousStory.nextId = nextStory ? nextStory.id : "last";
-			}
-
-			var storyIndex = stories.indexOf(storyToRemove);
-			stories.splice(storyIndex, 1);
-			serverStories.remove(story.id);
-
-			// TODO: Do we need this for 'remove'?
-			$timeout(makeStoriesDraggable, 0);
+			removeFromView(story, storyToRemove);
 		})
 		.error(function (data, status) {
 			console.log('failure');
