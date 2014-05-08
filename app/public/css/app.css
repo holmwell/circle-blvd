@@ -360,6 +360,37 @@ input:focus, textarea:focus {
   width: 10px;
 }
 
+.done-status, .active-status {
+  display: inline-block;
+
+  border: solid 1px transparent;
+  width: 26px;
+  height: 26px;
+  margin-top: -0.75ex;
+  margin-left: -1.75ex;
+  
+  vertical-align: text-top;
+  
+  background-image: url("../img/glyphs/icon-circle.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+
+  opacity: 0.6;
+}
+.done-status:hover {
+  background-image: url("../img/glyphs/icon-ok.png");
+  cursor: pointer;
+  opacity: 0.5;
+}
+.done-status:active {
+  margin-top: -0.65ex;
+  margin-left: -1.65ex;
+}
+.active-status {
+  margin-top: -1.25ex;
+  background-image: url("../img/glyphs/icon-half-circle.png");
+}
+
 .backlog-owner, .story, .not-selected, .storyWrapper, #backlog {
   /*border: solid 1px red;*/
 }

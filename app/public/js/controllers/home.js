@@ -302,7 +302,7 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 
 	var removeFromView = function (viewStory, serverStory) {
 		var nextStory = serverStories.get(serverStory.nextId);
-		
+
 		var getPreviousStory = function (story) {
 			var previousStory = story;
 			if (usefulStories.getFirst().id === story.id) {
@@ -335,12 +335,12 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 			previousStory.nextId = nextStory ? nextStory.id : "last";
 		}
 
-		var storyIndex = stories.indexOf(serverStory);
+		var storyIndex = stories.indexOf(viewStory);
 		stories.splice(storyIndex, 1);
 		serverStories.remove(viewStory.id);
 
 		// TODO: Do we need this for 'remove'?
-		$timeout(makeStoriesDraggable, 0);
+		// $timeout(makeStoriesDraggable, 0);
 	};
 
 	$scope.archive = function (story) {
