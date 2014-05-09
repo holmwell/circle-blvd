@@ -545,6 +545,22 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 	};
 
 	var attachToDragEvents = function (Y) {
+		// If a story is selected, (the details panel is open),
+		// then don't allow drag events to happen.
+		Y.DD.DDM.before('drag:mouseDown', function (e) {
+			var drag = e.target;
+		    var preMoveStoryNode = drag.get('node');
+		    if (preMoveStoryNode) {
+				var storyId = getStoryFacadeFromNode(preMoveStoryNode).id;		    	
+				var story = serverStories.get(storyId);
+
+				if (story.isSelected) {
+					e.stopPropagation();
+					e.preventDefault();
+				}
+		    }
+		});
+
 		// Show a semi-transparent version of the story selected.
 		Y.DD.DDM.on('drag:start', function(e) {
 		    //Get our drag object

@@ -87,6 +87,9 @@ h2, h3 {
   cursor: move;
   min-width: 200px;
 }
+.selected {
+  cursor: default;
+}
 .story:hover, .selected {
   background-color: #eee;
 }
