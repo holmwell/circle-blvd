@@ -1,8 +1,32 @@
 <div id="backlog" class="offset2 clear archives">
 	<div class="storyWrapper row" ng-repeat="archive in archives">
 		<div class="backlog-status span1">&nbsp;</div>
-		<div class="archive span6" ng-click="select(archive)">
-			{{archive.summary}}
+		<div class="archive span6" ng-class="{ selected: archive.isSelected }" ng-click="select(archive)">
+			<div ng-hide="archive.isSelected">{{archive.summary}}</div>
+			<div ng-if="archive.isSelected">
+				<div class="summary">
+					{{archive.summary}}
+					<div class="deselect pull-right"><a ng-click="deselect(archive)">Hide details</a></div>
+				</div>
+
+				<div ng-hide="archive.isDeadline">
+					<div>Owner: {{archive.owner}}</div>
+					<div>Status: {{archive.status}}</div>
+					<div>Created by: {{archive.createdBy.name}}</div>
+				</div>
+
+				<div class="description">
+					<div>Description:</div>
+					<div ng-model="archive.description"></div>
+				</div>
+
+				<div class="commentArea" ng-if="!(archive.isNextMeeting || archive.isDeadline)">
+					<div class="commentHeading">Comments:</div>
+					<div class="comment" ng-repeat="comment in archive.comments | reverse" ng-class-odd="'odd'">
+						<div class="text" append-linky ng-model="comment.text"><span class="name">{{comment.createdBy.name}}: </span></div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
