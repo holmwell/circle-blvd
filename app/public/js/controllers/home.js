@@ -94,7 +94,6 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 					s[storyId] = story;
 					// update story
 					saveStory(story, function (savedStory) {
-						s[storyId] = savedStory;
 						if (callback) {
 							callback(savedStory);
 						}
