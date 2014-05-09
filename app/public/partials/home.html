@@ -49,11 +49,12 @@
 <div id="backlog" ng-click="deselectAll()" class="offset2 clear">
 	<div class="storyWrapper row" ng-repeat="story in stories" data-story-id="{{story.id}}">
 		<div class="backlog-status span1">
-			<i class="done-status" 
-				ng-show="isStoryDone(story)" 
-				ng-click="archive(story)"
-				title="archive story"></i>
+			<i class="done-status" ng-show="story.isDeadline && !story.isAfterNextMeeting" 
+			ng-click="archive(story)" title="archive deadline"></i>
+			<i class="done-status" ng-show="isStoryDone(story)" ng-click="archive(story)" 
+			title="archive story"></i>
 			<i class="active-status" ng-show="isStoryActive(story)"></i>
+			
 		</div>
 		<div class="story span6" ng-class="{ 
 			selected: story.isSelected && !story.isDeadline, 
