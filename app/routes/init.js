@@ -37,11 +37,19 @@ exports.init = function (req, res) {
 			visibility: "private"
 		};
 
+		var sslCaSetting = {
+			name: "ssl-ca-path",
+			value: null,
+			visibility: "private"
+		};
+
 		// TODO: It would be nice to make this sane.
 		db.settings.add(demoSetting, function () {
 				db.settings.add(sslKeySetting, function () {
 					db.settings.add(sslCertSetting, function () {
-						addNextMeeting();
+						db.settings.add(sslCaSetting, function () {
+							addNextMeeting();	
+						}, onError);
 					}, onError);
 				}, onError);
 			}, onError);

@@ -91,13 +91,29 @@ var tryToCreateHttpsServer = function (callback) {
 	db.settings.getAll(function (settings) {
 		var sslKeyPath = settings['ssl-key-path'] ? settings['ssl-key-path'].value : undefined;
 		var sslCertPath = settings['ssl-cert-path'] ? settings['ssl-cert-path'].value : undefined;
+		var sslCaPath = settings['ssl-ca-path'] ? settings['ssl-ca-path'].value : undefined;
 		
-		if (sslKeyPath && sslCertPath) {
-			var options = {
-				key: fs.readFileSync(sslKeyPath),
-				cert: fs.readFileSync(sslCertPath)
-			};
+		var options = undefined;
 
+		if (sslKeyPath && sslCertPath) {
+			if (sslCaPath) {
+				// TODO: It would be nice to restart the server if we
+				// find ourselves with a new sslCaPath and we're already up.
+				options = {
+					key: fs.readFileSync(sslKeyPath),
+					cert: fs.readFileSync(sslCertPath),
+					ca: fs.readFileSync(sslCaPath)
+				};	
+			}
+			else {
+				options = {
+					key: fs.readFileSync(sslKeyPath),
+					cert: fs.readFileSync(sslCertPath)
+				};	
+			}
+		}
+
+		if (options) {
 			// TODO: It would be nice to turn off the https server when new settings are
 			// presented. For now, just turning on is good enough.
 			if (httpsServer) {
