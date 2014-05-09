@@ -584,12 +584,22 @@ var db = function() {
 	};
 
 	var findUserByEmail = function(userEmail, callback) {
+		if (userEmail) {
+			userEmail = userEmail.toLowerCase();
+		}
 		couch.users.findByEmail(userEmail, callback);
 	};
 
 	var findUserById = function(id, callback) {
 		couch.users.findById(id, callback);
 	};
+
+	var normalizeUser = function (user) {
+		if (user.email) {
+			user.email = user.email.toLowerCase();
+		}
+		return user;
+	}
 
 	// TODO: Refactor this to have one parameter for the user.
 	var addUser = function(name, email, password, memberships, isReadOnly, success, failure) {
@@ -606,6 +616,7 @@ var db = function() {
 		}
 
 		var addUser = function (user, password) {
+			user = normalizeUser(user);
 			couch.users.add(user, password, function (err, body) {
 				if (err) {
 					return failure(err);
@@ -650,6 +661,7 @@ var db = function() {
 			return failure();
 		}
 
+		user = normalizeUser(user);
 		couch.users.update(user, function (err) {
 			if (err) {
 				return failure(err);
