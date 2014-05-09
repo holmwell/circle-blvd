@@ -373,7 +373,8 @@ var couch = function() {
 
 	var findArchivesByProjectId = function (projectId, callback) {
 		var options = {
-			keys: [projectId]
+			startKey: [projectId,"{}"],
+			descending: true
 		};
 		getView("archives/byProjectId", options, function (err, rows) {
 			callback(err, rows);

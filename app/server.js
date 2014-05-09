@@ -272,7 +272,9 @@ var configureSuccessful = function () {
 		var projectId = req.params.projectId;
 
 		db.stories.findByProjectId(projectId, function (err, stories) {
-			// TODO: And if we err?
+			if (err) {
+				return handleError(err, res);
+			}
 			res.send(200, stories);
 		});
 	});
@@ -282,7 +284,20 @@ var configureSuccessful = function () {
 	app.get("/data/:projectId/first-story", ensureAuthenticated, function (req, res) {
 		var projectId = req.params.projectId;
 		db.stories.getFirstByProjectId(projectId, function (err, firstStory) {
+			if (err) {
+				return handleError(err, res);
+			}
 			res.send(200, firstStory);
+		});
+	});
+
+	app.get("/data/:projectId/archives", ensureAuthenticated, function (req, res) {
+		var projectId = req.params.projectId;
+		db.archives.findByProjectId(projectId, function (err, archives) {
+			if (err) {
+				return handleError(err, res);
+			}
+			res.send(200, archives);
 		});
 	});
 

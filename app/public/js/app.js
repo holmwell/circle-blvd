@@ -10,6 +10,7 @@ angular.module('myApp', [
 	'myApp.directives']).
 	config(['$routeProvider', function($routeProvider) {
 		$routeProvider.when('/', {templateUrl: 'partials/home.html', controller: HomeCtrl});
+		$routeProvider.when('/archives', {templateUrl: 'partials/archives.html', controller: ArchivesCtrl});
 		$routeProvider.when('/signin', {templateUrl: 'partials/signin.html', controller: SignInCtrl});
 		$routeProvider.when('/profile', {templateUrl: 'partials/profile.html', controller: ProfileCtrl});
 		$routeProvider.when('/admin', {templateUrl: 'partials/admin.html', controller: AdminCtrl});

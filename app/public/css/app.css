@@ -78,7 +78,7 @@ h2, h3 {
      as small as it can be */
   float: left;
 }
-.story {
+.story, .archive {
   background-color: #ddd;
   padding: 0.5ex;
   padding-left: 1.5ex;
@@ -401,6 +401,15 @@ input:focus, textarea:focus {
 }
 .actionRow .remember {
   padding-top: 0.6ex;
+}
+
+/* archive */
+.archive {
+  cursor: default;
+  border: dotted 1px #1E69B5;
+  padding: 1ex;
+  color: black;
+  background-color: white;
 }
 
 
