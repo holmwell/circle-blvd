@@ -535,7 +535,10 @@ var forceHttps = function(req, res, next) {
 };
 
 var initSettings = function (callback) {
-
+	// Visibility definitions:
+	//   public: visible to all
+	//   private: visible to administrators
+	//   secret: visible to the database and computer memory
 	var defaultSettings = [{
 		name: "demo",
 		value: false,
@@ -544,6 +547,18 @@ var initSettings = function (callback) {
 		name: 'session-secret',
 		value: uuid.v4(),
 		visibility: "secret"
+	},{
+		name: "smtp-login",
+		value: null,
+		visibility: "private"
+	},{
+		name: "smtp-password",
+		value: null,
+		visibility: "secret"
+	},{
+		name: "smtp-service",
+		value: "Zoho",
+		visibility: "private"
 	},{ 
 		name: "ssl-ca-path",
 		value: null,
