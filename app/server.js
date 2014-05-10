@@ -534,40 +534,72 @@ var forceHttps = function(req, res, next) {
 	res.redirect('https://' + req.get('Host') + req.url);
 };
 
-var setSessionSecret = function (callback) {
-	db.settings.getAll(
-		function (settings) {
-			var sessionSecret = settings['session-secret'];
+var initSettings = function (callback) {
 
-			if (!sessionSecret) {
-				var secretSetting = {};
-				secretSetting.name = 'session-secret';
-				secretSetting.value = uuid.v4();
-				secretSetting.visibility = "secret";
+	var defaultSettings = [{
+		name: 'session-secret',
+		value: uuid.v4(),
+		visibility: "secret"
+	}];
 
-				db.settings.add(secretSetting, 
+	var settingsTable = {};
+	var initialized = {};
+	defaultSettings.forEach(function (setting) {
+		settingsTable[setting.name] = setting;
+		initialized[setting.name] = false;
+	});
+
+	var callbackIfAllSettingsReady = function () {
+		var isReady = true;
+		for (var key in initialized) {
+			if (!initialized[key]) {
+				isReady = false;
+				break;
+			}
+		}
+
+		if (isReady && callback) {
+			callback(null, initialized);
+		}
+	};
+
+	db.settings.getAll(function (savedSettings) {
+		// var savedSetting;
+		// var defaultSetting;
+		var settingFound;
+		var settingReady = function (setting) {
+			initialized[setting.name] = setting;
+			callbackIfAllSettingsReady();
+		};
+
+		for (var defaultName in settingsTable) {
+			
+			settingFound = false;
+			for (var savedName in savedSettings) {
+				if (savedName === defaultName) {
+					settingFound = true;
+					break;
+				}
+			}
+
+			if (!settingFound) {
+				db.settings.add(settingsTable[defaultName], 
 					function (body) {
-						callback(null, secretSetting);
-					}, 
+						settingReady(settingsTable[defaultName]);
+					},
 					function (err) {
 						callback({
-							message: "Failed to start. Could not set session secret." 
+							message: "Could not set setting: " + defaultName
 						});
 					}
 				);
 			}
 			else {
-				callback(null, sessionSecret);
+				settingReady(savedSettings[savedName]);
 			}
-		},
-		function (err) {
-			callback({
-				message: "Failed to start. Could not get settings."
-			})
 		}
-	);
+	});
 };
-
 
 // configure Express
 app.configure(function() {
@@ -584,8 +616,10 @@ app.configure(function() {
 	app.use(express.bodyParser());
 	app.use(express.methodOverride());
 
-	var sessionSecretOk = function (setting) {
-		app.use(express.session({ secret: setting.value }));
+	var initSettingsOk = function (settings) {
+		var sessionSecret = settings['session-secret'].value;
+
+		app.use(express.session({ secret: sessionSecret }));
 		initAuthentication();
 		app.use(app.router);
 		configureSuccessful();
@@ -593,12 +627,12 @@ app.configure(function() {
 
 	var tenSeconds = 10000;
 	db.whenReady(function () {
-		setSessionSecret(function (err, setting) {
+		initSettings(function (err, settings) {
 			if (err) {
 				console.log(err);
 			}
 			else {
-				sessionSecretOk(setting);
+				initSettingsOk(settings);
 			}
 		});
 	}, tenSeconds);
