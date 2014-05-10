@@ -537,9 +537,25 @@ var forceHttps = function(req, res, next) {
 var initSettings = function (callback) {
 
 	var defaultSettings = [{
+		name: "demo",
+		value: false,
+		visibility: "public"
+	},{
 		name: 'session-secret',
 		value: uuid.v4(),
 		visibility: "secret"
+	},{ 
+		name: "ssl-ca-path",
+		value: null,
+		visibility: "private"
+	},{
+		name: "ssl-cert-path",
+		value: null,
+		visibility: "private"
+	},{
+		name: "ssl-key-path",
+		value: null,
+		visibility: "private"
 	}];
 
 	var settingsTable = {};
