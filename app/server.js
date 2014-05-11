@@ -5,6 +5,7 @@ var fs       = require('fs');
 var request  = require('request');
 var path     = require('path');
 var uuid     = require('node-uuid');
+var mailer   = require('nodemailer');
 var routes   = require('./routes')
 var auth     = require('./lib/auth.js');
 var db       = require('./lib/dataAccess.js').instance();
@@ -446,6 +447,70 @@ var configureSuccessful = function () {
 	app.put("/data/story/remove", ensureAuthenticated, function (req, res) {
 		var story = req.body;
 		removeStory(story, res);
+	});
+
+	app.post("/data/story/notify/new", ensureAuthenticated, function (req, res) {
+		var story = req.body;
+
+		db.settings.getAll(function (settings) {
+			var smtpService = settings['smtp-service'];
+			var smtpUsername = settings['smtp-login'];
+			var smtpPassword = settings['smtp-password'];
+
+			if (!smtpUsername || !smtpPassword || !smtpService) {
+				return res.send(501, "The server needs SMTP login info before sending notifications. Check the admin page.");
+			}
+
+			smtpService = smtpService.value;
+			smtpUsername = smtpUsername.value;
+			smtpPassword = smtpPassword.value;
+
+			var smtp = mailer.createTransport("SMTP", {
+				service: smtpService,
+				auth: {
+					user: smtpUsername,
+					pass: smtpPassword
+				}
+			});
+
+			var sender = req.user;
+			db.users.findByName(story.owner, function (err, owner) {
+				if (err) {
+					return handleError(err, res);
+				}
+
+				var getMessage = function (story) {
+					var message = "Hi. You've been requested to look at a new story on Circle Blvd.\n\n";
+					if (story.summary) {
+						message += "Summary: " + story.summary + "\n\n";
+					}
+					if (story.description) {
+						message += "Description: " + story.description + "\n\n";	
+					}
+					
+					return message;
+				};
+
+				// TODO: Use notification email addresses
+				var opt = {
+					from: "Circle Blvd <" + smtpUsername + ">",
+					to: owner.name + " <" + owner.email + ">",
+					replyTo: sender.name + " <" + sender.email + ">",
+					subject: "new story: " + story.summary,
+					text: getMessage(story)
+				};
+
+				smtp.sendMail(opt, function (err, response) {
+					smtp.close();
+					if (err) {
+						handleError(err, res);
+					}
+					else {
+						res.send(200, response);
+					}
+				});
+			});
+		});
 	});
 
 

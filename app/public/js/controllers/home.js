@@ -372,6 +372,18 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 		});
 	};
 
+	$scope.notify = function (story) {
+		$http.post('/data/story/notify/new', story)
+		.success(function (data) {
+			console.log("Notifcation successful");
+		})
+		.error (function (data, status) {
+			console.log("Notify error");
+			console.log(status);
+			console.log(data);
+		});
+	};
+
 	var getStoryFacadeFromNode = function (node) {
 		return {
 			id: node.getAttribute(idAttr)

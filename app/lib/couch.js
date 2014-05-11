@@ -134,6 +134,33 @@ var couch = function() {
 		findOneByKey("users/byId", id, callback);
 	};
 
+	var findUserByName = function (name, callback) {
+		if (name) {
+			name = name.toLowerCase();
+		}
+		var options = {
+			key: name
+		};
+		getView("users/byName", options, function (err, users) {
+			// TODO: This (the error messages) should probably be in the 
+			// data access layer. This file should probably just be for
+			// bare database access / making sure the queries are correct.
+			if (users.length > 1) {
+				return callback({
+					message: "More than one user was found by that name: " + name
+				});
+			}
+
+			if (users.length === 0) {
+				return callback({
+					message: "Nobody was found with that name."
+				});
+			}
+
+			callback(null, users[0]);
+		});
+	};
+
 	var findPasswordById = function (id, callback) {
 		findOneByKey("passwords/byId", id, callback);
 	};
@@ -704,6 +731,7 @@ var couch = function() {
 			remove: removeUser,
 			findByEmail: findUserByEmail,
 			findById: findUserById,
+			findByName: findUserByName,
 			getAll: getAllUsers,
 			update: updateUser,
 			updatePassword: updateUserPassword

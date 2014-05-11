@@ -594,6 +594,10 @@ var db = function() {
 		couch.users.findById(id, callback);
 	};
 
+	var findUserByName = function (name, callback) {
+		couch.users.findByName(name, callback);
+	};
+
 	var normalizeUser = function (user) {
 		if (user.email) {
 			user.email = user.email.toLowerCase();
@@ -841,6 +845,7 @@ var db = function() {
 			remove: removeUser,
 			findByEmail: findUserByEmail,
 			findById: findUserById, 
+			findByName: findUserByName,
 			update: updateUser,
 			updatePassword: updateUserPassword,
 			validatePassword: validateUserPassword,

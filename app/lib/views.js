@@ -27,7 +27,7 @@ var createViews = function(database, callback) {
 		url: '_design/users',
 		body: 
 		{
-			version: "1.0.0",
+			version: "1.0.1",
 			language: "javascript",
 			views: {
 				byEmail: {
@@ -41,6 +41,18 @@ var createViews = function(database, callback) {
 					map: function (doc) {
 						if (doc.type === "user" && doc.id) {
 							emit(doc.id, doc);
+						}
+					}
+				},
+				byName: {
+					map: function (doc) {
+						if (doc.type === "user") {
+							if (doc.name) {
+								emit(doc.name.toLowerCase(), doc);
+							}
+							else {
+								emit("", doc);
+							}
 						}
 					}
 				}
