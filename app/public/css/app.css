@@ -349,6 +349,22 @@ input:focus, textarea:focus {
 .backlog-owner.after {
   color: #bbb;
 }
+.notify {
+  padding-left: 0.5ex;
+  display: inline-block;
+  opacity: 0.5;
+}
+.notify i {
+  margin-top: 0.25ex;
+}
+.notify:hover {
+  opacity: 0.3;
+  cursor: pointer;
+}
+.notify:active {
+  margin-top: 0.1ex;
+  margin-left: 0.1ex;
+}
 
 .backlog-status {
   padding: 0.5ex;
