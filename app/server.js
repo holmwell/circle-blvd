@@ -219,6 +219,18 @@ var configureSuccessful = function () {
 		db.settings.getPrivate(onSuccess, onFailure);
 	});
 
+	app.get("/data/settings/authorized", ensureAdministrator, function (req, res) {
+		var onSuccess = function (settings) {
+			res.send(200, settings);
+		};
+
+		onFailure = function (err) {
+			handleError(err, res);
+		};
+
+		db.settings.getAuthorized(onSuccess, onFailure);
+	});
+
 	app.put("/data/setting", ensureAdministrator, function (req, res) {
 		var data = req.body;
 		db.settings.save(data, 
@@ -667,4 +679,7 @@ app.configure(function() {
 			}
 		});
 	}, tenSeconds);
+
+	// TODO: Do we need to wait a little bit to ensure the
+	// servers are started before our thread exits?
 });

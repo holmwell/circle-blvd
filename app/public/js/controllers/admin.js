@@ -179,12 +179,9 @@ function AdminCtrl(session, $scope, $http) {
 	};
 
 	var getLatestSettingData = function() {
-		$http.get('/data/settings')
+		$http.get('/data/settings/authorized')
 		.success(function (settings) {
 			appendSettings(settings);
-			$http.get('/data/settings/private')
-			.success(appendSettings)
-			.error(getSettingsError);
 		})
 		.error(getSettingsError);
 	};

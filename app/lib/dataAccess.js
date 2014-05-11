@@ -772,6 +772,17 @@ var db = function() {
 		});
 	};
 
+	var getAuthorizedSettings = function (success, failure) {
+		couch.settings.getAuthorized(function (err, settings) {
+			if (err) {
+				return failure(err);
+			}
+			else {
+				return success(settings);
+			}
+		});
+	};
+
 	var getPrivateSettings = function (success, failure) {
 		couch.settings.getPrivate(function (err, settings) {
 			if (err) {
@@ -800,6 +811,7 @@ var db = function() {
 		settings: {
 			add: addSetting,
 			get: getSettings,
+			getAuthorized: getAuthorizedSettings,
 			getPrivate: getPrivateSettings,
 			getAll: getAllSettings,
 			save: saveSetting

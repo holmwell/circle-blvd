@@ -215,31 +215,29 @@ var couch = function() {
 		});
 	};
 
-	var getSettings = function (callback) {
+	var getSettingsView = function (viewName, callback) {
 		// TODO: If there are two settings with the same name,
 		// things might not behave well.
 		var options = {
 			returnKeys: true
 		};
-		getView("settings/public", options, callback);
+		getView("settings/" + viewName, options, callback);
+	};
+
+	var getSettings = function (callback) {
+		getSettingsView("public", callback);
+	};
+
+	var getAuthorizedSettings = function (callback) {
+		getSettingsView("authorized", callback);
 	};
 
 	var getPrivateSettings = function (callback) {
-		// TODO: If there are two settings with the same name,
-		// things might not behave well.
-		var options = {
-			returnKeys: true
-		};
-		getView("settings/private", options, callback);
+		getSettingsView("private", callback);
 	};
 
 	var getAllSettings = function (callback) {
-		// TODO: If there are two settings with the same name,
-		// things might not behave well.
-		var options = {
-			returnKeys: true
-		};
-		getView("settings/all", options, callback);
+		getSettingsView("all", callback);
 	};
 
 	var addSetting = function(setting, callback) {
@@ -673,6 +671,7 @@ var couch = function() {
 		settings: {
 			add: addSetting,
 			get: getSettings,
+			getAuthorized: getAuthorizedSettings,
 			getPrivate: getPrivateSettings,
 			getAll: getAllSettings,
 			update: updateSetting

@@ -73,9 +73,28 @@ var createViews = function(database, callback) {
 		url: '_design/settings',
 		body: 
 		{
-			version: "1.0.3",
+			version: "1.0.4",
 			language: "javascript",
 			views: {
+				'authorized': {
+					map: function (doc) {
+						if (doc.type === "setting") {
+							if (doc.visibility === "public" 
+							 || doc.visibility === "private") {
+								emit(doc.name, doc);
+							}
+							else if (doc.visibility === "secret") {
+								var setting = {};
+								for (var prop in doc) {
+									setting[prop] = doc[prop];
+								}
+								// Do not expose the value of secret settings
+								setting.value = undefined;
+								emit(doc.name, setting);
+							}
+						}
+					}
+				},
 				'public': {
 					map: function (doc) {
 						if (doc.type === "setting") {
