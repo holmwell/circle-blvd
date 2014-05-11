@@ -121,7 +121,14 @@
 			class="backlog-owner span2" 
 			ng-class="{'after': story.isAfterNextMeeting}"
 			ng-click="select(story)">{{story.owner}}<span ng-show="isStoryNew(story)">?</span>
-			<div class="notify" ng-show="story.owner && isStoryNew(story)" ng-click="notify(story)" title="notify owner"><i class="icon-envelope"></i></div>
+			<div 
+				class="notify" 
+				ng-class="{ notified: story.isOwnerNotified }"
+				ng-show="story.owner && isStoryNew(story)"
+				title="notify owner"><i class="icon-envelope" ng-click="notify(story)"></i>
+				<span ng-show="story.isNotifying">o</span>
+				<i ng-show="story.isOwnerNotified" title="ok!" class="icon-ok"></i>
+			</div>
 
 		</div>
 	</div> <!-- ng-repeat -->

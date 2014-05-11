@@ -452,6 +452,10 @@ var configureSuccessful = function () {
 	app.post("/data/story/notify/new", ensureAuthenticated, function (req, res) {
 		var story = req.body;
 
+		if (story.isOwnerNotified) {
+			return res.send(412, "Story owner has already been notified.");
+		}
+
 		db.settings.getAll(function (settings) {
 			var smtpService = settings['smtp-service'];
 			var smtpUsername = settings['smtp-login'];
@@ -493,7 +497,7 @@ var configureSuccessful = function () {
 
 				// TODO: Use notification email addresses
 				var opt = {
-					from: "Circle Blvd <" + smtpUsername + ">",
+					from: sender.name + " via Circle Blvd <" + smtpUsername + ">",
 					to: owner.name + " <" + owner.email + ">",
 					replyTo: sender.name + " <" + sender.email + ">",
 					subject: "new story: " + story.summary,
@@ -506,7 +510,13 @@ var configureSuccessful = function () {
 						handleError(err, res);
 					}
 					else {
-						res.send(200, response);
+						var onSuccess = function (savedStory) {
+							res.send(200, response);
+						};
+
+						db.stories.markOwnerNotified(story, onSuccess, function (err) {
+							handleError(err, res);
+						});						
 					}
 				});
 			});

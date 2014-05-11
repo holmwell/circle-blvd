@@ -95,7 +95,8 @@ var db = function() {
 					isDeadline: story.isDeadline,
 					isNextMeeting: story.isNextMeeting,
 					createdBy: story.createdBy,
-					comments: story.comments
+					comments: story.comments,
+					isOwnerNotified: story.isOwnerNotified
 				};
 
 				stories[modelStory.id] = modelStory;
@@ -499,11 +500,25 @@ var db = function() {
 		});
 	};
 
+	var markStoryOwnerNotified = function (story, success, failure) {
+		couch.stories.findById(story.id, function (err, storyToSave) {
+			if (err) {
+				return failure(err);
+			}
+
+			storyToSave.isOwnerNotified = true;
+			updateStory(storyToSave, success, failure);
+		});
+	};
+
 	// 'Saving' a story is for persisting the things that a guest
 	// would consider part of a story, like the summary and who
 	// it is assigned to. Not for saving internal data.
 	var saveStory = function (story, success, failure) {
 		couch.stories.findById(story.id, function (err, storyToSave) {
+			if (err) {
+				return failure(err);
+			}
 
 			storyToSave.summary = story.summary;
 			storyToSave.owner = story.owner;
@@ -828,6 +843,7 @@ var db = function() {
 		},
 		stories: {
 			add: addStory,
+			markOwnerNotified: markStoryOwnerNotified,
 			move: moveStory,
 			remove: removeStory,
 			findByProjectId: findStoriesByProjectId,

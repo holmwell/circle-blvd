@@ -177,6 +177,12 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 			return;
 		}
 
+		if (story.isNotifying) {
+			// Also, when we click to notify, we don't
+			// want to do anything else.
+			return;
+		}
+
 		// Do not refocus stuff if we're already on this story.
 		if (!story.isSelected) {
 			if (selectedStory) {
@@ -373,15 +379,25 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 	};
 
 	$scope.notify = function (story) {
-		$http.post('/data/story/notify/new', story)
-		.success(function (data) {
-			console.log("Notifcation successful");
-		})
-		.error (function (data, status) {
-			console.log("Notify error");
-			console.log(status);
-			console.log(data);
-		});
+		if (!story.isNotifying) {
+			story.isNotifying = true;
+
+			var notificationSuccessful = function () {
+				story.isNotifying = undefined;
+				story.isOwnerNotified = true;
+			};
+
+			$http.post('/data/story/notify/new', story)
+			.success(function (data) {
+				notificationSuccessful();
+			})
+			.error (function (data, status) {
+				story.isNotifying = undefined;
+				console.log("Notify error");
+				console.log(status);
+				console.log(data);
+			});
+		}		
 	};
 
 	var getStoryFacadeFromNode = function (node) {

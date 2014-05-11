@@ -354,7 +354,7 @@ input:focus, textarea:focus {
   display: inline-block;
   opacity: 0.5;
 }
-.notify i {
+.notify .icon-envelope {
   margin-top: 0.25ex;
 }
 .notify:hover {
@@ -364,6 +364,10 @@ input:focus, textarea:focus {
 .notify:active {
   margin-top: 0.1ex;
   margin-left: 0.1ex;
+}
+.notify.notified {
+  cursor: default;
+  opacity: 0.1;
 }
 
 .backlog-status {
