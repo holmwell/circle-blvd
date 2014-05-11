@@ -2,8 +2,8 @@
   "name": "circle-blvd",
   "version": "0.4.6",
   "description": "Manage projects with small teams and volunteer organizations.",
-  "repository": { 
-    "type": "git", 
+  "repository": {
+    "type": "git",
     "url": "https://github.com/secret-project/circle-blvd.git"
   },
   "dependencies": {
@@ -13,7 +13,8 @@
     "passport-local": ">= 0.0.0",
     "request": ">= 0.0.0",
     "node-uuid": ">=0.0.0",
-    "nano": "4.1"
+    "nano": "4.1",
+    "nodemailer": "^0.6.3"
   },
   "devDependencies": {
     "karma-jasmine": "~0.1.5",
