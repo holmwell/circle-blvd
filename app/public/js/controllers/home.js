@@ -403,12 +403,23 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 	};
 
 	var scrollToStorySpecifiedByUrl = function () {
-		if (!$routeParams.storyId) {
+		var storyId = $routeParams.storyId;
+
+		if (!storyId) {
 			return;
 		}
 
+		// Special stories
+		if (storyId === "next-meeting") {
+			stories.forEach(function (story) {
+				if (story.isNextMeeting) {
+					storyId = story.id;
+				}
+			});
+		}
+
 		stories.forEach(function (story, index) {
-			if (story.id === $routeParams.storyId) {
+			if (story.id === storyId) {
 				// HACK: Wait for the ng-repeat element to
 				// populate itself. 250 milliseconds should
 				// be long enough for our needs.
