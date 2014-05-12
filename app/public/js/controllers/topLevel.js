@@ -42,6 +42,12 @@ function TopLevelCtrl(session, $scope, $http, $location) {
 		return false;
 	};
 
+	$scope.getAccountName = function () {
+		if (session && session.user) {
+			return session.user.name;
+		}
+	};
+
 	var resetSession = function () {
 		// clear out the logged in user
 		session.user = {};

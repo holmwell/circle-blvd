@@ -812,11 +812,18 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 
 	$scope.isStoryActive = function (story) {
 		return isStoryStatus(story, "active");
-	}
+	};
 
 	$scope.isStoryDone = function (story) {
 		return isStoryStatus(story, "done");
-	}
+	};
+
+	$scope.isStoryMine = function (story) {
+		if (story.owner && story.owner === $scope.getAccountName()) {
+			return true;
+		}
+		return false;
+	};
 
 	// $scope.showNextMeeting = function () {
 	// 	var body = {};

@@ -58,6 +58,9 @@
 		&& story.isAfterNextMeeting
 		&& !story.isDeadline 
 		&& !story.isNextMeeting)" data-story-id="{{story.id}}">
+		<div class="backlog-mine span1">
+			<i class="icon-arrow-right" ng-show="isStoryMine(story)"></i>
+		</div>
 		<div class="backlog-status span1">
 			<i class="done-status" ng-show="story.isDeadline && !story.isAfterNextMeeting" 
 			ng-click="archive(story)" title="archive deadline"></i>

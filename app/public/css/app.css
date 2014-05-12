@@ -371,6 +371,12 @@ input:focus, textarea:focus {
 .backlog-owner.after {
   color: #bbb;
 }
+.backlog-mine {
+  margin-left: -10px;
+  margin-right: -50px;
+  margin-top: 1ex;
+  opacity: 0.5;
+}
 .notify {
   padding-left: 0.5ex;
   display: inline-block;
