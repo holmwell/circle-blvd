@@ -191,16 +191,10 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 			story.isSelected = true;
 			selectedStory = story;
 
-			var boxId = "boxForStory" + story.id;
-			var foundBox = document.getElementById(boxId);
-			if (foundBox) {
-				// console.log(foundBox);
-				// We want this to happen after this method
-				// finishes.
-				$timeout(function() {
-					foundBox.focus();
-				}, 0);
-			}	
+			$timeout(function () {
+				var boxId = "boxForStory" + story.id;
+				focusElement(boxId);
+			});
 		}	
 	};
 
