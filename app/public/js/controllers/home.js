@@ -164,7 +164,6 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 		$scope.isAddingNew = undefined;
 	};
 
-
 	$scope.select = function (story) {
 		// TODO: This does NOT work on the story that
 		// was most recently moved.
@@ -639,6 +638,10 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 			preMoveStoryBefore = getStoryBefore(preMoveStoryNode);
 			preMoveStoryAfter = getStoryAfter(preMoveStoryNode);
 
+			var storyId = getStoryFacadeFromNode(preMoveStoryNode).id;		    	
+			var story = serverStories.get(storyId);
+			story.isMoving = true;
+
 		    //Set some styles here
 		    drag.get('node').addClass('placeholder-story'); // applied to the storyWrapper
 
@@ -950,6 +953,22 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 		$scope.$on('$viewContentLoaded', function() {
 			activateDragAndDrop();
 		});
+
+		$scope.$watch('keyboard.isShiftDown', function (newValue, oldValue) {
+			$scope.isAltMode = newValue;
+			// UX: Maybe once something is marked as 'isMoving' it
+			// should stay that way until the page is revisited. This
+			// way people can change their minds on which milestone
+			// things go to and it's no big deal.
+			//
+			// if (!newValue) {
+			// 	stories.forEach(function (story) {
+			// 		story.isMoving = false;
+			// 	});
+			// }
+		});
+
+		// UX: Hide story-entry panel at first.
 		// $scope.showEntry();
 	};
 

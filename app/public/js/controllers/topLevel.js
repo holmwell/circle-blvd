@@ -2,6 +2,26 @@
 
 function TopLevelCtrl(session, $scope, $http, $location) {
 
+	$scope.keyboard = {};
+
+	$scope.keydown = function(e) {
+		if (e.target.type === "textarea" ||
+			e.target.type === "text") {
+			// Ignore things while we're actually typing.
+			return;
+		}
+
+		if (e.keyCode === 16) {
+			$scope.keyboard.isShiftDown = true;
+		}
+	};
+
+	$scope.keyup = function (e) {
+		if (e.keyCode === 16) {
+			$scope.keyboard.isShiftDown = false;
+		}
+	};
+
 	$scope.isSignedIn = function() {
 		if (session && session.user && session.user.email) {
 			return true;

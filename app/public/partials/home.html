@@ -1,5 +1,6 @@
 <!-- <button ng-click="debug()">Debug</button> -->
 <!-- <button ng-click="resetStories()">Reset stories</button> -->
+
 <div class="entry" ng-hide="isAddingNew">
 	<div class="offset2 span6 show-entry">
 	+ <a ng-click="showEntry()" class="jsLink">Add story</a>
@@ -47,7 +48,12 @@
 </div>
 
 <div id="backlog" ng-click="deselectAll()" class="offset2 clear">
-	<div class="storyWrapper row" ng-repeat="story in stories" data-story-id="{{story.id}}">
+	<div class="storyWrapper row" ng-repeat="story in stories"
+		ng-hide="isAltMode 
+		&& (!story.isMoving 
+		&& story.isAfterNextMeeting
+		&& !story.isDeadline 
+		&& !story.isNextMeeting)" data-story-id="{{story.id}}">
 		<div class="backlog-status span1">
 			<i class="done-status" ng-show="story.isDeadline && !story.isAfterNextMeeting" 
 			ng-click="archive(story)" title="archive deadline"></i>
