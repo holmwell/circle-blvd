@@ -379,7 +379,7 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 	};
 
 	$scope.notify = function (story) {
-		if (!story.isNotifying) {
+		if (!story.isNotifying && !story.isOwnerNotified) {
 			story.isNotifying = true;
 
 			var notificationSuccessful = function () {

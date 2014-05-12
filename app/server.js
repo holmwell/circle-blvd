@@ -491,6 +491,8 @@ var configureSuccessful = function () {
 					if (story.description) {
 						message += "Description: " + story.description + "\n\n";	
 					}
+
+					message += "View on Circle Blvd:\nhttps://" + req.get('Host') + "/#/stories/" + story.id;
 					
 					return message;
 				};
@@ -504,6 +506,10 @@ var configureSuccessful = function () {
 					text: getMessage(story)
 				};
 
+				// For testing:
+				// console.log(opt.text);
+				// res.send(200);
+
 				smtp.sendMail(opt, function (err, response) {
 					smtp.close();
 					if (err) {
@@ -516,7 +522,7 @@ var configureSuccessful = function () {
 
 						db.stories.markOwnerNotified(story, onSuccess, function (err) {
 							handleError(err, res);
-						});						
+						});
 					}
 				});
 			});
