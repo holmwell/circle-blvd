@@ -1,10 +1,14 @@
 <!-- <button ng-click="debug()">Debug</button> -->
 <!-- <button ng-click="resetStories()">Reset stories</button> -->
 
-<div class="entry" ng-hide="isAddingNew">
+<div class="entry entry-facade" ng-hide="isAddingNew">
 	<div class="offset2 span6 show-entry">
 	+ <a ng-click="showEntry()" class="jsLink">Add story</a>
 	</div>
+
+	<div class="span2 alt-mode entry" 
+		ng-class="{alt: isManualAltMode || isAltMode}"
+		ng-click="toggleAltMode()" title="inbox mode"><i class="icon-align-justify"></i></div>
 </div>
 
 <div class="entry" ng-show="isAddingNew">
@@ -40,16 +44,16 @@
 				<button class="btn pull-right" ng-click="createDeadline(newDeadline)">Add milepost</button>
 			</form>
 		</div>
-
-	<!-- 	<div class="span6">
-			<div class="pull-right"><a ng-click="hideEntry()" class="jsLink">Done adding stories</a></div>
-		</div> -->
 	</div>
+
+	<div class="span2 alt-mode" 
+		ng-class="{alt: isManualAltMode || isAltMode}"
+		ng-click="toggleAltMode()" title="inbox mode"><i class="icon-align-justify"></i></div>
 </div>
 
 <div id="backlog" ng-click="deselectAll()" class="offset2 clear">
 	<div class="storyWrapper row" ng-repeat="story in stories"
-		ng-hide="isAltMode 
+		ng-hide="(isAltMode || isManualAltMode)
 		&& (!story.isMoving 
 		&& story.isAfterNextMeeting
 		&& !story.isDeadline 

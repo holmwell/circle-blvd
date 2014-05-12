@@ -164,6 +164,16 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 		$scope.isAddingNew = undefined;
 	};
 
+	$scope.toggleAltMode = function () {
+		if ($scope.isManualAltMode) {
+			$scope.isManualAltMode = false;
+		}
+		else {
+			$scope.isManualAltMode = true;
+		}
+	}
+
+
 	$scope.select = function (story) {
 		// TODO: This does NOT work on the story that
 		// was most recently moved.
