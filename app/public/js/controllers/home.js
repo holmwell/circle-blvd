@@ -267,22 +267,31 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 		insertFirstStory(newStory, callback);
 	};
 
+	var isCreatingStory = false;
 	$scope.create = function (newStory, callback) {
-		insertNewStory(newStory, function () {
-			$scope.newStory = undefined;
-			$timeout(makeStoriesDraggable, 0);
-			if (callback) {
-				callback(newStory);
-			}
-		});
+		if (!isCreatingStory && newStory) {
+			isCreatingStory = true;
+			insertNewStory(newStory, function () {
+				$scope.newStory = undefined;
+				isCreatingStory = false;
+				$timeout(makeStoriesDraggable, 0);
+				if (callback) {
+					callback(newStory);
+				}
+			});	
+		}
 	};
 
 	$scope.createDeadline = function (newDeadline) {
-		newDeadline.isDeadline = true;
-		insertNewStory(newDeadline, function () {
-			$scope.newDeadline = undefined;
-			$timeout(makeStoriesDraggable, 0);
-		});
+		if (!isCreatingStory && newDeadline) {
+			isCreatingStory = true;
+			newDeadline.isDeadline = true;
+			insertNewStory(newDeadline, function () {
+				$scope.newDeadline = undefined;
+				isCreatingStory = false;
+				$timeout(makeStoriesDraggable, 0);
+			});	
+		}
 	};
 
 	$scope.save = function (story) {
