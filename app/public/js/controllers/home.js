@@ -1,4 +1,4 @@
-function HomeCtrl($scope, $timeout, $http, $location) {
+function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 
 	var projectId = "1";
 	var thisY = undefined;
@@ -398,6 +398,37 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 				console.log(data);
 			});
 		}		
+	};
+
+	var scrollToStorySpecifiedByUrl = function () {
+		if (!$routeParams.storyId) {
+			return;
+		}
+
+		stories.forEach(function (story, index) {
+			if (story.id === $routeParams.storyId) {
+				// HACK: Wait for the ng-repeat element to
+				// populate itself. 250 milliseconds should
+				// be long enough for our needs.
+				$timeout(function () {
+					var elementId = "#story-" + index;
+					var topMargin = 75;
+					// Use jQuery to smooth-scroll to where we
+					// want to be.
+					$('html, body').animate({
+						scrollTop: $(elementId).offset().top - topMargin
+					}, 250);
+
+					story.isSelected = true;
+					selectedStory = story;
+				}, 250);
+
+				// If we ever want to do things the Angular way, 
+				// it's closer to this:
+				// 	$anchorScroll();
+				// 	$location.hash("story-" + index);
+			}
+		});
 	};
 
 	var getStoryFacadeFromNode = function (node) {
@@ -878,6 +909,7 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 
 				$scope.stories = stories;
 				$timeout(makeStoriesDraggable, 0);
+				scrollToStorySpecifiedByUrl();
 			})
 			.error(function (data, status) {
 				console.log('failure');
@@ -906,10 +938,12 @@ function HomeCtrl($scope, $timeout, $http, $location) {
 			console.log(data);			
 		});
 
-		$scope.$on('$viewContentLoaded', activateDragAndDrop);
+		$scope.$on('$viewContentLoaded', function() {
+			activateDragAndDrop();
+		});
 		// $scope.showEntry();
 	};
 
 	init();
 }
-HomeCtrl.$inject = ['$scope', '$timeout', '$http', '$location'];
+HomeCtrl.$inject = ['$scope', '$timeout', '$http', '$location', '$routeParams'];

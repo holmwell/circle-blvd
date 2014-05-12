@@ -8,8 +8,13 @@ angular.module('myApp', [
 	'myApp.filters', 
 	'myApp.services', 
 	'myApp.directives']).
-	config(['$routeProvider', function($routeProvider) {
-		$routeProvider.when('/', {templateUrl: 'partials/home.html', controller: HomeCtrl});
+	config(['$routeProvider', function ($routeProvider) {
+
+		var homePage = {templateUrl: 'partials/home.html', controller: HomeCtrl};
+
+		$routeProvider.when('/', homePage);
+		$routeProvider.when('/stories/:storyId', homePage);
+		$routeProvider.when('/stories', homePage);
 		$routeProvider.when('/archives', {templateUrl: 'partials/archives.html', controller: ArchivesCtrl});
 		$routeProvider.when('/signin', {templateUrl: 'partials/signin.html', controller: SignInCtrl});
 		$routeProvider.when('/profile', {templateUrl: 'partials/profile.html', controller: ProfileCtrl});
@@ -17,3 +22,8 @@ angular.module('myApp', [
 		$routeProvider.when('/initialize', {templateUrl: 'partials/initialize.html', controller: InitializeCtrl});
 		$routeProvider.otherwise({redirectTo: '/'});
 	}]);
+	// .
+	// config(['$locationProvider', function ($locationProvider) {
+	// 	$locationProvider.html5Mode(true);
+	// 	$locationProvider.hashPrefix('!');
+	// }]);
