@@ -14,7 +14,7 @@
 				<a class="jsLink" ng-click="showEntry('story')">Story</a>
 			</li>
 			<li ng-class="{ active: isAdding['deadline'] }">
-				<a class="jsLink" ng-click="showEntry('deadline')">Deadline</a>
+				<a class="jsLink" ng-click="showEntry('deadline')">Milepost</a>
 			</li>
 			<!-- <li><a class="jsLink">Discussion</a></li> -->
 			<li class="pull-right">
@@ -37,7 +37,7 @@
 			class="new-story after-meeting deadline" >
 			<form>
 				<input type="text" class="input-xlarge" ng-model="newDeadline.summary"/>
-				<button class="btn pull-right" ng-click="createDeadline(newDeadline)">Add deadline</button>
+				<button class="btn pull-right" ng-click="createDeadline(newDeadline)">Add milepost</button>
 			</form>
 		</div>
 
