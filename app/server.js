@@ -31,8 +31,10 @@ var logError = function (err) {
 };
 
 var handleError = function (err, res) {
+	var message = err.message || "Internal server error";
+	var status = err.status || 500;
 	logError(err);
-	res.send(500);
+	res.send(status, message);
 };
 
 // Authentication. 
@@ -331,6 +333,14 @@ var configureSuccessful = function () {
 		});
 	});
 
+	var sendCommentNotification = function(comment, story) {
+		if (!comment || !story) {
+			return;
+		}
+
+
+	};
+
 	var addStory = function (story, res) {
 		db.stories.add(story, 
 			function (story) {
@@ -396,6 +406,9 @@ var configureSuccessful = function () {
 
 		db.stories.save(story, 
 			function (savedStory) {
+				if (story.newComment) {
+					sendCommentNotification(story.newComment, savedStory);	
+				}
 				res.send(200, savedStory);
 			},
 			function (err) {
@@ -450,12 +463,31 @@ var configureSuccessful = function () {
 		removeStory(story, res);
 	});
 
-	app.post("/data/story/notify/new", ensureAuthenticated, function (req, res) {
-		var story = req.body;
-
-		if (story.isOwnerNotified) {
-			return res.send(412, "Story owner has already been notified.");
+	var getNewNotificationMessage = function (story, req) {
+		var message = "Hi. You've been requested to look at a new story on Circle Blvd.\n\n";
+		if (story.summary) {
+			message += "Summary: " + story.summary + "\n\n";
 		}
+		if (story.description) {
+			message += "Description: " + story.description + "\n\n";	
+		}
+
+		var protocol = "http";
+		if (httpsServer) {
+			protocol = "https";
+		}
+		message += "View on Circle Blvd:\n" + 
+			protocol + "://" + req.get('Host') + "/#/stories/" + story.id;
+		
+		return message;
+	};
+
+	// params: story, sender, recipients, message
+	var sendStoryNotification = function (params, callback) {
+		var story = params.story;
+		var sender = params.sender;
+		var recipients = params.recipients;
+		var message = params.message;
 
 		db.settings.getAll(function (settings) {
 			var smtpService = settings['smtp-service'];
@@ -463,7 +495,10 @@ var configureSuccessful = function () {
 			var smtpPassword = settings['smtp-password'];
 
 			if (!smtpUsername || !smtpPassword || !smtpService) {
-				return res.send(501, "The server needs SMTP login info before sending notifications. Check the admin page.");
+				return callback({
+					status: 501,
+					message: "The server needs SMTP login info before sending notifications. Check the admin page."
+				})
 			}
 
 			smtpService = smtpService.value;
@@ -478,66 +513,74 @@ var configureSuccessful = function () {
 				}
 			});
 
-			var sender = req.user;
-			db.users.findByName(story.owner, function (err, owner) {
+			var owner = recipients[0];
+
+			var opt = {
+				from: sender.name + " via Circle Blvd <" + smtpUsername + ">",
+				to: owner.name + " <" + owner.email + ">",
+				replyTo: sender.name + " <" + sender.email + ">",
+				subject: "new story: " + story.summary,
+				text: message
+			};
+
+			// For testing:
+			// console.log(opt);
+			// callback(null, {ok: true});
+
+			smtp.sendMail(opt, function (err, response) {
+				smtp.close();
+				if (err) {
+					callback(err);
+				}
+				else {
+					callback(null, response);
+				}
+			});
+		});
+	};
+
+	app.post("/data/story/notify/new", ensureAuthenticated, function (req, res) {
+		var story = req.body;
+		var sender = req.user;
+
+		if (story.isOwnerNotified) {
+			return res.send(412, "Story owner has already been notified.");
+		}
+
+		db.users.findByName(story.owner, function (err, owner) {
+			if (err) {
+				return handleError(err, res);
+			}
+
+			// Use notification email addresses
+			if (sender.notifications && sender.notifications.email) {
+				sender.email = sender.notifications.email;
+			}
+			if (owner.notifications && owner.notifications.email) {
+				owner.email = owner.notifications.email;
+			}
+
+			var params = {
+				story: story,
+				sender: sender,
+				recipients: [owner],
+				message: getNewNotificationMessage(story, req)
+			};
+
+			sendStoryNotification(params, function (err, response) {
 				if (err) {
 					return handleError(err, res);
 				}
 
-				var getMessage = function (story) {
-					var message = "Hi. You've been requested to look at a new story on Circle Blvd.\n\n";
-					if (story.summary) {
-						message += "Summary: " + story.summary + "\n\n";
-					}
-					if (story.description) {
-						message += "Description: " + story.description + "\n\n";	
-					}
-
-					var protocol = "http";
-					if (httpsServer) {
-						protocol = "https";
-					}
-					message += "View on Circle Blvd:\n" + 
-						protocol + "://" + req.get('Host') + "/#/stories/" + story.id;
-					
-					return message;
+				var onSuccess = function (savedStory) {
+					res.send(200, response);
 				};
 
-				// Use notification email addresses
-				if (sender.notifications && sender.notifications.email) {
-					sender.email = sender.notifications.email;
-				}
-				if (owner.notifications && owner.notifications.email) {
-					owner.email = owner.notifications.email;
-				}
-
-				var opt = {
-					from: sender.name + " via Circle Blvd <" + smtpUsername + ">",
-					to: owner.name + " <" + owner.email + ">",
-					replyTo: sender.name + " <" + sender.email + ">",
-					subject: "new story: " + story.summary,
-					text: getMessage(story)
+				var onError = function (err) {
+					handleError(err, res);
 				};
 
-				// For testing:
-				// console.log(opt.text);
-				// res.send(200);
-
-				smtp.sendMail(opt, function (err, response) {
-					smtp.close();
-					if (err) {
-						handleError(err, res);
-					}
-					else {
-						var onSuccess = function (savedStory) {
-							res.send(200, response);
-						};
-
-						db.stories.markOwnerNotified(story, onSuccess, function (err) {
-							handleError(err, res);
-						});
-					}
-				});
+				db.stories.markOwnerNotified(story, onSuccess, onError);
 			});
 		});
 	});
