@@ -493,7 +493,12 @@ var configureSuccessful = function () {
 						message += "Description: " + story.description + "\n\n";	
 					}
 
-					message += "View on Circle Blvd:\nhttps://" + req.get('Host') + "/#/stories/" + story.id;
+					var protocol = "http";
+					if (httpsServer) {
+						protocol = "https";
+					}
+					message += "View on Circle Blvd:\n" + 
+						protocol + "://" + req.get('Host') + "/#/stories/" + story.id;
 					
 					return message;
 				};
