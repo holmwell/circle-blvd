@@ -3,20 +3,55 @@
 function ProfileCtrl(session, $scope, $http) {
 
 	var messages = {};
-	$scope.user = session.user;
+	if (session.user) {
+		$scope.name = session.user.name;
+		$scope.email = session.user.email;
+		if (session.user.notifications && session.user.notifications.email) {
+			$scope.notificationEmail = session.user.notifications.email;
+		}
+		else {
+			$scope.notificationEmail = session.user.email;	
+		}
+	}
 	$scope.messages = messages;
 
-	$scope.updateUser = function (user) {
+	var saveUser = function (user, callback) {
 		$http.put('/data/user', user)
 		.success(function() {
 			session.user = user;
 			session.save();
 
-			messages.user = "Profile updated."
+			if (callback) {
+				callback();
+			}
 		})
 		.error(function (data, status) {
 			console.log(data);
-		})
+		});
+	};
+
+	$scope.updateUser = function (name, email) {
+		var data = session.user;
+		data.name = name;
+		data.email = email;
+
+		saveUser(data, function () {
+			messages.user = "Profile updated."
+		});
+	};
+
+	$scope.updateNotificationEmail = function (address) {
+		if (!address) {
+			messages.notificationEmail = "Sorry, we'd like an email address."
+			return;
+		}
+		var data = session.user;
+		data.notifications = session.user.notifications || {};
+		data.notifications.email = address;
+
+		saveUser(data, function () {
+			messages.notificationEmail = "Address updated.";
+		});
 	};
 
 	$scope.updatePassword = function (pass1, pass2) {

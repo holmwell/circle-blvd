@@ -444,6 +444,11 @@ input:focus, textarea:focus {
   color: white;
 }
 
+/* profile */
+.input-aligned {
+  margin-top: 0.5ex;
+}
+
 /* admin */
 .adminList {
   list-style: none;

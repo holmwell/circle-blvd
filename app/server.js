@@ -74,6 +74,7 @@ var authenticateLocal = function(req, res, next) {
 		publicUser.email = dbUser.email;
 		publicUser.name = dbUser.name;
 		publicUser.memberships = dbUser.memberships;
+		publicUser.notifications = dbUser.notifications;
 
 		res.send(200, publicUser);
 	};
@@ -497,7 +498,14 @@ var configureSuccessful = function () {
 					return message;
 				};
 
-				// TODO: Use notification email addresses
+				// Use notification email addresses
+				if (sender.notifications && sender.notifications.email) {
+					sender.email = sender.notifications.email;
+				}
+				if (owner.notifications && owner.notifications.email) {
+					owner.email = owner.notifications.email;
+				}
+
 				var opt = {
 					from: sender.name + " via Circle Blvd <" + smtpUsername + ">",
 					to: owner.name + " <" + owner.email + ">",

@@ -617,6 +617,10 @@ var db = function() {
 		if (user.email) {
 			user.email = user.email.toLowerCase();
 		}
+		if (user.notifications && user.notifications.email) {
+			user.notifications.email = user.notifications.email.toLowerCase();
+		}
+
 		return user;
 	}
 
