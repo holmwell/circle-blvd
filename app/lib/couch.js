@@ -138,6 +138,9 @@ var couch = function() {
 		if (name) {
 			name = name.toLowerCase();
 		}
+		else {
+			return callback(null, undefined);
+		}
 		var options = {
 			key: name
 		};
