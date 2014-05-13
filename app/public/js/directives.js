@@ -36,15 +36,20 @@ directive('appendLinky', ['$filter', function ($filter) {
 		}
 	};
 }]).
-directive('autosize', function () {
+directive('autosize', ['$timeout', function ($timeout) {
 	return {
 		restrict: 'A',
 		link: function(scope, elem, attr, ctrl) {
 			// Uses: https://github.com/jackmoore/autosize
-			elem.autosize();
+			$timeout(function () {
+				// If this isn't in a timeout block then it
+				// gets fired before things are ready to be
+				// resized.
+				elem.autosize();
+			});
 		}
 	};
-}).
+}]).
 directive('typeaheadOwners', function () {
 	return {
 		restrict: 'A',
