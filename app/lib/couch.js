@@ -161,6 +161,33 @@ var couch = function() {
 		});
 	};
 
+	var findUsersById = function (idList, callback) {
+		var query = {};
+		var usersFound = [];
+
+		// TODO: Would be nice to combine this duplicate code with
+		// the other fetch operation.
+		if (idList.length > 0) {
+			query["keys"] = idList;
+			database.fetch(query, function (err, body) {
+				if (err) {
+					return callback(err);
+				}
+				else {
+					// TODO: This deals with raw user objects, which
+					// might not be what we want.
+					for (var rowIndex in body.rows) {
+						usersFound.push(body.rows[rowIndex].doc);
+					}
+					return callback(null, usersFound);
+				}
+			});
+		}
+		else {
+			callback(null, usersFound);
+		}
+	};
+
 	var findPasswordById = function (id, callback) {
 		findOneByKey("passwords/byId", id, callback);
 	};
@@ -733,6 +760,7 @@ var couch = function() {
 			findByEmail: findUserByEmail,
 			findById: findUserById,
 			findByName: findUserByName,
+			findMany: findUsersById,
 			getAll: getAllUsers,
 			update: updateUser,
 			updatePassword: updateUserPassword
