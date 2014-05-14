@@ -846,13 +846,13 @@ var initSettings = function (callback) {
 	var initialized = {};
 	defaultSettings.forEach(function (setting) {
 		settingsTable[setting.name] = setting;
-		initialized[setting.name] = false;
+		initialized[setting.name] = undefined;
 	});
 
 	var callbackIfAllSettingsReady = function () {
 		var isReady = true;
 		for (var key in initialized) {
-			if (!initialized[key]) {
+			if (initialized[key] === undefined) {
 				isReady = false;
 				break;
 			}
@@ -883,16 +883,18 @@ var initSettings = function (callback) {
 			}
 
 			if (!settingFound) {
-				db.settings.add(settingsTable[defaultName], 
-					function (body) {
-						settingReady(settingsTable[defaultName]);
-					},
-					function (err) {
-						callback({
-							message: "Could not set setting: " + defaultName
-						});
-					}
-				);
+				var addSettingToDatabase = function (settingToAdd) {
+					db.settings.add(settingToAdd, 
+						function (body) {
+							settingReady(settingToAdd);
+						},
+						function (err) {
+							callback({
+								message: "Could not set setting: " + settingToAdd.name
+							});
+						}
+					);
+				}(settingsTable[defaultName]);				
 			}
 			else {
 				settingReady(savedSettings[savedName]);
