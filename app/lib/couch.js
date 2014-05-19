@@ -640,7 +640,10 @@ var couch = function() {
 			}
 
 			for (var storyIndex in newStories) {
-				newStories[storyIndex].transaction = transaction;
+				var story = newStories[storyIndex];
+				story.transaction = transaction;
+				story.transaction.oldDoc = oldStories[story._id];
+				newStories[storyIndex] = story;
 			}
 
 			var options = {
@@ -681,28 +684,43 @@ var couch = function() {
 				}
 
 				if (isConflicted) {
-					return callback({
-						message: "An open transaction has been left in the database due to conflicts."
+					var docsInTransactionalState = [];
+					for (var docIndex in response) {
+						if (response[docIndex].ok) {
+							docsInTransactionalState.push({
+								id: response[docIndex].id,
+								rev: response[docIndex].rev
+							});
+						}
+					}
+
+
+					var bulkRevert = {};
+					bulkRevert.docs = [];
+					docsInTransactionalState.forEach(function (doc) {
+						var docToRevert = oldStories[doc.id];
+						docToRevert._rev = doc.rev;
+						docToRevert.lastTransactionId = transaction.id;
+						bulkRevert.docs.push(docToRevert);
 					});
 
-					// var docsInTransactionalState = [];
-					// for (var docIndex in response) {
-					// 	if (response[docIndex].ok) {
-					// 		docsInTransactionalState.push(response[docIndex].id);
-					// 	}
-					// }
+					database.bulk(bulkRevert, options, function (err, response) {
+						if (err) {
+							callback({
+								message: "An open transaction has been left in the database due to conflicts."
+							});	
+						}
+						else {
+							// TODO: Check that response is ok.
+							console.log(response);
+							callback({
+								error: 'revert',
+								message: "Reverted."
+							});
+						}
+					});
 
-					// docsInTransactionalState.forEach(function (doc) {
-					// 	var params = {};
-					// 	params.rev = initialRevs[doc];
-					// 	database.get(doc, params, function (err, body) {
-					// 		if (err) {
-					// 			// TODO: Callback error
-					// 			console.log(err);
-					// 			return;	
-					// 		}
-					// 	});
-					// });
+					return;
 				}
 
 				for (var docIndex in response) {
@@ -780,7 +798,12 @@ var couch = function() {
 				});
 			}
 			else {
-				startTransaction(initialStories, stories);
+				var oldStories = {};
+				initialStories.forEach(function (story) {
+					oldStories[story._id] = story;
+				});
+
+				startTransaction(oldStories, stories);
 			}
 		});
 	};
