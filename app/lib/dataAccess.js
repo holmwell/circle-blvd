@@ -99,7 +99,14 @@ var db = function() {
 					isOwnerNotified: story.isOwnerNotified
 				};
 
-				stories[modelStory.id] = modelStory;
+				if (story.isInserting) {
+					// The story is in the database but it
+					// is in the middle of being inserted into
+					// the linked list.
+				}
+				else {
+					stories[modelStory.id] = modelStory;	
+				}
 
 				// If there is nothing 'next', we're done.
 				// TODO: Maybe. 
@@ -123,15 +130,11 @@ var db = function() {
 
 
 	var postInsertStory = function (story, success, failure) {
-		var finish = function (story) {
-			console.log("Finishing ...");
-			updateStory(story, success, failure);
-		};
 
 		if (isFirstStoryCreated(story)) {
 			story.isFirstStory = true;
 			story.nextId = "last";
-			return finish(story);
+			return updateStory(story, success, failure);
 		}
 
 		// Find the 'next' story. If the 'next' story is the
@@ -150,17 +153,27 @@ var db = function() {
 				})
 			}
 
-			if (nextStory.isFirstStory) {
-				console.log("Next story IS first story ...");
-				var updated = function () {
-					console.log("Finishing story update ...");
-					finish(story);
-				};
+			if (story.id === nextStory.id) {
+				return failure({
+					message: "Post-insert: Circular reference detected"
+				});
+			}
 
+			if (nextStory.isFirstStory) {
 				nextStory.isFirstStory = false;
 				story.isFirstStory = true;
-				console.log("Updating next story ...");
-				return updateStory(nextStory, updated, failure);
+				story.isInserting = false; // Saves us a database call later.
+
+				var storiesToSave = {};
+				storiesToSave[nextStory.id] = nextStory;
+				storiesToSave[story.id] = story;
+
+				couch.stories.transaction(storiesToSave, function (err, response) {
+					if (err) {
+						return failure(err);
+					}
+					return success(story);
+				});
 			}
 			else {
 				console.log("Next story IS NOT first story ...");
@@ -185,26 +198,66 @@ var db = function() {
 	// but other metadata (like 'isFirstStory') is
 	// in an unknown state.
 	var insertStory = function (story, success, failure) {
+		// TODO: Rethink this 'isInserting' stuff
+		// We might not want it / need it.
+		story.isInserting = true;
+
 		couch.stories.add(story, function (err, body) {
 			if (err) {
 				return failure(err);
 			}
+
+			story._id = body.id;
+			story._rev = body.rev;
 			story.id = body.id;
-			return postInsertStory(story, success, failure);
+
+			postInsertStory(story, function (story) {
+				story.isInserting = false;
+				updateStory(story, success, failure);
+			}, 
+			function (err) {
+				console.log("Erroring ...");
+				if (err && err.error === 'revert') {
+					couch.stories.remove(story, function (err, body) {
+						if (err) {
+							failure(err);
+						}
+						else {
+							failure({
+								message: "Story not added. Conflicts happening!"
+							});
+						}
+					});
+				}
+				else {
+					// Unknown error
+					failure(err);					
+				}
+			});
 		});
 	};
 
 	var addStory = function(story, success, failure) {
 		if (isFirstStoryCreated(story)) {
-			// TODO: This probably means we're the first story on the block,
-			// but it might also mean that the 'next' story was deleted by
-			// someone else.
-			// 
-			// TODO: Work for the case where stories exist in the backlog
-			// but we don't know about them.
-			return insertStory(story, success, failure);
+			if (story.isNextMeeting) {
+				// Ok, we're actually the first story created.
+				return insertStory(story, success, failure);				
+			}
+			else {
+				// This probably means the first story was not specified.
+				// Put it at the top of the backlog.
+				getFirstStory(story.projectId, function (err, firstStory) {
+					if (err) {
+						return failure(err);
+					}
+					story.nextId = firstStory._id;
+					addStory(story, success, failure);
+				});
+			}
 		}
-		else { // story.nextId exists
+		else { 
+			// story.nextId exists
+			//
 			// Look to see if there is already a story in the database
 			// that is already pointing to the 'next' story we want to
 			// point to.
@@ -493,7 +546,7 @@ var db = function() {
 				// TODO: Clean this up
 				console.log("Update-Story: Failure to update.");
 				Error.stackTraceLimit = Infinity;
-				throw new Error("whwwwttat");
+				// throw new Error("whwwwttat");
 				return failure(err);
 			}
 			success(story);
