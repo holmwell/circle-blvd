@@ -572,7 +572,8 @@ var couch = function() {
 		&& n(a.isDeadline) === n(b.isDeadline)
 		&& n(a.isNextMeeting) === n(b.isNextMeeting)
 		&& n(a.comments).length === n(b.comments).length
-		&& n(a.isOwnerNotified) && n(b.isOwnerNotified);
+		&& n(a.isOwnerNotified) === n(b.isOwnerNotified)
+		&& n(a.isInserting) === n(b.isInserting);
 	};
 
 	var updateStory = function (story, callback) {
@@ -606,11 +607,12 @@ var couch = function() {
 				callback(null, story);
 			}
 			else {
-				console.log("Updating ...");
-				console.log("From: ");
-				console.log(body);
-				console.log("To: ");
-				console.log(story);
+				// TODO: Turn this back on.
+				// console.log("Updating ...");
+				// console.log("From: ");
+				// console.log(body);
+				// console.log("To: ");
+				// console.log(story);
 
 				database.insert(story, function (err, body) {
 					if (err) {
@@ -624,67 +626,162 @@ var couch = function() {
 
 	var storiesTransaction = function (stories, callback) {
 
-		var transaction = {};
-		transaction.id = uuid.v4();
-		transaction.docs = [];
+		var startTransaction = function (oldStories, newStories) {
+			var transaction = {};
+			transaction.id = uuid.v4();
+			transaction.docs = [];
+
+			for (var storyIndex in oldStories) {
+				var story = oldStories[storyIndex];
+				transaction.docs.push({
+					id: story._id,
+					rev: story._rev
+				});				
+			}
+
+			for (var storyIndex in newStories) {
+				newStories[storyIndex].transaction = transaction;
+			}
+
+			var options = {
+				"all_or_nothing": true
+			};
+
+			var bulkDoc = {};
+			bulkDoc.docs = [];
+			for (var storyIndex in newStories) {
+				bulkDoc.docs.push(newStories[storyIndex]);
+			}
+
+			database.bulk(bulkDoc, options, function (err, response) {
+				if (err) {
+					return callback(err);
+				}
+
+				var isConflicted = false;
+				for (var docIndex in response) {
+					if (!response[docIndex].ok) {
+						if (response[docIndex].error === 'conflict') {
+							// If we get here, our transaction has failed,
+							// because all the docs could not enter into
+							// it, and we need to roll back the docs that
+							// are now in a transactional state.
+							isConflicted = true;
+							break;
+						}
+						else {
+							// If we get here, we've failed for some other
+							// reason that we don't know how to handle.
+							return callback({
+								message: "Response not ok.",
+								response: response
+							});
+						}
+					}
+				}
+
+				if (isConflicted) {
+					return callback({
+						message: "An open transaction has been left in the database due to conflicts."
+					});
+
+					// var docsInTransactionalState = [];
+					// for (var docIndex in response) {
+					// 	if (response[docIndex].ok) {
+					// 		docsInTransactionalState.push(response[docIndex].id);
+					// 	}
+					// }
+
+					// docsInTransactionalState.forEach(function (doc) {
+					// 	var params = {};
+					// 	params.rev = initialRevs[doc];
+					// 	database.get(doc, params, function (err, body) {
+					// 		if (err) {
+					// 			// TODO: Callback error
+					// 			console.log(err);
+					// 			return;	
+					// 		}
+					// 	});
+					// });
+				}
+
+				for (var docIndex in response) {
+					for (var storyIndex in newStories) {
+						if (newStories[storyIndex]._id === response[docIndex].id) {
+							newStories[storyIndex]._rev = response[docIndex].rev;
+							newStories[storyIndex].transaction = undefined;
+							newStories[storyIndex].lastTransactionId = transaction.id;	
+						}
+					}
+				}
+
+				bulkDoc = {};
+				bulkDoc.docs = [];
+				for (var storyIndex in newStories) {
+					bulkDoc.docs.push(newStories[storyIndex]);
+				}
+
+				database.bulk(bulkDoc, options, function (err, response) {
+					if (err) {
+						return callback(err);
+					}
+
+					for (var docIndex in response) {
+						if (!response[docIndex].ok) {
+							return callback({
+								message: "Response not ok in reset.",
+								response: response
+							});
+						}
+					}
+
+					callback(err, response);
+				});
+			});
+		}; // end startTransaction
+
+
+		// Do some basic checks before we try anything.
+		var storyIds = [];
+		var initialStories = [];
+		var initialRevs = {};
 
 		for (var storyIndex in stories) {
 			var story = stories[storyIndex];
-			transaction.docs.push({
-				id: story._id,
-				rev: story._rev
-			});
+			storyIds.push(story._id);
+			initialRevs[story._id] = story._rev;
 		}
 
-		for (var storyIndex in stories) {
-			stories[storyIndex].transaction = transaction;
-		}
+		var initialQuery = {};
+		initialQuery["keys"] = storyIds;
 
-		var options = {
-			"all_or_nothing": true
-		};
-
-		var bulkDoc = {};
-		bulkDoc.docs = [];
-		for (var storyIndex in stories) {
-			bulkDoc.docs.push(stories[storyIndex]);
-		}
-
-		database.bulk(bulkDoc, options, function (err, response) {
+		database.fetch(initialQuery, function (err, body) {
 			if (err) {
 				return callback(err);
 			}
 
-			var transResponse = {};
-			transResponse.id = transaction.id;
-			transResponse.docs = response;
+			body.rows.forEach(function (row) {
+				initialStories.push(row.doc);
+			});
 
-			for (var docIndex in response) {
-				if (!response[docIndex].ok) {
-					return callback({
-						message: "Response not ok.",
-						response: response
-					});
+			var hasInitialRevConflict = false;
+			initialStories.forEach(function (initialStory) {
+				if (initialStory._rev !== initialRevs[initialStory._id]) {
+					// This transaction is over before it begins.
+					hasInitialRevConflict = true;
 				}
-			}
+			});
 
-			for (var docIndex in response) {
-				for (var storyIndex in stories) {
-					if (stories[storyIndex]._id === response[docIndex].id) {
-						stories[storyIndex]._rev = response[docIndex].rev;
-						stories[storyIndex].transaction = undefined;
-						stories[storyIndex].lastTransactionId = transaction.id;	
-					}
-				}
+			if (hasInitialRevConflict) {
+				callback({
+					error: "init",
+					message: "Not starting transaction; " + 
+					         "revisions already behind when function called"
+				});
 			}
-
-			bulkDoc = {};
-			bulkDoc.docs = [];
-			for (var storyIndex in stories) {
-				bulkDoc.docs.push(stories[storyIndex]);
+			else {
+				startTransaction(initialStories, stories);
 			}
-
-			database.bulk(bulkDoc, options, callback);
 		});
 	};
 
