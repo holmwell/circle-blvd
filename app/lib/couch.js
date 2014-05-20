@@ -641,8 +641,13 @@ var couch = function() {
 
 			for (var storyIndex in newStories) {
 				var story = newStories[storyIndex];
-				story.transaction = transaction;
-				story.transaction.oldDoc = oldStories[story._id];
+
+				var thisTransaction = {};
+				thisTransaction.id = transaction.id;
+				thisTransaction.docs = transaction.docs;
+				thisTransaction.oldDoc = oldStories[story._id];
+
+				story.transaction = thisTransaction;
 				newStories[storyIndex] = story;
 			}
 
