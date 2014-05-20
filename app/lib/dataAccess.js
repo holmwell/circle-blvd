@@ -224,6 +224,7 @@ var db = function() {
 						}
 						else {
 							failure({
+								suggestedAction: 'retry',
 								message: "Story not added. Conflicts happening!"
 							});
 						}

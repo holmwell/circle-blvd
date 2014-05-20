@@ -531,13 +531,48 @@ var configureSuccessful = function () {
 		});
 	};
 
+	var copyStory = function (story) {
+		var copy = {};
+		
+		copy.projectId = story.projectId;
+		copy.summary = story.summary;
+		copy.isDeadline = story.isDeadline;
+		copy.isNextMeeting = story.isNextMeeting;
+
+		copy.createdBy = story.createdBy;
+		copy.nextId = story.nextId;
+
+		return copy;
+	};
+
 	var addStory = function (story, res) {
+		var storyFor2ndTry = copyStory(story);
 		db.stories.add(story, 
-			function (story) {
-				res.send(200, story);
+			function (addedStory) {
+				res.send(200, addedStory);
 			},
 			function (err) {
 				handleError(err, res);
+				// TODO: It would be nice if the server could retry
+				// on behalf of the client and try again, but the
+				// code below does not quite work.
+				//
+				// if (err.suggestedAction && err.suggestedAction === 'retry') {
+				// 	// Try again, once.
+				// 	var waitTime = 100; // milliseconds
+				// 	setTimeout(function () {
+				// 		db.stories.add(storyFor2ndTry, 
+				// 			function (addedStory) {
+				// 				res.send(200, addedStory)
+				// 			}, 
+				// 			function (err) {
+				// 				handleError(err, res);
+				// 		});	
+				// 	}, waitTime);
+				// }
+				// else {
+				// 	handleError(err, res);
+				// }
 			}
 		);
 	};
@@ -557,23 +592,8 @@ var configureSuccessful = function () {
 	app.post("/data/story/", ensureAuthenticated, function (req, res) {
 		var data = req.body;
 
-		var story = {};	
-		story.projectId = data.projectId;
-		story.summary = data.summary;
-		story.isDeadline = data.isDeadline;
-		story.isNextMeeting = data.isNextMeeting;
-
+		var story = copyStory(data);
 		story.createdBy = getCreatedBy(req);
-
-		// TODO: Really, we don't need both of these.
-		//
-		// Either we specify what the 'next story' is
-		// or that the new story is going to be the
-		// first story, but both distinctions are
-		// unnecessary.
-		story.nextId = data.nextId;
-		// The dataAccess layer takes care of this.
-		// story.isFirstStory = true; // data.isFirstStory;
 
 		addStory(story, res);
 	});
