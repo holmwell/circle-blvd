@@ -59,8 +59,12 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 					callback(newStory);
 				})
 				.error(function (data, status) {
+					// TODO: Show that something went wrong.
+					// Most likely there was a data conflict
+					// that could not be resolved.
 					console.log(status);
 					console.log(data);
+					callback(null);
 				});
 			},
 			move: function (story, newNextStory, callback) {
@@ -244,24 +248,24 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 		story.projectId = projectId;
 		story.type = "story";
 
-		usefulStories.setFirst(story);
 		serverStories.add(story, function (newStory) {
+			if (newStory) {
+				var serverStory = serverStories.get(newStory.id);
+				if (newStory.isFirstStory) {
+					usefulStories.setFirst(serverStory);	
+				}
+				else {
+					// TODO: Probably want to refresh the whole list 
+					// from the server, because some crazy things are
+					// happening!
+				}
 
-			var serverStory = serverStories.get(newStory.id);
-			if (newStory.isFirstStory) {
-				usefulStories.setFirst(serverStory);	
+				// add the new story to the front of the backlog.
+				stories.unshift(serverStory);	
 			}
-			else {
-				// TODO: Probably want to refresh the whole list 
-				// from the server, because some crazy things are
-				// happening!
-			}
-
-			// add the new story to the front of the backlog.
-			stories.unshift(serverStory);
-
+			
 			if (callback) {
-				callback();
+				callback(newStory);
 			}
 		});
 	};
@@ -274,12 +278,15 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 	$scope.create = function (newStory, callback) {
 		if (!isCreatingStory && newStory) {
 			isCreatingStory = true;
-			insertNewStory(newStory, function () {
+			insertNewStory(newStory, function (createdStory) {
+
+				console.log(createdStory);
+
 				$scope.newStory = undefined;
 				isCreatingStory = false;
 				$timeout(makeStoriesDraggable, 0);
 				if (callback) {
-					callback(newStory);
+					callback(createdStory);
 				}
 			});	
 		}
@@ -869,26 +876,58 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 		// console.log(usefulStories.getFirst());
 	};
 
-	$scope.resetStories = function() {
-		// var storyCount = stories.length;
-		// for (var i=storyCount; i > 0; i--) {
-		// 	$scope.remove(stories[i - 1]);
-		// }
-
-		$scope.create({
+	$scope.test = function () {
+		var stories = [{
    			"summary": "one",
    			"projectId": "1"
-		}, function () { 
-			$scope.create({
-   				"summary": "two",
-   				"projectId": "1"
-			}, function () {
-				$scope.create({
-   					"summary": "three",
-    				"projectId": "1"
-				});
-			});
-		});	
+		},{
+   			"summary": "two",
+   			"projectId": "1"
+		},{
+   			"summary": "three",
+   			"projectId": "1"
+		}];
+
+		insertFirstStory(stories[0], function (story) {
+			console.log("0");
+			console.log(story);
+		});
+
+		insertFirstStory(stories[1], function (story) {
+			console.log("1");
+			console.log(story);
+		});
+
+		insertFirstStory(stories[2], function (story) {
+			console.log("2");
+			console.log(story);
+		});
+
+		insertFirstStory(stories[2], function (story) {
+			console.log("2");
+			console.log(story);
+		});
+
+		insertFirstStory(stories[2], function (story) {
+			console.log("2");
+			console.log(story);
+		});
+
+		insertFirstStory(stories[2], function (story) {
+			console.log("2");
+			console.log(story);
+		});
+
+		insertFirstStory(stories[2], function (story) {
+			console.log("2");
+			console.log(story);
+		});
+
+		insertFirstStory(stories[2], function (story) {
+			console.log("2");
+			console.log(story);
+		});
+
 	};
 
 	$scope._test = function() {
