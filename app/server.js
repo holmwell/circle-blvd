@@ -547,34 +547,42 @@ var configureSuccessful = function () {
 
 	var addStory = function (story, res) {
 		var storyFor2ndTry = copyStory(story);
-		db.stories.add(story, 
-			function (addedStory) {
-				res.send(200, addedStory);
-			},
-			function (err) {
-				handleError(err, res);
-				// TODO: It would be nice if the server could retry
-				// on behalf of the client and try again, but the
-				// code below does not quite work.
-				//
-				// if (err.suggestedAction && err.suggestedAction === 'retry') {
-				// 	// Try again, once.
-				// 	var waitTime = 100; // milliseconds
-				// 	setTimeout(function () {
-				// 		db.stories.add(storyFor2ndTry, 
-				// 			function (addedStory) {
-				// 				res.send(200, addedStory)
-				// 			}, 
-				// 			function (err) {
-				// 				handleError(err, res);
-				// 		});	
-				// 	}, waitTime);
-				// }
-				// else {
-				// 	handleError(err, res);
-				// }
+		db.stories.add2(story, function (err) {
+			if (err) {
+				return handleError(err, res);
 			}
-		);
+
+			// TODO: Things
+			res.send(200, story);
+		});
+		// db.stories.add(story, nextId,
+		// 	function (addedStory) {
+		// 		res.send(200, addedStory);
+		// 	},
+		// 	function (err) {
+		// 		// handleError(err, res);
+		// 		// TODO: It would be nice if the server could retry
+		// 		// on behalf of the client and try again, but the
+		// 		// code below does not quite work.
+		// 		//
+		// 		if (err.suggestedAction && err.suggestedAction === 'retry') {
+		// 			// Try again, once.
+		// 			var waitTime = 100; // milliseconds
+		// 			setTimeout(function () {
+		// 				db.stories.add(storyFor2ndTry, nextId, 
+		// 					function (addedStory) {
+		// 						res.send(200, addedStory)
+		// 					}, 
+		// 					function (err) {
+		// 						handleError(err, res);
+		// 				});	
+		// 			}, waitTime);
+		// 		}
+		// 		else {
+		// 			handleError(err, res);
+		// 		}
+		// 	}
+		// );
 	};
 
 	var getCreatedBy = function (req) {

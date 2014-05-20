@@ -1,6 +1,8 @@
 var db = require('../lib/dataAccess.js').instance();
 
 exports.init = function (req, res) {
+	var data = req.body;
+
 	var onSuccess = function() {
 		res.send(200);
 	};
@@ -15,11 +17,15 @@ exports.init = function (req, res) {
 		story.summary = "Next meeting";
 		story.isNextMeeting = true;
 
-		db.stories.add(story, onSuccess, onError);
+		db.stories.add2(story, function (err, body) {
+			if (err) {
+				return onError(err);
+			}
+			return onSuccess(body);
+		});
 	};
 
 	var addAdminUser = function (userGroup) {
-		var data = req.body;
 
 		var memberships = [{
 			group: userGroup.id, // TODO: Config?

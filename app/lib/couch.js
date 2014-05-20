@@ -437,15 +437,6 @@ var couch = function() {
 	};
 
 
-	var addStory = function(story, callback) {
-		// TODO: If we keep this (setting the story.type), 
-		// we want a way to tell the client how we modified it.
-		story.type = "story";
-		console.log("Adding ...");
-		console.log(story);
-		database.insert(story, callback);
-	};
-
 	var removeStory = function(story, callback) {
 		findStoryByIds(story.projectId, (story.id || story._id), function (err, body) {
 			if (err) {
@@ -465,6 +456,32 @@ var couch = function() {
 				callback(err, body);
 			});
 		});
+	};
+
+	var addStoryToQueue = function (story, callback) {
+		var queueDocument = story;
+		queueDocument.type = "story-queue";
+		queueDocument.timestamp = Date.now();
+
+		database.insert(story, callback);
+	};
+
+	// callback(err, nextStory)
+	var nextStoryInQueue = function (callback) {
+		var params = {};
+		params.limit = 1;
+		getView("queue/byTimestamp", params, function (err, rows) {
+			if (err) {
+				return callback(err);
+			}
+
+			if (rows.length > 0) {
+				callback(null, rows[0]);
+			}
+			else {
+				callback(null, null);
+			}
+		})
 	};
 
 
@@ -572,8 +589,7 @@ var couch = function() {
 		&& n(a.isDeadline) === n(b.isDeadline)
 		&& n(a.isNextMeeting) === n(b.isNextMeeting)
 		&& n(a.comments).length === n(b.comments).length
-		&& n(a.isOwnerNotified) === n(b.isOwnerNotified)
-		&& n(a.isInserting) === n(b.isInserting);
+		&& n(a.isOwnerNotified) === n(b.isOwnerNotified);
 	};
 
 	var updateStory = function (story, callback) {
@@ -624,6 +640,23 @@ var couch = function() {
 		});
 	};
 
+	var updateDoc = function (doc, callback) {
+		database.get(doc._id, function (err, body) {
+			if (err) {
+				return callback(err);
+			}
+			doc._rev = body._rev;
+
+			database.insert(doc, function (err, body) {
+				if (err) {
+					return callback(err);
+				}
+				doc._rev = body.rev;
+				callback(null, doc);
+			});
+		});
+	};
+
 	var storiesTransaction = function (stories, callback) {
 
 		var startTransaction = function (oldStories, newStories) {
@@ -655,13 +688,13 @@ var couch = function() {
 				"all_or_nothing": true
 			};
 
-			var bulkDoc = {};
-			bulkDoc.docs = [];
+			var bulkEnter = {};
+			bulkEnter.docs = [];
 			for (var storyIndex in newStories) {
-				bulkDoc.docs.push(newStories[storyIndex]);
+				bulkEnter.docs.push(newStories[storyIndex]);
 			}
 
-			database.bulk(bulkDoc, options, function (err, response) {
+			database.bulk(bulkEnter, options, function (err, response) {
 				if (err) {
 					return callback(err);
 				}
@@ -738,7 +771,7 @@ var couch = function() {
 					}
 				}
 
-				bulkDoc = {};
+				var bulkDoc = {};
 				bulkDoc.docs = [];
 				for (var storyIndex in newStories) {
 					bulkDoc.docs.push(newStories[storyIndex]);
@@ -866,8 +899,12 @@ var couch = function() {
 			findByProjectId: findGroupsByProjectId,
 			findByUser: findGroupsByUser
 		},
+		docs: {
+			update: updateDoc
+		},
 		stories: {
-			add: addStory,
+			addToQueue: addStoryToQueue,
+			nextInQueue: nextStoryInQueue,
 			remove: removeStory,
 			findMany: findStoriesById,
 			findById: findStoryById,

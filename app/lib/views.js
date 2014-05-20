@@ -165,6 +165,23 @@ var createViews = function(database, callback) {
 	};
 	designDocs.push(groupsDesignDoc);
 
+	var queueDesignDoc = {
+		url: '_design/queue',
+		body: {
+			version: "1.0.0",
+			language: "javascript",
+			views: {
+				byTimestamp: {
+					map: function (doc) {
+						if (doc.type === "story-queue") {
+							emit(doc.timestamp, doc);
+						}
+					}
+				}
+			}
+		}
+	};
+	designDocs.push(queueDesignDoc);
 
 	var storiesDesignDoc = {
 		url: '_design/stories',

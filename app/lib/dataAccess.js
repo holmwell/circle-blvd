@@ -99,14 +99,7 @@ var db = function() {
 					isOwnerNotified: story.isOwnerNotified
 				};
 
-				if (story.isInserting) {
-					// The story is in the database but it
-					// is in the middle of being inserted into
-					// the linked list.
-				}
-				else {
-					stories[modelStory.id] = modelStory;	
-				}
+				stories[modelStory.id] = modelStory;	
 
 				// If there is nothing 'next', we're done.
 				// TODO: Maybe. 
@@ -129,28 +122,20 @@ var db = function() {
 	};
 
 
-	var postInsertStory = function (story, success, failure) {
-
-		if (isFirstStoryCreated(story)) {
-			story.isFirstStory = true;
-			story.nextId = "last";
-			return updateStory(story, success, failure);
-		}
-
+	var postInsertStory = function (story, nextId, success, failure) {
 		// Find the 'next' story. If the 'next' story is the
 		// 'first' story, well, now our story is the first story
 		// and the next story is not.
-		couch.stories.findById(story.nextId, function (err, nextStory) {
+		couch.stories.findById(nextId, function (err, nextStory) {
+			
 			if (err) {
 				console.log("Update-story-metadata: Failure to find by id");
 				return failure(err);
 			}
 
 			if (!nextStory) {
-				// TODO: Well ... this is fine ... but need to finish this code.
-				return failure({
-					message: "Finish this use case"
-				})
+				story.isFirstStory = true;
+				return updateStory(story, success, failure); 
 			}
 
 			if (story.id === nextStory.id) {
@@ -159,90 +144,67 @@ var db = function() {
 				});
 			}
 
-			if (nextStory.isFirstStory) {
-				nextStory.isFirstStory = false;
-				story.isFirstStory = true;
-				story.isInserting = false; // Saves us a database call later.
+			var storiesToSave = {};
+			story.nextId = nextId;
 
-				var storiesToSave = {};
-				storiesToSave[nextStory.id] = nextStory;
-				storiesToSave[story.id] = story;
-
+			var saveStories = function () {
 				couch.stories.transaction(storiesToSave, function (err, response) {
 					if (err) {
 						return failure(err);
 					}
 					return success(story);
 				});
+			};
+
+			if (nextStory.isFirstStory) {
+				nextStory.isFirstStory = false;
+				story.isFirstStory = true;
+				
+				storiesToSave[nextStory.id] = nextStory;
+				storiesToSave[story.id] = story;
+
+				saveStories();
 			}
 			else {
 				console.log("Next story IS NOT first story ...");
 				console.log(nextStory);
-				// Nothing more needs to be done.
-				return success(story);
-			}
-		});
-	};
+				
+				storiesToSave[story.id] = story;
 
-	// var updateStoryLinks = function (story, success, failure) {
-	// 	couch.stories.update(story, function (err, body) {
-	// 		if (err) {
-	// 			return failure(err);
-	// 		}
-	// 		return postInsertStory(story, success, failure);
-	// 	});
-	// };
-
-	// Put this story into the linked-list backlog.
-	// The story provided has the correct 'nextId',
-	// but other metadata (like 'isFirstStory') is
-	// in an unknown state.
-	var insertStory = function (story, success, failure) {
-		// TODO: Rethink this 'isInserting' stuff
-		// We might not want it / need it.
-		story.isInserting = true;
-
-		couch.stories.add(story, function (err, body) {
-			if (err) {
-				return failure(err);
-			}
-
-			story._id = body.id;
-			story._rev = body.rev;
-			story.id = body.id;
-
-			postInsertStory(story, function (story) {
-				story.isInserting = false;
-				updateStory(story, success, failure);
-			}, 
-			function (err) {
-				console.log("Erroring ...");
-				if (err && err.error === 'revert') {
-					couch.stories.remove(story, function (err, body) {
-						if (err) {
-							failure(err);
+				couch.stories.findByNextId(nextId, function (err, previousStory) {
+					if (err) {
+						failure(err);
+					}
+					else {
+						if (previousStory.nextId === story.id) {
+							// Fine.
 						}
 						else {
-							failure({
-								suggestedAction: 'retry',
-								message: "Story not added. Conflicts happening!"
-							});
+							previousStory.nextId = story.id;
+							storiesToSave[previousStory.id] = previousStory;
 						}
-					});
-				}
-				else {
-					// Unknown error
-					failure(err);					
-				}
-			});
+						saveStories();
+					}
+				});
+			}
 		});
 	};
 
-	var addStory = function(story, success, failure) {
-		if (isFirstStoryCreated(story)) {
+
+	var getNextIdForInsert = function (story, proposedNextId, callback) {
+
+		var foundNextId = function (nextId) {
+			callback(null, nextId);
+		};
+
+		var failure = function (err) {
+			callback(err, null);
+		};
+
+		if (isFirstStoryCreated(story) && !proposedNextId) {
 			if (story.isNextMeeting) {
 				// Ok, we're actually the first story created.
-				return insertStory(story, success, failure);				
+				foundNextId("last");
 			}
 			else {
 				// This probably means the first story was not specified.
@@ -251,8 +213,7 @@ var db = function() {
 					if (err) {
 						return failure(err);
 					}
-					story.nextId = firstStory._id;
-					addStory(story, success, failure);
+					getNextIdForInsert(story, firstStory._id, callback);
 				});
 			}
 		}
@@ -262,14 +223,14 @@ var db = function() {
 			// Look to see if there is already a story in the database
 			// that is already pointing to the 'next' story we want to
 			// point to.
-			findStoriesByNextId(story.nextId, function (err, conflicts) {
+			findStoriesByNextId(proposedNextId, function (err, conflicts) {
 				if (err) {
 					console.log("Add: Failure to find by next id.");
 					return failure(err);
 				}
 
 				if (conflicts.length === 0) {
-					return insertStory(story, success, failure);
+					return foundNextId(proposedNextId);
 				}
 
 				if (conflicts.length === 1) {
@@ -287,12 +248,11 @@ var db = function() {
 					conflict.id = conflict._id;
 
 					if (story.id !== conflict.id) {
-						story.nextId = conflict.id;
 						console.log("CONFLICT RESOLUTION");
 						console.log(story.summary + " ----> " + conflict.summary);
 						// It is possible there are conflicts with this new nextId,
 						// so enter another addStory process.
-						return addStory(story, success, failure);	
+						return getNextIdForInsert(story, conflict.id, callback);
 					}
 					else {
 						// Rather than create an infinite next-pointer
@@ -320,6 +280,78 @@ var db = function() {
 		}
 	};
 
+
+	var isStoryQueueRunning = false;
+	var processStoryQueue = function () {
+		isStoryQueueRunning = true;
+
+		var stopProcessing = function () {
+			isStoryQueueRunning = false;
+		};
+
+		var processNextInQueue = function () {	
+			// while queue exists:
+			// 1. process first story in queue.
+			// 2. remove first story (implicitly, via update).
+			couch.stories.nextInQueue(function (err, storyToProcess) {
+				if (err) {
+					console.log('queue: next-in-queue failure');
+					console.log(err);
+					stopProcessing();
+					return;
+				}
+
+				if (storyToProcess === null) {
+					stopProcessing();
+					return;
+				}
+
+				var proposedNextId = storyToProcess.nextId || null;
+				
+				storyToProcess.id = storyToProcess._id;
+				storyToProcess.type = "story";
+
+				getNextIdForInsert(storyToProcess, proposedNextId, function (err, nextId) {
+					storyToProcess.nextId = nextId;
+					couch.docs.update(storyToProcess, function (err, processedStory) {
+						if (err) {
+							console.log('queue: update failure');
+							console.log(err);
+							stopProcessing();
+							return;
+						}
+
+						postInsertStory(processedStory, processedStory.nextId, 
+							function (postProcessedStory) {
+								processNextInQueue();
+							},
+							function (err) {
+								console.log('queue: post-insert failure');
+								console.log(err);
+								stopProcessing();
+							}
+						);
+					});
+				});
+			});
+		}; 
+
+		processNextInQueue();
+	};
+
+	var addStoryProto = function (story, callback) {
+		couch.stories.addToQueue(story, function (err, body) {
+			if (err) {
+				return callback(err);
+			}
+
+			if (!isStoryQueueRunning) {
+				processStoryQueue();	
+			}
+
+			callback();
+		});
+	};
 
 	var getFirstStory = function (projectId, callback) {
 		if (!projectId) {
@@ -542,7 +574,7 @@ var db = function() {
 	};
 
 	var updateStory = function(story, success, failure) {
-		couch.stories.update(story, function (err) {
+		couch.stories.update(story, function (err, body) {
 			if (err) {
 				// TODO: Clean this up
 				console.log("Update-Story: Failure to update.");
@@ -550,6 +582,7 @@ var db = function() {
 				// throw new Error("whwwwttat");
 				return failure(err);
 			}
+			story._rev = body.rev;
 			success(story);
 		});
 	};
@@ -904,7 +937,7 @@ var db = function() {
 			findByUser: findGroupsByUser
 		},
 		stories: {
-			add: addStory,
+			add2: addStoryProto,
 			markOwnerNotified: markStoryOwnerNotified,
 			move: moveStory,
 			remove: removeStory,
