@@ -17,7 +17,7 @@ exports.init = function (req, res) {
 		story.summary = "Next meeting";
 		story.isNextMeeting = true;
 
-		db.stories.add2(story, function (err, body) {
+		db.stories.add(story, function (err, body) {
 			if (err) {
 				return onError(err);
 			}

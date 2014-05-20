@@ -1,8 +1,10 @@
 var couch 	= require('./couch.js');
 var encrypt = require('./encrypt.js');
 var uuid 	= require('node-uuid');
+var events  = require('events');
 
 var db = function() {
+	var ee = new events.EventEmitter();
 
 	var addGroup = function(group, success, failure) {
 		var newGroup = {
@@ -289,6 +291,10 @@ var db = function() {
 			isStoryQueueRunning = false;
 		};
 
+		var notifyListeners = function (err, story) {
+			ee.emit(story._id, err, story);
+		};
+
 		var processNextInQueue = function () {	
 			// while queue exists:
 			// 1. process first story in queue.
@@ -297,6 +303,7 @@ var db = function() {
 				if (err) {
 					console.log('queue: next-in-queue failure');
 					console.log(err);
+					notifyListeners(err, storyToProcess);
 					stopProcessing();
 					return;
 				}
@@ -312,22 +319,32 @@ var db = function() {
 				storyToProcess.type = "story";
 
 				getNextIdForInsert(storyToProcess, proposedNextId, function (err, nextId) {
+					if (err) {
+						console.log("queue: get-next-id failure");
+						console.log(err);
+						notifyListeners(err, storyToProcess);
+						// continue processing
+						return;
+					}
 					storyToProcess.nextId = nextId;
 					couch.docs.update(storyToProcess, function (err, processedStory) {
 						if (err) {
 							console.log('queue: update failure');
 							console.log(err);
+							notifyListeners(err, storyToProcess);
 							stopProcessing();
 							return;
 						}
 
 						postInsertStory(processedStory, processedStory.nextId, 
 							function (postProcessedStory) {
+								notifyListeners(null, postProcessedStory);
 								processNextInQueue();
 							},
 							function (err) {
 								console.log('queue: post-insert failure');
 								console.log(err);
+								notifyListeners(err, processedStory);
 								stopProcessing();
 							}
 						);
@@ -339,17 +356,19 @@ var db = function() {
 		processNextInQueue();
 	};
 
-	var addStoryProto = function (story, callback) {
+	var addStory = function (story, callback) {
 		couch.stories.addToQueue(story, function (err, body) {
 			if (err) {
 				return callback(err);
 			}
 
 			if (!isStoryQueueRunning) {
-				processStoryQueue();	
+				processStoryQueue();
 			}
 
-			callback();
+			ee.once(body.id, function (err, story) {
+				callback(err, story);
+			});
 		});
 	};
 
@@ -937,7 +956,7 @@ var db = function() {
 			findByUser: findGroupsByUser
 		},
 		stories: {
-			add2: addStoryProto,
+			add: addStory,
 			markOwnerNotified: markStoryOwnerNotified,
 			move: moveStory,
 			remove: removeStory,
