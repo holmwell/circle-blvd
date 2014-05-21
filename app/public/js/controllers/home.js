@@ -24,12 +24,6 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 		});
 	};
 
-	var apply = function () {
-		$scope.$apply(function () {
-
-		});
-	};
-
 	var focusElement = function (elementId) {
 		var element = document.getElementById(elementId);
 		if (element) {
@@ -223,22 +217,6 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 		}
 	};
 
-	$scope.deselectAll = function () {
-		// TODO: Figure out how to call this only
-		// when we want to. Right now, since it is
-		// attached to the #backlog, it is also called
-		// every time a .story is clicked.
-
-		// if (selectedStory) {
-		// 	selectedStory.isSelected = false;
-		// 	selectedStory = undefined;	
-		// }
-	};
-
-	// TODO: Soon ...
-	// var insertStory = function (story, afterStory, beforeStory) {
-
-	// };
 
 	var insertFirstStory = function (story, callback) {
 		var hadFirstStoryPreviously = usefulStories.hasFirst();
@@ -280,9 +258,6 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 		if (!isCreatingStory && newStory) {
 			isCreatingStory = true;
 			insertNewStory(newStory, function (createdStory) {
-
-				console.log(createdStory);
-
 				$scope.newStory = undefined;
 				isCreatingStory = false;
 				$timeout(makeStoriesDraggable, 0);
@@ -833,18 +808,6 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 		return false;
 	};
 
-	// $scope.showNextMeeting = function () {
-	// 	var body = {};
-	// 	body.showNextMeeting = true;
-	// 	$http.put("/data/1/settings/show-next-meeting", body)
-	// 	.success(function (data) {
-	// 		console.log(":-)");
-	// 	})
-	// 	.error(function (data, status) {
-	// 		console.log(status);
-	// 		console.log(data);
-	// 	});
-	// };
 
 	$scope.debug = function() {
 		console.log("Scope array: ");

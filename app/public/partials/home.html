@@ -52,7 +52,7 @@
 		ng-click="toggleAltMode()" title="inbox mode"><i class="icon-align-justify"></i></div>
 </div>
 
-<div id="backlog" ng-click="deselectAll()" class="offset2 clear">
+<div id="backlog" class="offset2 clear">
 	<div class="storyWrapper row" ng-repeat="story in stories"
 		ng-hide="(isAltMode || isManualAltMode)
 		&& (!story.isMoving 
@@ -79,8 +79,6 @@
 			'after-meeting': story.isAfterNextMeeting
 		}"
 		ng-click="select(story)">
-
-	<!-- 		<div class="span2 story-id">{{story.id | slice:5 }} (next: {{story.nextId | slice:5}}) </div> -->
 			<div ng-if="story.isSelected">
 				<form>
 					<div class="summary">
