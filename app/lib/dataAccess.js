@@ -282,16 +282,25 @@ var db = function() {
 		}
 	};
 
-
+	var activeStoryQueue = {};
 	var isStoryQueueRunning = false;
+
 	var processStoryQueue = function () {
 		isStoryQueueRunning = true;
 
 		var stopProcessing = function () {
 			isStoryQueueRunning = false;
+			var err = {
+				error: 'halted queue',
+				message: "Story processing queue halted. Please try again."
+			};
+			for (var storyId in activeStoryQueue) {
+				ee.emit(storyId, err, null);
+			}
 		};
 
 		var notifyListeners = function (err, story) {
+			delete activeStoryQueue[story._id];
 			ee.emit(story._id, err, story);
 		};
 
@@ -362,13 +371,14 @@ var db = function() {
 				return callback(err);
 			}
 
-			if (!isStoryQueueRunning) {
-				processStoryQueue();
-			}
-
+			activeStoryQueue[body.id] = body.id;
 			ee.once(body.id, function (err, story) {
 				callback(err, story);
 			});
+
+			if (!isStoryQueueRunning) {
+				processStoryQueue();
+			}
 		});
 	};
 
