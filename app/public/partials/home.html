@@ -30,7 +30,7 @@
 		<div ng-show="isAdding['story']" class="new-story">
 			<form>
 				<div class="input-group">
-					<input id="defaultEntry" type="text" class="input-xlarge" ng-model="newStory.summary"/>
+					<input id="storyEntry" type="text" class="input-xlarge" ng-model="newStory.summary"/>
 					<span class="input-group-btn">
 						<button class="btn pull-right" ng-click="create(newStory)">Add story</button>
 					</span>
@@ -41,7 +41,7 @@
 		<div ng-show="isAdding['deadline']" 
 			class="new-story after-meeting deadline" >
 			<form>
-				<input type="text" class="input-xlarge" ng-model="newDeadline.summary"/>
+				<input id="deadlineEntry" type="text" class="input-xlarge" ng-model="newDeadline.summary"/>
 				<button class="btn pull-right" ng-click="createDeadline(newDeadline)">Add milepost</button>
 			</form>
 		</div>

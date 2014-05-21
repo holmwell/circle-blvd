@@ -155,13 +155,14 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 			$scope.isAddingNew = true;
 			$scope.showEntry('story');
 			// TODO: Focus for all the story types
-			focusElement('defaultEntry');
+			focusElement('storyEntry');
 		}
 		else {
 			for (var pName in $scope.isAdding) {
 				$scope.isAdding[pName] = false;
 			}
 			$scope.isAdding[panelName] = true;
+			focusElement(panelName + 'Entry');
 		}
 	};
 	$scope.hideEntry = function () {
