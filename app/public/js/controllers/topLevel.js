@@ -30,16 +30,24 @@ function TopLevelCtrl(session, $scope, $http, $location) {
 		return false;
 	};
 
-	$scope.isAdmin = function () {
+	var isInGroup = function (groupName) {
 		if ($scope.isSignedIn()) {
 			var memberships = session.user.memberships;
 			for (var membershipKey in memberships) {
-				if (memberships[membershipKey].name === "Administrative") {
+				if (memberships[membershipKey].name === groupName) {
 					return true;
 				}
 			}
 		}
 		return false;
+	};
+
+	$scope.isAdmin = function () {
+		return isInGroup("Administrative");
+	};
+
+	$scope.isGatekeeper = function () {
+		return isInGroup("Gatekeeper");
 	};
 
 	$scope.getAccountName = function () {

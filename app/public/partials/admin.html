@@ -56,41 +56,6 @@
 	</ul>
 </form>
 
-<h4 id="settingForm">Settings</h4>
-<div class="adminList">
-	<div ng-repeat="setting in settings" class="setting-row" ng-class-odd="'odd'">
-		<form ng-show="!isBooleanSetting(setting)">
-			<div class="row">
-				<label class="name span2">{{setting.name}}</label>
-				<div class="span3" ng-hide="setting.visibility === 'secret'">
-					<input type="text" ng-model="setting.value" placeholder="Value"/>
-				</div>
-				<div class="span3" ng-show="setting.visibility === 'secret'">
-					<input type="password" ng-model="setting.value" placeholder="(secret)"/>
-				</div>
-				<div class="name span2">{{setting.visibility}}</div>
-				<div class="span2">
-					<button class="btn" ng-click="updateSetting(setting)">Save</button>
-				</div>
-			</div>
-		</form>
-
-
-		<form ng-show="isBooleanSetting(setting)">
-			<div class="row">
-				<label class="name span2">{{setting.name}}</label>
-				<div class="span3">
-					<input type="checkbox" ng-model="setting.value"/>
-				</div>
-				<div class="name span2">{{setting.visibility}}</div>
-				<div class="span2">
-					<button class="btn" ng-click="updateSetting(setting)">Save</button>
-				</div>
-			</div>
-		</form>
-	</div>
-</div>
-
 </div>
 
 

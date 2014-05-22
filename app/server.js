@@ -219,7 +219,7 @@ var configureSuccessful = function () {
 		db.settings.get(onSuccess, onFailure);
 	});
 
-	app.get("/data/settings/private", ensureAdministrator, function (req, res) {
+	app.get("/data/settings/private", ensureGatekeeper, function (req, res) {
 		var onSuccess = function (settings) {
 			res.send(200, settings);
 		};
@@ -231,7 +231,7 @@ var configureSuccessful = function () {
 		db.settings.getPrivate(onSuccess, onFailure);
 	});
 
-	app.get("/data/settings/authorized", ensureAdministrator, function (req, res) {
+	app.get("/data/settings/authorized", ensureGatekeeper, function (req, res) {
 		var onSuccess = function (settings) {
 			res.send(200, settings);
 		};
@@ -243,7 +243,7 @@ var configureSuccessful = function () {
 		db.settings.getAuthorized(onSuccess, onFailure);
 	});
 
-	app.put("/data/setting", ensureAdministrator, function (req, res) {
+	app.put("/data/setting", ensureGatekeeper, function (req, res) {
 		var data = req.body;
 		db.settings.save(data, 
 			function (setting) {
