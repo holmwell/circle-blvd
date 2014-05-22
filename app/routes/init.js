@@ -25,19 +25,20 @@ exports.init = function (req, res) {
 		});
 	};
 
+	var adminMemberships = [];
 	var addAdminUser = function (userGroup) {
 
-		var memberships = [{
+		adminMemberships.push({
 			group: userGroup.id, // TODO: Config?
 			level: "member"
-		}];
+		});
 
 		var isReadOnly = false;
 		db.users.add(
 			"Admin", 
 			data.email, 
 			data.password, 
-			memberships,
+			adminMemberships,
 			isReadOnly,
 			addNextMeeting, onError
 		);
@@ -49,5 +50,18 @@ exports.init = function (req, res) {
 		isPermanent: true
 	};
 
-	db.groups.add(adminGroup, addAdminUser, onError);
+	var gatekeeperGroup = {
+		name: "Gatekeeper",
+		isPermanent: true
+	};
+
+	db.groups.add(gatekeeperGroup,
+		function (group) {
+			adminMemberships.push({
+				group: group.id,
+				level: "member"
+			});
+			db.groups.add(adminGroup, addAdminUser, onError);		
+		},
+	onError);
 };

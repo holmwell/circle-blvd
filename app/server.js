@@ -46,25 +46,33 @@ var ensureAuthenticated = function (req, res, next) {
 	res.send(401, "Please authenticate with the server and try again.");
 };
 
-var ensureAdministrator = function (req, res, next) {
+var ensureIsGroup = function (groupName, req, res, next) {
 	var nope = function () {
-		res.send(403, "User is not in the Administrative group.")
+		res.send(403, "User is not in the " + groupName + " group.")
 	}
 
-	var isAdministrator = function () {
-		if (req.user.memberships) {
-			var groups = req.user.memberships;
-			for (var groupKey in groups) {
-				if (groups[groupKey].name === "Administrative") {
-					return next();
-				}
+	if (req.user.memberships) {
+		var groups = req.user.memberships;
+		for (var groupKey in groups) {
+			if (groups[groupKey].name === groupName) {
+				return next();
 			}
 		}
+	}
 
-		return nope();
-	};
+	return nope();
+};
 
-	ensureAuthenticated(req, res, isAdministrator);
+var ensureAdministrator = function (req, res, next) {
+	ensureAuthenticated(req, res, function () {
+		ensureIsGroup("Administrative", req, res, next);
+	});
+};
+
+var ensureGatekeeper = function (req, res, next) {
+	ensureAuthenticated(req, res, function () {
+		ensureIsGroup("Gatekeeper", req, res, next);
+	});
 };
 
 var authenticateLocal = function(req, res, next) {
