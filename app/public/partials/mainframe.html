@@ -4,14 +4,20 @@
 
 <div ng-show="isSignedIn()">
 
-<h4>Projects</h4>
-<div class="adminList">
-	<div ng-repeat="project in projects" ng-class-odd="'odd'">
-		<div class="row">
-			<div class="span3">{{project.name}}</div>
+<form id="projectForm">
+	<h4>Projects</h4>
+	<div class="row">
+		<div class="span3"><input type="text" ng-model="projectName" placeholder="Name"/></div>
+		<div class="span2"><button class="btn" ng-click="addProject(projectName)">Add project</button></div>
+	</div>
+	<div class="adminList">
+		<div ng-repeat="project in projects" ng-class-odd="'odd'">
+			<div class="row">
+				<div class="span3">{{project.name}}</div>
+			</div>
 		</div>
 	</div>
-</div>
+</form>
 
 
 <h4 id="settingForm">Settings</h4>

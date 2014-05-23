@@ -6,6 +6,29 @@ var events  = require('events');
 var db = function() {
 	var ee = new events.EventEmitter();
 
+	var addProject = function (project, callback) {
+		var newProject = {
+			name: project.name
+		};
+
+		// TODO: Get project ID
+
+		couch.projects.add(newProject, function (err, body) {
+			if (err) {
+				return callback(err);
+			}
+
+			newProject._id = body.id;
+			newProject._rev = body.rev;
+			callback(null, newProject);
+		});
+	};
+
+	var updateProject = function (project, callback) {
+		couch.projects.update(project, callback);
+	};
+
+
 	var addGroup = function(group, success, failure) {
 		var newGroup = {
 			name: group.name,
@@ -958,6 +981,13 @@ var db = function() {
 			getPrivate: getPrivateSettings,
 			getAll: getAllSettings,
 			save: saveSetting
+		},
+		projects: {
+			add: addProject,
+			getAll: function (callback) {
+				couch.projects.getAll(callback);
+			},
+			update: updateProject
 		},
 		groups: {
 			add: addGroup,

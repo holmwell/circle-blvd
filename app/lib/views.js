@@ -138,6 +138,34 @@ var createViews = function(database, callback) {
 	designDocs.push(settingsDesignDoc);
 
 
+	var projectsDesignDoc = {
+		url: '_design/projects',
+		body: 
+		{
+			version: "1.0.1",
+			language: "javascript",
+			views: {
+				byName: {
+					map: function(doc) {
+						if (doc.type === "project") {
+							emit(doc.name, doc);
+						}
+					}
+				},
+
+				byId: {
+					map: function (doc) {
+						if (doc.type === "project") {
+							emit(doc._id, doc);
+						}
+					}
+				}
+			}
+		}
+	};
+	designDocs.push(projectsDesignDoc);
+
+
 	var groupsDesignDoc = {
 		url: '_design/groups',
 		body: 
@@ -165,6 +193,7 @@ var createViews = function(database, callback) {
 	};
 	designDocs.push(groupsDesignDoc);
 
+
 	var queueDesignDoc = {
 		url: '_design/queue',
 		body: {
@@ -182,6 +211,7 @@ var createViews = function(database, callback) {
 		}
 	};
 	designDocs.push(queueDesignDoc);
+
 
 	var storiesDesignDoc = {
 		url: '_design/stories',

@@ -261,14 +261,32 @@ var configureSuccessful = function () {
 
 	// Projects!
 	app.get("/data/projects", ensureMainframeAccess, function (req, res) {
+		db.projects.getAll(function (err, projects) {
+			if (err) {
+				return handleError(err, res);
+			}
+			res.send(200, projects);
+		})
+	});
 
-		var projects = [];
-		projects.push({
-			id: "1",
-			name: "Circle Blvd"
+	app.post("/data/project", ensureMainframeAccess, function (req, res) {
+		var project = req.body;
+		db.projects.add(project, function (err, newProject) {
+			if (err) {
+				return handleError(err, res);
+			}
+			res.send(200, newProject);
 		});
+	});
 
-		res.send(200, projects);
+	app.put("/data/project", ensureMainframeAccess, function (req, res) {
+		var project = req.body;
+		db.projects.update(project, function (err, updatedProject) {
+			if (err) {
+				return handleError(err, res);
+			}
+			res.send(200, updatedProject);
+		});
 	});
 
 

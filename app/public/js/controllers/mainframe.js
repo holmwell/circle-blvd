@@ -2,6 +2,11 @@
 
 function MainframeCtrl(session, $scope, $http) {
 
+	var handleError = function (data, status) {
+		console.log(data);
+		console.log(status);
+	};
+
 	var getLatestProjectData = function () {
 
 		var getProjectsSuccess = function(data, status, headers, config) {
@@ -9,16 +14,25 @@ function MainframeCtrl(session, $scope, $http) {
 				// do nothing. 
 			}
 			else {
+				$scope.projectName = undefined;
 				$scope.projects = data;
 			}
 		};
 
 		$http.get('/data/projects')
 		.success(getProjectsSuccess)
-		.error(function (data, status) {
-			console.log(data);
-			console.log(status);
-		});
+		.error(handleError);
+	};
+
+
+	$scope.addProject = function (projectName) {
+		var data = {
+			name: projectName
+		};
+
+		$http.post('/data/project', data)
+		.success(getLatestProjectData)
+		.error(handleError);
 	};
 
 
@@ -29,9 +43,7 @@ function MainframeCtrl(session, $scope, $http) {
 			// to indicate success.
 			getLatestSettingData();
 		})
-		.error(function (data) {
-			console.log(data);
-		});
+		.error(handleError);
 	};
 
 	var appendSettings = function(data, status, headers, config) {
@@ -56,17 +68,12 @@ function MainframeCtrl(session, $scope, $http) {
 		return false;
 	};
 
-	var getSettingsError = function (data, status) {
-		console.log(data);
-		console.log(status);
-	};
-
 	var getLatestSettingData = function() {
 		$http.get('/data/settings/authorized')
 		.success(function (settings) {
 			appendSettings(settings);
 		})
-		.error(getSettingsError);
+		.error(handleError);
 	};
 
 

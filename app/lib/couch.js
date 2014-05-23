@@ -336,6 +336,40 @@ var couch = function() {
 		});
 	};
 
+	var addProject = function (project, callback) {
+		project.type = "project";
+		database.insert(project, callback);
+	};
+
+	var getAllProjects = function (callback) {
+		getView("projects/byName", callback);
+	};
+
+	var updateProject = function (project, callback) {
+		var copyProject = function (source, dest) {
+			dest.name = source.name;
+		};
+
+		database.get(project._id, function (err, projectToUpdate) {
+			if (err) {
+				return callback(err);
+			}
+			if (projectToUpdate.type !== "project") {
+				return callback({
+					message: "Update project: Attempt to update a non-project."
+				});
+			}
+
+			copyProject(project, projectToUpdate);
+			database.insert(projectToUpdate, function (err, body) {
+				if (err) {
+					return callback(err);
+				}
+				projectToUpdate._rev = body.rev;
+				return callback(null, projectToUpdate);
+			});
+		});
+	};
 
 	var addGroup = function(group, callback) {
 		group.type = "group";
@@ -882,7 +916,9 @@ var couch = function() {
 			whenReady: whenDatabaseReady
 		},
 		projects: {
-			// TODO: Do we want a projects data API?
+			add: addProject,
+			getAll: getAllProjects,
+			update: updateProject
 		},
 		settings: {
 			add: addSetting,
