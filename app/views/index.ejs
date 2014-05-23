@@ -24,7 +24,7 @@
       <li><a href="#/archives">Archives</a></li>
       <li><a href="#/profile">Profile</a></li>
       <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
-      <li ng-show="isGatekeeper()"><a href="#/gatekeeper">Gatekeeper</a></li>
+      <li ng-show="hasMainframeAccess()"><a href="#/mainframe">Mainframe</a></li>
       <li><a class="jsLink" ng-click="signOut()">Sign out</a></li>
     </ul>
   </div>
@@ -61,7 +61,7 @@
   <script src="js/controllers/archive.js"></script>
   <script src="js/controllers/profile.js"></script>
   <script src="js/controllers/admin.js"></script>
-  <script src="js/controllers/gatekeeper.js"></script>
+  <script src="js/controllers/mainframe.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/directives.js"></script>
 </body>

@@ -46,8 +46,8 @@ function TopLevelCtrl(session, $scope, $http, $location) {
 		return isInGroup("Administrative");
 	};
 
-	$scope.isGatekeeper = function () {
-		return isInGroup("Gatekeeper");
+	$scope.hasMainframeAccess = function () {
+		return isInGroup("Mainframe");
 	};
 
 	$scope.getAccountName = function () {

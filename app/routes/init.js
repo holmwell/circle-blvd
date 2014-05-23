@@ -50,12 +50,12 @@ exports.init = function (req, res) {
 		isPermanent: true
 	};
 
-	var gatekeeperGroup = {
-		name: "Gatekeeper",
+	var mainframeGroup = {
+		name: "Mainframe",
 		isPermanent: true
 	};
 
-	db.groups.add(gatekeeperGroup,
+	db.groups.add(mainframeGroup,
 		function (group) {
 			adminMemberships.push({
 				group: group.id,

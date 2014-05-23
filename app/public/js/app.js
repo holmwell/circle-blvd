@@ -19,7 +19,7 @@ angular.module('myApp', [
 		$routeProvider.when('/signin', {templateUrl: 'partials/signin.html', controller: SignInCtrl});
 		$routeProvider.when('/profile', {templateUrl: 'partials/profile.html', controller: ProfileCtrl});
 		$routeProvider.when('/admin', {templateUrl: 'partials/admin.html', controller: AdminCtrl});
-		$routeProvider.when('/gatekeeper', {templateUrl: 'partials/gatekeeper.html', controller: GatekeeperCtrl});
+		$routeProvider.when('/mainframe', {templateUrl: 'partials/mainframe.html', controller: MainframeCtrl});
 		$routeProvider.when('/initialize', {templateUrl: 'partials/initialize.html', controller: InitializeCtrl});
 		$routeProvider.otherwise({redirectTo: '/'});
 	}]);

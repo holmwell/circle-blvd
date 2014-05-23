@@ -69,9 +69,9 @@ var ensureAdministrator = function (req, res, next) {
 	});
 };
 
-var ensureGatekeeper = function (req, res, next) {
+var ensureMainframeAccess = function (req, res, next) {
 	ensureAuthenticated(req, res, function () {
-		ensureIsGroup("Gatekeeper", req, res, next);
+		ensureIsGroup("Mainframe", req, res, next);
 	});
 };
 
@@ -219,7 +219,7 @@ var configureSuccessful = function () {
 		db.settings.get(onSuccess, onFailure);
 	});
 
-	app.get("/data/settings/private", ensureGatekeeper, function (req, res) {
+	app.get("/data/settings/private", ensureMainframeAccess, function (req, res) {
 		var onSuccess = function (settings) {
 			res.send(200, settings);
 		};
@@ -231,7 +231,7 @@ var configureSuccessful = function () {
 		db.settings.getPrivate(onSuccess, onFailure);
 	});
 
-	app.get("/data/settings/authorized", ensureGatekeeper, function (req, res) {
+	app.get("/data/settings/authorized", ensureMainframeAccess, function (req, res) {
 		var onSuccess = function (settings) {
 			res.send(200, settings);
 		};
@@ -243,7 +243,7 @@ var configureSuccessful = function () {
 		db.settings.getAuthorized(onSuccess, onFailure);
 	});
 
-	app.put("/data/setting", ensureGatekeeper, function (req, res) {
+	app.put("/data/setting", ensureMainframeAccess, function (req, res) {
 		var data = req.body;
 		db.settings.save(data, 
 			function (setting) {
@@ -258,6 +258,19 @@ var configureSuccessful = function () {
 			}
 		);
 	});
+
+	// Projects!
+	app.get("/data/projects", ensureMainframeAccess, function (req, res) {
+
+		var projects = [];
+		projects.push({
+			id: "1",
+			name: "Circle Blvd"
+		});
+
+		res.send(200, projects);
+	});
+
 
 	// Groups!
 	app.get("/data/:projectId/groups", ensureAuthenticated, function (req, res) {

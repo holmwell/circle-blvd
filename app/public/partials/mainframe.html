@@ -1,8 +1,18 @@
-<h3>Gatekeeper!</h3>
+<h3>Mainframe controls!</h3>
 
 <p ng-show="!isSignedIn()">Please <a href="#/signin">sign in</a>.</p>
 
 <div ng-show="isSignedIn()">
+
+<h4>Projects</h4>
+<div class="adminList">
+	<div ng-repeat="project in projects" ng-class-odd="'odd'">
+		<div class="row">
+			<div class="span3">{{project.name}}</div>
+		</div>
+	</div>
+</div>
+
 
 <h4 id="settingForm">Settings</h4>
 <div class="adminList">

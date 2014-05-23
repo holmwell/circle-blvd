@@ -1,6 +1,25 @@
 'use strict';
 
-function GatekeeperCtrl(session, $scope, $http) {
+function MainframeCtrl(session, $scope, $http) {
+
+	var getLatestProjectData = function () {
+
+		var getProjectsSuccess = function(data, status, headers, config) {
+			if (data === {}) {
+				// do nothing. 
+			}
+			else {
+				$scope.projects = data;
+			}
+		};
+
+		$http.get('/data/projects')
+		.success(getProjectsSuccess)
+		.error(function (data, status) {
+			console.log(data);
+			console.log(status);
+		});
+	};
 
 
 	$scope.updateSetting = function (setting) {
@@ -52,8 +71,9 @@ function GatekeeperCtrl(session, $scope, $http) {
 
 
 	var init = function () {
+		getLatestProjectData();
 		getLatestSettingData();
 	}
 	init();
 }
-GatekeeperCtrl.$inject = ['session', '$scope', '$http'];
+MainframeCtrl.$inject = ['session', '$scope', '$http'];
