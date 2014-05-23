@@ -785,7 +785,10 @@ var db = function() {
 				if (err) {
 					return failure(err);
 				}
-				success();	
+				
+				user._id = body.id;
+				user._rev = body.rev;
+				success(user);	
 			});
 		};
 
@@ -826,11 +829,12 @@ var db = function() {
 		}
 
 		user = normalizeUser(user);
-		couch.users.update(user, function (err) {
+		couch.users.update(user, function (err, body) {
 			if (err) {
 				return failure(err);
 			}
-			success();
+			user._rev = body.rev;
+			success(user);
 		});
 	};
 

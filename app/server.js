@@ -270,12 +270,69 @@ var configureSuccessful = function () {
 	});
 
 	app.post("/data/circle", ensureMainframeAccess, function (req, res) {
-		var circle = req.body;
+		var circle = req.body.circle;
+		var admin = req.body.admin;
+
+		if (!admin.email) {
+			return res.send(400, "An email address for an administrative user is required when making a circle.");
+		}
+
 		db.circles.add(circle, function (err, newCircle) {
 			if (err) {
 				return handleError(err, res);
 			}
-			res.send(200, newCircle);
+
+			var administrativeGroup = {
+				name: "Administrative",
+				projectId: newCircle._id,
+				isPermanent: true
+			};
+
+			db.groups.add(administrativeGroup, function (group) {
+				db.users.findByEmail(admin.email, function (err, adminAccount) {
+					if (err) {
+						return handleError(err, res);
+					}
+
+					var accountFound = function (account) {
+						account.memberships.push({
+							group: group.id,
+							level: "member"
+						});
+						db.users.update(account, 
+							function (body) {
+								res.send(200, newCircle);
+							},
+							function (err) {
+								handleError(err, res);
+							}
+						);
+					};
+
+					if (adminAccount) {
+						accountFound(adminAccount);
+					}
+					else {
+						var isReadOnly = false;
+						var memberships = [];
+						db.users.add("Admin",
+							admin.email, 
+							"public", // TODO: Change 
+							memberships,
+							isReadOnly,
+							function (user) {
+								accountFound(user);
+							}, 
+							function (err) {
+								handleError(err, res);
+							});
+					}
+				});
+			},
+			function (err) {
+				// failure adding group
+				return handleError(err, res);
+			});
 		});
 	});
 

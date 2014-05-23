@@ -14,7 +14,7 @@ function MainframeCtrl(session, $scope, $http) {
 				// do nothing. 
 			}
 			else {
-				$scope.circleName = undefined;
+				$scope.circle = undefined;
 				$scope.circles = data;
 			}
 		};
@@ -25,9 +25,14 @@ function MainframeCtrl(session, $scope, $http) {
 	};
 
 
-	$scope.addCircle = function (circleName) {
+	$scope.addCircle = function (circle) {
 		var data = {
-			name: circleName
+			circle: {
+				name: circle.name
+			},
+			admin: {
+				email: circle.adminEmail
+			}
 		};
 
 		$http.post('/data/circle', data)
