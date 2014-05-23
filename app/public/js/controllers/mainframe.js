@@ -7,31 +7,31 @@ function MainframeCtrl(session, $scope, $http) {
 		console.log(status);
 	};
 
-	var getLatestProjectData = function () {
+	var getLatestCircleData = function () {
 
-		var getProjectsSuccess = function(data, status, headers, config) {
+		var getCirclesSuccess = function(data, status, headers, config) {
 			if (data === {}) {
 				// do nothing. 
 			}
 			else {
-				$scope.projectName = undefined;
-				$scope.projects = data;
+				$scope.circleName = undefined;
+				$scope.circles = data;
 			}
 		};
 
-		$http.get('/data/projects')
-		.success(getProjectsSuccess)
+		$http.get('/data/circles')
+		.success(getCirclesSuccess)
 		.error(handleError);
 	};
 
 
-	$scope.addProject = function (projectName) {
+	$scope.addCircle = function (circleName) {
 		var data = {
-			name: projectName
+			name: circleName
 		};
 
-		$http.post('/data/project', data)
-		.success(getLatestProjectData)
+		$http.post('/data/circle', data)
+		.success(getLatestCircleData)
 		.error(handleError);
 	};
 
@@ -78,7 +78,7 @@ function MainframeCtrl(session, $scope, $http) {
 
 
 	var init = function () {
-		getLatestProjectData();
+		getLatestCircleData();
 		getLatestSettingData();
 	}
 	init();

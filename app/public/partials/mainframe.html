@@ -4,16 +4,16 @@
 
 <div ng-show="isSignedIn()">
 
-<form id="projectForm">
-	<h4>Projects</h4>
+<form id="circleForm">
+	<h4>Circles</h4>
 	<div class="row">
-		<div class="span3"><input type="text" ng-model="projectName" placeholder="Name"/></div>
-		<div class="span2"><button class="btn" ng-click="addProject(projectName)">Add project</button></div>
+		<div class="span3"><input type="text" ng-model="circleName" placeholder="Name"/></div>
+		<div class="span2"><button class="btn" ng-click="addCircle(circleName)">Add circle</button></div>
 	</div>
 	<div class="adminList">
-		<div ng-repeat="project in projects" ng-class-odd="'odd'">
+		<div ng-repeat="circle in circles" ng-class-odd="'odd'">
 			<div class="row">
-				<div class="span3">{{project.name}}</div>
+				<div class="span3">{{circle.name}}</div>
 			</div>
 		</div>
 	</div>

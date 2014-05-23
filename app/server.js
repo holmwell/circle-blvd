@@ -259,33 +259,33 @@ var configureSuccessful = function () {
 		);
 	});
 
-	// Projects!
-	app.get("/data/projects", ensureMainframeAccess, function (req, res) {
-		db.projects.getAll(function (err, projects) {
+	// Circles!
+	app.get("/data/circles", ensureMainframeAccess, function (req, res) {
+		db.circles.getAll(function (err, circles) {
 			if (err) {
 				return handleError(err, res);
 			}
-			res.send(200, projects);
+			res.send(200, circles);
 		})
 	});
 
-	app.post("/data/project", ensureMainframeAccess, function (req, res) {
-		var project = req.body;
-		db.projects.add(project, function (err, newProject) {
+	app.post("/data/circle", ensureMainframeAccess, function (req, res) {
+		var circle = req.body;
+		db.circles.add(circle, function (err, newCircle) {
 			if (err) {
 				return handleError(err, res);
 			}
-			res.send(200, newProject);
+			res.send(200, newCircle);
 		});
 	});
 
-	app.put("/data/project", ensureMainframeAccess, function (req, res) {
-		var project = req.body;
-		db.projects.update(project, function (err, updatedProject) {
+	app.put("/data/circle", ensureMainframeAccess, function (req, res) {
+		var circle = req.body;
+		db.circles.update(circle, function (err, updateCircle) {
 			if (err) {
 				return handleError(err, res);
 			}
-			res.send(200, updatedProject);
+			res.send(200, updateCircle);
 		});
 	});
 

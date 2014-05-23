@@ -138,16 +138,16 @@ var createViews = function(database, callback) {
 	designDocs.push(settingsDesignDoc);
 
 
-	var projectsDesignDoc = {
-		url: '_design/projects',
+	var circlesDesignDoc = {
+		url: '_design/circles',
 		body: 
 		{
-			version: "1.0.1",
+			version: "1.0.0",
 			language: "javascript",
 			views: {
 				byName: {
 					map: function(doc) {
-						if (doc.type === "project") {
+						if (doc.type === "circle") {
 							emit(doc.name, doc);
 						}
 					}
@@ -155,7 +155,7 @@ var createViews = function(database, callback) {
 
 				byId: {
 					map: function (doc) {
-						if (doc.type === "project") {
+						if (doc.type === "circle") {
 							emit(doc._id, doc);
 						}
 					}
@@ -163,7 +163,7 @@ var createViews = function(database, callback) {
 			}
 		}
 	};
-	designDocs.push(projectsDesignDoc);
+	designDocs.push(circlesDesignDoc);
 
 
 	var groupsDesignDoc = {

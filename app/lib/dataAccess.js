@@ -6,26 +6,24 @@ var events  = require('events');
 var db = function() {
 	var ee = new events.EventEmitter();
 
-	var addProject = function (project, callback) {
-		var newProject = {
-			name: project.name
+	var addCircle = function (circle, callback) {
+		var newCircle = {
+			name: circle.name
 		};
 
-		// TODO: Get project ID
-
-		couch.projects.add(newProject, function (err, body) {
+		couch.circles.add(newCircle, function (err, body) {
 			if (err) {
 				return callback(err);
 			}
 
-			newProject._id = body.id;
-			newProject._rev = body.rev;
-			callback(null, newProject);
+			newCircle._id = body.id;
+			newCircle._rev = body.rev;
+			callback(null, newCircle);
 		});
 	};
 
-	var updateProject = function (project, callback) {
-		couch.projects.update(project, callback);
+	var updateCircle = function (circle, callback) {
+		couch.circles.update(circle, callback);
 	};
 
 
@@ -982,12 +980,12 @@ var db = function() {
 			getAll: getAllSettings,
 			save: saveSetting
 		},
-		projects: {
-			add: addProject,
+		circles: {
+			add: addCircle,
 			getAll: function (callback) {
-				couch.projects.getAll(callback);
+				couch.circles.getAll(callback);
 			},
-			update: updateProject
+			update: updateCircle
 		},
 		groups: {
 			add: addGroup,

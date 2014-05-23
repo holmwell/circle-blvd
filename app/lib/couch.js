@@ -336,37 +336,37 @@ var couch = function() {
 		});
 	};
 
-	var addProject = function (project, callback) {
-		project.type = "project";
-		database.insert(project, callback);
+	var addCircle = function (circle, callback) {
+		circle.type = "circle";
+		database.insert(circle, callback);
 	};
 
-	var getAllProjects = function (callback) {
-		getView("projects/byName", callback);
+	var getAllCircles = function (callback) {
+		getView("circles/byName", callback);
 	};
 
-	var updateProject = function (project, callback) {
-		var copyProject = function (source, dest) {
+	var updateCircle = function (circle, callback) {
+		var copyCircle = function (source, dest) {
 			dest.name = source.name;
 		};
 
-		database.get(project._id, function (err, projectToUpdate) {
+		database.get(circle._id, function (err, circleToUpdate) {
 			if (err) {
 				return callback(err);
 			}
-			if (projectToUpdate.type !== "project") {
+			if (circleToUpdate.type !== "circle") {
 				return callback({
-					message: "Update project: Attempt to update a non-project."
+					message: "Update circle: Attempt to update a non-circle."
 				});
 			}
 
-			copyProject(project, projectToUpdate);
-			database.insert(projectToUpdate, function (err, body) {
+			copyCircle(circle, circleToUpdate);
+			database.insert(circleToUpdate, function (err, body) {
 				if (err) {
 					return callback(err);
 				}
-				projectToUpdate._rev = body.rev;
-				return callback(null, projectToUpdate);
+				circleToUpdate._rev = body.rev;
+				return callback(null, circleToUpdate);
 			});
 		});
 	};
@@ -915,11 +915,6 @@ var couch = function() {
 		database: {
 			whenReady: whenDatabaseReady
 		},
-		projects: {
-			add: addProject,
-			getAll: getAllProjects,
-			update: updateProject
-		},
 		settings: {
 			add: addSetting,
 			get: getSettings,
@@ -927,6 +922,11 @@ var couch = function() {
 			getPrivate: getPrivateSettings,
 			getAll: getAllSettings,
 			update: updateSetting
+		},
+		circles: {
+			add: addCircle,
+			getAll: getAllCircles,
+			update: updateCircle
 		},
 		groups: {
 			add: addGroup,
