@@ -3,6 +3,7 @@
 function AdminCtrl(session, $scope, $http) {
 
 	var activeCircle = session.activeCircle;
+	var impliedGroup = undefined;
 
 	var addUserSuccess = function() {
 		$scope.userName = "";
@@ -16,7 +17,18 @@ function AdminCtrl(session, $scope, $http) {
 		console.log("Sad inside add user. :(");
 	};
 
+	$scope.isGroupImplied = function (group) {
+		if (group && group.name) {
+			return group.name === "_implied";
+		}
+		return false;
+	};
+
 	$scope.addUser = function(userName, userEmail, userPassword, userGroups) {
+		if (!impliedGroup) {
+			// TODO: Error. Not allowed.
+		}
+
 		var data = {
 			name: userName,
 			email: userEmail,
@@ -34,6 +46,14 @@ function AdminCtrl(session, $scope, $http) {
 			}
 		}
 
+		// Add the implied group
+		// TODO: This should be on the server.
+		data.memberships.push({
+			circle: activeCircle,
+			group: impliedGroup.id,
+			level: "member"
+		});	
+		
 		$http.post('/data/user', data)
 		.success(addUserSuccess)
 		.error(addUserFailure);
@@ -78,6 +98,9 @@ function AdminCtrl(session, $scope, $http) {
 	var groupNames = {};
 	$scope.getGroupName = function (groupId) {
 		var group = groupNames[groupId];
+		if ($scope.isGroupImplied(group)) {
+			return;
+		}
 		if (group) {
 			return group.name;
 		}
@@ -94,6 +117,10 @@ function AdminCtrl(session, $scope, $http) {
 			for (var groupKey in data) {
 				var group = data[groupKey];
 				groupNames[group.id] = group;
+
+				if ($scope.isGroupImplied(group)) {
+					impliedGroup = group;
+				}
 			}
 		}
 	};

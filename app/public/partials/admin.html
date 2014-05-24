@@ -16,7 +16,7 @@
 		<div class="span3">
 			<div style="margin-bottom: 1ex;">Select groups:</div>
 			<div ng-repeat="group in groups">
-				<div class="checkbox">
+				<div class="checkbox" ng-hide="isGroupImplied(group)">
 					<label><input type="checkbox" ng-model="userGroups[group.id]"> {{group.name}}</label>
 				</div>
 			</div>
@@ -48,7 +48,7 @@
 	</div>
 	<ul class="adminList">
 		<li ng-repeat="group in groups" ng-class-odd="'odd'">
-			<div class="row">
+			<div class="row" ng-hide="isGroupImplied(group)">
 				<div class="name span3">{{group.name}}</div>
 				<div class="removeUser span2" ng-hide="group.isPermanent" ng-click="removeGroup(group)" title="remove group"><i class="icon-trash"></i></div>
 			</div>
