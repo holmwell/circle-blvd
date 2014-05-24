@@ -2,6 +2,7 @@ var db = require('../lib/dataAccess.js').instance();
 
 exports.init = function (req, res) {
 	var data = req.body;
+	var defaultCircleId = "1";
 
 	var onSuccess = function() {
 		res.send(200);
@@ -13,7 +14,7 @@ exports.init = function (req, res) {
 
 	var addNextMeeting = function () {
 		var story = {};	
-		story.projectId = "1";
+		story.projectId = defaultCircleId;
 		story.summary = "Next meeting";
 		story.isNextMeeting = true;
 
@@ -29,6 +30,7 @@ exports.init = function (req, res) {
 	var addAdminUser = function (userGroup) {
 
 		adminMemberships.push({
+			circle: defaultCircleId,
 			group: userGroup.id, // TODO: Config?
 			level: "member"
 		});
@@ -46,7 +48,7 @@ exports.init = function (req, res) {
 
 	var adminGroup = {
 		name: "Administrative",
-		projectId: "1",
+		projectId: defaultCircleId,
 		isPermanent: true
 	};
 

@@ -27,7 +27,7 @@ var createViews = function(database, callback) {
 		url: '_design/users',
 		body: 
 		{
-			version: "1.0.1",
+			version: "1.0.5",
 			language: "javascript",
 			views: {
 				byEmail: {
@@ -54,6 +54,33 @@ var createViews = function(database, callback) {
 								emit("", doc);
 							}
 						}
+					}
+				},
+				byGroup: {
+					map: function (doc) {
+						if (doc.type === "user") {
+							for (var i in doc.memberships) {
+								var membership = doc.memberships[i];
+								emit([membership.group, doc.name], doc);
+							}	
+						}
+
+					}
+				},
+				byCircle: {
+					map: function (doc) {
+						if (doc.type === "user") {
+							for (var i in doc.memberships) {
+								var membership = doc.memberships[i];
+								emit([membership.circle, doc.name], doc);
+							}
+						}
+					},
+					reduce: function (keys, values, rereduce) {
+						if (rereduce) {
+							return true;
+						}
+						return keys[0][0][1];
 					}
 				}
 			}
@@ -170,13 +197,14 @@ var createViews = function(database, callback) {
 		url: '_design/groups',
 		body: 
 		{
-			version: "1.0.1",
+			version: "1.0.2",
 			language: "javascript",
 			views: {
-				byProjectId: {
+				byCircleId: {
 					map: function(doc) {
-						if (doc.type === "group" && doc.projectId) {
-							emit(doc.projectId, doc);
+						if (doc.type === "group" 
+							&& (doc.circleId || doc.projectId)) {
+							emit(doc.circleId || doc.projectId, doc);
 						}
 					}
 				},

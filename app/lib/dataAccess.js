@@ -768,6 +768,10 @@ var db = function() {
 		couch.users.findByName(name, callback);
 	};
 
+	var findNamesByCircleId = function (circleId, callback) {
+		couch.users.findNamesByCircleId(circleId, callback);
+	};
+
 	var findUsersById = function (idArray, callback) {
 		couch.users.findMany(idArray, callback);
 	};
@@ -1037,6 +1041,7 @@ var db = function() {
 			findByEmail: findUserByEmail,
 			findById: findUserById, 
 			findByName: findUserByName,
+			findNamesByCircleId: findNamesByCircleId,
 			findMany: findUsersById,
 			update: updateUser,
 			updatePassword: updateUserPassword,

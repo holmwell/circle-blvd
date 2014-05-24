@@ -164,6 +164,34 @@ var couch = function() {
 		});
 	};
 
+	// var findUsersByCircleId = function (circleId, callback) {
+	// 	var options = {
+	// 		startkey: [circleId,"{}"],
+	// 		group: false
+	// 	};
+	// 	getView("users/byCircle", options, function (err, users) {
+	// 		if (err) {
+	// 			return callback(err);
+	// 		}
+	// 		return callback(null, users);
+	// 	});	
+	// };
+
+	var findNamesByCircleId = function (circleId, callback) {
+		var options = {
+			startkey: circleId,
+			endkey: [circleId, {}],
+			group: true
+		};
+		getView("users/byCircle", options, function (err, users) {
+			if (err) {
+				return callback(err);
+			}
+			return callback(null, users);
+		});	
+	};
+
+
 	var findUsersById = function (idList, callback) {
 		var query = {};
 		var usersFound = [];
@@ -408,11 +436,11 @@ var couch = function() {
 		});
 	};
 
-	var findGroupsByProjectId = function (projectId, callback) {
+	var findGroupsByCircleId = function (circleId, callback) {
 		var options = {
-			key: projectId
+			key: circleId
 		};
-		getView("groups/byProjectId", options, function (err, rows) {
+		getView("groups/byCircleId", options, function (err, rows) {
 			callback(err, rows);
 		});
 	};
@@ -460,6 +488,7 @@ var couch = function() {
 	};
 
 	var findArchivesByProjectId = function (projectId, callback) {
+		// TODO: startKey should be startkey
 		var options = {
 			startKey: [projectId,"{}"],
 			descending: true
@@ -935,7 +964,7 @@ var couch = function() {
 			add: addGroup,
 			remove: removeGroup,
 			findById: findGroupById,
-			findByProjectId: findGroupsByProjectId,
+			findByProjectId: findGroupsByCircleId,
 			findByUser: findGroupsByUser
 		},
 		docs: {
@@ -962,6 +991,7 @@ var couch = function() {
 		users: {
 			add: addUser,
 			remove: removeUser,
+			findNamesByCircleId: findNamesByCircleId,
 			findByEmail: findUserByEmail,
 			findById: findUserById,
 			findByName: findUserByName,

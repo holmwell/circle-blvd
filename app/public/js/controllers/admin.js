@@ -2,7 +2,7 @@
 
 function AdminCtrl(session, $scope, $http) {
 
-	var defaultProjectId = session.activeCircle;
+	var activeCircle = session.activeCircle;
 
 	var addUserSuccess = function() {
 		$scope.userName = "";
@@ -27,6 +27,7 @@ function AdminCtrl(session, $scope, $http) {
 		for (var groupId in userGroups) {
 			if (userGroups[groupId] === true) {
 				data.memberships.push({
+					circle: activeCircle,
 					group: groupId,
 					level: "member"
 				});
@@ -98,7 +99,7 @@ function AdminCtrl(session, $scope, $http) {
 	};
 
 	var getLatestGroupData = function() {
-		$http.get('/data/' + defaultProjectId + '/groups')
+		$http.get('/data/' + activeCircle + '/groups')
 		.success(getGroupsSuccess)
 		.error(function (data, status) {
 			console.log(data);
@@ -120,7 +121,7 @@ function AdminCtrl(session, $scope, $http) {
 	$scope.addGroup = function (groupName) {
 		var data = {
 			name: groupName,
-			projectId: defaultProjectId // TODO: Notion of projects inside groups, yes?
+			projectId: activeCircle // TODO: Notion of projects inside groups, yes?
 		};
 
 		$http.post('/data/group', data)

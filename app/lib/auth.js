@@ -20,6 +20,7 @@ var getUserWithFriendlyGroups = function (user, callback) {
 					user.memberships[membershipKey].name = groups[groupKey].name;
 				}
 			}
+			// TODO: Add list of Circle memberships
 		};
 
 		return callback(null, user);
