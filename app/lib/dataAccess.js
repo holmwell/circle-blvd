@@ -53,6 +53,24 @@ var db = function() {
 		});
 	};
 
+	var findGroupById = function (groupId, callback) {
+		// TODO: Make the other get-by-id functions like this, perhaps.
+		couch.docs.get(groupId, function (err, body) {
+			if (err) {
+				return callback(err);
+			}
+
+			if (body.type === "group") {
+				return callback(null, body);
+			}
+			else {
+				return callback({
+					message: "Document is not a group: " + groupId
+				});
+			}
+		});
+	};
+
 	var findGroupsByProjectId = function (projectId, callback) {
 
 		var prepareGroups = function (err, dbGroups) {
@@ -785,7 +803,7 @@ var db = function() {
 				if (err) {
 					return failure(err);
 				}
-				
+
 				user._id = body.id;
 				user._rev = body.rev;
 				success(user);	
@@ -994,6 +1012,7 @@ var db = function() {
 		groups: {
 			add: addGroup,
 			remove: removeGroup,
+			findById: findGroupById,
 			findByProjectId: findGroupsByProjectId,
 			findByUser: findGroupsByUser
 		},

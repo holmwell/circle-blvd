@@ -381,6 +381,17 @@ var configureSuccessful = function () {
 		addGroup(group, res);
 	});
 
+	app.get("/data/group/:groupId", ensureAuthenticated, function (req, res) {
+		// TODO: Make sure the user is a member of the group.
+		var groupId = req.params.groupId;
+		db.groups.findById(groupId, function (err, group) {
+			if (err) {
+				return handleError(err, res);
+			}
+			res.send(200, group);
+		});
+	});
+
 	app.put("/data/group/remove", ensureAdministrator, function (req, res) {
 		var group = req.body;
 

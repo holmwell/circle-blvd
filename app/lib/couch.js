@@ -673,6 +673,10 @@ var couch = function() {
 		});
 	};
 
+	var getDoc = function (docId, callback) {
+		database.get(docId, callback);
+	}
+
 	var updateDoc = function (doc, callback) {
 		database.get(doc._id, function (err, body) {
 			if (err) {
@@ -935,6 +939,7 @@ var couch = function() {
 			findByUser: findGroupsByUser
 		},
 		docs: {
+			get: getDoc,
 			update: updateDoc
 		},
 		stories: {

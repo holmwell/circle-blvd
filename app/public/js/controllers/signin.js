@@ -9,10 +9,54 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 				signInName.set(user.email);	
 			}
 
-			session.user = user;
-			session.save();
+			var getDefaultCircle = function (user, callback) {
+				var defaultGroup = undefined;
+				if (user.memberships && user.memberships.length > 0) {
+					var membershipIndex = 0;
 
-			$location.path("/");
+					// Find the first group we're a part of that has a
+					// circle associated with it, and that's our default circle.
+					var tryToFindGroupStartingAtIndex = function (index) {
+						defaultGroup = user.memberships[index].group;
+
+						$http.get('/data/group/' + defaultGroup)
+						.success(function (group) {
+							if (group.projectId) {
+								callback(group.projectId);
+							}
+							else {
+								index++;
+								if (index < user.memberships.length) {
+									tryToFindGroupStartingAtIndex(index);
+								}
+								else {
+									// There are no circles!
+									callback(null);
+								}
+							}
+						})
+						.error(function (data, status) {
+							$scope.message = "Sorry, the server failed to get your circle.";
+						})
+					};
+
+					tryToFindGroupStartingAtIndex(0);
+				}
+				else {
+					callback(null);
+				}
+			};
+
+			var onCircleFound = function (circle) {
+				var defaultCircle = "1";
+				session.activeCircle = circle || defaultCircle;
+				session.user = user;
+				session.save();
+
+				$location.path("/");
+			};
+
+			getDefaultCircle(user, onCircleFound);
 		};
 
 		var failure = function(data, status, headers, config) {
