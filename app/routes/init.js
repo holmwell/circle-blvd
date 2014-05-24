@@ -52,18 +52,32 @@ exports.init = function (req, res) {
 		isPermanent: true
 	};
 
+	var impliedGroup = {
+		name: "_implied",
+		projectId: defaultCircleId,
+		isPermanent: true
+	};
+
 	var mainframeGroup = {
 		name: "Mainframe",
 		isPermanent: true
 	};
 
-	db.groups.add(mainframeGroup,
-		function (group) {
-			adminMemberships.push({
-				group: group.id,
-				level: "member"
-			});
-			db.groups.add(adminGroup, addAdminUser, onError);		
+	db.groups.add(mainframeGroup, function (rootGroup) {
+			db.groups.add(impliedGroup, function (memberGroup) {
+					adminMemberships.push({
+						circle: defaultCircleId,
+						group: memberGroup.id,
+						level: "member"
+					});
+					adminMemberships.push({
+						// no circle
+						group: rootGroup.id,
+						level: "member"
+					});
+					db.groups.add(adminGroup, addAdminUser, onError);
+				},
+			onError);
 		},
 	onError);
 };
