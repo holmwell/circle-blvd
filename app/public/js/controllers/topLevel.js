@@ -1,6 +1,6 @@
 'use strict';
 
-function TopLevelCtrl(session, $scope, $http, $location) {
+function TopLevelCtrl(session, $scope, $http, $location, $route) {
 
 	$scope.keyboard = {};
 
@@ -53,6 +53,19 @@ function TopLevelCtrl(session, $scope, $http, $location) {
 	$scope.getAccountName = function () {
 		if (session && session.user) {
 			return session.user.name;
+		}
+	};
+
+	$scope.setActiveCircle = function (circleId) {
+		session.activeCircle = circleId;
+		session.save();
+		$location.path("/");
+		$route.reload();
+	};
+
+	$scope.circleList = function () {
+		if ($scope.isSignedIn()) {
+			return session.circleList;
 		}
 	};
 
@@ -118,4 +131,4 @@ function TopLevelCtrl(session, $scope, $http, $location) {
 
 	init();
 }
-TopLevelCtrl.$inject = ['session', '$scope', '$http', '$location'];
+TopLevelCtrl.$inject = ['session', '$scope', '$http', '$location', '$route'];

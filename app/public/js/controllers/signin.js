@@ -9,6 +9,18 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 				signInName.set(user.email);	
 			}
 
+			var buildCircleList = function() {
+				var circleList = {};
+				var memberships = user.memberships;
+				for (var key in memberships) {
+					if (memberships[key].circle) {
+						circleList[memberships[key].circle] = memberships[key].circle;
+					}
+				}
+
+				session.circleList = circleList;
+			}(); // closure
+			
 			var getDefaultCircle = function (user, callback) {
 				var defaultGroup = undefined;
 				if (user.memberships && user.memberships.length > 0) {

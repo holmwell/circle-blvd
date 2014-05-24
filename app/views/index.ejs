@@ -20,11 +20,18 @@
       <li><a href="#/signin">Sign in</a></li>
     </ul>
 
-    <ul class="menu span6" ng-show="isSignedIn()">
+    <ul class="menu" ng-show="isSignedIn()">
       <li><a href="#/archives">Archives</a></li>
       <li><a href="#/profile">Profile</a></li>
       <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
       <li ng-show="hasMainframeAccess()"><a href="#/mainframe">Mainframe</a></li>
+      <li class="dropdown"><a class="jsLink" data-toggle="dropdown" data-target="#">Circles</a>
+          <ul class="dropdown-menu" role="menu">
+            <li ng-repeat="circle in circleList()">
+              <a class="jsLink" ng-click="setActiveCircle(circle)">{{circle}}</a>
+            </li>
+          </ul>
+      </li>
       <li><a class="jsLink" ng-click="signOut()">Sign out</a></li>
     </ul>
   </div>
