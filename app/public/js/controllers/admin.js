@@ -2,7 +2,7 @@
 
 function AdminCtrl(session, $scope, $http) {
 
-	var defaultProjectId = "1";
+	var defaultProjectId = session.activeCircle;
 
 	var addUserSuccess = function() {
 		$scope.userName = "";

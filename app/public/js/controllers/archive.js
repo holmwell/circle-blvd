@@ -1,5 +1,5 @@
-function ArchivesCtrl($scope, $http) {
-	var projectId = "1";
+function ArchivesCtrl(session, $scope, $http) {
+	var projectId = session.activeCircle;
 	var selectedArchive = undefined;
 
 	$http.get('/data/' + projectId + '/archives')
@@ -41,4 +41,4 @@ function ArchivesCtrl($scope, $http) {
 		}
 	};
 }
-ArchivesCtrl.$inject = ['$scope', '$http'];
+ArchivesCtrl.$inject = ['session', '$scope', '$http'];

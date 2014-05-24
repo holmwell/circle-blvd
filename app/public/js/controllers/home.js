@@ -1,6 +1,6 @@
-function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
+function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams) {
 
-	var projectId = "1";
+	var projectId = session.activeCircle;
 	var thisY = undefined;
 	var selectedStory = undefined;
 
@@ -999,4 +999,4 @@ function HomeCtrl($scope, $timeout, $http, $location, $routeParams) {
 
 	init();
 }
-HomeCtrl.$inject = ['$scope', '$timeout', '$http', '$location', '$routeParams'];
+HomeCtrl.$inject = ['session', '$scope', '$timeout', '$http', '$location', '$routeParams'];
