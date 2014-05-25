@@ -969,7 +969,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams) {
 			}
 		});
 
-		$http.get("/data/x/users/names")
+		$http.get("/data/" + projectId + "/users/names")
 		.success(function (names) {
 			$scope.owners = names;
 		})
