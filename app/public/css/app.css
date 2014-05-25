@@ -1,6 +1,19 @@
 /* app css stylesheet */
 
 /* global */
+.topMenu.navbar {
+  margin: 0 !important;
+}
+.topMenu .navbar-inner {
+  background-image: none !important;
+  background-color: #222 !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  -webkit-box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  box-shadow: none !important; 
+}
+
 .header {
   margin-bottom: 2em;
 }
@@ -38,8 +51,8 @@
     padding-top: 1em; 
 
     /* horizontal offset, vertical offset, thickness, fade */
-    -webkit-box-shadow:  0px 0px 8px 1px rgba(44, 44, 44, 1);
-    box-shadow:  0px 0px 8px 1px rgba(44, 44, 44, 1);
+/*    -webkit-box-shadow:  0px 0px 8px 1px rgba(44, 44, 44, 1);
+    box-shadow:  0px 0px 8px 1px rgba(44, 44, 44, 1);*/
 }
 
 body {
