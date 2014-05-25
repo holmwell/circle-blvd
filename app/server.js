@@ -75,6 +75,33 @@ var ensureMainframeAccess = function (req, res, next) {
 	});
 };
 
+var ensureIsCircleAdmin = function (circleId, req, res, next) {
+	var nope = function () {
+		res.send(403, "User is not in the " + circleId + " circle.")
+	}
+
+	if (req.user.memberships) {
+		var groups = req.user.memberships;
+		for (var groupKey in groups) {
+			if (groups[groupKey].circle === circleId
+				&& groups[groupKey].name === "Administrative") {
+				return next();
+			}
+		}
+	}
+
+	return nope();
+};
+
+var ensureCircleParam = function (req, res, next) {
+	var circleId = req.params.circleId;
+	if (!circleId) {
+		return res.send(400, "Circle ID is required.");
+	}
+
+	ensureIsCircleAdmin(circleId, req, res, next);
+};
+
 var authenticateLocal = function(req, res, next) {
 	var success = function() {
 		var dbUser = req.user;
@@ -160,45 +187,71 @@ var configureSuccessful = function () {
 	// Data API: Protected by authorization system
 
 	// Users routes (global actions. requires admin access)
-	app.post("/data/user", ensureAdministrator, usersRoutes.add);
 	app.put("/data/user/remove", ensureAdministrator, usersRoutes.remove);
-	
+
 	// TODO: Mainframe-access only, when the time comes.
 	// app.get("/data/users", ensureAdministrator, usersRoutes.list);
+	// app.post("/data/user", ensureAdministrator, usersRoutes.add);
 	
 	// User routes (account actions. requires login access)
 	app.get("/data/user", ensureAuthenticated, userRoutes.user);
 	app.put("/data/user", ensureAuthenticated, userRoutes.update);
 	app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
 
-	app.get("/data/:circleId/users", ensureAdministrator, function (req, res) {
+	app.get("/data/:circleId/users", ensureCircleParam, function (req, res) {
 		var circleId = req.params.circleId;
-		var memberships = req.user.memberships;
-		var hasAccess = false;
-		if (memberships) {
-			memberships.forEach(function (membership) {
-				if (membership.name === "Administrative"
-				&& membership.circle === circleId) {
-					hasAccess = true;
-				}
-			});
-
-			if (hasAccess) {
-				db.users.findByCircleId(circleId, function (err, users) {
-					if (err) {
-						return handleError(err, res);
-					}
-					res.send(200, users);
-				});
+		db.users.findByCircleId(circleId, function (err, users) {
+			if (err) {
+				return handleError(err, res);
 			}
-			else {
-				res.send(401);
-			}
-		}
+			res.send(200, users);
+		});
 	});
 
-	app.post("/data/:circleId/user", ensureAdministrator, function (req, res) {
+	app.post("/data/:circleId/user", ensureCircleParam, function (req, res) {
+		var circleId = req.params.circleId;
+		var user = req.body;
 
+		db.users.findByEmail(user.email, function (err, userAccount) {
+			if (err) {
+				return handleError(err, res);
+			}
+
+			var accountFound = function (account) {
+				user.memberships.forEach(function (newMembership) {
+					account.memberships.push(newMembership);
+				});
+
+				db.users.update(account, 
+					function (body) {
+						res.send(201);
+					},
+					function (err) {
+						handleError(err, res);
+					}
+				);
+			};
+
+			if (userAccount) {
+				accountFound(userAccount);
+			}
+			else {
+				var isReadOnly = false;
+				var memberships = [];
+				db.users.add(
+					user.name,
+					user.email, 
+					user.password,
+					[], // no memberships at first
+					user.isReadOnly,
+					function (user) {
+						accountFound(user);
+					}, 
+					function (err) {
+						handleError(err, res);
+					});
+			}
+		});
 	});
 
 	app.get("/data/:circleId/users/names", ensureAuthenticated, function (req, res) {

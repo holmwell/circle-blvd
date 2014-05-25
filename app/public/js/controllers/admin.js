@@ -27,6 +27,8 @@ function AdminCtrl(session, $scope, $http) {
 	$scope.addUser = function(userName, userEmail, userPassword, userGroups) {
 		if (!impliedGroup) {
 			// TODO: Error. Not allowed.
+			console.log("Attempt to add a user to a circle without an implied group.");
+			return;
 		}
 
 		var data = {
@@ -54,7 +56,7 @@ function AdminCtrl(session, $scope, $http) {
 			level: "member"
 		});	
 		
-		$http.post('/data/user', data)
+		$http.post('/data/' + activeCircle + '/user', data)
 		.success(addUserSuccess)
 		.error(addUserFailure);
 	};
