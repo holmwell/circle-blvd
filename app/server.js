@@ -284,65 +284,76 @@ var configureSuccessful = function () {
 				isPermanent: true
 			};
 
-			db.groups.add(administrativeGroup, function (adminGroup) {
-				db.groups.add(impliedGroup, function (memberGroup) {
-					db.users.findByEmail(admin.email, function (err, adminAccount) {
-						if (err) {
-							return handleError(err, res);
-						}
+			var nextMeeting = {};	
+			nextMeeting.projectId = newCircle._id;
+			nextMeeting.summary = "Next meeting";
+			nextMeeting.isNextMeeting = true;
 
-						var accountFound = function (account) {
-							// admin access
-							account.memberships.push({
-								circle: newCircle._id,
-								group: adminGroup.id,
-								level: "member"
-							});
-							// member access
-							account.memberships.push({
-								circle: newCircle._id,
-								group: memberGroup.id,
-								level: "member"
-							});
+			db.stories.add(nextMeeting, function (err, body) {
+				if (err) {
+					return handleError(err, res);;
+				}
 
-							db.users.update(account, 
-								function (body) {
-									res.send(200, newCircle);
-								},
-								function (err) {
-									handleError(err, res);
-								}
-							);
-						};
+				db.groups.add(administrativeGroup, function (adminGroup) {
+					db.groups.add(impliedGroup, function (memberGroup) {
+						db.users.findByEmail(admin.email, function (err, adminAccount) {
+							if (err) {
+								return handleError(err, res);
+							}
 
-						if (adminAccount) {
-							accountFound(adminAccount);
-						}
-						else {
-							var isReadOnly = false;
-							var memberships = [];
-							db.users.add("Admin",
-								admin.email, 
-								"public", // TODO: Change 
-								memberships,
-								isReadOnly,
-								function (user) {
-									accountFound(user);
-								}, 
-								function (err) {
-									handleError(err, res);
+							var accountFound = function (account) {
+								// admin access
+								account.memberships.push({
+									circle: newCircle._id,
+									group: adminGroup.id,
+									level: "member"
 								});
-						}
+								// member access
+								account.memberships.push({
+									circle: newCircle._id,
+									group: memberGroup.id,
+									level: "member"
+								});
+
+								db.users.update(account, 
+									function (body) {
+										res.send(200, newCircle);
+									},
+									function (err) {
+										handleError(err, res);
+									}
+								);
+							};
+
+							if (adminAccount) {
+								accountFound(adminAccount);
+							}
+							else {
+								var isReadOnly = false;
+								var memberships = [];
+								db.users.add("Admin",
+									admin.email, 
+									"public", // TODO: Change 
+									memberships,
+									isReadOnly,
+									function (user) {
+										accountFound(user);
+									}, 
+									function (err) {
+										handleError(err, res);
+									});
+							}
+						});
+					},
+					function (err) {
+						// failure adding member group
+						return handleError(err, res);
 					});
 				},
 				function (err) {
-					// failure adding member group
+					// failure adding admin group
 					return handleError(err, res);
 				});
-			},
-			function (err) {
-				// failure adding admin group
-				return handleError(err, res);
 			});
 		});
 	});
