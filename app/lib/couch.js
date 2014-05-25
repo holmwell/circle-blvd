@@ -580,9 +580,6 @@ var couch = function() {
 
 	var findStoriesByNextId = function (nextId, callback) {
 		// this works since nextIds are universal-unique ids.
-		// in other words, we don't need a projectId.
-		//
-		// TODO: LIES, each project has a story with a "last" nextId
 		getView("stories/byNextId", {key: nextId}, callback);
 	}
 

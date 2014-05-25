@@ -11,6 +11,10 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams) {
 	var preMoveStoryBefore = undefined;
 	var preMoveStoryAfter = undefined;
 
+	var getLastStoryId = function () {
+		return "last-" + projectId;
+	}
+
 	var saveStory = function (story, callback) {
 		$http.put('/data/story/', story)
 		.success(function (savedStory) {
@@ -69,7 +73,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams) {
 					body.newNextId = newNextStory.id;
 				}
 				else {
-					body.newNextId = "last";
+					body.newNextId = getLastStoryId();
 				}
 
 				$http.put('/data/story/move', body)
@@ -332,7 +336,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams) {
 			usefulStories.setFirst(nextStory);
 		}
 		else {
-			previousStory.nextId = nextStory ? nextStory.id : "last";
+			previousStory.nextId = nextStory ? nextStory.id : getLastStoryId();
 		}
 
 		var storyIndex = stories.indexOf(viewStory);
@@ -462,7 +466,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams) {
 		}
 		else {
 			return {
-				id: "last"
+				id: getLastStoryId()
 			};
 		}
 	};
@@ -512,7 +516,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams) {
 			// We need to update 'nextId' of the following:
 			// 1. The story before the moved story, before it was moved.		
 			if (preMove.storyBefore) {
-				preMove.storyBefore.nextId = preMove.storyAfter ? preMove.storyAfter.id : "last";
+				preMove.storyBefore.nextId = preMove.storyAfter ? preMove.storyAfter.id : getLastStoryId();
 				storiesToSave[preMove.storyBefore.id] = preMove.storyBefore;
 			}
 			
@@ -531,7 +535,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams) {
 			}
 
 			// 3. The story that was moved, unless it's now the last story.
-			movedStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : "last";
+			movedStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();
 			storiesToSave[movedStory.id] = movedStory;	
 			
 			// TODO: We don't need these 'storiesToSave' any more.

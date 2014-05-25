@@ -107,8 +107,12 @@ var db = function() {
 		return !story.nextId;
 	};
 
+	var getLastId = function (story) {
+		return ("last-" + story.projectId);
+	}
+
 	var isLastStory = function (story) {
-		return story.nextId === "last";
+		return story.nextId === getLastId(story);
 	};
 
 	var findStoriesByProjectId = function (projectId, callback) {
@@ -126,7 +130,7 @@ var db = function() {
 				var modelStory = {
 					id: story._id,
 					projectId: story.projectId,
-					nextId: story.nextId || "last",
+					nextId: story.nextId || getLastId(story),
 					isFirstStory: story.isFirstStory,
 
 					summary: story.summary,
@@ -245,7 +249,7 @@ var db = function() {
 		if (isFirstStoryCreated(story) && !proposedNextId) {
 			if (story.isNextMeeting) {
 				// Ok, we're actually the first story created.
-				foundNextId("last");
+				foundNextId(getLastId(story));
 			}
 			else {
 				// This probably means the first story was not specified.
@@ -475,6 +479,8 @@ var db = function() {
 					story: story
 				});
 			}
+
+			var lastId = getLastId(storyToMove);
 			couch.stories.findByNextId(storyToMove.id, function (err, preMovePreviousStory) {
 				if (err) {
 					return failure(err);
@@ -487,7 +493,7 @@ var db = function() {
 						if (err) {
 							return failure(err);
 						}
-						if (!storyE && newNextId !== "last") {
+						if (!storyE && newNextId !== lastId) {
 							return failure({
 								message: "Someone deleted the story you're trying "
 								+ "to put this one in front of. Maybe refresh your story list "
@@ -500,7 +506,7 @@ var db = function() {
 								return failure(err);
 							}
 							// This might happen if there is a ton of activity, I guess.
-							if (!preMoveNextStory && storyToMove.nextId !== "last") {
+							if (!preMoveNextStory && storyToMove.nextId !== lastId) {
 								return failure({
 									message: "There is a lot of activity on the project. " +
 									"Wait a little bit and try again.",
@@ -594,9 +600,10 @@ var db = function() {
 						return failure(err);
 					}
 
-					if (storyToRemove.nextId === "last") {
+					var lastId = getLastId(storyToRemove);
+					if (storyToRemove.nextId === lastId) {
 						nextStory = {};
-						nextStory.id = "last";
+						nextStory.id = lastId;
 					}
 					else if (!nextStory) {
 						// Someone deleted the nextStory before we could access it.

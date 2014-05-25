@@ -12,6 +12,8 @@ exports.init = function (req, res) {
 		res.send(500, err);
 	};
 
+	// TODO: This should be consolidated with
+	// the add-new-circle code in server.js
 	var addNextMeeting = function () {
 		var story = {};	
 		story.projectId = defaultCircleId;
