@@ -187,17 +187,18 @@ var configureSuccessful = function () {
 	// Data API: Protected by authorization system
 
 	// Users routes (global actions. requires admin access)
-	app.put("/data/user/remove", ensureAdministrator, usersRoutes.remove);
-
+	
 	// TODO: Mainframe-access only, when the time comes.
 	// app.get("/data/users", ensureAdministrator, usersRoutes.list);
 	// app.post("/data/user", ensureAdministrator, usersRoutes.add);
+	// app.put("/data/user/remove", ensureAdministrator, usersRoutes.remove);
 	
 	// User routes (account actions. requires login access)
 	app.get("/data/user", ensureAuthenticated, userRoutes.user);
 	app.put("/data/user", ensureAuthenticated, userRoutes.update);
 	app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
 
+	// User routes (circle actions. requires admin access)
 	app.get("/data/:circleId/users", ensureCircleParam, function (req, res) {
 		var circleId = req.params.circleId;
 		db.users.findByCircleId(circleId, function (err, users) {
@@ -205,6 +206,36 @@ var configureSuccessful = function () {
 				return handleError(err, res);
 			}
 			res.send(200, users);
+		});
+	});
+
+	app.put("/data/:circleId/user/remove", ensureCircleParam, function (req, res) {
+		// usersRoutes.remove
+		var circleId = req.params.circleId;
+		var reqUser = req.body;
+
+		db.users.findById(reqUser.id, function (err, user) {
+			if (err) {
+				return handleError(err, res);
+			}
+
+			var newMemberships = [];
+			user.memberships.forEach(function (membership) {
+				if (membership.circle === circleId) {
+					// do nothing
+				}
+				else {
+					newMemberships.push(membership);
+				}
+			});
+
+			user.memberships = newMemberships;
+			db.users.update(user, function (body) {
+				res.send(204);
+			},
+			function (err) {
+				handleError(err, res);
+			});
 		});
 	});
 
