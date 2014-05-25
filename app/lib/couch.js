@@ -164,31 +164,43 @@ var couch = function() {
 		});
 	};
 
-	// var findUsersByCircleId = function (circleId, callback) {
-	// 	var options = {
-	// 		startkey: [circleId,"{}"],
-	// 		group: false
-	// 	};
-	// 	getView("users/byCircle", options, function (err, users) {
-	// 		if (err) {
-	// 			return callback(err);
-	// 		}
-	// 		return callback(null, users);
-	// 	});	
-	// };
-
-	var findNamesByCircleId = function (circleId, callback) {
+	var findUsersByCircleId = function (circleId, callback) {
 		var options = {
-			startkey: circleId,
+			startkey: [circleId],
 			endkey: [circleId, {}],
-			group: true
+			reduce: false,
+			group: false
 		};
-		getView("users/byCircle", options, function (err, users) {
+
+		var users = [];
+		var uniqueUsers = {};
+		getView("users/byCircle", options, function (err, viewUsers) {
 			if (err) {
 				return callback(err);
 			}
-			return callback(null, users);
-		});	
+
+			// TODO: It would be neat for CouchDB to give
+			// us a unique list of users instead of us doing
+			// this hack.
+			viewUsers.forEach(function (user) {
+				uniqueUsers[user._id] = user;
+			});
+
+			for (var key in uniqueUsers) {
+				users.push(uniqueUsers[key]);
+			}
+
+			callback(null, users);
+		});
+	};
+
+	var findNamesByCircleId = function (circleId, callback) {
+		var options = {
+			startkey: [circleId],
+			endkey: [circleId, {}],
+			group: true
+		};
+		getView("users/byCircle", options, callback);	
 	};
 
 
@@ -988,6 +1000,7 @@ var couch = function() {
 		users: {
 			add: addUser,
 			remove: removeUser,
+			findByCircleId: findUsersByCircleId,
 			findNamesByCircleId: findNamesByCircleId,
 			findByEmail: findUserByEmail,
 			findById: findUserById,

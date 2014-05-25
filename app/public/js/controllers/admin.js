@@ -89,7 +89,7 @@ function AdminCtrl(session, $scope, $http) {
 	};
 
 	var getLatestUserData = function() {
-		$http.get('/data/users')
+		$http.get('/data/' + activeCircle + '/users')
 		.success(getUsersSuccess)
 		.error(getUsersFailure);
 	};

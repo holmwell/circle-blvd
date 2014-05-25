@@ -160,14 +160,46 @@ var configureSuccessful = function () {
 	// Data API: Protected by authorization system
 
 	// Users routes (global actions. requires admin access)
-	app.get("/data/users", ensureAdministrator, usersRoutes.list);
 	app.post("/data/user", ensureAdministrator, usersRoutes.add);
 	app.put("/data/user/remove", ensureAdministrator, usersRoutes.remove);
-
+	
+	// TODO: Mainframe-access only, when the time comes.
+	// app.get("/data/users", ensureAdministrator, usersRoutes.list);
+	
 	// User routes (account actions. requires login access)
 	app.get("/data/user", ensureAuthenticated, userRoutes.user);
 	app.put("/data/user", ensureAuthenticated, userRoutes.update);
 	app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
+
+	app.get("/data/:circleId/users", ensureAdministrator, function (req, res) {
+		var circleId = req.params.circleId;
+		var memberships = req.user.memberships;
+		var hasAccess = false;
+		if (memberships) {
+			memberships.forEach(function (membership) {
+				if (membership.name === "Administrative"
+				&& membership.circle === circleId) {
+					hasAccess = true;
+				}
+			});
+
+			if (hasAccess) {
+				db.users.findByCircleId(circleId, function (err, users) {
+					if (err) {
+						return handleError(err, res);
+					}
+					res.send(200, users);
+				});
+			}
+			else {
+				res.send(401);
+			}
+		}
+	});
+
+	app.post("/data/:circleId/user", ensureAdministrator, function (req, res) {
+
+	});
 
 	app.get("/data/:circleId/users/names", ensureAuthenticated, function (req, res) {
 		var circleId = req.params.circleId;
