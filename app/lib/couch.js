@@ -538,13 +538,13 @@ var couch = function() {
 		database.bulk(bulkDoc, options, callback);
 	};
 
-	var findArchivesByProjectId = function (projectId, callback) {
-		// TODO: startKey should be startkey
+	var findArchivesByCircleId = function (circleId, callback) {
 		var options = {
-			startKey: [projectId,"{}"],
+			startkey: [circleId, {}],
+			endkey: [circleId],
 			descending: true
 		};
-		getView("archives/byProjectId", options, function (err, rows) {
+		getView("archives/byCircleId", options, function (err, rows) {
 			callback(err, rows);
 		});
 	};
@@ -1015,7 +1015,7 @@ var couch = function() {
 		},
 		archives: {
 			add: addArchives,
-			findByProjectId: findArchivesByProjectId
+			findByCircleId: findArchivesByCircleId
 		},
 		users: {
 			add: addUser,

@@ -372,10 +372,10 @@ var createViews = function(database, callback) {
 		url: '_design/archives',
 		body: 
 		{
-			version: "1.0.0",
+			version: "1.0.1",
 			language: "javascript",
 			views: {
-				byProjectId: {
+				byCircleId: {
 					map: function (doc) {
 						if (doc.type === "archive" && doc.projectId) {
 							emit([doc.projectId, doc.sortIndex], doc);

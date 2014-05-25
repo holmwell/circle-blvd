@@ -537,9 +537,9 @@ var configureSuccessful = function () {
 		});
 	});
 
-	app.get("/data/:projectId/archives", ensureAuthenticated, function (req, res) {
-		var projectId = req.params.projectId;
-		db.archives.findByProjectId(projectId, function (err, archives) {
+	app.get("/data/:circleId/archives", ensureAuthenticated, function (req, res) {
+		var circleId = req.params.circleId;
+		db.archives.findByCircleId(circleId, function (err, archives) {
 			if (err) {
 				return handleError(err, res);
 			}

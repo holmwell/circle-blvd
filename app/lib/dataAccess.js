@@ -751,8 +751,8 @@ var db = function() {
 		});
 	};
 
-	var findArchivesByProjectId = function (projectId, callback) {
-		couch.archives.findByProjectId(projectId, callback);
+	var findArchivesByCircleId = function (circleId, callback) {
+		couch.archives.findByCircleId(circleId, callback);
 	};
 
 
@@ -1047,7 +1047,7 @@ var db = function() {
 		},
 		archives: {
 			addStories: addStoriesToArchive,
-			findByProjectId: findArchivesByProjectId
+			findByCircleId: findArchivesByCircleId
 		},
 		users: { 
 			add: addUser,
