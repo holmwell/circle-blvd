@@ -14,7 +14,10 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 				var memberships = user.memberships;
 				for (var key in memberships) {
 					if (memberships[key].circle) {
-						circleList[memberships[key].circle] = memberships[key].circle;
+						circleList[memberships[key].circle] = {
+							id: memberships[key].circle,
+							name: memberships[key].circleName
+						};
 					}
 				}
 

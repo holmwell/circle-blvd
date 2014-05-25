@@ -1022,6 +1022,9 @@ var db = function() {
 			getAll: function (callback) {
 				couch.circles.getAll(callback);
 			},
+			findByUser: function (user, callback) {
+				couch.circles.findByUser(user, callback);
+			},
 			update: updateCircle
 		},
 		groups: {

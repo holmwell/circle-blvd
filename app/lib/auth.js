@@ -8,22 +8,37 @@ var passwordField = 'password';
 
 var getUserWithFriendlyGroups = function (user, callback) {
 	db.groups.findByUser(user, function (err, groups) {
-		// Populate the user's membership data with the
-		// names of the memberships.
-		for (var membershipKey in user.memberships) {
-			var membership = user.memberships[membershipKey];
-			for (var groupKey in groups) {
-				var group = groups[groupKey];
-				if (group && membership.group === group._id) {
-					// TODO: Might just want to throw all the group
-					// data in there.
-					user.memberships[membershipKey].name = groups[groupKey].name;
-				}
+		if (err) {
+			return callback(err);
+		}
+		db.circles.findByUser(user, function (err, circles) {
+			if (err) {
+				return callback(err);
 			}
-			// TODO: Add list of Circle memberships
-		};
 
-		return callback(null, user);
+			// Populate the user's membership data with the
+			// names of the memberships.
+			for (var membershipKey in user.memberships) {
+				var membership = user.memberships[membershipKey];
+				for (var groupKey in groups) {
+					var group = groups[groupKey];
+					if (group && membership.group === group._id) {
+						// TODO: Might just want to throw all the group
+						// data in there.
+						user.memberships[membershipKey].name = groups[groupKey].name;
+					}
+				}
+
+				for (var circleKey in circles) {
+					var circle = circles[circleKey];
+					if (circle && membership.circle === circle._id) {
+						user.memberships[membershipKey].circleName = circles[circleKey].name;
+					}
+				}
+			};
+
+			return callback(null, user);
+		});
 	});
 };
 

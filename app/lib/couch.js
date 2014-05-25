@@ -104,6 +104,48 @@ var couch = function() {
 		});
 	};
 
+	var getDoc = function (docId, callback) {
+		database.get(docId, callback);
+	};
+
+	var getDocs = function (docIds, callback) {
+		if (!docIds || docIds.length < 1) {
+			return callback(null, null);
+		}
+
+		var docsFound = [];
+		var query = {};
+		query["keys"] = docIds;
+		database.fetch(query, function (err, body) {
+			if (err) {
+				return callback(err);
+			}
+			else {
+				for (var rowIndex in body.rows) {
+					docsFound.push(body.rows[rowIndex].doc);
+				}
+				return callback(null, docsFound);
+			}
+		});
+	};
+
+	var updateDoc = function (doc, callback) {
+		database.get(doc._id, function (err, body) {
+			if (err) {
+				return callback(err);
+			}
+			doc._rev = body._rev;
+
+			database.insert(doc, function (err, body) {
+				if (err) {
+					return callback(err);
+				}
+				doc._rev = body.rev;
+				callback(null, doc);
+			});
+		});
+	};
+
 	var findOneByKey = function(viewName, key, callback) {
 		var options = {
 			limit: 1,
@@ -120,6 +162,9 @@ var couch = function() {
 			callback(null, doc);
 		});		
 	}
+
+
+
 
 	var findStoryByIds = function (projectId, storyId, callback) {
 		var key = projectId + "," + storyId;
@@ -384,6 +429,18 @@ var couch = function() {
 		getView("circles/byName", callback);
 	};
 
+	var findCirclesByUser = function (user, callback) {
+		var circleIds = [];
+
+		for (var membershipKey in user.memberships) {
+			var membership = user.memberships[membershipKey];
+			circleIds.push(membership.circle);
+		}
+
+		getDocs(circleIds, callback);
+	};
+
+
 	var updateCircle = function (circle, callback) {
 		var copyCircle = function (source, dest) {
 			dest.name = source.name;
@@ -458,32 +515,14 @@ var couch = function() {
 	};
 
 	var findGroupsByUser = function (user, callback) {
-		var query = {};
 		var groupIds = [];
-		var groupsFound = [];
 
 		for (var membershipKey in user.memberships) {
 			var membership = user.memberships[membershipKey];
 			groupIds.push(membership.group);
 		}
 
-		if (groupIds.length > 0) {
-			query["keys"] = groupIds;
-			database.fetch(query, function (err, body) {
-				if (err) {
-					return callback(err);
-				}
-				else {
-					for (var rowIndex in body.rows) {
-						groupsFound.push(body.rows[rowIndex].doc);
-					}
-					return callback(null, groupsFound);
-				}
-			});
-		}
-		else {
-			callback(null, groupsFound);
-		}
+		getDocs(groupIds, callback);
 	};
 
 
@@ -711,26 +750,6 @@ var couch = function() {
 		});
 	};
 
-	var getDoc = function (docId, callback) {
-		database.get(docId, callback);
-	}
-
-	var updateDoc = function (doc, callback) {
-		database.get(doc._id, function (err, body) {
-			if (err) {
-				return callback(err);
-			}
-			doc._rev = body._rev;
-
-			database.insert(doc, function (err, body) {
-				if (err) {
-					return callback(err);
-				}
-				doc._rev = body.rev;
-				callback(null, doc);
-			});
-		});
-	};
 
 	var storiesTransaction = function (stories, callback) {
 
@@ -967,6 +986,7 @@ var couch = function() {
 		circles: {
 			add: addCircle,
 			getAll: getAllCircles,
+			findByUser: findCirclesByUser,
 			update: updateCircle
 		},
 		groups: {
