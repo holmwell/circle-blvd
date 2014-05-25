@@ -48,24 +48,30 @@ exports.init = function (req, res) {
 		);
 	};
 
-	var adminGroup = {
-		name: "Administrative",
-		projectId: defaultCircleId,
-		isPermanent: true
-	};
-
-	var impliedGroup = {
-		name: "_implied",
-		projectId: defaultCircleId,
-		isPermanent: true
-	};
-
 	var mainframeGroup = {
 		name: "Mainframe",
 		isPermanent: true
 	};
 
-	db.groups.add(mainframeGroup, function (rootGroup) {
+	var firstCircle = {
+		name: "Circle Blvd"
+	};
+
+	db.circles.add(firstCircle, function (err, newCircle) {
+		defaultCircleId = newCircle._id;
+		db.groups.add(mainframeGroup, function (rootGroup) {
+			var adminGroup = {
+				name: "Administrative",
+				projectId: defaultCircleId,
+				isPermanent: true
+			};
+
+			var impliedGroup = {
+				name: "_implied",
+				projectId: defaultCircleId,
+				isPermanent: true
+			};
+
 			db.groups.add(impliedGroup, function (memberGroup) {
 					adminMemberships.push({
 						circle: defaultCircleId,
@@ -78,8 +84,7 @@ exports.init = function (req, res) {
 						level: "member"
 					});
 					db.groups.add(adminGroup, addAdminUser, onError);
-				},
-			onError);
-		},
-	onError);
+				}, onError);
+		}, onError);
+	});
 };
