@@ -13,6 +13,9 @@
   -moz-box-shadow: none !important;
   box-shadow: none !important; 
 }
+.topMenu .navbar-inner .active a {
+  background: #222 !important;
+}
 
 .header {
   margin-bottom: 2em;

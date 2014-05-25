@@ -63,6 +63,13 @@ function TopLevelCtrl(session, $scope, $http, $location, $route) {
 		$route.reload();
 	};
 
+	$scope.isActiveCircle = function (circle) {
+		if (!circle || !session) {
+			return false;
+		}
+		return session.activeCircle === circle.id;
+	};
+
 	$scope.circleList = function () {
 		if ($scope.isSignedIn()) {
 			return session.circleList;
