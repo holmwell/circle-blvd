@@ -771,8 +771,8 @@ var db = function() {
 		couch.users.findById(id, callback);
 	};
 
-	var findUserByName = function (name, callback) {
-		couch.users.findByName(name, callback);
+	var findUserByCircleAndName = function (circleId, name, callback) {
+		couch.users.findByCircleAndName(circleId, name, callback);
 	};
 
 	var findUsersByCircleId = function (circleId, callback) {
@@ -1059,7 +1059,7 @@ var db = function() {
 			remove: removeUser,
 			findByEmail: findUserByEmail,
 			findById: findUserById, 
-			findByName: findUserByName,
+			findByCircleAndName: findUserByCircleAndName,
 			findByCircleId: findUsersByCircleId,
 			findNamesByCircleId: findNamesByCircleId,
 			findMany: findUsersById,

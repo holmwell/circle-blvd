@@ -993,7 +993,7 @@ var configureSuccessful = function () {
 				return res.send(412, "Story owner has already been notified.");
 			}
 
-			db.users.findByName(story.owner, function (err, owner) {
+			db.users.findByCircleAndName(story.projectId, story.owner, function (err, owner) {
 				if (err) {
 					return handleError(err, res);
 				}

@@ -179,20 +179,29 @@ var couch = function() {
 		findOneByKey("users/byId", id, callback);
 	};
 
-	var findUserByName = function (name, callback) {
+	var findUserByCircleAndName = function (circleId, name, callback) {
 		if (name) {
 			name = name.toLowerCase();
 		}
 		else {
 			return callback(null, undefined);
 		}
-		var options = {
-			key: name
-		};
-		getView("users/byName", options, function (err, users) {
-			// TODO: This (the error messages) should probably be in the 
-			// data access layer. This file should probably just be for
-			// bare database access / making sure the queries are correct.
+
+		// TODO: Re-think this when we get to have millions of members
+		// in each circle, for performance reasons.
+		findUsersByCircleId(circleId, function (err, usersInCircle) {
+			if (err) {
+				return callback(err);
+			}
+
+			var users = [];
+			usersInCircle.forEach(function (inCircle) {
+				if (inCircle.name 
+					&& inCircle.name.toLowerCase() === name) {
+					users.push(inCircle);
+				}
+			});
+
 			if (users.length > 1) {
 				return callback({
 					message: "More than one user was found by that name: " + name
@@ -1024,7 +1033,7 @@ var couch = function() {
 			findNamesByCircleId: findNamesByCircleId,
 			findByEmail: findUserByEmail,
 			findById: findUserById,
-			findByName: findUserByName,
+			findByCircleAndName: findUserByCircleAndName,
 			findMany: findUsersById,
 			getAll: getAllUsers,
 			update: updateUser,
