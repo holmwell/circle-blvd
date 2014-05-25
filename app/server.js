@@ -75,6 +75,23 @@ var ensureMainframeAccess = function (req, res, next) {
 	});
 };
 
+var ensureIsCircle = function (circleId, req, res, next) {
+	var nope = function () {
+		res.send(403, "User is not in the " + circleId + " circle.")
+	}
+
+	if (req.user.memberships) {
+		var groups = req.user.memberships;
+		for (var groupKey in groups) {
+			if (groups[groupKey].circle === circleId) {
+				return next();
+			}
+		}
+	}
+
+	return nope();
+};
+
 var ensureIsCircleAdmin = function (circleId, req, res, next) {
 	var nope = function () {
 		res.send(403, "User is not in the " + circleId + " circle.")
@@ -93,13 +110,26 @@ var ensureIsCircleAdmin = function (circleId, req, res, next) {
 	return nope();
 };
 
-var ensureCircleParam = function (req, res, next) {
+var ensureAdminCircleAccess = function (req, res, next) {
 	var circleId = req.params.circleId;
 	if (!circleId) {
 		return res.send(400, "Circle ID is required.");
 	}
 
-	ensureIsCircleAdmin(circleId, req, res, next);
+	ensureAuthenticated(req, res, function () {
+		ensureIsCircleAdmin(circleId, req, res, next);
+	});
+};
+
+var ensureCircleAccess = function (req, res, next) {
+	var circleId = req.params.circleId;
+	if (!circleId) {
+		return res.send(400, "Circle ID is required.");
+	}
+
+	ensureAuthenticated(req, res, function () {
+		ensureIsCircle(circleId, req, res, next);
+	});
 };
 
 var authenticateLocal = function(req, res, next) {
@@ -199,7 +229,7 @@ var configureSuccessful = function () {
 	app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
 
 	// User routes (circle actions. requires admin access)
-	app.get("/data/:circleId/users", ensureCircleParam, function (req, res) {
+	app.get("/data/:circleId/users", ensureAdminCircleAccess, function (req, res) {
 		var circleId = req.params.circleId;
 		db.users.findByCircleId(circleId, function (err, users) {
 			if (err) {
@@ -209,7 +239,7 @@ var configureSuccessful = function () {
 		});
 	});
 
-	app.put("/data/:circleId/user/remove", ensureCircleParam, function (req, res) {
+	app.put("/data/:circleId/user/remove", ensureAdminCircleAccess, function (req, res) {
 		// usersRoutes.remove
 		var circleId = req.params.circleId;
 		var reqUser = req.body;
@@ -239,7 +269,7 @@ var configureSuccessful = function () {
 		});
 	});
 
-	app.post("/data/:circleId/user", ensureCircleParam, function (req, res) {
+	app.post("/data/:circleId/user", ensureAdminCircleAccess, function (req, res) {
 		var circleId = req.params.circleId;
 		var user = req.body;
 
@@ -285,7 +315,7 @@ var configureSuccessful = function () {
 		});
 	});
 
-	app.get("/data/:circleId/users/names", ensureAuthenticated, function (req, res) {
+	app.get("/data/:circleId/users/names", ensureCircleAccess, function (req, res) {
 		var circleId = req.params.circleId;
 		db.users.findNamesByCircleId(circleId, function (err, names) {
 			if (err) {
@@ -486,10 +516,9 @@ var configureSuccessful = function () {
 
 
 	// Groups!
-	app.get("/data/:projectId/groups", ensureAuthenticated, function (req, res) {
-		var projectId = req.params.projectId;
-
-		db.groups.findByProjectId(projectId, function (err, groups) {
+	app.get("/data/:circleId/groups", ensureCircleAccess, function (req, res) {
+		var circleId = req.params.circleId;
+		db.groups.findByProjectId(circleId, function (err, groups) {
 			if (err) {
 				return handleError(err, res);
 			}
@@ -509,6 +538,7 @@ var configureSuccessful = function () {
 		);
 	};
 
+	// TODO: Ensure circle access
 	app.post("/data/group", ensureAdministrator, function (req, res) {
 		var data = req.body;
 
@@ -519,8 +549,8 @@ var configureSuccessful = function () {
 		addGroup(group, res);
 	});
 
+	// TODO: Ensure circle access
 	app.get("/data/group/:groupId", ensureAuthenticated, function (req, res) {
-		// TODO: Make sure the user is a member of the group.
 		var groupId = req.params.groupId;
 		db.groups.findById(groupId, function (err, group) {
 			if (err) {
@@ -530,6 +560,7 @@ var configureSuccessful = function () {
 		});
 	});
 
+	// TODO: Ensure circle access
 	app.put("/data/group/remove", ensureAdministrator, function (req, res) {
 		var group = req.body;
 
@@ -545,10 +576,10 @@ var configureSuccessful = function () {
 
 
 	// Story routes
-	app.get("/data/:projectId/stories", ensureAuthenticated, function (req, res) {
-		var projectId = req.params.projectId;
+	app.get("/data/:circleId/stories", ensureCircleAccess, function (req, res) {
+		var circleId = req.params.circleId;
 
-		db.stories.findByProjectId(projectId, function (err, stories) {
+		db.stories.findByProjectId(circleId, function (err, stories) {
 			if (err) {
 				return handleError(err, res);
 			}
@@ -558,9 +589,9 @@ var configureSuccessful = function () {
 
 	// TODO: combine this with /stories to return one object with 
 	// both the story list and the first story (in two different things)
-	app.get("/data/:projectId/first-story", ensureAuthenticated, function (req, res) {
-		var projectId = req.params.projectId;
-		db.stories.getFirstByProjectId(projectId, function (err, firstStory) {
+	app.get("/data/:circleId/first-story", ensureCircleAccess, function (req, res) {
+		var circleId = req.params.circleId;
+		db.stories.getFirstByProjectId(circleId, function (err, firstStory) {
 			if (err) {
 				return handleError(err, res);
 			}
@@ -568,7 +599,7 @@ var configureSuccessful = function () {
 		});
 	});
 
-	app.get("/data/:circleId/archives", ensureAuthenticated, function (req, res) {
+	app.get("/data/:circleId/archives", ensureCircleAccess, function (req, res) {
 		var circleId = req.params.circleId;
 		db.archives.findByCircleId(circleId, function (err, archives) {
 			if (err) {
@@ -813,49 +844,60 @@ var configureSuccessful = function () {
 		return createdBy;
 	};
 
+	// TODO: Ensure that the circleId specified in this
+	// story is valid. Otherwise people can hack around
+	// ways of accessing stories.
+	//
+	// This might be a thing to do at the data layer, or
+	// we could do it higher up by getting the story
+	// from the database and comparing the projectId to
+	// the one specified, which might be a cleaner approach.
 	app.post("/data/story/", ensureAuthenticated, function (req, res) {
 		var data = req.body;
+		ensureIsCircle(data.projectId, req, res, function() {
+			var story = copyStory(data);
+			story.createdBy = getCreatedBy(req);
 
-		var story = copyStory(data);
-		story.createdBy = getCreatedBy(req);
-
-		addStory(story, res);
+			addStory(story, res);			
+		});
 	});
 
 	app.put("/data/story/", ensureAuthenticated, function (req, res) {
 		var story = req.body;
 		var commentText = undefined;
+		ensureIsCircle(story.projectId, req, res, function () {
+			// TODO: This is an opportunity to clean up the API?
+			// In other words, add /data/story/comment? Maybe.
+			if (story.newComment) {
+				var comment = {
+					text: story.newComment,
+					createdBy: getCreatedBy(req),
+					timestamp: Date.now()
+				};
 
-		// TODO: This is an opportunity to clean up the API?
-		// In other words, add /data/story/comment? Maybe.
-		if (story.newComment) {
-			var comment = {
-				text: story.newComment,
-				createdBy: getCreatedBy(req),
-				timestamp: Date.now()
-			};
-
-			story.newComment = comment;
-		}
-
-		db.stories.save(story, 
-			function (savedStory) {
-				if (story.newComment) {
-					var params = {
-						story: savedStory,
-						comment: story.newComment,
-						user: req.user
-					};
-					sendCommentNotification(params, req);	
-				}
-				res.send(200, savedStory);
-			},
-			function (err) {
-				handleError(err, res);
+				story.newComment = comment;
 			}
-		);
+
+			db.stories.save(story, 
+				function (savedStory) {
+					if (story.newComment) {
+						var params = {
+							story: savedStory,
+							comment: story.newComment,
+							user: req.user
+						};
+						sendCommentNotification(params, req);	
+					}
+					res.send(200, savedStory);
+				},
+				function (err) {
+					handleError(err, res);
+				}
+			);
+		});	
 	});
 
+	// TODO: Refactor out the circle access
 	app.get("/data/story/:storyId", ensureAuthenticated, function (req, res) {
 		var storyId = req.params.storyId;
 		if (!storyId) {
@@ -895,12 +937,13 @@ var configureSuccessful = function () {
 		var body = req.body;
 		var story = body.story;
 		var newNextId = body.newNextId;
-
-		db.stories.move(story, newNextId, function (response) {
-			res.send(200, response);
-		},
-		function (err) {
-			handleError(err, res);
+		ensureIsCircle(story.projectId, req, res, function () {
+			db.stories.move(story, newNextId, function (response) {
+				res.send(200, response);
+			},
+			function (err) {
+				handleError(err, res);
+			});
 		});
 	});
 
@@ -917,77 +960,83 @@ var configureSuccessful = function () {
 
 	app.put("/data/story/archive", ensureAuthenticated, function (req, res) {
 		var story = req.body;
-		var stories = [];
-		stories.push(story);
+		ensureIsCircle(story.projectId, req, res, function () {
+			var stories = [];
+			stories.push(story);
 
-		db.archives.addStories(stories, 
-		function (body) {
-			// TODO: If this breaks then we have a data
-			// integrity issue, because we have an archive
-			// of a story that has not been deleted.
-			removeStory(story, res);
-		}, 
-		function (err) {
-			handleError(err, res);
+			db.archives.addStories(stories, 
+			function (body) {
+				// TODO: If this breaks then we have a data
+				// integrity issue, because we have an archive
+				// of a story that has not been deleted.
+				removeStory(story, res);
+			}, 
+			function (err) {
+				handleError(err, res);
+			});
 		});
 	});
 
 	app.put("/data/story/remove", ensureAuthenticated, function (req, res) {
 		var story = req.body;
-		removeStory(story, res);
+		ensureIsCircle(story.projectId, req, res, function () {
+			removeStory(story, res);
+		});
 	});
 
 
 	app.post("/data/story/notify/new", ensureAuthenticated, function (req, res) {
 		var story = req.body;
 		var sender = req.user;
-
-		if (story.isOwnerNotified) {
-			return res.send(412, "Story owner has already been notified.");
-		}
-
-		db.users.findByName(story.owner, function (err, owner) {
-			if (err) {
-				return handleError(err, res);
+		ensureIsCircle(story.projectId, req, res, function () {
+			if (story.isOwnerNotified) {
+				return res.send(412, "Story owner has already been notified.");
 			}
 
-			// Use notification email addresses
-			if (sender.notifications && sender.notifications.email) {
-				sender.email = sender.notifications.email;
-			}
-			if (owner.notifications && owner.notifications.email) {
-				owner.email = owner.notifications.email;
-			}
-
-			var params = {
-				story: story,
-				sender: sender,
-				recipients: [owner],
-				message: getNewNotificationMessage(story, req),
-				subjectPrefix: "new story: "
-			};
-
-			sendStoryNotification(params, function (err, response) {
+			db.users.findByName(story.owner, function (err, owner) {
 				if (err) {
 					return handleError(err, res);
 				}
 
-				var onSuccess = function (savedStory) {
-					res.send(200, response);
+				// Use notification email addresses
+				if (sender.notifications && sender.notifications.email) {
+					sender.email = sender.notifications.email;
+				}
+				if (owner.notifications && owner.notifications.email) {
+					owner.email = owner.notifications.email;
+				}
+
+				var params = {
+					story: story,
+					sender: sender,
+					recipients: [owner],
+					message: getNewNotificationMessage(story, req),
+					subjectPrefix: "new story: "
 				};
 
-				var onError = function (err) {
-					handleError(err, res);
-				};
+				sendStoryNotification(params, function (err, response) {
+					if (err) {
+						return handleError(err, res);
+					}
 
-				db.stories.markOwnerNotified(story, onSuccess, onError);
+					var onSuccess = function (savedStory) {
+						res.send(200, response);
+					};
+
+					var onError = function (err) {
+						handleError(err, res);
+					};
+
+					db.stories.markOwnerNotified(story, onSuccess, onError);
+				});
 			});
 		});
 	});
 
-	app.put("/data/:projectId/settings/show-next-meeting", ensureAuthenticated, function (req, res) {
+	// TODO: Where should this be on the client?
+	app.put("/data/:circleId/settings/show-next-meeting", ensureAdminCircleAccess, function (req, res) {
 		var showNextMeeting = req.body.showNextMeeting;
-		var projectId = req.params.projectId;
+		var projectId = req.params.circleId;
 
 		var handleNextMeeting = function (err, nextMeeting) {
 			if (err) {
