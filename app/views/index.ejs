@@ -17,7 +17,7 @@
   <div class="navbar-inner">
   <ul class="nav">
     <li ng-repeat="circle in circleList()" ng-class="{active: isActiveCircle(circle)}">
-      <a class="jsLink" ng-click="setActiveCircle(circle)">{{circle.name}}</a>
+      <a class="jsLink" ng-click="setActiveCircle(circle, true)">{{circle.name}}</a>
     </li>
   </ul>
   <ul class="nav pull-right">

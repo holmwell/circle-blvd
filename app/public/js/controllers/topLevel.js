@@ -56,11 +56,13 @@ function TopLevelCtrl(session, $scope, $http, $location, $route) {
 		}
 	};
 
-	$scope.setActiveCircle = function (circle) {
+	$scope.setActiveCircle = function (circle, refreshPage) {
 		session.activeCircle = circle.id;
 		session.save();
-		$location.path("/");
-		$route.reload();
+		if (refreshPage) {
+			$location.path("/");
+			$route.reload();
+		}
 	};
 
 	$scope.isActiveCircle = function (circle) {

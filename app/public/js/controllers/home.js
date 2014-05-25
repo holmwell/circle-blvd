@@ -1,4 +1,4 @@
-function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams) {
+function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $route) {
 
 	var projectId = session.activeCircle;
 	var thisY = undefined;
@@ -415,29 +415,51 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams) {
 			});
 		}
 
-		stories.forEach(function (story, index) {
-			if (story.id === storyId) {
-				// HACK: Wait for the ng-repeat element to
-				// populate itself. 250 milliseconds should
-				// be long enough for our needs.
-				$timeout(function () {
-					var elementId = "#story-" + index;
-					var topMargin = 75;
-					// Use jQuery to smooth-scroll to where we
-					// want to be.
-					$('html, body').animate({
-						scrollTop: $(elementId).offset().top - topMargin
+		var scrollToStory = function () {
+			stories.forEach(function (story, index) {
+				if (story.id === storyId) {
+					// HACK: Wait for the ng-repeat element to
+					// populate itself. 250 milliseconds should
+					// be long enough for our needs.
+					$timeout(function () {
+						var elementId = "#story-" + index;
+						var topMargin = 75;
+						// Use jQuery to smooth-scroll to where we
+						// want to be.
+						$('html, body').animate({
+							scrollTop: $(elementId).offset().top - topMargin
+						}, 250);
+
+						story.isSelected = true;
+						selectedStory = story;
 					}, 250);
 
-					story.isSelected = true;
-					selectedStory = story;
-				}, 250);
+					// If we ever want to do things the Angular way, 
+					// it's closer to this:
+					// 	$anchorScroll();
+					// 	$location.hash("story-" + index);
+				}
+			});
+		};
 
-				// If we ever want to do things the Angular way, 
-				// it's closer to this:
-				// 	$anchorScroll();
-				// 	$location.hash("story-" + index);
+		$http.get('/data/story/' + storyId)
+		.success(function (story) {
+			if (story.projectId !== projectId) {
+				// switch the active circle
+				var circleFacade = {
+					id: story.projectId
+				};
+				$scope.setActiveCircle(circleFacade, false);
+				$location.path("/stories/" + storyId);
+				$route.reload();
 			}
+			else {
+				scrollToStory();
+			}
+		})
+		.error(function (data, status) {
+			console.log(data);
+			console.log(status);
 		});
 	};
 
@@ -1003,4 +1025,4 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams) {
 
 	init();
 }
-HomeCtrl.$inject = ['session', '$scope', '$timeout', '$http', '$location', '$routeParams'];
+HomeCtrl.$inject = ['session', '$scope', '$timeout', '$http', '$location', '$routeParams', '$route'];

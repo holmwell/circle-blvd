@@ -1034,6 +1034,11 @@ var db = function() {
 			findByProjectId: findGroupsByProjectId,
 			findByUser: findGroupsByUser
 		},
+		docs: {
+			get: function(docId, callback) {
+				couch.docs.get(docId, callback);
+			}
+		},
 		stories: {
 			add: addStory,
 			markOwnerNotified: markStoryOwnerNotified,

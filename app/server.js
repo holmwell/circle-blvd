@@ -856,6 +856,41 @@ var configureSuccessful = function () {
 		);
 	});
 
+	app.get("/data/story/:storyId", ensureAuthenticated, function (req, res) {
+		var storyId = req.params.storyId;
+		if (!storyId) {
+			return res.send(400, "Story id required.");
+		}
+
+		db.docs.get(storyId, function (err, doc) {
+			if (err) {
+				return handleError(err, res);
+			}
+
+			if (!doc || doc.type !== "story") {
+				return res.send(400, "Story not found");
+			}
+
+			var circleId = doc.projectId;
+			var memberships = req.user.memberships;
+			var hasAccess = false;
+			memberships.forEach(function (membership) {
+				if (membership.circle === circleId) {
+					hasAccess = true;
+				}
+			});
+
+			if (hasAccess) {
+				// TODO: This is the plain db story document.
+				// Is that ok? Or do we want to process it first?
+				res.send(200, doc);
+			}
+			else {
+				res.send(403, "Not a member of this circle");
+			}
+		});
+	});
+
 	app.put("/data/story/move", ensureAuthenticated, function (req, res) {
 		var body = req.body;
 		var story = body.story;
