@@ -928,12 +928,6 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 	};
 
 	var init = function() {
-		// TODO: Possibly put this at the TopLevelCtrl?
-		if (!$scope.isSignedIn()) {
-			$location.path('/signin');
-			return;
-		}
-
 		$scope.owners = [];
 		$scope.stories = stories;
 

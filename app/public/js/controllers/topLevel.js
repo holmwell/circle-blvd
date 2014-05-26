@@ -23,7 +23,7 @@ function TopLevelCtrl(session, $scope, $http, $location, $route) {
 	};
 
 	$scope.isSignedIn = function() {
-		if (session && session.user && session.user.email) {
+		if (session.user && session.user.email) {
 			return true;
 		}
 
@@ -116,22 +116,24 @@ function TopLevelCtrl(session, $scope, $http, $location, $route) {
 
 
 	var init = function() {
-		if (session.isExpired) {
+		$scope.$on('$routeChangeSuccess', function (what) {
 			$http.get('/data/user')
 			.success(function (user) {
 				session.user = user;
 				session.save();
 			})
 			.error(function (data, status, headers, config) {
-				resetSession();
+				if ($scope.isSignedIn()) {
+					$scope.signOut();	
+				}
 			});
-		}
+		});	
 
 		// TODO: What's an efficient way of doing this?
 		// Does CouchDB take care of that? (ish?)
 		$http.get('/data/settings')
 		.success(function (settings) {
-			session.settings = settings;
+			session.settings = settings;	
 		})
 		.error(function (data, status) {
 			// Do nothing.
