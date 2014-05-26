@@ -761,7 +761,7 @@ var configureSuccessful = function () {
 		}
 
 
-		db.users.findByName(story.owner, function (err, owner) {
+		db.users.findByCircleAndName(story.projectId, story.owner, function (err, owner) {
 			if (story.owner && err) {
 				// Log, but we can continue.
 				console.log("Comment notification: Cannot find story owner for story: " + story.id);
