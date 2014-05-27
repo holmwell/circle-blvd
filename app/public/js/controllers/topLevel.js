@@ -116,7 +116,11 @@ function TopLevelCtrl(session, $scope, $http, $location, $route) {
 
 
 	var init = function() {
-		$scope.$on('$routeChangeSuccess', function (what) {
+		$scope.$on('$routeChangeSuccess', function () {
+			var path = $location.path();
+			if (path !== '/signin') {
+				session.lastLocationPath = $location.path();	
+			}
 			$http.get('/data/user')
 			.success(function (user) {
 				session.user = user;

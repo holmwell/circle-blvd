@@ -68,7 +68,12 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 				session.user = user;
 				session.save();
 
-				$location.path("/");
+				if (session.lastLocationPath) {
+					$location.path(session.lastLocationPath);
+				}
+				else {
+					$location.path("/");	
+				}
 			};
 
 			getDefaultCircle(user, onCircleFound);
