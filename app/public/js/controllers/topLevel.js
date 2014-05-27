@@ -127,7 +127,7 @@ function TopLevelCtrl(session, $scope, $http, $location, $route) {
 				session.save();
 			})
 			.error(function (data, status, headers, config) {
-				if ($scope.isSignedIn()) {
+				if ($scope.isSignedIn() || path !== '/signin') {
 					$scope.signOut();	
 				}
 			});
