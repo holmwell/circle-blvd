@@ -14,6 +14,8 @@ var usersRoutes = require('./routes/users');
 var userRoutes 	= require('./routes/user');
 var initRoutes 	= require('./routes/init');
 
+var sessionCouch = require('./lib/session-couch.js');
+
 var app = express();
 
 var initAuthentication = function () {
@@ -211,6 +213,10 @@ var configureSuccessful = function () {
 
 	app.get('/auth/signout', function (req, res) {
 		req.logout();
+		// TODO: How to destroy sessions?
+		// if (req.session) {
+		// 	req.session.destroy();	
+		// }
 		res.send(204); // no content
 	});
 
@@ -1248,8 +1254,11 @@ app.configure(function() {
 
 	var initSettingsOk = function (settings) {
 		var sessionSecret = settings['session-secret'].value;
-
-		app.use(express.session({ secret: sessionSecret }));
+		var CouchStore = sessionCouch(express.session);
+		app.use(express.session({ 
+			store: new CouchStore(),
+			secret: sessionSecret 
+		}));
 		initAuthentication();
 		app.use(app.router);
 		configureSuccessful();
