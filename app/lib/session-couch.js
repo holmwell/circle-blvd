@@ -1,5 +1,5 @@
 var nano = require('nano');
-// var views = require('./session-views.js');
+var views = require('./session-views.js');
 
 module.exports = function (session) {
 	var databaseUrl = 'http://localhost:5984';
@@ -48,7 +48,7 @@ module.exports = function (session) {
 				throw (err);
 			}
 			else if (exists) {
-				// views.create(database, callback);
+				views.create(database, callback);
 			}
 			else {
 				createDatabase(function (err) {
@@ -57,7 +57,7 @@ module.exports = function (session) {
 						callback(err);
 					}
 					else {
-						// views.create(database, callback);
+						views.create(database, callback);
 					}
 				});
 			}
@@ -94,6 +94,79 @@ module.exports = function (session) {
 		}, 100);
 	};
 
+	var lastMainenanceDate = undefined;
+	var actuallyPerformMaintenance = function () {
+		lastMainenanceDate = new Date();
+
+		var deleteExpiredSessions = function () {
+			var earliestDate = "";
+			var endkey = new Date().toISOString();
+
+			var options = {
+				startkey: earliestDate,
+				endkey: endkey
+			};
+
+			database.view("sessions", "byExpires", options, function (err, body) {
+				if (err) {
+					return console.log(err);
+				}
+
+				var bulkDoc = {};
+				var options = {};
+				bulkDoc.docs = [];
+
+				body.rows.forEach (function (doc) {
+					var deleteDoc = {
+						_id: doc.id,
+						_rev: doc.value,
+						_deleted: true
+					};
+					bulkDoc.docs.push(deleteDoc);
+				});
+
+				database.bulk(bulkDoc, options, function (err, body) {
+					if (err) {
+						console.log(err);
+					}
+				});
+			});
+		};
+
+		var performAllMaintenance = function () {
+			deleteExpiredSessions();
+			nanoMaster.db.compact(databaseName);
+		};
+
+		process.nextTick(performAllMaintenance);
+	};
+
+	// Dates are equal if they share the same day of the year.
+	// We don't care about units smaller than days.
+	var areDatesEqual = function (date1, date2) {
+		if (date1.getYear() !== date2.getYear()
+		|| date1.getMonth() !== date2.getMonth()
+		|| date1.getDay() !== date2.getDay()) {
+			return false;
+		}
+
+		return true;
+	};
+
+	var performMaintenance = function () {
+		// actually perform maintenance if it hasn't
+		// been done today, otherwise no.
+		if (!lastMainenanceDate) {
+			return actuallyPerformMaintenance();
+		}
+		if (areDatesEqual(new Date(), lastMainenanceDate)) {
+			// do nothing
+			return;
+		}
+
+		actuallyPerformMaintenance();
+	};
+
 	var getSessionDoc = function (sid, callback) {
 		database.get(sid, function (err, doc) {
 			if (err && err.error === 'not_found') {
@@ -104,6 +177,7 @@ module.exports = function (session) {
 	};
 
 	var getSession = function (sid, callback) {
+		performMaintenance();
 		getSessionDoc(sid, function (err, doc) {
 			if (err) {
 				return callback(err);
@@ -136,6 +210,17 @@ module.exports = function (session) {
 		var areSessionsEqual = function (sess1, sess2) {
 			if (sess1 === sess2) {
 				return true;
+			}
+
+			if (sess1.cookie && sess2.cookie) {
+				if (sess1.cookie.expires !== sess2.cookie.expires) {
+					var date1 = new Date(sess1.cookie.expires);
+					var date2 = new Date(sess2.cookie.expires);
+
+					if (!areDatesEqual(date1, date2)) {
+						return false;
+					}
+				}
 			}
 
 			// TODO: Refactor out this equality stuff, so we

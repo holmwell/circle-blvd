@@ -1237,6 +1237,22 @@ var initSettings = function (callback) {
 	});
 };
 
+var getCookieSettings = function () {
+	// TODO: Check settings to guess if https is running.
+	// Or actually figure out if https is running, and if so
+	// use secure cookies
+	var oneHour = 3600000;
+	var twoWeeks = 14 * 24 * oneHour;
+	var cookieSettings = {
+		path: '/',
+		httpOnly: true,
+		secure: false,
+		maxAge: twoWeeks
+	};
+
+	return cookieSettings;
+};
+
 // configure Express
 app.configure(function() {
 	// TODO: Put port in config
@@ -1255,10 +1271,14 @@ app.configure(function() {
 	var initSettingsOk = function (settings) {
 		var sessionSecret = settings['session-secret'].value;
 		var CouchStore = sessionCouch(express.session);
+		var sessionStore = new CouchStore();
+		var cookieSettings = getCookieSettings();
 		app.use(express.session({ 
-			store: new CouchStore(),
-			secret: sessionSecret 
+			store: sessionStore,
+			secret: sessionSecret,
+			cookie: cookieSettings
 		}));
+
 		initAuthentication();
 		app.use(app.router);
 		configureSuccessful();
