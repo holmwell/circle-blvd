@@ -19,7 +19,7 @@ Date.prototype.toJSON = function (key) {
 
 /* Services */
 angular.module('myApp.services', []).
-  value('version', '0.6.0'). // a simple value service
+  value('version', '0.6.1'). // a simple value service
   factory('signInName', function () {
   	var storageKey = 'signInName';
 
