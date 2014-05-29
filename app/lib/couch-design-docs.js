@@ -1,7 +1,7 @@
 // views.js
 //
 // The design docs specific to Circle Blvd.
-var nanoViews = require("./nano-views.js");
+var designDocs = require("./design-docs.js");
 
 var usersDesignDoc = {
 	url: '_design/users',
@@ -66,7 +66,7 @@ var usersDesignDoc = {
 		}
 	}
 };
-nanoViews.add(usersDesignDoc);
+designDocs.add(usersDesignDoc);
 
 var passwordsDesignDoc = {
 	url: '_design/passwords',
@@ -85,7 +85,7 @@ var passwordsDesignDoc = {
 		}
 	}
 };
-nanoViews.add(passwordsDesignDoc);
+designDocs.add(passwordsDesignDoc);
 
 
 var settingsDesignDoc = {
@@ -142,7 +142,7 @@ var settingsDesignDoc = {
 		}
 	}
 };
-nanoViews.add(settingsDesignDoc);
+designDocs.add(settingsDesignDoc);
 
 
 var circlesDesignDoc = {
@@ -170,7 +170,7 @@ var circlesDesignDoc = {
 		}
 	}
 };
-nanoViews.add(circlesDesignDoc);
+designDocs.add(circlesDesignDoc);
 
 
 var groupsDesignDoc = {
@@ -199,7 +199,7 @@ var groupsDesignDoc = {
 		}
 	}
 };
-nanoViews.add(groupsDesignDoc);
+designDocs.add(groupsDesignDoc);
 
 
 var queueDesignDoc = {
@@ -218,7 +218,7 @@ var queueDesignDoc = {
 		}
 	}
 };
-nanoViews.add(queueDesignDoc);
+designDocs.add(queueDesignDoc);
 
 
 var storiesDesignDoc = {
@@ -345,7 +345,7 @@ var storiesDesignDoc = {
 		}
 	}
 };
-nanoViews.add(storiesDesignDoc);
+designDocs.add(storiesDesignDoc);
 
 
 var archivesDesignDoc = {
@@ -365,10 +365,10 @@ var archivesDesignDoc = {
 		}
 	}
 };
-nanoViews.add(archivesDesignDoc);
+designDocs.add(archivesDesignDoc);
 
-var createViews = function (database, callback) {
-	nanoViews.saveToDatabase(database, callback);
+var createDesignDocs = function (database, callback) {
+	designDocs.saveToDatabase(database, callback);
 };
 
-exports.create = createViews;
+exports.create = createDesignDocs;

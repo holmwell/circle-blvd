@@ -1,5 +1,5 @@
 var nano = require('nano');
-var views = require('./session-views.js');
+var designDocs = require('./session-design-docs.js');
 
 module.exports = function (session) {
 	var databaseUrl = 'http://localhost:5984';
@@ -48,7 +48,7 @@ module.exports = function (session) {
 				throw (err);
 			}
 			else if (exists) {
-				views.create(database, callback);
+				designDocs.create(database, callback);
 			}
 			else {
 				createDatabase(function (err) {
@@ -57,7 +57,7 @@ module.exports = function (session) {
 						callback(err);
 					}
 					else {
-						views.create(database, callback);
+						designDocs.create(database, callback);
 					}
 				});
 			}

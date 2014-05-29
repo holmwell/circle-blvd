@@ -1,5 +1,5 @@
 var nano = require('nano');
-var views = require('./views.js');
+var designDocs = require('./couch-design-docs.js');
 var encrypt = require('./encrypt.js');
 var uuid 	= require('node-uuid');
 
@@ -54,7 +54,7 @@ var couch = function() {
 				throw (err);
 			}
 			else if (exists) {
-				views.create(database, callback);
+				designDocs.create(database, callback);
 			}
 			else {
 				createDatabase(function (err) {
@@ -63,7 +63,7 @@ var couch = function() {
 						callback(err);
 					}
 					else {
-						views.create(database, callback);		
+						designDocs.create(database, callback);		
 					}
 				});
 			}

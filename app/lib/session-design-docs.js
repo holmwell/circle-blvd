@@ -2,7 +2,7 @@
 //
 // The design docs for circle-blvd-sessions.
 //
-var nanoViews = require("./nano-views.js");
+var designDocs = require("./design-docs.js");
 
 var sessionsDesignDoc = {
 	url: '_design/sessions',
@@ -23,10 +23,10 @@ var sessionsDesignDoc = {
 		}
 	}
 };
-nanoViews.add(sessionsDesignDoc);
+designDocs.add(sessionsDesignDoc);
 
 var createViews = function (database, callback) {
-	nanoViews.saveToDatabase(database, callback);
+	designDocs.saveToDatabase(database, callback);
 };
 
 exports.create = createViews;

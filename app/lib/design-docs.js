@@ -1,5 +1,3 @@
-// nano-views.js
-
 module.exports = function () {
 	var designDocs = [];
 
