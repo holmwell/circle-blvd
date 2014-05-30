@@ -1,4 +1,4 @@
-var designDocs = require('./session-design-docs.js');
+var designDocs = require('./design-docs-session.js');
 var LocalDatabase = require('./local-database.js');
 
 module.exports = function (session) {

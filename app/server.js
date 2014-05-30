@@ -14,7 +14,7 @@ var usersRoutes = require('./routes/users');
 var userRoutes 	= require('./routes/user');
 var initRoutes 	= require('./routes/init');
 
-var CouchSessionStore = require('./lib/couch-session-store.js');
+var couchSessionStore = require('./lib/couch-session-store.js');
 
 var app = express();
 
@@ -1269,10 +1269,10 @@ app.configure(function() {
 
 	var initSettingsOk = function (settings) {
 		var sessionSecret = settings['session-secret'].value;
-		var sessionStore = new CouchSessionStore(express.session);
+		var SessionStore = couchSessionStore(express.session);
 		var cookieSettings = getCookieSettings();
 		app.use(express.session({ 
-			store: sessionStore,
+			store: new SessionStore(),
 			secret: sessionSecret,
 			cookie: cookieSettings
 		}));

@@ -1,5 +1,5 @@
 var LocalDatabase = require('./local-database.js');
-var designDocs    = require('./couch-design-docs.js');
+var designDocs    = require('./design-docs-couch.js');
 
 var encrypt = require('./encrypt.js');
 var uuid 	= require('node-uuid');
