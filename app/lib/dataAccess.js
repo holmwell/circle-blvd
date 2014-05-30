@@ -5,32 +5,11 @@ var couch = require('./couch.js');
 couch.stories = require('./couch-stories.js');
 
 var data = {};
+data.circles  = require('./data-circles.js');
 data.settings = require('./data-settings.js');
-data.stories = require('./data-stories.js');
-
+data.stories  = require('./data-stories.js');
 
 var db = function() {
-
-	var addCircle = function (circle, callback) {
-		var newCircle = {
-			name: circle.name
-		};
-
-		couch.circles.add(newCircle, function (err, body) {
-			if (err) {
-				return callback(err);
-			}
-
-			newCircle._id = body.id;
-			newCircle._rev = body.rev;
-			callback(null, newCircle);
-		});
-	};
-
-	var updateCircle = function (circle, callback) {
-		couch.circles.update(circle, callback);
-	};
-
 
 	var addGroup = function(group, success, failure) {
 		var newGroup = {
@@ -313,21 +292,11 @@ var db = function() {
 		});
 	};
 
-
 	return {
 		whenReady: couch.database.whenReady,
 		settings: data.settings,
 		stories: data.stories,
-		circles: {
-			add: addCircle,
-			getAll: function (callback) {
-				couch.circles.getAll(callback);
-			},
-			findByUser: function (user, callback) {
-				couch.circles.findByUser(user, callback);
-			},
-			update: updateCircle
-		},
+		circles: data.circles,
 		groups: {
 			add: addGroup,
 			remove: removeGroup,
