@@ -1,0 +1,414 @@
+var uuid = require('node-uuid');
+var couch = require('./couch.js');
+var database = couch.db;
+
+module.exports = function () {
+
+	var findStoryByIds = function (projectId, storyId, callback) {
+		var key = projectId + "," + storyId;
+		couch.findOneByKey("stories/byIds", key, callback);
+	};
+
+	var removeStory = function(story, callback) {
+		findStoryByIds(story.projectId, (story.id || story._id), function (err, body) {
+			if (err) {
+				return callback(err);
+			}
+
+			if (story === null) {
+				// Tried to remove a story that already is gone. 
+				// Relax.
+				return callback(null, null);
+			}
+
+			story._id = body._id;
+			story._rev = body._rev;
+
+			database.destroy(story._id, story._rev, function (err, body) {
+				callback(err, body);
+			});
+		});
+	};
+
+	var addStoryToQueue = function (story, callback) {
+		var queueDocument = story;
+		queueDocument.type = "story-queue";
+		queueDocument.timestamp = Date.now();
+
+		database.insert(story, callback);
+	};
+
+	// callback(err, nextStory)
+	var nextStoryInQueue = function (callback) {
+		var params = {};
+		params.limit = 1;
+		couch.view("queue/byTimestamp", params, function (err, rows) {
+			if (err) {
+				return callback(err);
+			}
+
+			if (rows.length > 0) {
+				callback(null, rows[0]);
+			}
+			else {
+				callback(null, null);
+			}
+		})
+	};
+
+
+	var findStoryById = function (storyId, callback) {
+		couch.view("stories/byId", {key: storyId}, function (err, rows) {
+			if (err) {
+				callback(err);
+			}
+			else {
+				if (rows.length > 0) {
+					callback(null, rows[0]);
+				}
+				else {
+					callback(null, null);
+				}
+			}
+		});
+	};
+
+	var findStoriesById = function (keys, callback) {
+		var query = {};
+		query["keys"] = keys;
+		database.fetch(query, callback);
+	};
+
+	var findStoriesByProjectId = function (projectId, callback) {
+		var options = {
+			key: projectId
+		};
+		couch.view("stories/byProjectId", options, function (err, rows) {
+			callback(err, rows);
+		});
+	};
+
+	var findStoriesByNextId = function (nextId, callback) {
+		// this works since nextIds are universal-unique ids.
+		couch.view("stories/byNextId", {key: nextId}, callback);
+	}
+
+	var findFirstByProjectId = function (projectId, callback) {
+		couch.view(
+			"stories/firstsByProjectId",
+			{key: projectId}, 
+			function (err, rows) {
+				if (err) {
+					callback(err);
+				}
+				else {
+					if (rows.length > 0) {
+						// TODO: If rows.length > 1 then we
+						// have a data integrity issue.
+						callback(null, rows[0]);
+					}
+					else {
+						callback(null, null);
+					}
+				}
+			}
+		);
+	};
+
+	var findNextMeetingByProjectId = function (projectId, callback) {
+		// TODO: Combine with the method above.
+		couch.view(
+			"stories/nextMeetingByProjectId",
+			{key: projectId}, 
+			function (err, rows) {
+				if (err) {
+					callback(err);
+				}
+				else {
+					if (rows.length > 0) {
+						// TODO: If rows.length > 1 then we
+						// have a data integrity issue.
+						callback(null, rows[0]);
+					}
+					else {
+						callback(null, null);
+					}
+				}
+			}
+		);
+	};
+
+
+	var n = function(s) {
+		return s || "";
+	}
+
+	var areStoriesEqual = function (a, b) {
+		// TODO: a 'for in' loop
+		// Also, do we even need this?
+		return n(a.id) === n(b.id)
+		&& n(a.type) === n(b.type)
+		&& n(a.nextId) === n(b.nextId)
+		&& n(a.isFirstStory) === n(b.isFirstStory)
+		&& n(a.projectId) === n(b.projectId)
+		&& n(a.summary) === n(b.summary)
+		&& n(a.description) === n(b.description)
+		&& n(a.status) === n(b.status)
+		&& n(a.owner) === n(b.owner)
+		&& n(a.isDeadline) === n(b.isDeadline)
+		&& n(a.isNextMeeting) === n(b.isNextMeeting)
+		&& n(a.comments).length === n(b.comments).length
+		&& n(a.isOwnerNotified) === n(b.isOwnerNotified);
+	};
+
+	var updateStory = function (story, callback) {
+		if (!story) {
+			return callback();
+		}
+
+		findStoryByIds(story.projectId, (story.id || story._id), function (err, body) {
+			if (err) {
+				return callback(err);
+			}
+
+			if (body === null) {
+				return callback({
+					message: "Update: Story not found",
+					story: story
+				});
+			}
+
+			// TODO: Where is the right place to change the appropriate fields?
+			// As this stands, this method has to be updated whenever there
+			// is a change to the user model.
+			story._id = body._id;
+			story._rev = body._rev;
+			story.type = body.type;
+
+			if (areStoriesEqual(body, story)) {
+				// Do nothing
+				console.log("Skipping update ...");
+				console.log(story);
+				callback(null, story);
+			}
+			else {
+				// TODO: Turn this back on.
+				// console.log("Updating ...");
+				// console.log("From: ");
+				// console.log(body);
+				// console.log("To: ");
+				// console.log(story);
+
+				database.insert(story, function (err, body) {
+					if (err) {
+						console.log("Error.");
+					}
+					callback(err, body);
+				});	
+			}
+		});
+	};
+
+	var storiesTransaction = function (stories, callback) {
+
+		var startTransaction = function (oldStories, newStories) {
+			var transaction = {};
+			transaction.id = uuid.v4();
+			transaction.docs = [];
+
+			for (var storyIndex in oldStories) {
+				var story = oldStories[storyIndex];
+				transaction.docs.push({
+					id: story._id,
+					rev: story._rev
+				});				
+			}
+
+			for (var storyIndex in newStories) {
+				var story = newStories[storyIndex];
+
+				var thisTransaction = {};
+				thisTransaction.id = transaction.id;
+				thisTransaction.docs = transaction.docs;
+				thisTransaction.oldDoc = oldStories[story._id];
+
+				story.transaction = thisTransaction;
+				newStories[storyIndex] = story;
+			}
+
+			var options = {
+				"all_or_nothing": true
+			};
+
+			var bulkEnter = {};
+			bulkEnter.docs = [];
+			for (var storyIndex in newStories) {
+				bulkEnter.docs.push(newStories[storyIndex]);
+			}
+
+			database.bulk(bulkEnter, options, function (err, response) {
+				if (err) {
+					return callback(err);
+				}
+
+				var isConflicted = false;
+				for (var docIndex in response) {
+					if (!response[docIndex].ok) {
+						if (response[docIndex].error === 'conflict') {
+							// If we get here, our transaction has failed,
+							// because all the docs could not enter into
+							// it, and we need to roll back the docs that
+							// are now in a transactional state.
+							isConflicted = true;
+							break;
+						}
+						else {
+							// If we get here, we've failed for some other
+							// reason that we don't know how to handle.
+							return callback({
+								message: "Response not ok.",
+								response: response
+							});
+						}
+					}
+				}
+
+				if (isConflicted) {
+					var docsInTransactionalState = [];
+					for (var docIndex in response) {
+						if (response[docIndex].ok) {
+							docsInTransactionalState.push({
+								id: response[docIndex].id,
+								rev: response[docIndex].rev
+							});
+						}
+					}
+
+
+					var bulkRevert = {};
+					bulkRevert.docs = [];
+					docsInTransactionalState.forEach(function (doc) {
+						var docToRevert = oldStories[doc.id];
+						docToRevert._rev = doc.rev;
+						docToRevert.lastTransactionId = transaction.id;
+						bulkRevert.docs.push(docToRevert);
+					});
+
+					database.bulk(bulkRevert, options, function (err, response) {
+						if (err) {
+							callback({
+								message: "An open transaction has been left in the database due to conflicts."
+							});	
+						}
+						else {
+							// TODO: Check that response is ok.
+							console.log(response);
+							callback({
+								error: 'revert',
+								message: "Reverted."
+							});
+						}
+					});
+
+					return;
+				}
+
+				for (var docIndex in response) {
+					for (var storyIndex in newStories) {
+						if (newStories[storyIndex]._id === response[docIndex].id) {
+							newStories[storyIndex]._rev = response[docIndex].rev;
+							newStories[storyIndex].transaction = undefined;
+							newStories[storyIndex].lastTransactionId = transaction.id;	
+						}
+					}
+				}
+
+				var bulkDoc = {};
+				bulkDoc.docs = [];
+				for (var storyIndex in newStories) {
+					bulkDoc.docs.push(newStories[storyIndex]);
+				}
+
+				database.bulk(bulkDoc, options, function (err, response) {
+					if (err) {
+						return callback(err);
+					}
+
+					for (var docIndex in response) {
+						if (!response[docIndex].ok) {
+							return callback({
+								message: "Response not ok in reset.",
+								response: response
+							});
+						}
+					}
+
+					callback(err, response);
+				});
+			});
+		}; // end startTransaction
+
+
+		// Do some basic checks before we try anything.
+		var storyIds = [];
+		var initialStories = [];
+		var initialRevs = {};
+
+		for (var storyIndex in stories) {
+			var story = stories[storyIndex];
+			storyIds.push(story._id);
+			initialRevs[story._id] = story._rev;
+		}
+
+		var initialQuery = {};
+		initialQuery["keys"] = storyIds;
+
+		database.fetch(initialQuery, function (err, body) {
+			if (err) {
+				return callback(err);
+			}
+
+			body.rows.forEach(function (row) {
+				initialStories.push(row.doc);
+			});
+
+			var hasInitialRevConflict = false;
+			initialStories.forEach(function (initialStory) {
+				if (initialStory._rev !== initialRevs[initialStory._id]) {
+					// This transaction is over before it begins.
+					hasInitialRevConflict = true;
+				}
+			});
+
+			if (hasInitialRevConflict) {
+				callback({
+					error: "init",
+					message: "Not starting transaction; " + 
+					         "revisions already behind when function called"
+				});
+			}
+			else {
+				var oldStories = {};
+				initialStories.forEach(function (story) {
+					oldStories[story._id] = story;
+				});
+
+				startTransaction(oldStories, stories);
+			}
+		});
+	};
+
+	return {
+		addToQueue: addStoryToQueue,
+		nextInQueue: nextStoryInQueue,
+		remove: removeStory,
+		findMany: findStoriesById,
+		findById: findStoryById,
+		findByProjectId: findStoriesByProjectId,
+		findByNextId: findStoriesByNextId,
+		findFirst: findFirstByProjectId,
+		findNextMeeting: findNextMeetingByProjectId,
+		transaction: storiesTransaction,
+		update: updateStory
+	};
+}(); // closure
