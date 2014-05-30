@@ -307,69 +307,7 @@ var couch = function() {
 		});
 	};
 
-	var getSettingsView = function (viewName, callback) {
-		// TODO: If there are two settings with the same name,
-		// things might not behave well.
-		var options = {
-			returnKeys: true
-		};
-		getView("settings/" + viewName, options, callback);
-	};
 
-	var getSettings = function (callback) {
-		getSettingsView("public", callback);
-	};
-
-	var getAuthorizedSettings = function (callback) {
-		getSettingsView("authorized", callback);
-	};
-
-	var getPrivateSettings = function (callback) {
-		getSettingsView("private", callback);
-	};
-
-	var getAllSettings = function (callback) {
-		getSettingsView("all", callback);
-	};
-
-	var addSetting = function(setting, callback) {
-		setting.type = "setting";
-		database.insert(setting, callback);
-	};
-
-	var updateSetting = function (setting, callback) {
-		console.log("Updating ...");
-		console.log(setting);
-		database.get(setting._id, function (err, settingToUpdate) {
-
-			if (settingToUpdate.type !== "setting") {
-				console.log(settingToUpdate);
-				return callback({
-					message: "Attempt to update a non-setting."
-				});
-			}
-
-			var doc = {};
-			doc._id = settingToUpdate._id;
-			doc._rev = settingToUpdate._rev;
-			doc.type = settingToUpdate.type;
-			doc.name = settingToUpdate.name;
-
-			doc.value = setting.value;
-			doc.visibility = setting.visibility || settingToUpdate.visibility;
-
-			database.insert(doc, function (err, body) {
-				if (err) {
-					callback(err);
-				}
-				else {
-					doc._id = body._id;
-					doc._rev = body._rev;
-					callback(null, doc);
-				}
-			});
-		});
-	};
 
 	var addCircle = function (circle, callback) {
 		circle.type = "circle";
@@ -892,16 +830,10 @@ var couch = function() {
 	};
 
 	return {
+		view: getView,
+		db: database,
 		database: {
 			whenReady: database.whenReady
-		},
-		settings: {
-			add: addSetting,
-			get: getSettings,
-			getAuthorized: getAuthorizedSettings,
-			getPrivate: getPrivateSettings,
-			getAll: getAllSettings,
-			update: updateSetting
 		},
 		circles: {
 			add: addCircle,
