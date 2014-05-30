@@ -14,7 +14,7 @@ var usersRoutes = require('./routes/users');
 var userRoutes 	= require('./routes/user');
 var initRoutes 	= require('./routes/init');
 
-var sessionCouch = require('./lib/session-couch.js');
+var CouchSessionStore = require('./lib/couch-session-store.js');
 
 var app = express();
 
@@ -208,7 +208,6 @@ var tryToCreateHttpsServer = function (callback) {
 };
 
 var configureSuccessful = function () {
-	// TODO: Require https (for passwords)
 	app.post('/auth/signin', authenticateLocal);
 
 	app.get('/auth/signout', function (req, res) {
@@ -1270,8 +1269,7 @@ app.configure(function() {
 
 	var initSettingsOk = function (settings) {
 		var sessionSecret = settings['session-secret'].value;
-		var CouchStore = sessionCouch(express.session);
-		var sessionStore = new CouchStore();
+		var sessionStore = new CouchSessionStore(express.session);
 		var cookieSettings = getCookieSettings();
 		app.use(express.session({ 
 			store: sessionStore,
