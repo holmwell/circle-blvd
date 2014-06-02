@@ -56,7 +56,7 @@
 					<div class="amount">{{plan.displayAmount}} per month</div>
 				</div>
 			</div>
-			<div class="span2"><button class="btn" ng-click="openStripeCheckout($event)">Checkout</button></div>
+			<div class="span2 checkout"><button class="btn" ng-click="openStripeCheckout($event)">Checkout</button></div>
 		</div>
 
 		<p ng-show="activePlan.name" class="span6 subtle cancel"><a class="jsLink subtle" ng-click="cancelSubscription()">cancel subscription</a></p>

@@ -509,10 +509,11 @@ input:focus, textarea:focus {
   opacity: 0.6;
 }
 .donations .plans {
-  margin-top: 1.3em;
   margin-left: 0em;
 }
 .donations .plan {
+  padding-top: 1.2em;
+  padding-bottom: 1.2em;
   padding-left: 0.75ex;
   text-align: center;
   border: solid 1px transparent;
@@ -540,6 +541,10 @@ input:focus, textarea:focus {
 .donations .btn {
   margin-left: 16px;
 }
+.donations .checkout {
+  padding-top: 1.2em;
+}
+
 .donations .cancel {
   margin-left: -0.75ex;
   text-align: center;
