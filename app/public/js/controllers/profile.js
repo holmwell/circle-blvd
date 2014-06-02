@@ -41,6 +41,9 @@ function ProfileCtrl(session, $scope, $http) {
 					}
 				});
 			}
+			else {
+				$scope.activePlan = {};
+			}
 		}
 	};
 
@@ -152,6 +155,20 @@ function ProfileCtrl(session, $scope, $http) {
 
 		$scope.setPlan = function (plan) {
 			$scope.activePlan = plan;
+		};
+
+		$scope.cancelSubscription = function () {
+			var data = {};
+			$http.put('/payment/subscribe/cancel', data)
+			.success(function (data) {
+				session.user.subscription = data;
+				session.save();
+				updateScope();
+			})
+			.error(function (data, status) {
+				console.log(data);
+				console.log(status);
+			});
 		};
 	}
 	

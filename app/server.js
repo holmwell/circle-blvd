@@ -1155,6 +1155,36 @@ var configureSuccessful = function () {
 		}
 	});
 
+	app.put('/payment/subscribe/cancel', ensureAuthenticated, function (req, res) {
+		var user = req.user;
+		if (!user.subscription) {
+			return res.send(204);
+		}
+
+		// Just delete the Stripe customer, since they
+		// only have one subscription anyway.
+		var customerId = user.subscription.customerId;
+		stripe.customers.del(customerId, function (err, confirm) {
+			if (err) {
+				return handleError(err, res);
+			}
+
+			var onSuccess = function (updatedUser) {
+				res.send(200, updatedUser.subscription);
+			};
+			var onError = function (err) {
+				// TODO: Technically it's possible to update
+				// the Stripe data and not update our own 
+				// data, so we should have a fall-back plan
+				// if that happens.
+				handleError(err, res);
+			};
+
+			user.subscription = null;
+			db.users.update(user, onSuccess, onError);
+		});
+	});
+
 	// The secret to bridging Angular and Express in a 
 	// way that allows us to pass any path to the client.
 	// 

@@ -58,7 +58,8 @@
 			</div>
 			<div class="span2"><button class="btn" ng-click="openStripeCheckout($event)">Checkout</button></div>
 		</div>
-		
+
+		<p ng-show="activePlan.name" class="span6 subtle cancel"><a class="jsLink subtle" ng-click="cancelSubscription()">cancel subscription</a></p>
 	</div>
 </div>
 

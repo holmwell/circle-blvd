@@ -540,6 +540,11 @@ input:focus, textarea:focus {
 .donations .btn {
   margin-left: 16px;
 }
+.donations .cancel {
+  margin-left: -0.75ex;
+  text-align: center;
+  padding-top: 1.2em;
+}
 
 /* admin */
 .adminList {
