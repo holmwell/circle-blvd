@@ -31,6 +31,11 @@ exports.update = function (req, res) {
 		res.send(500, err);
 	};
 
+	// TODO: Security: Right now a user can update 
+	// any property on his or her database record.
+	//
+	// At least prevent people from modifying their
+	// access levels.
 	db.users.update(data, onSuccess, onError);
 };
 
