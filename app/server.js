@@ -1092,7 +1092,7 @@ var configureSuccessful = function () {
 		}
 
 		var onSuccess = function (updatedUser) {
-			res.send(200);
+			res.send(200, updatedUser.subscription);
 		};
 		var onError = function (err) {
 			// TODO: Technically it's possible to update

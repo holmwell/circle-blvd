@@ -2,18 +2,49 @@
 
 function ProfileCtrl(session, $scope, $http) {
 	$scope.supportsPayments = false;
+	$scope.activePlan = {};
+
+	var plans = [];
+	plans.push({
+		name: "Supporter",
+		displayAmount: "$5",
+		stripeAmount: 500
+	});
+	plans.push({
+		name: "Organizer",
+		displayAmount: "$20",
+		stripeAmount: 2000
+	});
+	plans.push({
+		name: "Patron",
+		displayAmount: "$100",
+		stripeAmount: 10000
+	});
+
+	var updateScope = function () {
+		if (session.user) {
+			$scope.name = session.user.name;
+			$scope.email = session.user.email;
+			if (session.user.notifications && session.user.notifications.email) {
+				$scope.notificationEmail = session.user.notifications.email;
+			}
+			else {
+				$scope.notificationEmail = session.user.email;	
+			}
+
+			// Load the saved subscription if there is one
+			if (session.user.subscription) {
+				var savedPlanName = session.user.subscription.planName;
+				angular.forEach(plans, function (plan) {
+					if (plan.name === savedPlanName) {
+						$scope.activePlan = plan;
+					}
+				});
+			}
+		}
+	};
 
 	var messages = {};
-	if (session.user) {
-		$scope.name = session.user.name;
-		$scope.email = session.user.email;
-		if (session.user.notifications && session.user.notifications.email) {
-			$scope.notificationEmail = session.user.notifications.email;
-		}
-		else {
-			$scope.notificationEmail = session.user.email;	
-		}
-	}
 	$scope.messages = messages;
 
 	var saveUser = function (user, callback) {
@@ -75,23 +106,6 @@ function ProfileCtrl(session, $scope, $http) {
 
 	var stripeKey = session.settings['stripe-public-key'].value;
 	if (stripeKey) {
-		$scope.activePlan = {};
-		var plans = [];
-		plans.push({
-			name: "Supporter",
-			displayAmount: "$5",
-			stripeAmount: 500
-		});
-		plans.push({
-			name: "Organizer",
-			displayAmount: "$20",
-			stripeAmount: 2000
-		});
-		plans.push({
-			name: "Patron",
-			displayAmount: "$100",
-			stripeAmount: 10000
-		});
 		$scope.plans = plans;
 		$scope.supportsPayments = true;
 
@@ -105,8 +119,10 @@ function ProfileCtrl(session, $scope, $http) {
 				data.stripeTokenId = token.id;
 				data.planName = activePlan.name;
 				$http.post('/payment/subscribe', data)
+
 				.success(function (data) {
-					console.log(data);
+					session.user.subscription = data;
+					session.save();
 				})
 				.error(function (data, status) {
 					console.log(data);
@@ -145,6 +161,9 @@ function ProfileCtrl(session, $scope, $http) {
 		if (session.user.id !== data.id) {
 			$scope.signOut();
 			console.log("Sorry, we thought you were someone else for a second. Please sign in again.");
+		}
+		else {
+			updateScope();
 		}
 	})
 	.error(function (data, status) {
