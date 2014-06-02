@@ -1067,6 +1067,10 @@ var configureSuccessful = function () {
 		var nextMeeting = db.stories.getNextMeetingByProjectId(projectId, handleNextMeeting);
 	});
 
+	app.post('/payment/subscribe', function (req, res) {
+		res.send(200);
+	});
+
 	// The secret to bridging Angular and Express in a 
 	// way that allows us to pass any path to the client.
 	// 
@@ -1173,6 +1177,14 @@ var initSettings = function (callback) {
 		name: "ssl-key-path",
 		value: null,
 		visibility: "private"
+	},{
+		name: "stripe-public-key",
+		value: null,
+		visibility: "public"
+	},{
+		name: "stripe-secret-key",
+		value: null,
+		visibility: "secret"
 	}];
 
 	var settingsTable = {};

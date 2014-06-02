@@ -30,6 +30,36 @@
 	</div>
 	<p>{{messages.password}}</p>
 
+	<div class="donations" ng-show="supportsPayments">
+		<h5>Subscription plan</h5>
+		<div class="row plans">
+			<div ng-repeat="plan in plans">
+				<div class="span2 plan" 
+					ng-class="{active: (activePlan === plan)}" 
+					ng-click="setPlan(plan)">
+					<div ng-if="plan.name === 'Supporter'">
+						<span class="support-circle"></span>
+					</div>
+					<div ng-if="plan.name === 'Organizer'">
+						<span class="support-circle"></span>
+						<span class="support-circle"></span>
+						<span class="support-circle"></span>
+					</div>
+					<div ng-if="plan.name === 'Patron'">
+						<span class="support-circle"></span>
+						<span class="support-circle"></span>
+						<span class="support-circle"></span>
+						<span class="support-circle"></span>
+						<span class="support-circle"></span>
+					</div>
+					<div class="name">{{plan.name}}</div>
+					<div class="amount">{{plan.displayAmount}} per month</div>
+				</div>
+			</div>
+			<div class="span2"><button class="btn" ng-click="openStripeCheckout($event)">Checkout</button></div>
+		</div>
+		
+	</div>
 </div>
 
 

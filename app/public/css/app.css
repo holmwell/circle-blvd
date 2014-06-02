@@ -492,6 +492,54 @@ input:focus, textarea:focus {
 .input-aligned {
   margin-top: 0.5ex;
 }
+.support-circle {
+  display: inline-block;
+
+  border: solid 1px transparent;
+  width: 26px;
+  height: 26px;
+  margin-left: -0.75ex;
+  
+  vertical-align: text-top;
+  
+  background-image: url("../img/glyphs/icon-circle.png");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+
+  opacity: 0.6;
+}
+.donations .plans {
+  margin-top: 1.3em;
+  margin-left: 0em;
+}
+.donations .plan {
+  padding-left: 0.75ex;
+  text-align: center;
+  border: solid 1px transparent;
+  margin-left: 0;
+}
+.donations .plan:hover {
+  cursor: pointer;
+}
+.donations .plan:hover .support-circle, 
+.donations .plan.active .support-circle {
+  background-image: url("../img/glyphs/icon-ok.png");
+}
+.donations .plan.active {
+  color: #1E69B5;
+  border: dotted 1px #1E69B5;
+}
+.donations .name {
+  margin-top: 0.75em;
+  margin-left: -0.75ex;
+}
+.donations .amount {
+  margin-left: -0.75ex;
+  font-size: smaller;
+}
+.donations .btn {
+  margin-left: 16px;
+}
 
 /* admin */
 .adminList {
@@ -530,3 +578,5 @@ input:focus, textarea:focus {
 .setting-row form {
   margin: 0;
 }
+
+

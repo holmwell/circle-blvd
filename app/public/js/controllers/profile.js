@@ -1,6 +1,7 @@
 'use strict';
 
 function ProfileCtrl(session, $scope, $http) {
+	$scope.supportsPayments = false;
 
 	var messages = {};
 	if (session.user) {
@@ -72,6 +73,62 @@ function ProfileCtrl(session, $scope, $http) {
 		});
 	};
 
+	var stripeKey = session.settings['stripe-public-key'].value;
+	if (stripeKey) {
+		$scope.activePlan = {};
+		var plans = [];
+		plans.push({
+			name: "Supporter",
+			displayAmount: "$5",
+			stripeAmount: 500
+		});
+		plans.push({
+			name: "Organizer",
+			displayAmount: "$20",
+			stripeAmount: 2000
+		});
+		plans.push({
+			name: "Patron",
+			displayAmount: "$100",
+			stripeAmount: 10000
+		});
+		$scope.plans = plans;
+		$scope.supportsPayments = true;
+
+		var stripeHandler = StripeCheckout.configure({
+			key: stripeKey,
+			image: '/img/logo-on-black-128px.png',
+			token: function (token, args) {
+				// Use the token to create the charge with a server-side script.
+				// You can access the token ID with `token.id`
+				console.log(token);
+			}
+		});
+
+		$scope.openStripeCheckout = function (e) {
+			var activePlan = $scope.activePlan;
+			if (!activePlan.name) {
+				return;
+			}
+			stripeHandler.open({
+				name: 'Circle Blvd.',
+				description: activePlan.name +
+				 " subscription (" + 
+				 	activePlan.displayAmount +
+				 	 " per month)",
+				amount: activePlan.stripeAmount,
+				panelLabel: "Pay {{amount}} per month",
+				email: session.user.email,
+				allowRememberMe: false
+			});
+			e.stopPropagation();
+		};	
+
+		$scope.setPlan = function (plan) {
+			$scope.activePlan = plan;
+		};
+	}
+	
 	// Get our data as a check to see if we should even be here.
 	$http.get('/data/user')
 	.success(function (data) {
