@@ -14,7 +14,8 @@
     "request": ">= 0.0.0",
     "node-uuid": ">=0.0.0",
     "nano": "4.1",
-    "nodemailer": "^0.6.3"
+    "nodemailer": "^0.6.3",
+    "stripe": "^2.6.3"
   },
   "devDependencies": {
     "karma-jasmine": "~0.1.5",
