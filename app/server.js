@@ -16,6 +16,9 @@ var initRoutes 	= require('./routes/init');
 
 var couchSessionStore = require('./lib/couch-session-store.js');
 
+var stripeProcessor = require('stripe');
+var stripe = undefined;
+
 var app = express();
 
 var initAuthentication = function () {
@@ -391,6 +394,9 @@ var configureSuccessful = function () {
 				if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
 					// TODO: Tell the client if we started the server?
 					tryToCreateHttpsServer();
+				}
+				if (setting.name === 'stripe-secret-key') {
+					stripe = stripeProcessor(setting.value);
 				}
 				res.send(200);
 			},
@@ -1067,8 +1073,86 @@ var configureSuccessful = function () {
 		var nextMeeting = db.stories.getNextMeetingByProjectId(projectId, handleNextMeeting);
 	});
 
-	app.post('/payment/subscribe', function (req, res) {
-		res.send(200);
+	app.post('/payment/subscribe', ensureAuthenticated, function (req, res) {
+		var data = req.body;
+		var user = req.user;
+		var planId = undefined;
+
+		if (data.planName === 'Supporter') {
+			planId = '2014-06-supporter';
+		}
+		if (data.planName === 'Organizer') {
+			planId = '2014-06-organizer';
+		}
+		if (data.planName === 'Patron') {
+			planId = '2014-06-patron';
+		}
+		if (!planId) {
+			return res.send(400, "Invalid plan name");
+		}
+
+		var onSuccess = function (updatedUser) {
+			res.send(200);
+		};
+		var onError = function (err) {
+			// TODO: Technically it's possible to update
+			// the Stripe data and not update our own 
+			// data, so we should have a fall-back plan
+			// if that happens.
+			handleError(err, res);
+		};
+
+		if (!user.subscription) {
+			// First time here!
+			var newCustomer = {
+				description: user.name + " (" + user.id + ")",
+				card: data.stripeTokenId,
+				plan: planId,
+				metadata: {
+					"id": user.id
+				}
+			};
+
+			stripe.customers.create(newCustomer, function (err, customer) {
+				if (err) {
+					return handleError(err, res);
+				}
+
+				var sub = {};
+				sub.created = customer.created;
+				sub.customerId = customer.id;
+				sub.subscriptionId = customer.subscriptions.data[0].id;
+				sub.planName = data.planName;
+
+				user.subscription = sub;
+				db.users.update(user, onSuccess, onError);
+			});
+		}
+		else {
+			// Returning customer
+			var customerId = user.subscription.customerId;
+			var subscriptionId = user.subscription.subscriptionId;
+			var newPlan = {
+				card: data.stripeTokenId,
+				plan: planId
+			};
+			stripe.customers.updateSubscription(
+				customerId, subscriptionId, newPlan,
+				function (err, subscription) {
+					if (err) {
+						return handleError(err, res);
+					}
+
+					var newSub = user.subscription;
+					newSub.subscriptionId = subscription.id;
+					newSub.planName = data.planName;
+					newSub.updated = subscription.start;
+
+					user.subscription = newSub;
+					db.users.update(user, onSuccess, onError);
+				}
+			);
+		}
 	});
 
 	// The secret to bridging Angular and Express in a 
@@ -1288,6 +1372,11 @@ app.configure(function() {
 			secret: sessionSecret,
 			cookie: cookieSettings
 		}));
+
+		var stripeApiKey = settings['stripe-secret-key'];
+		if (stripeApiKey) {
+			stripe = stripeProcessor(stripeApiKey.value);
+		}
 
 		initAuthentication();
 		app.use(app.router);

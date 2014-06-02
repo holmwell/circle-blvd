@@ -99,9 +99,19 @@ function ProfileCtrl(session, $scope, $http) {
 			key: stripeKey,
 			image: '/img/logo-on-black-128px.png',
 			token: function (token, args) {
-				// Use the token to create the charge with a server-side script.
-				// You can access the token ID with `token.id`
-				console.log(token);
+				var activePlan = $scope.activePlan;
+				var data = {};
+
+				data.stripeTokenId = token.id;
+				data.planName = activePlan.name;
+				$http.post('/payment/subscribe', data)
+				.success(function (data) {
+					console.log(data);
+				})
+				.error(function (data, status) {
+					console.log(data);
+					console.log(status);
+				});
 			}
 		});
 
