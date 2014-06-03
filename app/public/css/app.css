@@ -1,4 +1,8 @@
 /* app css stylesheet */
+.debug {
+  border: solid 1px red;
+  border: transparent;
+}
 
 /* global */
 .topMenu.navbar {
@@ -16,17 +20,33 @@
   padding: 0;
 }
 .topMenu .container-fluid .active a {
+  color: #eee;
   background: #222 !important;
 }
 
 .header {
   margin-bottom: 2em;
-  padding-left: 1.4em;
+/*  padding-left: 1.4em;
+  padding-right: 1.4em;*/
+  padding: 1px;
+  padding-top: 0;
+/*  text-align: center;*/
+
+  /*background-color: #666;*/
+  /*font-family: 'Headland One', serif;*/
+  /*font-size: larger;*/
 }
 .menu {
-  margin-top: 2.25em;
-  padding-left: 2ex;
+  padding-left: 0;
   list-style: none;
+
+  /*margin: auto;*/
+  margin-top: 1em;
+  margin-top: 2.25em;
+  margin-bottom: 1.2em;
+
+  /*font-size: larger;
+  width: 100%;*/
 }
 
 .menu > li {
@@ -43,6 +63,16 @@
   padding: 0;
 }
 
+/*.menu {
+  color: white;
+}
+.menu a {
+  color: white;
+}
+.menu a:hover {
+  color: #fafa00;
+}*/
+
 .jsLink {
   cursor: pointer;
 }
@@ -55,8 +85,8 @@
   background: white;
   padding: 3em;
   padding-top: 0;
-  padding-right: 0;
-  padding-left: 1.4em;
+  padding-right: 1.75ex;
+  padding-left: 1.75ex;
 
   width: 1100px !important;  
 
@@ -111,7 +141,6 @@ h4, h5 {
   background-color: #ddd;
   padding: 0.5ex;
   padding-left: 1.5ex;
-  margin-left: 5px;
   margin-bottom: 0.5em;
   cursor: move;
   min-width: 200px;
@@ -168,11 +197,8 @@ h4, h5 {
 .entry {
 
 }
-
 .entry-nav {
-  margin: 0;
-  margin-left: -8px;
-  margin-right: -2.25ex;
+
 }
 
 .new-story form {
@@ -180,20 +206,19 @@ h4, h5 {
 }
 .new-story {
   background-color: #ddd;
-  padding: 0.5ex;
   padding-top: 1ex;
   padding-bottom: 1ex;
+
   padding-left: 1.5ex;
   padding-right: 1.5ex;
   cursor: default;
 
   margin-top: 1ex;
-  margin-left: -8px;
-  margin-right: -2.25ex;
 }
 .new-story:hover {
   background-color: #eee;
 }
+
 .subtle {
   color: #ccc;
 }
@@ -207,26 +232,27 @@ h4, h5 {
   padding: 0.5ex;
   text-align: right;
   padding-bottom: 0;
+  padding-right: 1.5ex;
 }
 
 .alt-mode {
-  margin-top: 4.5em;
+  margin-top: 4.7em;
   cursor: pointer;
   opacity: 0.4;
-  padding-left: 1.5ex;
+  padding-left: 0.5ex;
 }
 .alt-mode.alt {
   opacity: 1.0;
 }
 .alt-mode:active {
   padding-top: 0.1ex;
-  padding-left: 1.6ex;
+  padding-left: 0.6ex;
 }
 
 .entry-facade .alt-mode {
   margin-top: 0.5ex;
   margin-left: 0;
-  padding-left: 1ex;
+  padding-left: 0.5ex;
 }
 .entry-facade .alt-mode:active {
   padding-top: 0.1ex;
@@ -406,8 +432,6 @@ input:focus, textarea:focus, select:focus {
   padding-bottom: 1.1ex;
   padding-left: 0.5ex;
   padding-right: 0;
-
-  margin-left: 5px;
 }
 .backlog-owner.after {
   color: #bbb;
@@ -436,14 +460,11 @@ input:focus, textarea:focus, select:focus {
   padding: 0.5ex;
   padding-top: 1.25ex;
   padding-bottom: 1.1ex;
-  margin-left: 1ex;
 
   text-align: right;
   opacity: 0.6;
-  width: 26px;
 }
 .backlog-mine {
-  margin-left: 0;
   opacity: 0.5;
 }
 
@@ -454,7 +475,6 @@ input:focus, textarea:focus, select:focus {
   width: 26px;
   height: 26px;
   margin-top: -0.75ex;
-  margin-left: -2.25ex;
   
   vertical-align: text-top;
   
@@ -471,7 +491,7 @@ input:focus, textarea:focus, select:focus {
 }
 .done-status:active {
   margin-top: -0.65ex;
-  margin-left: -2ex;
+  margin-left: -0.10ex;
 }
 .active-status {
   margin-top: -1.25ex;
@@ -504,7 +524,6 @@ label.relax {
   padding: 1ex;
   color: black;
   background-color: white;
-  margin-left: -0.5ex;
 }
 .archive.selected {
   cursor: default;
@@ -618,10 +637,7 @@ label.relax {
   margin: 0;
 }
 
-.debug {
-  border: solid 1px red !important;
-  border: transparent !important;
-}
+
 
 /* Typeahead */
 /* From: https://github.com/bassjobsen */

@@ -15,7 +15,7 @@
 <body ng-controller="TopLevelCtrl" ng-keydown="keydown($event)" ng-keyup="keyup($event)">
 <div id="topLevel">
 
-<div class="navbar navbar-inverse topMenu" role="navigation" ng-cloak>
+ <div class="navbar navbar-inverse topMenu" role="navigation" ng-cloak>
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-circles">
@@ -38,24 +38,39 @@
       </ul>
     </div>
   </div>
-</div>
 
+</div>
 <div class="container debug">
   <div class="header row debug">
-    <h2 class="pull-left debug"><a href="/">Circle Blvd.</a></h2>
+    <!--
+    <div class="navbar navbar-default" role="navigation" ng-cloak ng-show="isSignedIn()">
+      <div class="container-fluid">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/">Circle Blvd</a></li>
+            <li><a href="#/archives">Archives</a></li>
+            <li><a href="#/profile">Profile</a></li>
+            <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
+            
+            <li><a class="jsLink" ng-click="signOut()">Sign out</a></li>
+          </ul>
+      </div>
+    </div>
+     -->
+
+    <h2 class="debug col-xs-3"><a href="/">Circle Blvd.</a></h2>
     <ul class="menu col-xs-4" ng-show="!isSignedIn()">
-      <li><a href="#/signin">Sign in</a></li>
+       <li><a href="#/signin">Sign in</a></li>
     </ul>
 
-    <ul class="menu pull-left debug" ng-show="isSignedIn()">
+    <ul class="menu col-xs-4 debug" ng-show="isSignedIn()">
+      <!-- <li><a href="/">Circle Blvd</a></li> -->
       <li><a href="#/archives">Archives</a></li>
       <li><a href="#/profile">Profile</a></li>
       <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
       
       <li><a class="jsLink" ng-click="signOut()">Sign out</a></li>
-    </ul>
+    </ul> 
   </div>
-  
   <div class="view" ng-view></div>
 </div>
 
