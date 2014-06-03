@@ -2,7 +2,7 @@
 <!-- <button ng-click="debug()">Debug</button> -->
 <!-- <button ng-click="resetStories()">Reset stories</button> -->
 
-<div class="entry-facade row" ng-hide="isAddingNew">
+<div class="entry-facade col-xs-offset-2 col-xs-8" ng-hide="isAddingNew">
 	<div class="row entry-facade-container">
 		<div class="col-xs-2">&nbsp;</div>
 		<div class="col-xs-8 debug show-entry">
@@ -15,7 +15,7 @@
 	</div>
 </div>
 
-<div class="entry row" ng-show="isAddingNew">
+<div class="entry col-xs-offset-2 col-xs-8" ng-show="isAddingNew">
 	<div class="row">
 		<div class="col-xs-2 debug">&nbsp;</div>
 		<div class="col-xs-8 debug">
@@ -60,7 +60,7 @@
 	</div>
 </div>
 
-<div id="backlog" class="row debug">
+<div id="backlog" class="col-xs-offset-2 col-xs-8 debug">
 	<div class="storyWrapper row debug" ng-repeat="story in stories"
 		ng-hide="(isAltMode || isManualAltMode)
 		&& (!story.isMoving 
@@ -68,10 +68,10 @@
 		&& !story.isDeadline 
 		&& !story.isNextMeeting)" data-story-id="{{story.id}}">
 		<div class="col-xs-2 debug">
-			<div class="backlog-mine col-xs-offset-8 col-xs-2 debug">
+			<div class="backlog-mine col-xs-offset-6 col-xs-3 debug">
 				<i class="glyphicon glyphicon-arrow-right" ng-show="isStoryMine(story)"></i>
 			</div>
-			<div class="backlog-status col-xs-2 debug">
+			<div class="backlog-status col-xs-3 debug">
 				<i class="done-status" ng-show="story.isDeadline && !story.isAfterNextMeeting" 
 				ng-click="archive(story)" title="archive deadline"></i>
 				<i class="done-status" ng-show="isStoryDone(story)" ng-click="archive(story)" 

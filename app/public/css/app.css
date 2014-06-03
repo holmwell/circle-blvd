@@ -5,6 +5,9 @@
 }
 
 /* global */
+.topMenu, .header {
+  /*display: none;*/
+}
 .topMenu.navbar {
   margin: 0 !important;
   border: 0 !important;
