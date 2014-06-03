@@ -4,31 +4,32 @@
   <meta charset="utf-8">
   <title>Circle Blvd.</title>
   
-  <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap.min.nr.css" rel="stylesheet">
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
   <link href='//fonts.googleapis.com/css?family=Headland+One' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="css/app.css"/>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-  <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/js/bootstrap.min.js"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
 </head>
 <body ng-controller="TopLevelCtrl" ng-keydown="keydown($event)" ng-keyup="keyup($event)">
 <div id="topLevel">
 <div class="navbar navbar-inverse topMenu" role="navigation" ng-cloak>
-  <div class="navbar-inner">
-  <ul class="nav">
-    <li ng-repeat="circle in circleList()" ng-class="{active: isActiveCircle(circle)}">
-      <a class="jsLink" ng-click="setActiveCircle(circle, true)">{{circle.name}}</a>
-    </li>
-  </ul>
-  <ul class="nav pull-right">
-    <li ng-show="hasMainframeAccess()"><a href="#/mainframe">Mainframe access</a></li>
-  </ul>
+  <div class="container-fluid">
+    <ul class="nav navbar-nav">
+      <li ng-repeat="circle in circleList()" ng-class="{active: isActiveCircle(circle)}">
+        <a class="jsLink" ng-click="setActiveCircle(circle, true)">{{circle.name}}</a>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav pull-right">
+      <li ng-show="hasMainframeAccess()"><a href="#/mainframe">Mainframe access</a></li>
+    </ul>
   </div>
 </div>
 <div class="container">
   <div class="header row">
-    <h2 class="span3"><a href="/">Circle Blvd.</a></h2>
-    <ul class="menu span4" ng-show="!isSignedIn()">
+    <h2 class="col-md-3"><a href="/">Circle Blvd.</a></h2>
+    <ul class="menu col-md-4" ng-show="!isSignedIn()">
       <li><a href="#/signin">Sign in</a></li>
     </ul>
 
@@ -64,6 +65,7 @@
   <script src="js/lib/yui/dd.js"></script>
 
   <script src="js/lib/autosize/jquery.autosize.min.js"></script>
+  <script src="js/lib/typeahead/0.10.2.js"></script>
 
   <script src="js/app.js"></script>
   <script src="js/services.js"></script>

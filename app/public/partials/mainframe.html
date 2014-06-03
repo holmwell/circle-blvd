@@ -6,17 +6,24 @@
 
 <form id="circleForm">
 	<h4>Circles</h4>
-	<div><input type="text" ng-model="circle.name" placeholder="Circle name"/></div>
-	<div><input type="email" ng-model="circle.adminEmail" placeholder="Admin email address"/></div>
-	<div><button class="btn" ng-click="addCircle(circle)">Add circle</button></div>
-	<div class="adminList">
-		<div ng-repeat="circle in circles" ng-class-odd="'odd'">
-			<div class="row">
-				<div class="span3">{{circle.name}}</div>
-			</div>
+	<div class="row">
+		<div class="col-md-3">
+			<div><input type="text" ng-model="circle.name" 
+				placeholder="Circle name" class="form-control"/></div>
+			<div><input type="email" ng-model="circle.adminEmail" 
+				placeholder="Admin email address" class="form-control"/></div>
+			<div><button class="btn btn-default" ng-click="addCircle(circle)">Add circle</button></div>
 		</div>
 	</div>
 </form>
+
+<ul class="adminList">
+	<li ng-repeat="circle in circles" ng-class-odd="'odd'">
+		<div class="row">
+			<div class="col-md-3">{{circle.name}}</div>
+		</div>
+	</li>
+</ul>
 
 
 <h4 id="settingForm">Settings</h4>
@@ -24,16 +31,16 @@
 	<div ng-repeat="setting in settings" class="setting-row" ng-class-odd="'odd'">
 		<form ng-show="!isBooleanSetting(setting)">
 			<div class="row">
-				<label class="name span2">{{setting.name}}</label>
-				<div class="span3" ng-hide="setting.visibility === 'secret'">
-					<input type="text" ng-model="setting.value" placeholder="Value"/>
+				<label class="name col-md-2">{{setting.name}}</label>
+				<div class="col-md-3" ng-hide="setting.visibility === 'secret'">
+					<input type="text" ng-model="setting.value" placeholder="Value" class="form-control"/>
 				</div>
-				<div class="span3" ng-show="setting.visibility === 'secret'">
-					<input type="password" ng-model="setting.value" placeholder="(secret)"/>
+				<div class="col-md-3" ng-show="setting.visibility === 'secret'">
+					<input type="password" ng-model="setting.value" placeholder="(secret)" class="form-control"/>
 				</div>
-				<div class="name span2">{{setting.visibility}}</div>
-				<div class="span2">
-					<button class="btn" ng-click="updateSetting(setting)">Save</button>
+				<div class="name col-md-2">{{setting.visibility}}</div>
+				<div class="col-md-2">
+					<button class="btn btn-default" ng-click="updateSetting(setting)">Save</button>
 				</div>
 			</div>
 		</form>
@@ -41,13 +48,13 @@
 
 		<form ng-show="isBooleanSetting(setting)">
 			<div class="row">
-				<label class="name span2">{{setting.name}}</label>
-				<div class="span3">
+				<label class="name col-md-2">{{setting.name}}</label>
+				<div class="col-md-3">
 					<input type="checkbox" ng-model="setting.value"/>
 				</div>
-				<div class="name span2">{{setting.visibility}}</div>
-				<div class="span2">
-					<button class="btn" ng-click="updateSetting(setting)">Save</button>
+				<div class="name col-md-2">{{setting.visibility}}</div>
+				<div class="col-md-2">
+					<button class="btn btn-default" ng-click="updateSetting(setting)">Save</button>
 				</div>
 			</div>
 		</form>

@@ -3,8 +3,9 @@
 /* global */
 .topMenu.navbar {
   margin: 0 !important;
+  border: 0 !important;
 }
-.topMenu .navbar-inner {
+.topMenu .container-fluid {
   background-image: none !important;
   background-color: #222 !important;
   border-radius: 0 !important;
@@ -12,8 +13,9 @@
   -webkit-box-shadow: none !important;
   -moz-box-shadow: none !important;
   box-shadow: none !important; 
+  padding: 0;
 }
-.topMenu .navbar-inner .active a {
+.topMenu .container-fluid .active a {
   background: #222 !important;
 }
 
@@ -64,6 +66,10 @@ body {
 
 h2, h3 {
   font-family: 'Headland One', serif;
+  font-weight: bold;
+}
+h4, h5 {
+  font-weight: bold;
 }
 
 .view {
@@ -84,15 +90,17 @@ h2, h3 {
   color: #888;
 }
 
+.form-control {
+  margin-bottom: 1ex;
+}
+
 
 /* home */
 #backlog {
-  padding-top: 1.5em;
+  padding-top: 1ex;
 }
 .storyWrapper {
-  /* Make the width of the draggable piece
-     as small as it can be */
-  float: left;
+
 }
 .story, .archive {
   background-color: #ddd;
@@ -153,14 +161,13 @@ h2, h3 {
 }
 
 .entry {
-  /* This is the width of the backlog-status panel */
-  margin-left: 31px;
+
 }
 
 .entry-nav {
   margin: 0;
   margin-left: -8px;
-  margin-right: -8px;
+  margin-right: -2.25ex;
 }
 
 .new-story form {
@@ -172,11 +179,13 @@ h2, h3 {
   padding-top: 1ex;
   padding-bottom: 1ex;
   padding-left: 1.5ex;
+  padding-right: 1.5ex;
   cursor: default;
 
   margin-top: 1ex;
   margin-left: -8px;
   margin-right: -8px;
+  margin-right: -2.25ex;
 }
 .new-story:hover {
   background-color: #eee;
@@ -184,33 +193,40 @@ h2, h3 {
 .subtle {
   color: #ccc;
 }
-.subtle:hover {
+.subtle a:hover {
   color: #aaa;
+}
+.entry-facade-container {
+  padding: 0;
 }
 .show-entry {
   padding: 0.5ex;
   text-align: right;
+  padding-bottom: 0;
 }
 
 .alt-mode {
-  margin-top: 3.9em;
+  margin-top: 4.5em;
   cursor: pointer;
-
-  padding-left: 0.5ex;
-  margin-left: 11px;
   opacity: 0.4;
-  width: 40px;
+  padding-left: 1.5ex;
 }
 .alt-mode.alt {
   opacity: 1.0;
 }
 .alt-mode:active {
   padding-top: 0.1ex;
-  padding-left: 0.6ex;
+  padding-left: 1.6ex;
 }
+
 .entry-facade .alt-mode {
-  margin-left: 2px;
-  margin-top: 0.6ex;
+  margin-top: 0.5ex;
+  margin-left: 0;
+  padding-left: 1ex;
+}
+.entry-facade .alt-mode:active {
+  padding-top: 0.1ex;
+  padding-left: 0.6ex;
 }
 
 
@@ -257,7 +273,7 @@ h2, h3 {
 }
 
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
   border-color: #999 !important;
   box-shadow: none !important;
 }
@@ -270,6 +286,7 @@ input:focus, textarea:focus {
 .summary .deselect  {
   cursor: pointer;
   margin-top: 0.5ex;
+  text-align: right;
 }
 
 .summary .deselect, .summary .deselect a {
@@ -277,7 +294,7 @@ input:focus, textarea:focus {
 }
 
 .summary .deselect, .created-by {
-  margin-right: 1ex;
+  margin-right: 1.5ex;
 }
 
 .top-info {
@@ -297,8 +314,12 @@ input:focus, textarea:focus {
   margin-top: 1ex;
 }
 
+.story .textarea-container {
+  padding-right: 1.5ex;
+}
+
 .description textarea, .commentArea textarea {
-  width: 95%;
+  /*width: 95%;*/
   height: 6em;
   margin-bottom: 0;
   background-color: #ddd;
@@ -320,7 +341,7 @@ input:focus, textarea:focus {
   margin: 0.5ex;
   margin-top: 1ex;
   margin-bottom: 1ex;
-  margin-left: 2ex;
+  margin-left: 1.25ex;
 }
 .comment .text, .archive .preformatted {
   /* From 2006: http://longren.io/wrapping-text-inside-pre-tags/ */
@@ -388,8 +409,7 @@ input:focus, textarea:focus {
   color: #bbb;
 }
 .backlog-mine {
-  margin-left: -10px;
-  margin-right: -50px;
+  margin-left: -35px;
   margin-top: 1ex;
   opacity: 0.5;
 }
@@ -397,9 +417,7 @@ input:focus, textarea:focus {
   padding-left: 0.5ex;
   display: inline-block;
   opacity: 0.5;
-}
-.notify .icon-envelope {
-  margin-top: 0.25ex;
+  vertical-align: -2px;
 }
 .notify:hover {
   opacity: 0.3;
@@ -431,7 +449,7 @@ input:focus, textarea:focus {
   width: 26px;
   height: 26px;
   margin-top: -0.75ex;
-  margin-left: -1.75ex;
+  margin-left: -2.25ex;
   
   vertical-align: text-top;
   
@@ -448,7 +466,7 @@ input:focus, textarea:focus {
 }
 .done-status:active {
   margin-top: -0.65ex;
-  margin-left: -1.65ex;
+  margin-left: -2ex;
 }
 .active-status {
   margin-top: -1.25ex;
@@ -465,6 +483,9 @@ input:focus, textarea:focus {
 }
 .actionRow .remember {
   padding-top: 0.6ex;
+}
+label.relax {
+  font-weight: normal;
 }
 
 /* archive */
@@ -514,7 +535,7 @@ input:focus, textarea:focus {
 .donations .plan {
   padding-top: 1.2em;
   padding-bottom: 1.2em;
-  padding-left: 0.75ex;
+  padding-left: 3ex;
   text-align: center;
   border: solid 1px transparent;
   margin-left: 0;
@@ -539,16 +560,17 @@ input:focus, textarea:focus {
   font-size: smaller;
 }
 .donations .btn {
-  margin-left: 16px;
+
 }
 .donations .checkout {
-  padding-top: 1.2em;
+  padding-top: 1em;
+  padding-left: 1ex;
 }
 
 .donations .cancel {
-  margin-left: -0.75ex;
   text-align: center;
   padding-top: 1.2em;
+  padding-left: 3ex;
 }
 
 /* admin */
@@ -556,6 +578,7 @@ input:focus, textarea:focus {
   list-style: none;
   margin-left: 0;
   margin-top: 1.2em;
+  padding-left: 0;
 }
 .adminList li {
 
@@ -567,6 +590,7 @@ input:focus, textarea:focus {
 
 .adminList  .row {
   padding: 8px;
+  margin-left: -1.5ex;
 }
 
 .adminList .removeUser {
@@ -589,4 +613,52 @@ input:focus, textarea:focus {
   margin: 0;
 }
 
+.debug {
+  border: solid 1px red !important;
+}
 
+/* Typeahead */
+/* From: https://github.com/bassjobsen */
+.tt-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 160px;
+  padding: 5px 0;
+  margin: 2px 0 0;
+  list-style: none;
+  font-size: 14px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  -webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+  background-clip: padding-box;
+}
+.tt-suggestion > p {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.428571429;
+  color: #333333;
+  white-space: nowrap;
+}
+.tt-suggestion > p:hover,
+.tt-suggestion > p:focus,
+.tt-suggestion.tt-cursor p {
+  color: #ffffff;
+  text-decoration: none;
+  outline: 0;
+  background-color: #428bca;
+}
+.twitter-typeahead {
+  width: 100%;
+}
+.twitter-typeahead input:focus, .twitter-typeahead input:hover {
+  background-color: white !important;
+}

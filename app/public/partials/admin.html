@@ -6,14 +6,20 @@
 <form>
 	<h4>Users</h4>
 	<div class="row">
-		<div class="span3">
-			<input type="text" ng-model="userName" placeholder="Display name"/>
-			<input type="email" ng-model="userEmail" placeholder="Email"/>
-			<input type="password" ng-model="userPassword" placeholder="Password"/>
-			<button class="btn" ng-click="addUser(userName, userEmail, userPassword, userGroups)">Add user</button>
+		<div class="col-md-3">
+			<input class="form-control" type="text" 
+			ng-model="userName" placeholder="Display name"/>
+			
+			<input class="form-control" type="email" 
+			ng-model="userEmail" placeholder="Email"/>
+			
+			<input  class="form-control" type="password" 
+			ng-model="userPassword" placeholder="Password"/>
+			
+			<button class="btn btn-default" ng-click="addUser(userName, userEmail, userPassword, userGroups)">Add user</button>
 		</div>
 
-		<div class="span3">
+		<div class="col-md-3">
 			<div style="margin-bottom: 1ex;">Select groups:</div>
 			<div ng-repeat="group in groups">
 				<div class="checkbox" ng-hide="isGroupImplied(group)">
@@ -28,14 +34,14 @@
 <ul class="adminList">
 	<li ng-repeat="user in users" ng-class-odd="'odd'">
 		<div class="row">
-			<div class="name span3">{{user.name}}</div>
-			<div class="email span3">{{user.email}}</div>
-			<div class="roles span3">
+			<div class="name col-md-3">{{user.name}}</div>
+			<div class="email col-md-3">{{user.email}}</div>
+			<div class="roles col-md-3">
 				<span ng-repeat="membership in user.memberships">
 					{{getGroupName(membership.group)}}
 				</span>
 			</div>
-			<div class="removeUser span2" ng-click="removeUser(user)" title="remove user"><i class="icon-trash"></i></div>
+			<div class="removeUser col-md-2" ng-click="removeUser(user)" title="remove user"><i class="glyphicon glyphicon-trash"></i></div>
 		</div>
 	</li>
 </ul>
@@ -43,14 +49,15 @@
 <form id="groupForm">
 	<h4>Groups</h4>
 	<div class="row">
-		<div class="span3"><input type="text" ng-model="groupName" placeholder="Name"/></div>
-		<div class="span2"><button class="btn" ng-click="addGroup(groupName)">Add group</button></div>
+		<div class="col-md-3"><input type="text" ng-model="groupName" 
+			placeholder="Name" class="form-control" /></div>
+		<div class="col-md-2"><button class="btn btn-default" ng-click="addGroup(groupName)">Add group</button></div>
 	</div>
 	<ul class="adminList">
 		<li ng-repeat="group in groups" ng-class-odd="'odd'">
 			<div class="row" ng-hide="isGroupImplied(group)">
-				<div class="name span3">{{group.name}}</div>
-				<div class="removeUser span2" ng-hide="group.isPermanent" ng-click="removeGroup(group)" title="remove group"><i class="icon-trash"></i></div>
+				<div class="name col-md-3">{{group.name}}</div>
+				<div class="removeUser col-md-2" ng-hide="group.isPermanent" ng-click="removeGroup(group)" title="remove group"><i class="glyphicon glyphicon-trash"></i></div>
 			</div>
 		</li>
 	</ul>

@@ -1,17 +1,17 @@
 <div class="row">
-	<form class="span4">
+	<form class="col-md-4">
 		<p>Welcome to Circle Boulevard.</p>
-		<div><input type="text" ng-model="user.email" placeholder="Email address"/></div>
-		<div><input type="password" ng-model="user.password" placeholder="Password"/></div>
-		<div class="span3 actionRow">
-			<div class="checkbox pull-left remember">
-				<label><input type="checkbox" ng-model="rememberMe"/>Remember me</label>
+		<div><input type="text" ng-model="user.email" placeholder="Email address" class="form-control"/></div>
+		<div><input type="password" ng-model="user.password" placeholder="Password" class="form-control"/></div>
+		<div class="actionRow">
+			<div class="checkbox-inline remember pull-left">
+				<label class="relax"><input type="checkbox" ng-model="rememberMe"/>Remember me</label>
 			</div>
-			<button class="btn pull-right" type="submit" ng-click="signIn()">Sign in</button> 
+			<button class="btn btn-default pull-right" type="submit" ng-click="signIn()">Sign in</button> 
 		</div>
 	</form>
 
-	<div class="span6" ng-show="isDemo">
+	<div class="col-md-6" ng-show="isDemo">
 		<p>To preview the site, please sign in:</p>
 		<ul>
 			<li>demo@circleblvd.org</li>

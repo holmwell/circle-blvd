@@ -54,12 +54,51 @@ directive('typeaheadOwners', function () {
 	return {
 		restrict: 'A',
 		link: function(scope, elem, attr, ctrl) {
-			// Uses: http://getbootstrap.com/2.3.2/javascript.html#typeahead
+			// Uses: https://github.com/twitter/typeahead.js
 			var array = scope.owners; 
-			var options = {
-				source: array
+			var sourceFunction = function (query, callback) {
+				// HACK: This is a quick hack to migrate
+				// from Bootstrap 2 to 3. Actual work should
+				// be done on this.
+				var matches = [];
+				var lowerCaseQuery = query.toLowerCase();
+				angular.forEach(array, function (owner) {
+					var lowerCaseOwner = owner.toLowerCase();
+					if (lowerCaseOwner.slice(0, query.length) === lowerCaseQuery) {
+						matches.push(owner);
+					}
+				});
+				callback(matches);
 			};
-			elem.typeahead(options);
+
+			var displayKeyFunction = function (obj) {
+				return obj;
+			};
+
+			var options = {
+				hint: true,
+				highlight: true,
+				minLength: 1
+			};
+			var dataset = {
+				source: sourceFunction,
+				displayKey: displayKeyFunction
+			};
+
+			elem.typeahead(options, dataset);
+
+			elem.on("typeahead:selected", function (jQuery, suggestion, datasetName) {
+				elem.trigger('input');
+			});
+
+			// This messes up the selection highlight.
+			// elem.on("typeahead:cursorchanged", function (jQuery, suggestion, datasetName) {
+			// 	elem.trigger('input');
+			// });
+
+			elem.on("typeahead:autocompleted", function (jQuery, suggestion, datasetName) {
+				elem.trigger('input');
+			});
 		}
 	};
 });
