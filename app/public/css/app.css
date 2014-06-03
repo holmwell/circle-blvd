@@ -15,7 +15,7 @@
   box-shadow: none !important; 
   padding: 0;
 }
-.topMenu .container .active a {
+.topMenu .container-fluid .active a {
   background: #222 !important;
 }
 
