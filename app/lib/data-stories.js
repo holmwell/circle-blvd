@@ -347,6 +347,8 @@ module.exports = function () {
 
 	var moveStory = function (story, newNextId, success, failure) {
 		var storiesToSave = {};
+		var saveChecks = [];
+
 		var addToStoriesToSave = function (s) {
 			if (s) {
 				if (storiesToSave[s.id]) {
@@ -356,12 +358,30 @@ module.exports = function () {
 					console.log("DUPLICATE SAVE. DOC CONFLICT. INTEGRITY BROKEN.");
 					console.log(storiesToSave[s.id]);
 					console.log(s);
+					return false;
 				}
 				storiesToSave[s.id] = s;
 			}
+			return true;
 		};
 
-		var saveStories = function () {
+		var saveStories = function (integrityChecks) {
+			if (integrityChecks) {
+				var passesChecks = true;
+				integrityChecks.forEach(function (check) {
+					if (!check) {
+						passesChecks = false;
+					}
+				});
+
+				if (!passesChecks) {
+					return failure({
+						message: "Story move failed to pass integrity checks.",
+						stories: storiesToSave
+					});
+				}
+			}
+
 			couch.stories.transaction(storiesToSave, function (err, response) {
 				if (err) {
 					// We maybe had some document conflicts and should
@@ -433,7 +453,7 @@ module.exports = function () {
 								if (preMovePreviousStory) {
 									// base case
 									preMovePreviousStory.nextId = storyToMove.nextId;	
-									addToStoriesToSave(preMovePreviousStory);
+									saveChecks.push(addToStoriesToSave(preMovePreviousStory));
 								}
 								else if (preMoveNextStory) {
 									// if there is no preMovePreviousStory, that
@@ -442,7 +462,7 @@ module.exports = function () {
 									// So, the new first story is the preMoveNextStory.
 									storyToMove.isFirstStory = false;
 									preMoveNextStory.isFirstStory = true;
-									addToStoriesToSave(preMoveNextStory);									
+									saveChecks.push(addToStoriesToSave(preMoveNextStory));
 								}
 								
 								storyToMove.nextId = newNextId;
@@ -455,7 +475,7 @@ module.exports = function () {
 									}
 									else {
 										storyC.nextId = storyToMove.id;
-										addToStoriesToSave(storyC);	
+										saveChecks.push(addToStoriesToSave(storyC));	
 									}
 								}
 								else {
@@ -467,12 +487,12 @@ module.exports = function () {
 									}
 									else {
 										firstStory.isFirstStory = false;
-										addToStoriesToSave(firstStory);	
+										saveChecks.push(addToStoriesToSave(firstStory));	
 									}
 								}
 
-								addToStoriesToSave(storyToMove);
-								saveStories();
+								saveChecks.push(addToStoriesToSave(storyToMove));
+								saveStories(saveChecks);
 							});
 						});
 					});
