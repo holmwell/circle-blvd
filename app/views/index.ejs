@@ -14,18 +14,32 @@
 </head>
 <body ng-controller="TopLevelCtrl" ng-keydown="keydown($event)" ng-keyup="keyup($event)">
 <div id="topLevel">
+
 <div class="navbar navbar-inverse topMenu" role="navigation" ng-cloak>
-  <div class="container">
-    <ul class="nav navbar-nav">
-      <li ng-repeat="circle in circleList()" ng-class="{active: isActiveCircle(circle)}">
-        <a class="jsLink" ng-click="setActiveCircle(circle, true)">{{circle.name}}</a>
-      </li>
-    </ul>
-    <ul class="nav navbar-nav pull-right">
-      <li ng-show="hasMainframeAccess()"><a href="#/mainframe">Mainframe access</a></li>
-    </ul>
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-circles">
+          <span class="sr-only">Show circles</span>
+          <span class="icon-bar">.</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">O</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="navigation-circles">
+      <ul class="nav navbar-nav">
+        <li ng-repeat="circle in circleList()" ng-class="{active: isActiveCircle(circle)}">
+          <a class="jsLink" ng-click="setActiveCircle(circle, true)">{{circle.name}}</a>
+        </li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li ng-show="hasMainframeAccess()"><a href="#/mainframe">Mainframe access</a></li>
+      </ul>
+    </div>
   </div>
 </div>
+
 <div class="container">
   <div class="header row">
     <h2 class="col-xs-3"><a href="/">Circle Blvd.</a></h2>
