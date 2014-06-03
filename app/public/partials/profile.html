@@ -4,17 +4,17 @@
 
 <div ng-show="isSignedIn()">
 	<div class="row">
-		<div class="col-md-3"><input ng-model="name" type="text" class="form-control"/></div>
-		<div class="col-md-3"><input ng-model="email" type="text" class="form-control"/></div>
-		<div class="col-md-2"><button class="btn btn-default" ng-click="updateUser(name, email)" class="form-control">Save</button></div>
+		<div class="col-xs-3"><input ng-model="name" type="text" class="form-control"/></div>
+		<div class="col-xs-3"><input ng-model="email" type="text" class="form-control"/></div>
+		<div class="col-xs-2"><button class="btn btn-default" ng-click="updateUser(name, email)" class="form-control">Save</button></div>
 	</div>
 	<p>{{messages.user}}</p>
 
 	<h5>Email address used for notifications</h5>
 	<div class="row">
-		<div class="col-md-3"><input ng-model="notificationEmail" type="email" class="form-control"/></div>
-		<div class="col-md-3 input-aligned">People can see this address.</div>
-		<div class="col-md-2">
+		<div class="col-xs-3"><input ng-model="notificationEmail" type="email" class="form-control"/></div>
+		<div class="col-xs-3 input-aligned">People can see this address.</div>
+		<div class="col-xs-2">
 			<button class="btn btn-default" 
 			ng-click="updateNotificationEmail(notificationEmail)">Save</button> 
 		</div>
@@ -23,9 +23,9 @@
 
 	<h5>Change password</h5>
 	<div class="row">
-		<div class="col-md-3"><input ng-model="pass1" type="password" placeholder="New password" class="form-control"></div>
-		<div class="col-md-3"><input ng-model="pass2" type="password" placeholder="Again" class="form-control"></div>
-		<div class="col-md-2"><button class="btn btn-default" ng-click="updatePassword(pass1, pass2)" class="form-control">Update</button></div>
+		<div class="col-xs-3"><input ng-model="pass1" type="password" placeholder="New password" class="form-control"></div>
+		<div class="col-xs-3"><input ng-model="pass2" type="password" placeholder="Again" class="form-control"></div>
+		<div class="col-xs-2"><button class="btn btn-default" ng-click="updatePassword(pass1, pass2)" class="form-control">Update</button></div>
 	</div>
 	<p>{{messages.password}}</p>
 
@@ -33,7 +33,7 @@
 		<h5>Subscription plan</h5>
 		<div class="row plans">
 			<div ng-repeat="plan in plans">
-				<div class="col-md-2 plan" 
+				<div class="col-xs-2 plan" 
 					ng-class="{active: (activePlan === plan)}" 
 					ng-click="setPlan(plan)">
 					<div ng-if="plan.name === 'Supporter'">
@@ -55,10 +55,10 @@
 					<div class="amount">{{plan.displayAmount}} per month</div>
 				</div>
 			</div>
-			<div class="col-md-2 checkout"><button class="btn btn-default" ng-click="openStripeCheckout($event)">Checkout</button></div>
+			<div class="col-xs-2 checkout"><button class="btn btn-default" ng-click="openStripeCheckout($event)">Checkout</button></div>
 		</div>
 
-		<p ng-show="activePlan.name" class="col-md-6 subtle cancel"><a class="jsLink subtle" ng-click="cancelSubscription()">cancel subscription</a></p>
+		<p ng-show="activePlan.name" class="col-xs-6 subtle cancel"><a class="jsLink subtle" ng-click="cancelSubscription()">cancel subscription</a></p>
 	</div>
 </div>
 

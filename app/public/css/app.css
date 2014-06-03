@@ -5,7 +5,7 @@
   margin: 0 !important;
   border: 0 !important;
 }
-.topMenu .container-fluid {
+.topMenu .container {
   background-image: none !important;
   background-color: #222 !important;
   border-radius: 0 !important;
@@ -15,7 +15,7 @@
   box-shadow: none !important; 
   padding: 0;
 }
-.topMenu .container-fluid .active a {
+.topMenu .container .active a {
   background: #222 !important;
 }
 
@@ -49,11 +49,13 @@
   clear: left;
 }
 
-.container, .container-fluid {
-    background: white;
-    padding: 3em;
-    padding-right: 6em;
-    padding-top: 1em; 
+.container {
+  background: white;
+  padding: 3em;
+  padding-right: 6em;
+  padding-top: 1em; 
+
+  width: 1050px !important;  
 
     /* horizontal offset, vertical offset, thickness, fade */
 /*    -webkit-box-shadow:  0px 0px 8px 1px rgba(44, 44, 44, 1);

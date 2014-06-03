@@ -7,7 +7,7 @@
 <form id="circleForm">
 	<h4>Circles</h4>
 	<div class="row">
-		<div class="col-md-3">
+		<div class="col-xs-3">
 			<div><input type="text" ng-model="circle.name" 
 				placeholder="Circle name" class="form-control"/></div>
 			<div><input type="email" ng-model="circle.adminEmail" 
@@ -20,7 +20,7 @@
 <ul class="adminList">
 	<li ng-repeat="circle in circles" ng-class-odd="'odd'">
 		<div class="row">
-			<div class="col-md-3">{{circle.name}}</div>
+			<div class="col-xs-3">{{circle.name}}</div>
 		</div>
 	</li>
 </ul>
@@ -31,15 +31,15 @@
 	<div ng-repeat="setting in settings" class="setting-row" ng-class-odd="'odd'">
 		<form ng-show="!isBooleanSetting(setting)">
 			<div class="row">
-				<label class="name col-md-2">{{setting.name}}</label>
-				<div class="col-md-3" ng-hide="setting.visibility === 'secret'">
+				<label class="name col-xs-2">{{setting.name}}</label>
+				<div class="col-xs-3" ng-hide="setting.visibility === 'secret'">
 					<input type="text" ng-model="setting.value" placeholder="Value" class="form-control"/>
 				</div>
-				<div class="col-md-3" ng-show="setting.visibility === 'secret'">
+				<div class="col-xs-3" ng-show="setting.visibility === 'secret'">
 					<input type="password" ng-model="setting.value" placeholder="(secret)" class="form-control"/>
 				</div>
-				<div class="name col-md-2">{{setting.visibility}}</div>
-				<div class="col-md-2">
+				<div class="name col-xs-2">{{setting.visibility}}</div>
+				<div class="col-xs-2">
 					<button class="btn btn-default" ng-click="updateSetting(setting)">Save</button>
 				</div>
 			</div>
@@ -48,12 +48,12 @@
 
 		<form ng-show="isBooleanSetting(setting)">
 			<div class="row">
-				<label class="name col-md-2">{{setting.name}}</label>
-				<div class="col-md-3">
+				<label class="name col-xs-2">{{setting.name}}</label>
+				<div class="col-xs-3">
 					<input type="checkbox" ng-model="setting.value"/>
 				</div>
-				<div class="name col-md-2">{{setting.visibility}}</div>
-				<div class="col-md-2">
+				<div class="name col-xs-2">{{setting.visibility}}</div>
+				<div class="col-xs-2">
 					<button class="btn btn-default" ng-click="updateSetting(setting)">Save</button>
 				</div>
 			</div>
