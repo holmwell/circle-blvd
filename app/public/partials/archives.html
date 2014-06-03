@@ -1,7 +1,8 @@
 
 
-<div id="backlog" class="col-xs-offset-2 clear archives">
-	<div class="storyWrapper col-xs-10" ng-repeat="archive in archives">
+<div id="backlog" class="row archives">
+	<div class="storyWrapper col-xs-12" ng-repeat="archive in archives">
+		<div class="backlog-mine col-xs-1">&nbsp;</div>
 		<div class="backlog-status col-xs-1">&nbsp;</div>
 		<div class="archive col-xs-9" ng-class="{ 
 			selected: archive.isSelected,

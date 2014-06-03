@@ -2,8 +2,9 @@
 <!-- <button ng-click="debug()">Debug</button> -->
 <!-- <button ng-click="resetStories()">Reset stories</button> -->
 
-<div class="entry-facade col-xs-offset-2" ng-hide="isAddingNew">
-	<div class="col-xs-10 entry-facade-container">
+<div class="entry-facade row" ng-hide="isAddingNew">
+	<div class="col-xs-12 entry-facade-container">
+		<div class="backlog-mine col-xs-1">&nbsp;</div>
 		<div class="backlog-status col-xs-1">&nbsp;</div>
 		<div class="col-xs-9 show-entry">
 		+ <a ng-click="showEntry()" class="jsLink">Add story</a>
@@ -15,8 +16,9 @@
 	</div>
 </div>
 
-<div class="entry col-xs-offset-2" ng-show="isAddingNew">
-	<div class="col-xs-10">
+<div class="entry row" ng-show="isAddingNew">
+	<div class="col-xs-12">
+		<div class="backlog-mine col-xs-1">&nbsp;</div>
 		<div class="backlog-status col-xs-1">&nbsp;</div>
 		<div class="col-xs-9">
 			<ul class="entry-nav nav nav-pills">
@@ -61,14 +63,14 @@
 	</div>
 </div>
 
-<div id="backlog" class="col-xs-offset-2 clear">
-	<div class="storyWrapper col-xs-10" ng-repeat="story in stories"
+<div id="backlog" class="row debug">
+	<div class="storyWrapper col-xs-12 debug" ng-repeat="story in stories"
 		ng-hide="(isAltMode || isManualAltMode)
 		&& (!story.isMoving 
 		&& story.isAfterNextMeeting
 		&& !story.isDeadline 
 		&& !story.isNextMeeting)" data-story-id="{{story.id}}">
-		<div class="backlog-mine pull-left">
+		<div class="backlog-mine col-xs-1">
 			<i class="glyphicon glyphicon-arrow-right" ng-show="isStoryMine(story)"></i>
 		</div>
 		<div class="backlog-status col-xs-1">
@@ -79,15 +81,15 @@
 			<i class="active-status" ng-show="isStoryActive(story)"></i>
 			
 		</div>
-		<div class="story col-xs-9" ng-class="{ 
-			selected: story.isSelected, 
-			'not-selected': !story.isSelected,
-			first: story.isFirstStory,
-			deadline: story.isDeadline,
-			'next-meeting': story.isNextMeeting,
-			'after-meeting': story.isAfterNextMeeting
-		}"
-		ng-click="select(story)">
+		<div class="story col-xs-9 debug" ng-class="{ 
+				selected: story.isSelected, 
+				'not-selected': !story.isSelected,
+				first: story.isFirstStory,
+				deadline: story.isDeadline,
+				'next-meeting': story.isNextMeeting,
+				'after-meeting': story.isAfterNextMeeting
+			}"
+			ng-click="select(story)">
 			<div ng-if="story.isSelected">
 				<form>
 					<div class="summary row">
@@ -147,8 +149,7 @@
 			<span class="not-selected" ng-show="!story.isSelected" id="story-{{$index}}">{{story.summary}}</span>
 		</div>
 
-		<div 
-			class="backlog-owner col-xs-2" 
+		<div class="backlog-owner col-xs-2 debug" 
 			ng-class="{'after': story.isAfterNextMeeting}"
 			ng-click="select(story)">{{story.owner}}<span ng-show="isStoryNew(story)">?</span>
 			<div 
@@ -159,7 +160,6 @@
 				<span ng-show="story.isNotifying">o</span>
 				<i ng-show="story.isOwnerNotified" title="ok!" class="glyphicon glyphicon-ok"></i>
 			</div>
-
 		</div>
 	</div> <!-- ng-repeat -->
 </div> <!-- backlog -->
