@@ -2,7 +2,14 @@
 <!-- <button ng-click="debug()">Debug</button> -->
 <!-- <button ng-click="resetStories()">Reset stories</button> -->
 
-<div class="entry-facade col-xs-offset-2 col-xs-8" ng-hide="isAddingNew">
+<div ng-show="isBacklogBroken" class="brokenHeading col-xs-offset-2 col-xs-8">
+	<h4>Something is broken, but you can help</h4>
+	<p>Hi! Sorry, Circle Blvd is broken &ndash; it's not you, it's me, Phil.</p>
+	<p>It might be easy to fix, though!</p>
+	<p><a href="#/fix">Follow this link</a>, please.</p>
+</div>
+
+<div class="entry-facade col-xs-offset-2 col-xs-8" ng-hide="isAddingNew || isBacklogBroken">
 	<div class="row entry-facade-container">
 		<div class="col-xs-2">&nbsp;</div>
 		<div class="col-xs-8 debug show-entry">

@@ -10,12 +10,17 @@
   background-color: pink !important;
 }
 .suggestion {
-  background-color: lightgreen;
+  background-color: mediumturquoise;
   padding: 3ex;
   padding-top: 1ex;
 }
-.suggestion .btn {
+.suggestion .btn, .brokenHeading .btn {
   margin-top: 1ex;
+}
+.brokenHeading {
+  background-color: antiquewhite;
+  padding: 3ex;
+  padding-top: 1ex;
 }
 
 /* global */

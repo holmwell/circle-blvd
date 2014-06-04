@@ -13,7 +13,7 @@
 	<div>ID: {{firstStory._id}}</div>
 </div>
 
-<h4>Backlog</h4>
+<h4>Story list</h4>
 <div ng-repeat="story in backlog">
 	<div class="new-story" ng-class="{ broken: story.broken }">
 		{{story.summary}} <span ng-show="story.broken">({{story.id}})</span>
@@ -36,7 +36,7 @@ it means two stories are pointing to it, and there is a next-story loop.</p>
 	<div class="new-story">{{story.summary}}</div>
 </div>
 
-<h4>Primary story group (stories outside of the broken backlog)</h4>
+<h4>Primary story group (stories outside of the broken list)</h4>
 <div ng-repeat="group in groups">
 	<div ng-repeat="story in group">
 		<div class="new-story">{{story.summary}}</div>

@@ -143,6 +143,25 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 		};
 	}(); // closure
 
+	var isBacklogBroken = function () {
+		var nextIdCounts = {};
+		var isBroken = false;
+		var currentStory = usefulStories.getFirst();
+		while (currentStory && !isBroken) {
+			if (!nextIdCounts[currentStory.id]) {
+				nextIdCounts[currentStory.id] = 1;
+			}
+			else {
+				nextIdCounts[currentStory.id]++;
+				isBroken = true;
+			}
+			currentStory = serverStories.get(currentStory.nextId);
+		}
+
+		$scope.isBacklogBroken = isBroken;
+		return isBroken;
+	};
+
 
 	$scope.isAdding = [];
 	$scope.isAdding['story'] = false;
@@ -311,6 +330,10 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 			var previousStory = story;
 			if (usefulStories.getFirst().id === story.id) {
 				return undefined;
+			}
+
+			if (isBacklogBroken()) {
+				return null;
 			}
 
 			var currentStory = usefulStories.getFirst();
@@ -606,6 +629,10 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 
 			var updateViewModelStoryOrder = function () {
 				var storiesInNewOrder = [];
+
+				if (isBacklogBroken()) {
+					return;
+				}
 
 				var firstStory = usefulStories.getFirst();
 				var currentStory = firstStory;
@@ -940,6 +967,10 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 				stories = [];
 				serverStories.init(data);
 				usefulStories.setFirst(serverStories.get(firstStory.id));
+
+				if (isBacklogBroken()) {
+					return;
+				}
 
 				// TODO: If we don't have a first story, relax.
 				var currentStory = usefulStories.getFirst();
