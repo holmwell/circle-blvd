@@ -199,15 +199,6 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 	$scope.select = function (story) {
 		// TODO: This does NOT work on the story that
 		// was most recently moved.
-		
-		if (story.justDeselected) {
-			// HACK: So right now whenever we call deselect,
-			// the click event also bubbles up (or whatever)
-			// to this method.
-			story.justDeselected = undefined;
-			return;
-		}
-
 		if (story.isNotifying) {
 			// Also, when we click to notify, we don't
 			// want to do anything else.
@@ -230,13 +221,13 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 		}	
 	};
 
-	$scope.deselect = function (story) {
+	$scope.deselect = function (story, event) {
 
 		if (story && story.isSelected) {
 			story.isSelected = false;
-			story.justDeselected = true;
 			
 			selectedStory = undefined;
+			event.stopPropagation();
 		}
 	};
 
