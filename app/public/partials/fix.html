@@ -1,0 +1,46 @@
+<div class="suggestion" ng-show="hasSuggestion">
+	<h4>Suggested action</h4>
+	<p>How about we connect these two stories? Read below to see if this makes sense.</p>
+	<div class="new-story">{{lastBacklogStory.summary}}</div>
+	<div class="new-story">{{newNextStory.summary}}</div>
+	<button class="btn btn-success" 
+	ng-click="connectStories(lastBacklogStory, newNextStory)">Attempt suggested action</button>
+</div>
+
+<h4>First story (allegedly)</h4>
+<div class="firstStory new-story">
+	<div>{{firstStory.summary}}</div>
+	<div>ID: {{firstStory._id}}</div>
+</div>
+
+<h4>Backlog</h4>
+<div ng-repeat="story in backlog">
+	<div class="new-story" ng-class="{ broken: story.broken }">
+		{{story.summary}} <span ng-show="story.broken">({{story.id}})</span>
+	</div>
+</div>
+<p>If there is a <span class="broken">highlighted</span> story above, 
+it means two stories are pointing to it, and there is a next-story loop.</p>
+
+<h4>Duplicate next-story mappings</h4>
+<div ng-repeat="story in stories">
+	<div class="row" ng-show="nextIdCounts[story.nextId] > 1">
+		<div class="col-xs-4">{{story.summary}}</div>
+		<div class="col-xs-1">--&gt;</div>
+		<div class="col-xs-4">{{storiesHash[story.nextId].summary || story.nextId}}</div>
+	</div>
+</div>
+
+<h4>Stories without a previous story (besides the first story)</h4>
+<div ng-repeat="story in withoutPrevious">
+	<div class="new-story">{{story.summary}}</div>
+</div>
+
+<h4>Primary story group (stories outside of the broken backlog)</h4>
+<div ng-repeat="group in groups">
+	<div ng-repeat="story in group">
+		<div class="new-story">{{story.summary}}</div>
+	</div>
+</div>
+
+

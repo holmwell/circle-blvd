@@ -21,6 +21,7 @@ angular.module('myApp', [
 		$routeProvider.when('/admin', {templateUrl: 'partials/admin.html', controller: AdminCtrl});
 		$routeProvider.when('/mainframe', {templateUrl: 'partials/mainframe.html', controller: MainframeCtrl});
 		$routeProvider.when('/initialize', {templateUrl: 'partials/initialize.html', controller: InitializeCtrl});
+		$routeProvider.when('/fix', {templateUrl: 'partials/fix.html', controller: FixCtrl});
 		$routeProvider.otherwise({redirectTo: '/'});
 	}]);
 	// .

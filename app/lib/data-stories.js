@@ -631,6 +631,7 @@ module.exports = function () {
 		// TODO: Maybe don't return the raw database object
 		getFirstByProjectId: getFirstStory,
 		getNextMeetingByProjectId: getNextMeeting,
-		save: saveStory
+		save: saveStory,
+		fix: updateStory
 	};
 }(); // closure

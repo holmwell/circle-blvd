@@ -944,6 +944,21 @@ var configureSuccessful = function () {
 		});
 	});
 
+	app.put("/data/story/fix", ensureAuthenticated, function (req, res) {
+		var body = req.body;
+		var story = body.story;
+		var newNextId = body.newNextId;
+		ensureIsCircle(story.projectId, req, res, function () {
+			story.nextId = newNextId;
+			db.stories.fix(story, function (response) {
+				res.send(200, response);
+			},
+			function (err) {
+				handleError(err, res);
+			});
+		});
+	});
+
 	app.put("/data/story/move", ensureAuthenticated, function (req, res) {
 		var body = req.body;
 		var story = body.story;

@@ -37,9 +37,10 @@
         <li ng-show="hasMainframeAccess()"><a href="#/mainframe">Mainframe access</a></li>
       </ul>
     </div>
-  </div>
+  </div> 
+ </div>
 
-</div>
+
 <div class="container debug">
   <div class="header row debug">
     <!--
@@ -63,13 +64,13 @@
     </ul>
 
     <ul class="menu col-xs-4 debug" ng-show="isSignedIn()">
-      <!-- <li><a href="/">Circle Blvd</a></li> -->
       <li><a href="#/archives">Archives</a></li>
       <li><a href="#/profile">Profile</a></li>
       <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
       
       <li><a class="jsLink" ng-click="signOut()">Sign out</a></li>
     </ul> 
+
   </div>
   <div class="view" ng-view></div>
 </div>
@@ -89,8 +90,13 @@
   <script src="js/lib/angular/angular-sanitize.js"></script>
   <script src="js/lib/store/store.min.js"></script>
   
+  
   <script src="js/lib/yui/dd-dependencies.js"></script>
   <script src="js/lib/yui/dd.js"></script>
+  
+  <!-- 
+  <script src="http://yui.yahooapis.com/3.17.2/build/yui/yui-min.js"></script>
+-->
 
   <script src="js/lib/autosize/jquery.autosize.min.js"></script>
   <script src="js/lib/typeahead/0.10.2.js"></script>
@@ -105,6 +111,7 @@
   <script src="js/controllers/profile.js"></script>
   <script src="js/controllers/admin.js"></script>
   <script src="js/controllers/mainframe.js"></script>
+  <script src="js/controllers/fix.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/directives.js"></script>
   <script src="https://checkout.stripe.com/checkout.js"></script>

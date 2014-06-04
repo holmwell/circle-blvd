@@ -3,6 +3,20 @@
   border: solid 1px red;
   border: transparent;
 }
+.highlight {
+  background-color: yellow !important;
+}
+.broken {
+  background-color: pink !important;
+}
+.suggestion {
+  background-color: lightgreen;
+  padding: 3ex;
+  padding-top: 1ex;
+}
+.suggestion .btn {
+  margin-top: 1ex;
+}
 
 /* global */
 .topMenu, .header {
