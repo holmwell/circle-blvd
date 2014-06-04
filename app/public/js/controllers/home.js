@@ -199,11 +199,6 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 	$scope.select = function (story) {
 		// TODO: This does NOT work on the story that
 		// was most recently moved.
-		if (story.isNotifying) {
-			// Also, when we click to notify, we don't
-			// want to do anything else.
-			return;
-		}
 
 		// Do not refocus stuff if we're already on this story.
 		if (!story.isSelected) {
@@ -222,7 +217,6 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 	};
 
 	$scope.deselect = function (story, event) {
-
 		if (story && story.isSelected) {
 			story.isSelected = false;
 			
@@ -391,7 +385,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 		});
 	};
 
-	$scope.notify = function (story) {
+	$scope.notify = function (story, event) {
 		if (!story.isNotifying && !story.isOwnerNotified) {
 			story.isNotifying = true;
 
@@ -410,6 +404,8 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 				console.log(status);
 				console.log(data);
 			});
+
+			event.stopPropagation();
 		}		
 	};
 

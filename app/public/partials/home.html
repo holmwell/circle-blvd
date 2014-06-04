@@ -162,7 +162,7 @@
 				class="notify" 
 				ng-class="{ notified: story.isOwnerNotified }"
 				ng-show="story.owner && isStoryNew(story)"
-				title="notify owner"><i class="glyphicon glyphicon-envelope" ng-click="notify(story)"></i>
+				title="notify owner"><i class="glyphicon glyphicon-envelope" ng-click="notify(story, $event)"></i>
 				<span ng-show="story.isNotifying">o</span>
 				<i ng-show="story.isOwnerNotified" title="ok!" class="glyphicon glyphicon-ok"></i>
 			</div>
