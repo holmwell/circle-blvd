@@ -788,8 +788,6 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 					// need this to keep things in a list 
 					// (vs leaving the element where the cursor is let go)
 					moveOnEnd: false
-				}).plug(Y.Plugin.DDConstrained, {
-					// whatever. no constraints for now. maybe later.
 				}).addHandle('.grippy');
 			}
 		});
