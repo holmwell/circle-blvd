@@ -177,6 +177,19 @@ h4, h5 {
   opacity: 0.25;
 }
 
+.grippy:active .grippy-viz .grippy-bar {
+  background-color: #888;
+}
+.grippy:active .grippy-viz .glyphicon {
+  color: #888;
+}
+.next-meeting .grippy:active .grippy-viz .grippy-bar {
+  background-color: white;
+}
+.next-meeting .grippy:active .grippy-viz .glyphicon {
+  color: white;
+}
+
 .grippy {
   margin-left: -2ex;
   padding-right: 0.5ex;
@@ -230,7 +243,13 @@ h4, h5 {
   border: none !important;
   opacity: 0.75;
 }
-
+.dragging-row .story {
+  -webkit-box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+}
+.what {
+  background-color: red;
+}
 .first {
   /*background-color: #e3e3e3;*/
 }
