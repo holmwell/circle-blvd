@@ -421,17 +421,27 @@ input:focus, textarea:focus, select:focus {
   background-color: red;
 }
 
-.owner, .status {
+.owner, .owner-placeholder {
   width: 48%;
   margin-top: 1ex;
   float: left;
 }
-.status {
+.owner-placeholder {
+  /*border: dotted 1px #999;*/
   margin-left: 10px;
+  text-align: center;
+  padding-top: 1.4em;
+  height: 4em;
+}
+
+.status {
+  margin-top: 1ex;
+  margin-right: 1.5ex;
 }
 
 .description {
-  margin-top: 1ex;
+  clear: left;
+  padding-top: 1ex;
 }
 
 .story .textarea-container {
