@@ -709,7 +709,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 		    isDragging = true;
 		    $timeout(function () {
 		    	isDragging = false;
-		    }, 100);
+		    }, 500);
 		});
 
 
@@ -802,7 +802,8 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 		// I guess we need to yield to whatever else is happening.
 		$timeout(function () {
 			// Use the demo from http://yuilibrary.com/yui/docs/dd/list-drag.html
-			YUI().use('dd-proxy', 'dd-drop', function (Y) {
+			var gesturesIfTouch = Modernizr.touch ? 'dd-gestures' : 'dd-drop';
+			YUI().use('dd-proxy', 'dd-drop', gesturesIfTouch, function (Y) {
 				// keep a local instance of Y around for adding draggable
 				// objects in the future.
 				thisY = Y;
