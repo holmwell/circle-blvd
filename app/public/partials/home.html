@@ -91,6 +91,7 @@
 				selected: story.isSelected, 
 				'not-selected': !story.isSelected,
 				first: story.isFirstStory,
+				'first-at-load': story.isFirstAtLoad,
 				deadline: story.isDeadline,
 				'next-meeting': story.isNextMeeting,
 				'after-meeting': story.isAfterNextMeeting
@@ -152,7 +153,23 @@
 					</div>
 				</form>
 			</div>
-			<span class="not-selected" ng-show="!story.isSelected" id="story-{{$index}}">{{story.summary}}</span>
+
+			<div class="row" ng-show="!story.isSelected" id="story-{{$index}}">
+				<div class="col-xs-10 paddy">{{story.summary}}</div>
+				<div class="col-xs-2 grippy">
+					<div class="pull-right grippy-viz">
+						<span class="grippy-bar top"></span>
+						<span class="grippy-bar"></span>
+						<div class="row">
+							<div class="col-xs-offset-5">
+								<div class="glyphicon glyphicon-move">&nbsp;</div>
+							</div>
+						</div>
+						<span class="grippy-bar top"></span>
+						<span class="grippy-bar"></span>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<div class="backlog-owner col-xs-2 debug" 

@@ -177,16 +177,58 @@ h4, h5 {
   opacity: 0.25;
 }
 
+.grippy {
+  margin-left: -2ex;
+  padding-right: 0.5ex;
+}
+.grippy .glyphicon {
+  font-size: 8pt;
+  color: transparent;
+}
+.grippy-bar {
+  display: block;
+  width: 28px;
+  height: 2px;
+  border-radius: 1px;
+}
+.grippy-bar.top {
+  margin-bottom: 1px;
+}
+.first-at-load .grippy-bar {
+  background-color: #b6b6b6;
+}
+.first-at-load .grippy .glyphicon {
+  color: #aaa;
+}
+.next-meeting .grippy-bar {
+  background-color: #111;
+}
+.next-meeting .grippy .glyphicon {
+  color: #111;
+}
+.grippy-viz {
+  background-color: #d6d6d6;
+}
+.first-at-load .grippy-viz {
+  background-color: inherit;
+}
+.next-meeting .grippy-viz {
+  background-color: inherit;
+}
+.after-meeting .grippy-viz {
+  background-color: #fcfcfc;
+}
+.deadline .grippy-viz {
+  background-color: inherit;
+}
+.deadline.after-meeting .grippy-viz {
+  background-color: #5a5a5a;
+}
+
 .dragging-row {
   border: none !important;
   opacity: 0.75;
 }
-
-.dragging-story {
-  padding-top: 1.1ex;
-  padding-bottom: 1.1ex;
-}
-
 
 .first {
   /*background-color: #e3e3e3;*/
@@ -211,9 +253,13 @@ h4, h5 {
   margin: 0;
 }
 
-#backlog .not-selected, .new-story {
+.new-story {
   padding-top: 1.1ex;
   padding-bottom: 1.1ex;
+}
+.paddy, .dragging-story {
+  padding-top: 0.75ex;
+  padding-bottom: 0.75ex; 
 }
 
 .entry {

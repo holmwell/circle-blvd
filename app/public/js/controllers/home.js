@@ -967,6 +967,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 				stories = [];
 				serverStories.init(data);
 				usefulStories.setFirst(serverStories.get(firstStory.id));
+				serverStories.get(firstStory.id).isFirstAtLoad = true;
 
 				if (isBacklogBroken()) {
 					return;
