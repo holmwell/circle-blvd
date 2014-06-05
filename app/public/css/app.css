@@ -192,11 +192,13 @@ h4, h5 {
 
 .grippy {
   margin-left: -2ex;
-  padding-right: 0.5ex;
+  padding-right: 0;
   cursor: move;
+  margin-top: 1px;
 }
 .grippy .glyphicon {
   font-size: 8pt;
+  height: 11px;
   color: transparent;
 }
 .grippy-bar {
