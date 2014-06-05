@@ -10,6 +10,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 	var idAttr = 'data-story-id';
 	var preMoveStoryBefore = undefined;
 	var preMoveStoryAfter = undefined;
+	var isDragging = false;
 
 	var getLastStoryId = function () {
 		return "last-" + projectId;
@@ -197,8 +198,11 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 
 
 	$scope.select = function (story) {
-		// TODO: This does NOT work on the story that
-		// was most recently moved.
+		if (isDragging) {
+			// Do nothing. We're dragging. See the note
+			// in 'drag:end' as to why.
+			return;
+		}
 
 		// Do not refocus stuff if we're already on this story.
 		if (!story.isSelected) {
@@ -697,6 +701,15 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 
 		    //Put our styles back
 		    drag.get('node').removeClass('placeholder-story');
+
+		    // HACK: The end of a drag fires a click event
+		    // on touch devices, and I can't figure out how
+		    // to stop it. So, in select(story) we don't
+		    // do anything when isDragging is true.
+		    isDragging = true;
+		    $timeout(function () {
+		    	isDragging = false;
+		    }, 100);
 		});
 
 
