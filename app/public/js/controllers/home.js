@@ -790,7 +790,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 					moveOnEnd: false
 				}).plug(Y.Plugin.DDConstrained, {
 					// whatever. no constraints for now. maybe later.
-				});
+				}).addHandle('.grippy');
 			}
 		});
 	};
