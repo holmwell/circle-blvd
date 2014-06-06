@@ -9,11 +9,10 @@
 	<p><a href="#/fix">Follow this link</a>, please.</p>
 </div>
 
-<div class="entry-facade col-xs-offset-2 col-xs-8" ng-hide="isAddingNew || isBacklogBroken">
+<div class="entry-facade col-xs-offset-2 col-xs-8 no-select" ng-hide="isAddingNew || isBacklogBroken">
 	<div class="row entry-facade-container">
-		<div class="col-xs-2">&nbsp;</div>
-		<div class="col-xs-8 debug show-entry">
-		+ <a ng-click="showEntry()" class="jsLink">Add story</a>
+		<div class="col-xs-offset-2 col-xs-8 debug show-entry">
+		+ <a ng-click="showEntry()" class="jsLink text-select">Add story</a>
 		</div>
 
 		<div class="col-xs-2 alt-mode" 
@@ -24,8 +23,7 @@
 
 <div class="entry col-xs-offset-2 col-xs-8" ng-show="isAddingNew">
 	<div class="row">
-		<div class="col-xs-2 debug">&nbsp;</div>
-		<div class="col-xs-8 debug">
+		<div class="col-xs-offset-2 col-xs-8 debug">
 			<ul class="entry-nav nav nav-pills row">
 				<li ng-class="{ active: isAdding['story'] }">
 					<a class="jsLink" ng-click="showEntry('story')">Story</a>
@@ -68,14 +66,15 @@
 </div>
 
 <div id="backlog" class="col-xs-offset-2 col-xs-8 debug">
-	<div class="storyWrapper row debug" ng-repeat="story in stories"
+	<div class="storyWrapper row debug no-select" ng-repeat="story in stories"
 		ng-hide="(isAltMode || isManualAltMode)
 		&& (!story.isMoving 
 		&& story.isAfterNextMeeting
 		&& !story.isDeadline 
 		&& !story.isNextMeeting)" data-story-id="{{story.id}}">
+
 		<div class="col-xs-2 debug">
-			<div class="backlog-mine col-xs-9 debug no-select"
+			<div class="backlog-mine col-xs-9 debug"
 				ng-class="{done: isStoryDone(story)}">
 				<div ng-show="isStoryMine(story)" ng-click="bumpStatus(story)">
 					<i class="bump-status debug glyphicon glyphicon-record" 
@@ -96,7 +95,8 @@
 				ng-show="(isStoryNew(story) && isStoryMine(story))"></i>
 			</div>
 		</div>
-		<div class="story col-xs-8 debug" ng-class="{ 
+
+		<div class="story col-xs-8 debug no-select" ng-class="{ 
 				selected: story.isSelected, 
 				'not-selected': !story.isSelected,
 				first: story.isFirstStory,
@@ -106,7 +106,7 @@
 				'after-meeting': story.isAfterNextMeeting
 			}"
 			ng-click="select(story)">
-			<div ng-if="story.isSelected">
+			<div ng-if="story.isSelected" class="text-select">
 				<form>
 					<div class="summary row">
 						<div class="col-xs-9">
@@ -187,8 +187,9 @@
 				</form>
 			</div>
 
-			<div class="row" ng-show="!story.isSelected" id="story-{{$index}}">
-				<div class="col-xs-10 paddy">{{story.summary}}</div>
+			<div class="row no-select" ng-show="!story.isSelected" id="story-{{$index}}">
+				<div class="col-xs-10 paddy">
+					<span class="text-select">{{story.summary}}</span></div>
 				<div class="col-xs-2 grippy">
 					<div class="pull-right grippy-viz">
 						<span class="grippy-bar top"></span>
@@ -203,11 +204,13 @@
 					</div>
 				</div>
 			</div>
+
 		</div>
 
-		<div class="backlog-owner col-xs-2 debug" 
+		<div class="backlog-owner col-xs-2 debug no-select" 
 			ng-class="{'after': story.isAfterNextMeeting}"
-			ng-click="select(story)">{{story.owner}}<span ng-show="isStoryNew(story)">?</span>
+			ng-click="select(story)">
+			<span class="text-select">{{story.owner}}</span><span ng-show="isStoryNew(story)">?</span>
 			<div 
 				class="notify" 
 				ng-class="{ notified: story.isOwnerNotified }"

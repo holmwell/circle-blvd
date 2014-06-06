@@ -1,13 +1,16 @@
 <div id="backlog" class="col-xs-offset-2 col-xs-8 archives">
-	<div class="storyWrapper row" ng-repeat="archive in archives">
-		<div class="col-xs-2">&nbsp;</div>
-		<div class="archive col-xs-8" ng-class="{ 
-			selected: archive.isSelected,
-			deadline: archive.isDeadline
-		}" 
-		ng-click="select(archive)">
-			<div ng-hide="archive.isSelected">{{archive.summary}}</div>
-			<div ng-if="archive.isSelected">
+	<div class="storyWrapper row no-select" ng-repeat="archive in archives">
+		<div class="archive col-xs-offset-2 col-xs-8 no-select" 
+		ng-click="select(archive)"
+		ng-class="{ 
+			selected: archive.isSelected, 
+			deadline: archive.isDeadline 
+		}">
+			<div ng-hide="archive.isSelected">
+				<span class="text-select">{{archive.summary}}</span>
+			</div>
+
+			<div ng-if="archive.isSelected" class="text-select">
 				<div class="summary">
 					{{archive.summary}}
 					<div class="deselect pull-right"><a ng-click="deselect(archive)">Hide details</a></div>
