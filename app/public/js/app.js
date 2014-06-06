@@ -1,12 +1,30 @@
 'use strict';
+var CircleBlvd = {};
+CircleBlvd.Services = {};
 
+// Added to make dates format to ISO8601 across browsers
+// h/t: http://stackoverflow.com/a/2218874/124487
+Date.prototype.toJSON = function (key) {
+    function f(n) {
+        // Format integers to have at least two digits.
+        return n < 10 ? '0' + n : n;
+    }
+
+    return this.getUTCFullYear()   + '-' +
+         f(this.getUTCMonth() + 1) + '-' +
+         f(this.getUTCDate())      + 'T' +
+         f(this.getUTCHours())     + ':' +
+         f(this.getUTCMinutes())   + ':' +
+         f(this.getUTCSeconds())   + '.' +
+         f(this.getUTCMilliseconds())   + 'Z';
+};
 
 // Declare app level module which depends on filters, and services
 angular.module('myApp', [
 	'ngRoute',
 	'ngSanitize',
 	'myApp.filters', 
-	'myApp.services', 
+	'CircleBlvd.services', 
 	'myApp.directives']).
 	config(['$routeProvider', function ($routeProvider) {
 
