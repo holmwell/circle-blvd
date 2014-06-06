@@ -3,6 +3,9 @@
   border: solid 1px red;
   border: transparent;
 }
+.debug.on {
+  border: solid 1px red !important;
+}
 .highlight {
   background-color: yellow !important;
 }
@@ -352,12 +355,14 @@ h4, h5 {
 
 #backlog textarea, 
 #backlog input, 
-#backlog select {
+#backlog select,
+#backlog .status .btn {
   background-color: #ddd;
 }
 #backlog textarea:hover, #backlog textarea:focus,
 #backlog input:hover, #backlog input:focus, 
-#backlog select:hover, #backlog select:focus {
+#backlog select:hover, #backlog select:focus,
+#backlog .status .btn:hover {
   background-color: white;
 }
 
@@ -393,7 +398,9 @@ h4, h5 {
 }
 
 
-input:focus, textarea:focus, select:focus {
+input:focus, 
+textarea:focus, 
+select:focus {
   border-color: #999 !important;
   box-shadow: none !important;
 }
@@ -437,6 +444,28 @@ input:focus, textarea:focus, select:focus {
 .status {
   margin-top: 1ex;
   margin-right: 1.5ex;
+}
+.status .wider {
+  padding-left: 0;
+}
+.status .btn.question .txt {
+  position: relative;
+  left: -0.5ex;
+}
+#backlog .status .sad.active {
+  background-color: #a00;
+  color: white;
+}
+#backlog .status .neutral.active {
+  background-color: white;
+}
+#backlog .status .in-progress.active {
+  background-color: #608A43;
+  color: white;
+}
+#backlog .status .done.active {
+  background-color: #606;
+  color: white;
 }
 
 .description {

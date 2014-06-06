@@ -2,6 +2,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 
 	var projectId = session.activeCircle;
 	var thisY = undefined;
+	var sliderY = undefined;
 	var selectedStory = undefined;
 
 	var stories = [];
@@ -764,6 +765,9 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 	}
 
 	var makeStoriesDraggableCore = function(Y) {
+		if (!Y) {
+			return;
+		}
 		// Allow stories to be dragged
 		// TODO: We should probably make a method for making
 		// a specific item draggable, in the case of adding
@@ -805,7 +809,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 		$timeout(function () {
 			// Use the demo from http://yuilibrary.com/yui/docs/dd/list-drag.html
 			var gesturesIfTouch = Modernizr.touch ? 'dd-gestures' : 'dd-drop';
-			YUI().use('dd-proxy', 'dd-drop', gesturesIfTouch, function (Y) {
+			YUI({}).use('dd-proxy', 'dd-drop', gesturesIfTouch, function (Y) {
 				// keep a local instance of Y around for adding draggable
 				// objects in the future.
 				thisY = Y;
@@ -815,12 +819,32 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 		}, 0);
 	};
 
+
+	var activateSliders = function () {
+		YUI({
+			skin: {
+        		overrides: {
+            		slider: [ 'round' ]
+        		}
+        	}
+    	}).use('slider', function (Y) {
+			sliderY = Y;
+			$scope.sliderY = sliderY;
+		});
+	};
+
 	var isStory = function (story) {
 		if (!story || story.isDeadline || story.isNextMeeting) {
 			return false;
 		}
 
 		return true;
+	};
+
+	$scope.setStoryStatus = function (story, status) {
+		if (story) {
+			story.status = status;
+		}
 	};
 
 	var isStoryStatus = function (story, status) {
@@ -845,6 +869,14 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 		}
 
 		return false;
+	};
+
+	$scope.isStorySad = function (story) {
+		return isStoryStatus(story, "sad");
+	};
+
+	$scope.isStoryAssigned = function (story) {
+		return isStoryStatus(story, "assigned");
 	};
 
 	$scope.isStoryActive = function (story) {
@@ -1002,7 +1034,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 				scrollToStorySpecifiedByUrl();
 
 				// For designing
-				// $scope.select(usefulStories.getFirst());
+				$scope.select(usefulStories.getFirst());
 			})
 			.error(function (data, status) {
 				console.log('failure');
@@ -1049,6 +1081,8 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 			// }
 		});
 
+		// TODO: Will this load quickly enough?
+		activateSliders();
 		// UX: Hide story-entry panel at first.
 		// $scope.showEntry();
 	};
