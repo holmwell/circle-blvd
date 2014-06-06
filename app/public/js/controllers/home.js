@@ -876,8 +876,12 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 	};
 
 	$scope.isStoryMine = function (story) {
-		if (story.owner && story.owner === $scope.getAccountName()) {
-			return true;
+		if (story.owner) {
+			var owner = story.owner.toLowerCase();
+			var member = $scope.getAccountName().toLowerCase();
+			if (owner === member) {
+				return true;
+			}
 		}
 		return false;
 	};
