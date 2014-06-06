@@ -404,6 +404,9 @@ select:focus {
   border-color: #999 !important;
   box-shadow: none !important;
 }
+button:focus {
+  outline: 0 !important;
+}
 
 /* story details */
 .summary {
@@ -537,6 +540,9 @@ select:focus {
 }
 .topSaveBtn {
   margin-top: 1ex;
+}
+.saveBtn:hover, .topSaveBtn:hover {
+  background-color: white;
 }
 
 .removeBtn {
