@@ -114,9 +114,8 @@
 							<input type="text" ng-model="story.owner" typeahead-owners 
 							class="typeahead form-control" />
 						</div>
+						<div class="owner-placeholder">&gt;.^_^.&lt;</div>
 					</div>
-
-					<div class="owner-placeholder">&gt;.^_^.&lt;</div>
 
 					<div class="description">
 						<div>What are the details?
@@ -129,7 +128,7 @@
 						</div>
 					</div>
 
-					<div class="status">How's it going?
+					<div class="status" ng-hide="story.isNextMeeting || story.isDeadline">How's it going?
 						<div class="row">
 							<div class="col-xs-2 debug">
 								<a ng-class="{ active: isStorySad(story) }"
