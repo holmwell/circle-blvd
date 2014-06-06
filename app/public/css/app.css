@@ -27,6 +27,15 @@
 }
 
 /* global */
+.no-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
 .topMenu, .header {
   /*display: none;*/
 }
@@ -600,9 +609,34 @@ button:focus {
   opacity: 0.6;
 }
 .backlog-mine {
-  opacity: 0.5;
+  padding: 0.5ex;
+  padding-top: 0.75ex;
+  opacity: 0.5;  
 }
-.sad-status {
+.backlog-mine .arrow {
+  vertical-align: top;
+  line-height: 24px;
+}
+.bump-status {
+  margin-top: 0;
+  padding-top: 0;
+  font-size: 1.9ex;
+  line-height: 24px;
+}
+.backlog-mine:hover {
+  cursor: pointer;
+}
+.backlog-mine.done:hover {
+  cursor: default;
+}
+.backlog-mine:active .bump-status {
+  margin-top: 0.1ex;
+  margin-right: -0.1ex;
+}
+.backlog-mine.done:active .bump-status {
+  margin-top: 0;
+}
+.sad-status, .new-status {
   margin-top: 1px;
   margin-left: 0.6ex;
 }

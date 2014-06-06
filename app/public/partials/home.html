@@ -75,8 +75,13 @@
 		&& !story.isDeadline 
 		&& !story.isNextMeeting)" data-story-id="{{story.id}}">
 		<div class="col-xs-2 debug">
-			<div class="backlog-mine col-xs-offset-6 col-xs-3 debug">
-				<i class="glyphicon glyphicon-arrow-right" ng-show="isStoryMine(story)"></i>
+			<div class="backlog-mine col-xs-9 debug no-select"
+				ng-class="{done: isStoryDone(story)}">
+				<div ng-show="isStoryMine(story)" ng-click="bumpStatus(story)">
+					<i class="bump-status debug glyphicon glyphicon-record" 
+					ng-hide="isStoryDone(story)"></i>
+					<i class="arrow glyphicon glyphicon-arrow-right debug"></i>
+				</div>
 			</div>
 			<div class="backlog-status col-xs-3 debug">
 				<i class="done-status" ng-show="story.isDeadline && !story.isAfterNextMeeting" 
@@ -84,7 +89,10 @@
 				<i class="done-status" ng-show="isStoryDone(story)" ng-click="archive(story)" 
 				title="archive story"></i>
 				<i class="active-status" ng-show="isStoryActive(story)"></i>
-				<i class="sad-status glyphicon glyphicon-stop" ng-show="isStorySad(story)"></i>
+				<i class="sad-status glyphicon glyphicon-stop" 
+				ng-show="isStorySad(story)"></i>
+				<i class="new-status glyphicon glyphicon-gift"
+				ng-show="(isStoryNew(story) && isStoryMine(story))"></i>
 			</div>
 		</div>
 		<div class="story col-xs-8 debug" ng-class="{ 

@@ -886,6 +886,26 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 		return false;
 	};
 
+	var statusOrder = ['sad','assigned','active','done'];
+	$scope.bumpStatus = function (story) {
+		if (story) {
+			var index = statusOrder.indexOf(story.status);
+			if (index > -1) {
+				index++;
+				if (index < statusOrder.length) {
+					$scope.setStoryStatus(story, statusOrder[index]);
+				}
+			}
+			else {
+				// Do this here so we can move from sad to 
+				// assigned in one go
+				if ($scope.isStoryNew(story)) {
+					$scope.setStoryStatus(story, 'assigned');
+				};
+			}
+		}
+	};
+
 
 	$scope.debug = function() {
 		console.log("Scope array: ");
