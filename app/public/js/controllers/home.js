@@ -1,10 +1,10 @@
-function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $route) {
+function HomeCtrl(session, stories, $scope, $timeout, $http, $location, $routeParams, $route) {
 
 	var projectId = session.activeCircle;
 	var thisY = undefined;
 	var selectedStory = undefined;
 
-	var stories = [];
+	var storiesList = [];
 	var usefulStories = {};
 
 	var idAttr = 'data-story-id';
@@ -15,19 +15,6 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 	var getLastStoryId = function () {
 		return "last-" + projectId;
 	}
-
-	var saveStory = function (story, callback) {
-		$http.put('/data/story/', story)
-		.success(function (savedStory) {
-			if (callback) {
-				callback(savedStory);
-			}
-		})
-		.error(function (data, status) {
-			console.log(status);
-			console.log(data);
-		});
-	};
 
 	var focusElement = function (elementId) {
 		var element = document.getElementById(elementId);
@@ -96,7 +83,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 				if (s[storyId]) {
 					s[storyId] = story;
 					// update story
-					saveStory(story, function (savedStory) {
+					stories.save(story, function (savedStory) {
 						if (callback) {
 							callback(savedStory);
 						}
@@ -254,7 +241,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 				}
 
 				// add the new story to the front of the backlog.
-				stories.unshift(serverStory);	
+				storiesList.unshift(serverStory);	
 			}
 			
 			if (callback) {
@@ -353,8 +340,8 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 			previousStory.nextId = nextStory ? nextStory.id : getLastStoryId();
 		}
 
-		var storyIndex = stories.indexOf(viewStory);
-		stories.splice(storyIndex, 1);
+		var storyIndex = storiesList.indexOf(viewStory);
+		storiesList.splice(storyIndex, 1);
 		serverStories.remove(viewStory.id);
 
 		// TODO: Do we need this for 'remove'?
@@ -424,7 +411,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 
 		// Special stories
 		if (storyId === "next-meeting") {
-			stories.forEach(function (story) {
+			storiesList.forEach(function (story) {
 				if (story.isNextMeeting) {
 					storyId = story.id;
 				}
@@ -432,7 +419,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 		}
 
 		var scrollToStory = function () {
-			stories.forEach(function (story, index) {
+			storiesList.forEach(function (story, index) {
 				if (story.id === storyId) {
 					// HACK: Wait for the ng-repeat element to
 					// populate itself. 250 milliseconds should
@@ -635,7 +622,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 					currentStory = serverStories.get(currentStory.nextId);
 				}
 
-				if (storiesInNewOrder.length === stories.length) {
+				if (storiesInNewOrder.length === storiesList.length) {
 					// Update isAfterNextMeeting for all stories
 					storiesInNewOrder = applyNextMeeting(storiesInNewOrder);
 
@@ -645,7 +632,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 					// stories affected, not all of them, but that can 
 					// be a performance optimization later.
 					for (var key in storiesInNewOrder) {
-						stories[key] = serverStories.get(storiesInNewOrder[key].id);
+						storiesList[key] = serverStories.get(storiesInNewOrder[key].id);
 					}
 				}
 				else {
@@ -831,7 +818,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 			story.status = status;
 			// TODO: Do we need this serverStory runaround?
 			var serverStory = serverStories.get(story.id);
-			saveStory(serverStory);
+			stories.save(serverStory);
 		}
 	};
 
@@ -917,7 +904,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 		});
 
 		console.log("Array: ");
-		stories.forEach(function (el, index) {
+		storiesList.forEach(function (el, index) {
 			if (index < 7) {
 				console.log(index);
 				console.log(el);	
@@ -1001,7 +988,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 
 	var init = function() {
 		$scope.owners = [];
-		$scope.stories = stories;
+		$scope.stories = storiesList;
 
 		$http.get('/data/' + projectId + '/first-story')
 		.success(function (firstStory) {
@@ -1009,7 +996,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 			$http.get('/data/' + projectId + '/stories')
 			.success(function (data) {
 
-				stories = [];
+				storiesList = [];
 				serverStories.init(data);
 				usefulStories.setFirst(serverStories.get(firstStory.id));
 				serverStories.get(firstStory.id).isFirstAtLoad = true;
@@ -1023,7 +1010,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 				var isAfterNextMeeting = false;
 
 				while (currentStory) {
-					stories.push(currentStory); // <3 pass by reference
+					storiesList.push(currentStory); // <3 pass by reference
 
 					if (isAfterNextMeeting) {
 						currentStory.isAfterNextMeeting = true;
@@ -1041,7 +1028,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 					}
 				}
 
-				$scope.stories = stories;
+				$scope.stories = storiesList;
 				$timeout(makeStoriesDraggable, 0);
 				scrollToStorySpecifiedByUrl();
 
@@ -1099,4 +1086,4 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 
 	init();
 }
-HomeCtrl.$inject = ['session', '$scope', '$timeout', '$http', '$location', '$routeParams', '$route'];
+HomeCtrl.$inject = ['session', 'stories', '$scope', '$timeout', '$http', '$location', '$routeParams', '$route'];
