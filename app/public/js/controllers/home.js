@@ -2,7 +2,6 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 
 	var projectId = session.activeCircle;
 	var thisY = undefined;
-	var sliderY = undefined;
 	var selectedStory = undefined;
 
 	var stories = [];
@@ -819,20 +818,6 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 		}, 0);
 	};
 
-
-	var activateSliders = function () {
-		YUI({
-			skin: {
-        		overrides: {
-            		slider: [ 'round' ]
-        		}
-        	}
-    	}).use('slider', function (Y) {
-			sliderY = Y;
-			$scope.sliderY = sliderY;
-		});
-	};
-
 	var isStory = function (story) {
 		if (!story || story.isDeadline || story.isNextMeeting) {
 			return false;
@@ -1081,8 +1066,6 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 			// }
 		});
 
-		// TODO: Will this load quickly enough?
-		activateSliders();
 		// UX: Hide story-entry panel at first.
 		// $scope.showEntry();
 	};

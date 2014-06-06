@@ -2,11 +2,6 @@
 <!-- <button ng-click="debug()">Debug</button> -->
 <!-- <button ng-click="resetStories()">Reset stories</button> -->
 
-<!-- <div class="yui3-skin-sam">
-	<span class="slider-parent"></span>
-	<span class="slider-parent2"></span>
-</div> -->
-
 <div ng-show="isBacklogBroken" class="brokenHeading col-xs-offset-2 col-xs-8">
 	<h4>Something is broken, but you can help</h4>
 	<p>Hi! Sorry, Circle Blvd is broken &ndash; it's not you, it's me, Phil.</p>
@@ -134,12 +129,6 @@
 						</div>
 					</div>
 
-<!-- 					<div class="status debug">How far along is it?					
-						<div class="yui3-skin-round">
-							<span class="debug" slider id="slider-{{story.id}}"></span>
-						</div>
-					</div>
- -->
 					<div class="status">How's it going?
 						<div class="row">
 							<div class="col-xs-2 debug">
@@ -171,15 +160,6 @@
 							</div>
 						</div>
 					</div>
-
-<!-- 					<div class="status">How far along is it?
-						<select ng-model="story.status" class="form-control">
-							<option value="">(I don't know)</option>
-							<option value="assigned">I've seen this task</option>
-							<option value="active">I'm working on it</option>
-							<option value="done">It's done</option>
-						</select>
-					</div> -->
 
 					<div class="commentArea" ng-if="!(story.isNextMeeting || story.isDeadline)">
 						<div class="commentHeading">Questions or comments?</div>

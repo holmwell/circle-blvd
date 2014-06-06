@@ -50,27 +50,6 @@ directive('autosize', ['$timeout', function ($timeout) {
 		}
 	};
 }]).
-directive('slider', ['$timeout', function ($timeout) {
-	return {
-		restrict: 'A',
-		link: function (scope, elem, attr, ctrl) {
-			$timeout(function () {
-				var width = $(elem.parents(".status")[0]).width() + 'px';
-				var Y = scope.sliderY;
-				if (Y) {
-					var slider = new Y.Slider({
-						length: width
-					});
-					var selector = '#' + attr['id'];
-					slider.render(selector);
-				}
-			}, 100); 
-			// TODO: YUI might not load in time.
-			// In any case we need a $timeout for 
-			// the render to work.
-		}
-	}
-}]).
 directive('typeaheadOwners', function () {
 	return {
 		restrict: 'A',
