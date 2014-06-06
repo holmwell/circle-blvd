@@ -87,14 +87,36 @@ directive('typeaheadOwners', function () {
 
 			elem.typeahead(options, dataset);
 
+			var hack = {
+				isKeypressed: false,
+				openedVal: undefined
+			};
+
+
+			elem.keypress(function () {
+				hack.isKeypressed = true;
+			});
+
 			elem.on("typeahead:selected", function (jQuery, suggestion, datasetName) {
 				elem.trigger('input');
 			});
 
-			// This messes up the selection highlight.
-			// elem.on("typeahead:cursorchanged", function (jQuery, suggestion, datasetName) {
-			// 	elem.trigger('input');
-			// });
+			elem.on("typeahead:closed", function () {
+				// HACK: Why we need this, I have no idea.
+				// Otherwise elem.val() is the empty string.
+				if (!hack.isKeypressed) {
+					elem.val(hack.openedVal);	
+				}
+			});
+			elem.on("typeahead:opened", function () {
+				hack.openedVal = elem.val();
+			});
+
+			
+			elem.on("typeahead:cursorchanged", function (jQuery, suggestion, datasetName) {
+				// This messes up the selection highlight.
+				// elem.trigger('input');
+			});
 
 			elem.on("typeahead:autocompleted", function (jQuery, suggestion, datasetName) {
 				elem.trigger('input');

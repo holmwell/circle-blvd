@@ -225,7 +225,9 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 			story.isSelected = false;
 			
 			selectedStory = undefined;
-			event.stopPropagation();
+			if (event) {
+				event.stopPropagation();	
+			}
 		}
 	};
 
@@ -998,6 +1000,9 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 				$scope.stories = stories;
 				$timeout(makeStoriesDraggable, 0);
 				scrollToStorySpecifiedByUrl();
+
+				// For designing
+				// $scope.select(usefulStories.getFirst());
 			})
 			.error(function (data, status) {
 				console.log('failure');
