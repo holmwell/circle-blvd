@@ -132,31 +132,30 @@
 					<div class="status">How's it going?
 						<div class="row">
 							<div class="col-xs-2 debug">
-								<button ng-class="{ active: isStorySad(story) }"
+								<a ng-class="{ active: isStorySad(story) }"
 								ng-click="setStoryStatus(story, 'sad')"
-								class="btn btn-default sad form-control">:-(</button>
+								class="btn btn-default sad form-control">:-(</a>
 							</div>
 							<div class="col-xs-1 wider debug">
-								<button ng-class="{ active: isStoryNew(story) }"
+								<a ng-class="{ active: isStoryNew(story) }"
 								ng-click="setStoryStatus(story, '')"
 								class="btn btn-default question neutral form-control">
-								<span class="txt">?</span</button>
+								<span class="txt">?</span></a>
 							</div>
 							<div class="col-xs-3 wider">
-								<button ng-class="{ active: isStoryAssigned(story) }"
+								<a ng-class="{ active: isStoryAssigned(story) }"
 								ng-click="setStoryStatus(story, 'assigned')"
-								class="btn btn-default neutral form-control">
-								<span class="txt">:-)</span></button>
+								class="btn btn-default neutral form-control">:-)</a>
 							</div>
 							<div class="col-xs-3 wider">
-								<button ng-class="{ active: isStoryActive(story) }"
+								<a ng-class="{ active: isStoryActive(story) }"
 								ng-click="setStoryStatus(story, 'active')"
-								class="btn btn-default in-progress form-control">:-) :-)</button>
+								class="btn btn-default in-progress form-control">:-) :-)</a>
 							</div>
 							<div class="col-xs-3 wider">
-								<button ng-class="{ active: isStoryDone(story) }"
+								<a ng-class="{ active: isStoryDone(story) }"
 								ng-click="setStoryStatus(story, 'done')"
-								class="btn btn-default done form-control">Done!</button>
+								class="btn btn-default done form-control">Done!</a>
 							</div>
 						</div>
 					</div>
