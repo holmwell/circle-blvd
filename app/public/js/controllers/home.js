@@ -829,6 +829,9 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 	$scope.setStoryStatus = function (story, status) {
 		if (story) {
 			story.status = status;
+			// TODO: Do we need this serverStory runaround?
+			var serverStory = serverStories.get(story.id);
+			saveStory(serverStory);
 		}
 	};
 
