@@ -1019,7 +1019,7 @@ function HomeCtrl(session, $scope, $timeout, $http, $location, $routeParams, $ro
 				scrollToStorySpecifiedByUrl();
 
 				// For designing
-				$scope.select(usefulStories.getFirst());
+				// $scope.select(usefulStories.getFirst());
 			})
 			.error(function (data, status) {
 				console.log('failure');
