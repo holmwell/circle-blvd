@@ -80,10 +80,11 @@
 				<div ng-show="isStoryMine(story)" ng-click="bumpStatus(story)">
 					<i class="bump-status debug glyphicon glyphicon-record" 
 					ng-hide="isStoryDone(story)"></i>
-					<i class="arrow glyphicon glyphicon-arrow-right debug"></i>
+					<i class="arrow glyphicon glyphicon-arrow-right debug"
+					ng-show="isStoryDone(story)"></i>
 				</div>
 			</div>
-			<div class="backlog-status col-xs-3 debug">
+			<div class="backlog-status col-xs-3 debug no-select">
 				<i class="done-status" ng-show="story.isDeadline && !story.isAfterNextMeeting" 
 				ng-click="archive(story)" title="archive deadline"></i>
 				<i class="done-status" ng-show="isStoryDone(story)" ng-click="archive(story)" 
