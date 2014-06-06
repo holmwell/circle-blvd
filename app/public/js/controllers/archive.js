@@ -2,15 +2,6 @@ function ArchivesCtrl(session, $scope, $http) {
 	var projectId = session.activeCircle;
 	var selectedArchive = undefined;
 
-	$http.get('/data/' + projectId + '/archives')
-	.success(function (data) {
-		$scope.archives = data;
-	})
-	.error(function (data) {
-		console.log("Failed to get archives.");
-		console.log(data);
-	});
-
 	$scope.select = function (archive) {
 		if (archive.justDeselected) {
 			// HACK: So right now whenever we call deselect,
@@ -40,5 +31,18 @@ function ArchivesCtrl(session, $scope, $http) {
 			selectedArchive = undefined;
 		}
 	};
+
+	var init = function () {
+		$http.get('/data/' + projectId + '/archives')
+		.success(function (data) {
+			$scope.archives = data;
+		})
+		.error(function (data) {
+			console.log("Failed to get archives.");
+			console.log(data);
+		});
+	};
+
+	init();
 }
 ArchivesCtrl.$inject = ['session', '$scope', '$http'];
