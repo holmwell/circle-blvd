@@ -602,7 +602,10 @@ button:focus {
 .backlog-mine {
   opacity: 0.5;
 }
-
+.sad-status {
+  margin-top: 1px;
+  margin-left: 0.6ex;
+}
 .done-status, .active-status {
   display: inline-block;
 
