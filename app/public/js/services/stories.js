@@ -47,6 +47,22 @@ CircleBlvd.Services.stories = function ($http) {
 		};
 	}(); // closure
 
+	var addStory = function (story, callback) {
+		$http.post('/data/story/', story)
+		.success(function (newStory) {
+			s[newStory.id] = newStory;
+			callback(newStory);
+		})
+		.error(function (data, status) {
+			// TODO: Show that something went wrong.
+			// Most likely there was a data conflict
+			// that could not be resolved.
+			console.log(status);
+			console.log(data);
+			callback(null);
+		});
+	};
+
 
 	var insertFirstStory = function (story, projectId, callback) {
 		var hadFirstStoryPreviously = usefulStories.hasFirst();
@@ -57,7 +73,7 @@ CircleBlvd.Services.stories = function ($http) {
 		story.projectId = projectId;
 		story.type = "story";
 
-		serverStories.add(story, function (newStory) {
+		addStory(story, function (newStory) {
 			if (newStory) {
 				var serverStory = getStory(newStory.id);
 				if (newStory.isFirstStory) {
@@ -78,6 +94,47 @@ CircleBlvd.Services.stories = function ($http) {
 		});
 	};
 
+	var isBacklogBroken = function () {
+		var nextIdCounts = {};
+		var isBroken = false;
+		var currentStory = usefulStories.getFirst();
+		while (currentStory && !isBroken) {
+			if (!nextIdCounts[currentStory.id]) {
+				nextIdCounts[currentStory.id] = 1;
+			}
+			else {
+				nextIdCounts[currentStory.id]++;
+				isBroken = true;
+			}
+			currentStory = getStory(currentStory.nextId);
+		}
+
+		return isBroken;
+	};
+
+	var getPreviousStory = function (story) {
+		var previousStory = story;
+		if (usefulStories.getFirst().id === story.id) {
+			return undefined;
+		}
+
+		if (isBacklogBroken()) {
+			return null;
+		}
+
+		var currentStory = usefulStories.getFirst();
+		while (currentStory) {
+			if (currentStory.nextId === serverStory.id) {
+				previousStory = currentStory;
+				return previousStory;
+			}
+			currentStory = getStory(currentStory.nextId);
+		}
+
+		// TODO: If we get here, the story doesn't exist.
+		return previousStory;
+	};
+
 	// wrap around getting and setting the server-side stories,
 	// so we can push to the server when we set things. there's
 	// probably a better way / pattern for doing this. feel free
@@ -92,21 +149,7 @@ CircleBlvd.Services.stories = function ($http) {
 			init: function (data) {
 				s = data;
 			},
-			add: function (story, callback) {
-				$http.post('/data/story/', story)
-				.success(function (newStory) {
-					s[newStory.id] = newStory;
-					callback(newStory);
-				})
-				.error(function (data, status) {
-					// TODO: Show that something went wrong.
-					// Most likely there was a data conflict
-					// that could not be resolved.
-					console.log(status);
-					console.log(data);
-					callback(null);
-				});
-			},
+			add: addStory,
 			insertFirst: insertFirstStory,
 			move: function (story, newNextStory, callback) {
 				var body = {};
@@ -133,6 +176,7 @@ CircleBlvd.Services.stories = function ($http) {
 			},
 			save: saveStory,
 			get: getStory, 
+			getPrevious: getPreviousStory,
 			set: function (storyId, story, callback) {
 				if (s[storyId]) {
 					s[storyId] = story;
@@ -153,7 +197,8 @@ CircleBlvd.Services.stories = function ($http) {
 				if (s[storyId]) {
 					delete s[storyId];
 				}
-			}
+			},
+			isListBroken: isBacklogBroken
 		};
 	}(); // closure;
 

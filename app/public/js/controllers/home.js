@@ -17,26 +17,6 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 		return "last-" + projectId;
 	};
 
-	var isBacklogBroken = function () {
-		var nextIdCounts = {};
-		var isBroken = false;
-		var currentStory = usefulStories.getFirst();
-		while (currentStory && !isBroken) {
-			if (!nextIdCounts[currentStory.id]) {
-				nextIdCounts[currentStory.id] = 1;
-			}
-			else {
-				nextIdCounts[currentStory.id]++;
-				isBroken = true;
-			}
-			currentStory = serverStories.get(currentStory.nextId);
-		}
-
-		$scope.isBacklogBroken = isBroken;
-		return isBroken;
-	};
-
-
 	$scope.isAdding = [];
 	$scope.isAdding['story'] = false;
 	$scope.isAdding['deadline'] = false;
@@ -79,6 +59,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 
 		// Do not refocus stuff if we're already on this story.
 		if (!story.isSelected) {
+			// Deselect the story that was selected previously
 			if (selectedStory) {
 				selectedStory.isSelected = false;
 			}
@@ -86,6 +67,11 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 			story.isSelected = true;
 			selectedStory = story;
 
+			// Bring the focus to the default input box, 
+			// which is likely the summary text.
+			//
+			// We do need this timeout wrapper around focus
+			// for this to work, for whatever reason.
 			$timeout(function () {
 				var boxId = "boxForStory" + story.id;
 				hacks.focus(boxId);
@@ -159,34 +145,17 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 	};
 
 	var removeFromView = function (viewStory, serverStory) {
+
 		var nextStory = serverStories.get(serverStory.nextId);
-
-		var getPreviousStory = function (story) {
-			var previousStory = story;
-			if (usefulStories.getFirst().id === story.id) {
-				return undefined;
-			}
-
-			if (isBacklogBroken()) {
-				return null;
-			}
-
-			var currentStory = usefulStories.getFirst();
-			while (currentStory) {
-				if (currentStory.nextId === serverStory.id) {
-					previousStory = currentStory;
-					return previousStory;
-				}
-				currentStory = serverStories.get(currentStory.nextId);
-			}
-
-			// TODO: If we get here, the story doesn't exist.
-			return previousStory;
-		};
 
 		if (viewStory.isSelected) {
 			viewStory.isSelected = false;
 			selectedStory = undefined;
+		}
+
+		if (stories.isListBroken()) {
+			$scope.isBacklogBroken = true;
+			return;
 		}
 
 		var previousStory = getPreviousStory(viewStory);
@@ -467,7 +436,8 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 			var updateViewModelStoryOrder = function () {
 				var storiesInNewOrder = [];
 
-				if (isBacklogBroken()) {
+				if (stories.isListBroken()) {
+					$scope.isBacklogBroken = true;
 					return;
 				}
 
@@ -858,7 +828,8 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 				usefulStories.setFirst(serverStories.get(firstStory.id));
 				serverStories.get(firstStory.id).isFirstAtLoad = true;
 
-				if (isBacklogBroken()) {
+				if (stories.isListBroken()) {
+					$scope.isBacklogBroken = true;
 					return;
 				}
 
