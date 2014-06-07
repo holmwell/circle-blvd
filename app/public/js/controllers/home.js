@@ -5,7 +5,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 	var selectedStory = undefined;
 
 	var storiesList = [];
-	var usefulStories = {};
+	var usefulStories = stories;
 	var serverStories = stories;
 
 	var idAttr = 'data-story-id';
@@ -16,34 +16,6 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 	var getLastStoryId = function () {
 		return "last-" + projectId;
 	};
-
-	var usefulStories = function() {
-		var s = {};
-		s.first = undefined;
-
-		return {
-			setFirst: function (story) {
-				if (s.first) {
-					s.first.isFirstStory = false;
-				}
-				s.first = story;
-				if (s.first) {
-					s.first.isFirstStory = true;	
-				}
-			},
-			getFirst: function () {
-				return s.first;
-			},
-			hasFirst: function() {
-				if (s.first) {
-					return true;
-				}
-				else {
-					return false;
-				}
-			}
-		};
-	}(); // closure
 
 	var isBacklogBroken = function () {
 		var nextIdCounts = {};

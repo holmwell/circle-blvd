@@ -13,14 +13,46 @@ CircleBlvd.Services.stories = function ($http) {
 		});
 	};
 
+	var usefulStories = function() {
+		var s = {};
+		s.first = undefined;
+
+		return {
+			setFirst: function (story) {
+				if (s.first) {
+					s.first.isFirstStory = false;
+				}
+				s.first = story;
+				if (s.first) {
+					s.first.isFirstStory = true;	
+				}
+			},
+			getFirst: function () {
+				return s.first;
+			},
+			hasFirst: function() {
+				if (s.first) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
+		};
+	}(); // closure
+
 	// wrap around getting and setting the server-side stories,
 	// so we can push to the server when we set things. there's
 	// probably a better way / pattern for doing this. feel free
 	// to implement it, future self.
-	var serverStories = function() {
+	var stories = function() {
 		var s = {};
 
 		return {
+			setFirst: usefulStories.setFirst,
+			getFirst: usefulStories.getFirst,
+			hasFirst: usefulStories.hasFirst,
+
 			init: function (data) {
 				s = data;
 			},
@@ -90,6 +122,6 @@ CircleBlvd.Services.stories = function ($http) {
 		};
 	}(); // closure;
 
-	return serverStories;
+	return stories;
 };
 CircleBlvd.Services.stories.$inject = ['$http'];
