@@ -5,7 +5,6 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 	var selectedStory = undefined;
 
 	var storiesList = [];
-	var serverStories = stories;
 
 	var idAttr = 'data-story-id';
 	var preMoveStoryBefore = undefined;
@@ -124,7 +123,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 	};
 
 	$scope.save = function (story) {
-		var storyToSave = serverStories.get(story.id);
+		var storyToSave = stories.get(story.id);
 		
 		// TODO: We can probably just have this on the 
 		// server side, but it's nice to have clean
@@ -136,7 +135,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 
 		storyToSave.newComment = story.newComment;
 		
-		serverStories.set(story.id, storyToSave, function (savedStory) {
+		stories.set(story.id, storyToSave, function (savedStory) {
 			story.newComment = undefined;
 			story.comments = savedStory.comments;
 			$scope.deselect(story);
@@ -145,7 +144,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 
 	var removeFromView = function (viewStory, serverStory) {
 
-		var nextStory = serverStories.get(serverStory.nextId);
+		var nextStory = stories.get(serverStory.nextId);
 
 		if (viewStory.isSelected) {
 			viewStory.isSelected = false;
@@ -167,14 +166,14 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 
 		var storyIndex = storiesList.indexOf(viewStory);
 		storiesList.splice(storyIndex, 1);
-		serverStories.remove(viewStory.id);
+		stories.remove(viewStory.id);
 
 		// TODO: Do we need this for 'remove'?
 		// $timeout(makeStoriesDraggable, 0);
 	};
 
 	$scope.archive = function (story) {
-		var storyToArchive = serverStories.get(story.id);
+		var storyToArchive = stories.get(story.id);
 		$http.put('/data/story/archive', storyToArchive)
 		.success(function (data) {
 			removeFromView(story, storyToArchive);
@@ -190,7 +189,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 		// data was fine on the server so a refresh 
 		// took care of everything. Look into this data
 		// display issue.
-		var storyToRemove = serverStories.get(story.id);
+		var storyToRemove = stories.get(story.id);
 		
 		$http.put('/data/story/remove', storyToRemove)
 		.success(function (data) {
@@ -326,16 +325,16 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 		var storyBefore = getStoryBefore(node);
 		var storyAfter = getStoryAfter(node);
 
-		var movedStory = serverStories.get(story.id);
+		var movedStory = stories.get(story.id);
 
 		var preMove = {
-			storyBefore: serverStories.get(preMoveStoryBefore.id),
-			storyAfter: serverStories.get(preMoveStoryAfter.id)
+			storyBefore: stories.get(preMoveStoryBefore.id),
+			storyAfter: stories.get(preMoveStoryAfter.id)
 		};
 
 		var postMove = {
-			storyBefore: serverStories.get(storyBefore.id),
-			storyAfter: serverStories.get(storyAfter.id)
+			storyBefore: stories.get(storyBefore.id),
+			storyAfter: stories.get(storyAfter.id)
 		};
 
 		if (preMove.storyBefore === postMove.storyBefore
@@ -345,7 +344,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 		}
 
 		var newNextId = storyAfter.id;
-		serverStories.move(movedStory, postMove.storyAfter, function (err, response) {
+		stories.move(movedStory, postMove.storyAfter, function (err, response) {
 			if (err) {
 				// We failed. Probably because of a data integrity issue
 				// on the server that we need to wait out. 
@@ -445,7 +444,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 				
 				while (currentStory) {
 					storiesInNewOrder.push(currentStory);
-					currentStory = serverStories.get(currentStory.nextId);
+					currentStory = stories.get(currentStory.nextId);
 				}
 
 				if (storiesInNewOrder.length === storiesList.length) {
@@ -458,7 +457,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 					// stories affected, not all of them, but that can 
 					// be a performance optimization later.
 					for (var key in storiesInNewOrder) {
-						storiesList[key] = serverStories.get(storiesInNewOrder[key].id);
+						storiesList[key] = stories.get(storiesInNewOrder[key].id);
 					}
 				}
 				else {
@@ -476,7 +475,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 		    var preMoveStoryNode = drag.get('node');
 		    if (preMoveStoryNode) {
 				var storyId = getStoryFacadeFromNode(preMoveStoryNode).id;		    	
-				var story = serverStories.get(storyId);
+				var story = stories.get(storyId);
 
 				if (story.isSelected) {
 					e.stopPropagation();
@@ -496,7 +495,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 			preMoveStoryAfter = getStoryAfter(preMoveStoryNode);
 
 			var storyId = getStoryFacadeFromNode(preMoveStoryNode).id;		    	
-			var story = serverStories.get(storyId);
+			var story = stories.get(storyId);
 			story.isMoving = true;
 
 		    //Set some styles here
@@ -643,7 +642,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 		if (story) {
 			story.status = status;
 			// TODO: Do we need this serverStory runaround?
-			var serverStory = serverStories.get(story.id);
+			var serverStory = stories.get(story.id);
 			stories.save(serverStory);
 		}
 	};
@@ -738,7 +737,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 		});
 
 		// console.log("Assoc array: ");
-		// var ss = serverStories.all();
+		// var ss = stories.all();
 		// var counter = 0;
 		// for (var storyId in ss) {
 		// 	if (counter < 7) {
@@ -808,7 +807,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 	$scope._test = function() {
 		return {
 			firstStory: stories.getFirst(),
-			storiesTable: serverStories
+			storiesTable: stories
 		}
 	};
 
@@ -823,9 +822,9 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 			.success(function (data) {
 
 				storiesList = [];
-				serverStories.init(data);
-				stories.setFirst(serverStories.get(firstStory.id));
-				serverStories.get(firstStory.id).isFirstAtLoad = true;
+				stories.init(data);
+				stories.setFirst(stories.get(firstStory.id));
+				stories.get(firstStory.id).isFirstAtLoad = true;
 
 				if (stories.isListBroken()) {
 					$scope.isBacklogBroken = true;
@@ -848,7 +847,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 
 					var nextStoryId = currentStory.nextId;
 					if (nextStoryId) {
-						currentStory = serverStories.get(nextStoryId);
+						currentStory = stories.get(nextStoryId);
 					}
 					else {
 						currentStory = undefined;
