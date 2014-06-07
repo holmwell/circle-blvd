@@ -116,7 +116,7 @@ CircleBlvd.Services.stories = function ($http) {
 		return isBroken;
 	};
 
-	var getPreviousStory = function (story) {
+	var getPreviousStory = function (story, serverStory) {
 		var previousStory = story;
 		if (usefulStories.getFirst().id === story.id) {
 			return undefined;
