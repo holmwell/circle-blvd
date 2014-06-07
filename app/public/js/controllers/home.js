@@ -156,7 +156,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 			return;
 		}
 
-		var previousStory = getPreviousStory(viewStory);
+		var previousStory = stories.getPrevious(viewStory);
 		if (!previousStory) {
 			stories.setFirst(nextStory);
 		}
