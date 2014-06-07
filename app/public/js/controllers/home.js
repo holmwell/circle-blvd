@@ -5,7 +5,6 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 	var selectedStory = undefined;
 
 	var storiesList = [];
-	var usefulStories = stories;
 	var serverStories = stories;
 
 	var idAttr = 'data-story-id';
@@ -160,7 +159,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 
 		var previousStory = getPreviousStory(viewStory);
 		if (!previousStory) {
-			usefulStories.setFirst(nextStory);
+			stories.setFirst(nextStory);
 		}
 		else {
 			previousStory.nextId = nextStory ? nextStory.id : getLastStoryId();
@@ -359,8 +358,8 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 			// If the moved story was the first story, the preMove.storyAfter
 			// is now the first story (if it exists).
 			var storiesToSave = [];
-			if (usefulStories.getFirst().id === movedStory.id && preMove.storyAfter) {
-			 	usefulStories.setFirst(preMove.storyAfter);
+			if (stories.getFirst().id === movedStory.id && preMove.storyAfter) {
+			 	stories.setFirst(preMove.storyAfter);
 			 	storiesToSave[preMove.storyAfter.id] = preMove.storyAfter;
 			}
 
@@ -380,8 +379,8 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 				// No need to set the "nextId" on the "storyBefore," because 
 				// there isn't one. Instead, we know that the moved story
 				// is now the first story.
-				storiesToSave[usefulStories.getFirst().id] = usefulStories.getFirst();
-				usefulStories.setFirst(movedStory);
+				storiesToSave[stories.getFirst().id] = stories.getFirst();
+				stories.setFirst(movedStory);
 				storiesToSave[movedStory.id] = movedStory;
 			}
 
@@ -441,7 +440,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 					return;
 				}
 
-				var firstStory = usefulStories.getFirst();
+				var firstStory = stories.getFirst();
 				var currentStory = firstStory;
 				
 				while (currentStory) {
@@ -749,7 +748,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 		// };
 
 		// console.log("First story: ");
-		// console.log(usefulStories.getFirst());
+		// console.log(stories.getFirst());
 	};
 
 	$scope.test = function () {
@@ -808,7 +807,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 
 	$scope._test = function() {
 		return {
-			firstStory: usefulStories.getFirst(),
+			firstStory: stories.getFirst(),
 			storiesTable: serverStories
 		}
 	};
@@ -825,7 +824,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 
 				storiesList = [];
 				serverStories.init(data);
-				usefulStories.setFirst(serverStories.get(firstStory.id));
+				stories.setFirst(serverStories.get(firstStory.id));
 				serverStories.get(firstStory.id).isFirstAtLoad = true;
 
 				if (stories.isListBroken()) {
@@ -834,7 +833,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 				}
 
 				// TODO: If we don't have a first story, relax.
-				var currentStory = usefulStories.getFirst();
+				var currentStory = stories.getFirst();
 				var isAfterNextMeeting = false;
 
 				while (currentStory) {
@@ -861,7 +860,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 				scrollToStorySpecifiedByUrl();
 
 				// For designing
-				// $scope.select(usefulStories.getFirst());
+				// $scope.select(stories.getFirst());
 			})
 			.error(function (data, status) {
 				console.log('failure');
