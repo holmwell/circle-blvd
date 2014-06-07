@@ -104,53 +104,24 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 		}
 	};
 
-
-	var insertFirstStory = function (story, callback) {
-		var hadFirstStoryPreviously = usefulStories.hasFirst();
-		if (hadFirstStoryPreviously) {
-			story.nextId = usefulStories.getFirst().id;	
-		}
-
-		story.projectId = projectId;
-		story.type = "story";
-
-		serverStories.add(story, function (newStory) {
-			if (newStory) {
-				var serverStory = serverStories.get(newStory.id);
-				if (newStory.isFirstStory) {
-					usefulStories.setFirst(serverStory);	
-				}
-				else {
-					// TODO: Probably want to refresh the whole list 
-					// from the server, because some crazy things are
-					// happening!
-				}
-
-				// add the new story to the front of the backlog.
-				storiesList.unshift(serverStory);	
-			}
-			
+	var insertNewStory = function (newStory, callback) {
+		stories.insertFirst(newStory, projectId, function (serverStory) {
+			// add the new story to the front of the backlog.
+			storiesList.unshift(serverStory);
 			if (callback) {
-				callback(newStory);
+				callback(serverStory);
 			}
 		});
 	};
 
-	var insertNewStory = function (newStory, callback) {
-		insertFirstStory(newStory, callback);
-	};
-
 	var isCreatingStory = false;
-	$scope.create = function (newStory, callback) {
+	$scope.create = function (newStory) {
 		if (!isCreatingStory && newStory) {
 			isCreatingStory = true;
-			insertNewStory(newStory, function (createdStory) {
+			insertNewStory(newStory, function () {
 				$scope.newStory = undefined;
 				isCreatingStory = false;
 				$timeout(makeStoriesDraggable, 0);
-				if (callback) {
-					callback(createdStory);
-				}
 			});	
 		}
 	};
@@ -823,42 +794,42 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
    			"projectId": "1"
 		}];
 
-		insertFirstStory(stories[0], function (story) {
+		insertFirstStory(stories[0], projectId, function (story) {
 			console.log("0");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[1], function (story) {
+		insertFirstStory(stories[1], projectId, function (story) {
 			console.log("1");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[2], function (story) {
+		insertFirstStory(stories[2], projectId, function (story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[2], function (story) {
+		insertFirstStory(stories[2], projectId, function (story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[2], function (story) {
+		insertFirstStory(stories[2], projectId, function (story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[2], function (story) {
+		insertFirstStory(stories[2], projectId, function (story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[2], function (story) {
+		insertFirstStory(stories[2], projectId, function (story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[2], function (story) {
+		insertFirstStory(stories[2], projectId, function (story) {
 			console.log("2");
 			console.log(story);
 		});

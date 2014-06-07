@@ -1,5 +1,11 @@
 CircleBlvd.Services.stories = function ($http) {
 
+	var s = {};
+
+	var getStory = function (storyId) {
+		return s[storyId];
+	};
+
 	var saveStory = function (story, callback) {
 		$http.put('/data/story/', story)
 		.success(function (savedStory) {
@@ -41,12 +47,42 @@ CircleBlvd.Services.stories = function ($http) {
 		};
 	}(); // closure
 
+
+	var insertFirstStory = function (story, projectId, callback) {
+		var hadFirstStoryPreviously = usefulStories.hasFirst();
+		if (hadFirstStoryPreviously) {
+			story.nextId = usefulStories.getFirst().id;	
+		}
+
+		story.projectId = projectId;
+		story.type = "story";
+
+		serverStories.add(story, function (newStory) {
+			if (newStory) {
+				var serverStory = getStory(newStory.id);
+				if (newStory.isFirstStory) {
+					usefulStories.setFirst(serverStory);	
+				}
+				else {
+					// TODO: Probably want to refresh the whole list 
+					// from the server, because some crazy things are
+					// happening!
+				}
+				if (callback) {
+					callback(serverStory);
+				}	
+			}
+			else if (callback) {
+				callback();
+			}
+		});
+	};
+
 	// wrap around getting and setting the server-side stories,
 	// so we can push to the server when we set things. there's
 	// probably a better way / pattern for doing this. feel free
 	// to implement it, future self.
 	var stories = function() {
-		var s = {};
 
 		return {
 			setFirst: usefulStories.setFirst,
@@ -71,6 +107,7 @@ CircleBlvd.Services.stories = function ($http) {
 					callback(null);
 				});
 			},
+			insertFirst: insertFirstStory,
 			move: function (story, newNextStory, callback) {
 				var body = {};
 				body.story = story;
@@ -95,9 +132,7 @@ CircleBlvd.Services.stories = function ($http) {
 				});
 			},
 			save: saveStory,
-			get: function (storyId) {
-				return s[storyId];
-			},
+			get: getStory, 
 			set: function (storyId, story, callback) {
 				if (s[storyId]) {
 					s[storyId] = story;
@@ -121,6 +156,8 @@ CircleBlvd.Services.stories = function ($http) {
 			}
 		};
 	}(); // closure;
+
+
 
 	return stories;
 };
