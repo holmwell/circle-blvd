@@ -6,6 +6,10 @@ CircleBlvd.Services.stories = function ($http) {
 		return s[storyId];
 	};
 
+	var getLastStoryId = function (projectId) {
+		return "last-" + projectId;
+	};
+
 	var saveStory = function (story, callback) {
 		$http.put('/data/story/', story)
 		.success(function (savedStory) {
@@ -159,7 +163,7 @@ CircleBlvd.Services.stories = function ($http) {
 					body.newNextId = newNextStory.id;
 				}
 				else {
-					body.newNextId = getLastStoryId();
+					body.newNextId = getLastStoryId(story.projectId);
 				}
 
 				$http.put('/data/story/move', body)
