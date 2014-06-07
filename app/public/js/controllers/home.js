@@ -356,49 +356,30 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 			}
 			// If the moved story was the first story, the preMove.storyAfter
 			// is now the first story (if it exists).
-			var storiesToSave = [];
 			if (stories.getFirst().id === movedStory.id && preMove.storyAfter) {
 			 	stories.setFirst(preMove.storyAfter);
-			 	storiesToSave[preMove.storyAfter.id] = preMove.storyAfter;
 			}
 
 			// We need to update 'nextId' of the following:
 			// 1. The story before the moved story, before it was moved.		
 			if (preMove.storyBefore) {
 				preMove.storyBefore.nextId = preMove.storyAfter ? preMove.storyAfter.id : getLastStoryId();
-				storiesToSave[preMove.storyBefore.id] = preMove.storyBefore;
 			}
 			
 			// 2. The story before the moved story, after it was moved.
 			if (postMove.storyBefore) {
 				postMove.storyBefore.nextId = movedStory.id;
-				storiesToSave[postMove.storyBefore.id] = postMove.storyBefore;
 			}
 			else {
 				// No need to set the "nextId" on the "storyBefore," because 
 				// there isn't one. Instead, we know that the moved story
 				// is now the first story.
-				storiesToSave[stories.getFirst().id] = stories.getFirst();
 				stories.setFirst(movedStory);
-				storiesToSave[movedStory.id] = movedStory;
 			}
 
 			// 3. The story that was moved, unless it's now the last story.
 			movedStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();
-			storiesToSave[movedStory.id] = movedStory;	
 			
-			// TODO: We don't need these 'storiesToSave' any more.
-			//
-			// if a story is to be saved, only do it once, to avoid
-			// simple document conflicts.
-			//
-			// This functionality has moved to the server side.
-			// TODO: We'll want to react to the server response.
-			//
-			// for (var storyId in storiesToSave) {
-			// 	saveStory(storiesToSave[storyId]);
-			// }
-
 			// The YUI drag-and-drop stuff manipulates the DOM, 
 			// but doesn't touch our view-model, so we need to 
 			// update our stories array to reflect the new order
