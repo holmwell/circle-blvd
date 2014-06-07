@@ -1,4 +1,4 @@
-function HomeCtrl(session, stories, $scope, $timeout, $http, $location, $routeParams, $route) {
+function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $routeParams, $route) {
 
 	var projectId = session.activeCircle;
 	var thisY = undefined;
@@ -12,17 +12,6 @@ function HomeCtrl(session, stories, $scope, $timeout, $http, $location, $routePa
 	var preMoveStoryBefore = undefined;
 	var preMoveStoryAfter = undefined;
 	var isDragging = false;
-
-	var focusElement = function (elementId) {
-		var element = document.getElementById(elementId);
-		if (element) {
-			// We want this to happen after this method
-			// finishes.
-			$timeout(function() {
-				element.focus();
-			}, 0);
-		}
-	};	
 
 	var getLastStoryId = function () {
 		return "last-" + projectId;
@@ -85,14 +74,14 @@ function HomeCtrl(session, stories, $scope, $timeout, $http, $location, $routePa
 			$scope.isAddingNew = true;
 			$scope.showEntry('story');
 			// TODO: Focus for all the story types
-			focusElement('storyEntry');
+			hacks.focus('storyEntry');
 		}
 		else {
 			for (var pName in $scope.isAdding) {
 				$scope.isAdding[pName] = false;
 			}
 			$scope.isAdding[panelName] = true;
-			focusElement(panelName + 'Entry');
+			hacks.focus(panelName + 'Entry');
 		}
 	};
 	$scope.hideEntry = function () {
@@ -127,7 +116,7 @@ function HomeCtrl(session, stories, $scope, $timeout, $http, $location, $routePa
 
 			$timeout(function () {
 				var boxId = "boxForStory" + story.id;
-				focusElement(boxId);
+				hacks.focus(boxId);
 			});
 		}	
 	};
@@ -1011,4 +1000,4 @@ function HomeCtrl(session, stories, $scope, $timeout, $http, $location, $routePa
 
 	init();
 }
-HomeCtrl.$inject = ['session', 'stories', '$scope', '$timeout', '$http', '$location', '$routeParams', '$route'];
+HomeCtrl.$inject = ['session', 'stories', 'hacks', '$scope', '$timeout', '$http', '$location', '$routeParams', '$route'];
