@@ -732,7 +732,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 	};
 
 	$scope.test = function () {
-		var stories = [{
+		var s = [{
    			"summary": "one",
    			"projectId": "1"
 		},{
@@ -743,42 +743,42 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
    			"projectId": "1"
 		}];
 
-		insertFirstStory(stories[0], projectId, function (story) {
+		stories.insertFirst(s[0], projectId, function (story) {
 			console.log("0");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[1], projectId, function (story) {
+		stories.insertFirst(s[1], projectId, function (story) {
 			console.log("1");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[2], projectId, function (story) {
+		stories.insertFirst(s[2], projectId, function (story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[2], projectId, function (story) {
+		stories.insertFirst(s[2], projectId, function (story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[2], projectId, function (story) {
+		stories.insertFirst(s[2], projectId, function (story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[2], projectId, function (story) {
+		stories.insertFirst(s[2], projectId, function (story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[2], projectId, function (story) {
+		stories.insertFirst(s[2], projectId, function (story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		insertFirstStory(stories[2], projectId, function (story) {
+		stories.insertFirst(s[2], projectId, function (story) {
 			console.log("2");
 			console.log(story);
 		});

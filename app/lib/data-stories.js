@@ -231,6 +231,48 @@ module.exports = function () {
 	var activeStoryQueue = {};
 	var isStoryQueueRunning = false;
 
+	var processStory = function (story, callback) {
+		var proposedNextId = story.nextId || null;
+				
+		story.id = story._id;
+		story.type = "story";
+
+		getNextIdForInsert(story, proposedNextId, function (err, nextId) {
+			if (err) {
+				var error = {};
+				error.err = err;
+				error.message = "queue: get-next-id failure";
+				callback(error);
+				return;
+			}
+
+			story.nextId = nextId;
+			couch.docs.update(story, function (err, processedStory) {
+				if (err) {
+					var error = {};
+					error.err = err;
+					error.message = "queue: update failure";
+					error.fatal = true;
+					// TODO: Make queue better
+					callback(err);
+					return;
+				}
+
+				postInsertStory(processedStory, processedStory.nextId, 
+					function (postProcessedStory) {
+						callback(null, postProcessedStory);
+					},
+					function (err) {
+						console.log('queue: post-insert failure');
+						console.log(err);
+						error.fatal = true;
+						callback(err);
+					}
+				);
+			});
+		});
+	};
+
 	var processStoryQueue = function () {
 		isStoryQueueRunning = true;
 
@@ -268,42 +310,15 @@ module.exports = function () {
 					return;
 				}
 
-				var proposedNextId = storyToProcess.nextId || null;
-				
-				storyToProcess.id = storyToProcess._id;
-				storyToProcess.type = "story";
-
-				getNextIdForInsert(storyToProcess, proposedNextId, function (err, nextId) {
+				processStory(storyToProcess, function (err, processedStory) {
 					if (err) {
-						console.log("queue: get-next-id failure");
-						console.log(err);
 						notifyListeners(err, storyToProcess);
-						// continue processing
-						return;
-					}
-					storyToProcess.nextId = nextId;
-					couch.docs.update(storyToProcess, function (err, processedStory) {
-						if (err) {
-							console.log('queue: update failure');
-							console.log(err);
-							notifyListeners(err, storyToProcess);
+						if (err.fatal) {
 							stopProcessing();
-							return;
 						}
-
-						postInsertStory(processedStory, processedStory.nextId, 
-							function (postProcessedStory) {
-								notifyListeners(null, postProcessedStory);
-								processNextInQueue();
-							},
-							function (err) {
-								console.log('queue: post-insert failure');
-								console.log(err);
-								notifyListeners(err, processedStory);
-								stopProcessing();
-							}
-						);
-					});
+					}
+					notifyListeners(null, processedStory);
+					processNextInQueue();
 				});
 			});
 		}; 
