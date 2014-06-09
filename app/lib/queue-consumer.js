@@ -5,7 +5,6 @@
 // I'm sure there's a cool library for this, but
 // it's pretty simple, so:
 //
-var process = require('process');
 var queue = require('./queue-async.js');
 
 module.exports = function () {
@@ -13,7 +12,7 @@ module.exports = function () {
 	var isConsuming = false;
 	var savedWorker = undefined;
 
-	var consume = function (worker) {
+	this.consume = function (worker) {
 		savedWorker = worker;
 		isConsuming = true;
 		var consumeNext = function () {
@@ -50,7 +49,7 @@ module.exports = function () {
 	};
 
 
-	var enqueue = function (thing, callback) {
+	this.enqueue = function (thing, callback) {
 		queue.enqueue(thing, function (err, thing) {
 			callback(err, thing);
 			// TODO: We could probably clean up this api,
@@ -66,7 +65,6 @@ module.exports = function () {
 			});
 		});
 	};
-
 
 	return {
 		consume: that.consume,

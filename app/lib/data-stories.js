@@ -1,3 +1,5 @@
+var uuid = require('node-uuid');
+var consumer = require('./queue-consumer.js');
 var couch = require('./couch.js');
 couch.stories = require('./couch-stories.js');
 
@@ -228,9 +230,6 @@ module.exports = function () {
 		}
 	};
 
-	var activeStoryQueue = {};
-	var isStoryQueueRunning = false;
-
 	var processStory = function (story, callback) {
 		var proposedNextId = story.nextId || null;
 				
@@ -273,75 +272,72 @@ module.exports = function () {
 		});
 	};
 
-	var processStoryQueue = function () {
-		isStoryQueueRunning = true;
-
-		var stopProcessing = function () {
-			isStoryQueueRunning = false;
-			var err = {
-				error: 'halted queue',
-				message: "Story processing queue halted. Please try again."
-			};
-			for (var storyId in activeStoryQueue) {
-				ee.emit(storyId, err, null);
+	var addStory = function (story, callback) {
+		var thing = {
+			id: uuid.v4(),
+			action: 'add',
+			params: {
+				story: story
 			}
 		};
 
-		var notifyListeners = function (err, story) {
-			delete activeStoryQueue[story._id];
-			ee.emit(story._id, err, story);
-		};
-
-		var processNextInQueue = function () {	
-			// while queue exists:
-			// 1. process first story in queue.
-			// 2. remove first story (implicitly, via update).
-			couch.stories.nextInQueue(function (err, storyToProcess) {
-				if (err) {
-					console.log('queue: next-in-queue failure');
-					console.log(err);
-					notifyListeners(err, storyToProcess);
-					stopProcessing();
-					return;
-				}
-
-				if (storyToProcess === null) {
-					stopProcessing();
-					return;
-				}
-
-				processStory(storyToProcess, function (err, processedStory) {
-					if (err) {
-						notifyListeners(err, storyToProcess);
-						if (err.fatal) {
-							stopProcessing();
-						}
-					}
-					notifyListeners(null, processedStory);
-					processNextInQueue();
-				});
-			});
-		}; 
-
-		processNextInQueue();
-	};
-
-	var addStory = function (story, callback) {
-		couch.stories.addToQueue(story, function (err, body) {
+		var afterEnqueue = function (err) {
 			if (err) {
 				return callback(err);
 			}
-
-			activeStoryQueue[body.id] = body.id;
-			ee.once(body.id, function (err, story) {
-				callback(err, story);
+			// When the queue consumer is done with
+			// our thing, we'll emit an event named
+			// thing.id. and then we'll callback.
+			ee.once(thing.id, function (err, newStory) {
+				callback(err, newStory);
 			});
+		};
 
-			if (!isStoryQueueRunning) {
-				processStoryQueue();
+		consumer.enqueue(thing, afterEnqueue);
+	};
+
+	var handleAddThing = function (err, thing, callback) {
+		var story = thing.params.story;
+		if (err) {
+			ee.emit(thing.id, err, story);
+			return callback();
+		}
+
+		// Actually add the story to the database.
+		// TODO: Need to rename 'addToQueue' ... 
+		couch.stories.addToQueue(story, function (err, body) {
+			if (err) {
+				ee.emit(thing.id, err, story);
+				return callback();
 			}
+
+			story._id = body.id;
+			story._rev = body.rev;
+
+			processStory(story, function (err, newStory) {
+				if (err) {
+					// TODO: We have an orphaned story. :-(
+				}
+				ee.emit(thing.id, err, newStory);
+				return callback();
+			});
 		});
 	};
+
+	var processAllTheThings = function () {
+		// All of them.
+		var handleThings = function (err, thing, next) {
+			// TODO: Handle errors. Right now we don't care,
+			// because there are no errors thrown by
+			// queue-async.
+			if (thing.action === 'add') {
+				handleAddThing(err, thing, next);
+			}
+		};
+
+		consumer.consume(handleThings);
+	};
+
 
 	var getFirstStory = function (projectId, callback) {
 		if (!projectId) {
@@ -636,6 +632,10 @@ module.exports = function () {
 		});
 	};
 
+	// Turn on processing queue.
+	// TODO: Probably put this in the API, to be called
+	// at a higher level.
+	processAllTheThings();
 
 	return {
 		add: addStory,
