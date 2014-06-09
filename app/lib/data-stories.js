@@ -546,24 +546,8 @@ module.exports = function () {
 			});
 	};
 
-	var processAllTheThings = function () {
-		// All of them.
-		var handleThings = function (err, thing, next) {
-			// TODO: Handle errors. Right now we don't care,
-			// because there are no errors thrown by
-			// queue-async.
-			if (thing.action === 'add') {
-				handleAddThing(err, thing, next);
-			}
-			else if (thing.action === 'move') {
-				handleMoveThing(err, thing, next);
-			}
-		};
 
-		consumer.consume(handleThings);
-	};
-
-	var removeStory = function (story, success, failure) {
+	var oldRemoveStory = function (story, success, failure) {
 
 		couch.stories.findById(story.id, function (err, storyToRemove) {
 			if (err) {
@@ -631,6 +615,74 @@ module.exports = function () {
 				});
 			});
 		});
+	};
+
+	var removeStory = function (story, success, failure) {
+		var thing = {
+			id: uuid.v4(),
+			action: 'remove',
+			params: {
+				story: story
+			}
+		};
+
+		var afterEnqueue = function (err) {
+			if (err) {
+				return callback(err);
+			}
+			// When the queue consumer is done with
+			// our thing, we'll emit an event named
+			// thing.id. and then we'll callback.
+			ee.once(thing.id, function (err) {
+				if (err) {
+					failure(err);
+				}
+				else {
+					success();
+				}
+			});
+		};
+
+		consumer.enqueue(thing, afterEnqueue);
+	};
+
+	var handleRemoveThing = function (err, thing, callback) {
+		var story = thing.params.story;
+		if (err) {
+			ee.emit(thing.id, err, story);
+			return callback();
+		}
+
+		oldRemoveStory(story, 
+			function () {
+				ee.emit(thing.id, null, null);
+				return callback();
+			}, 
+			function (err) {
+				ee.emit(thing.id, err, story);
+				return callback();
+			});
+	};
+
+
+	var processAllTheThings = function () {
+		// All of them.
+		var handleThings = function (err, thing, next) {
+			// TODO: Handle errors. Right now we don't care,
+			// because there are no errors thrown by
+			// queue-async.
+			if (thing.action === 'add') {
+				handleAddThing(err, thing, next);
+			}
+			else if (thing.action === 'move') {
+				handleMoveThing(err, thing, next);
+			}
+			else if (thing.action == 'remove') {
+				handleRemoveThing(err, thing, next);
+			}
+		};
+
+		consumer.consume(handleThings);
 	};
 
 	var updateStory = function(story, success, failure) {
