@@ -20,6 +20,23 @@ module.exports = function () {
 		return story.nextId === getLastId(story);
 	};
 
+	var getFirstStory = function (projectId, callback) {
+		if (!projectId) {
+			callback(null, null);
+		}
+
+		couch.stories.findFirst(projectId, callback);
+	};
+
+	var getNextMeeting = function (projectId, callback) {
+		if (!projectId) {
+			callback(null, null);
+		}
+
+		couch.stories.findNextMeeting(projectId, callback);
+	};
+
+
 	var findStoriesByProjectId = function (projectId, callback) {
 
 		var prepareStories = function (err, dbStories) {
@@ -324,39 +341,38 @@ module.exports = function () {
 		});
 	};
 
-	var processAllTheThings = function () {
-		// All of them.
-		var handleThings = function (err, thing, next) {
-			// TODO: Handle errors. Right now we don't care,
-			// because there are no errors thrown by
-			// queue-async.
-			if (thing.action === 'add') {
-				handleAddThing(err, thing, next);
+
+	var moveStory = function (story, newNextId, success, failure) {
+		var thing = {
+			id: uuid.v4(),
+			action: 'move',
+			params: {
+				story: story,
+				nextId: newNextId
 			}
 		};
 
-		consumer.consume(handleThings);
+		var afterEnqueue = function (err) {
+			if (err) {
+				return callback(err);
+			}
+			// When the queue consumer is done with
+			// our thing, we'll emit an event named
+			// thing.id. and then we'll callback.
+			ee.once(thing.id, function (err, movedStory) {
+				if (err) {
+					failure(err);
+				}
+				else {
+					success(movedStory);
+				}
+			});
+		};
+
+		consumer.enqueue(thing, afterEnqueue);
 	};
 
-
-	var getFirstStory = function (projectId, callback) {
-		if (!projectId) {
-			callback(null, null);
-		}
-
-		couch.stories.findFirst(projectId, callback);
-	};
-
-	var getNextMeeting = function (projectId, callback) {
-		if (!projectId) {
-			callback(null, null);
-		}
-
-		couch.stories.findNextMeeting(projectId, callback);
-	};
-
-
-	var moveStory = function (story, newNextId, success, failure) {
+	var oldMoveStory = function (story, newNextId, success, failure) {
 		var storiesToSave = {};
 		var saveChecks = [];
 
@@ -510,6 +526,41 @@ module.exports = function () {
 				});
 			});
 		});
+	};
+
+	var handleMoveThing = function (err, thing, callback) {
+		var story = thing.params.story;
+		if (err) {
+			ee.emit(thing.id, err, story);
+			return callback();
+		}
+
+		oldMoveStory(story, thing.params.nextId, 
+			function (movedStory) {
+				ee.emit(thing.id, null, movedStory);
+				return callback();
+			}, 
+			function (err) {
+				ee.emit(thing.id, err, story);
+				return callback();
+			});
+	};
+
+	var processAllTheThings = function () {
+		// All of them.
+		var handleThings = function (err, thing, next) {
+			// TODO: Handle errors. Right now we don't care,
+			// because there are no errors thrown by
+			// queue-async.
+			if (thing.action === 'add') {
+				handleAddThing(err, thing, next);
+			}
+			else if (thing.action === 'move') {
+				handleMoveThing(err, thing, next);
+			}
+		};
+
+		consumer.consume(handleThings);
 	};
 
 	var removeStory = function (story, success, failure) {
