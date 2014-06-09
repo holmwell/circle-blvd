@@ -732,57 +732,7 @@ function HomeCtrl(session, stories, hacks, $scope, $timeout, $http, $location, $
 	};
 
 	$scope.test = function () {
-		var s = [{
-   			"summary": "one",
-   			"projectId": "1"
-		},{
-   			"summary": "two",
-   			"projectId": "1"
-		},{
-   			"summary": "three",
-   			"projectId": "1"
-		}];
-
-		stories.insertFirst(s[0], projectId, function (story) {
-			console.log("0");
-			console.log(story);
-		});
-
-		stories.insertFirst(s[1], projectId, function (story) {
-			console.log("1");
-			console.log(story);
-		});
-
-		stories.insertFirst(s[2], projectId, function (story) {
-			console.log("2");
-			console.log(story);
-		});
-
-		stories.insertFirst(s[2], projectId, function (story) {
-			console.log("2");
-			console.log(story);
-		});
-
-		stories.insertFirst(s[2], projectId, function (story) {
-			console.log("2");
-			console.log(story);
-		});
-
-		stories.insertFirst(s[2], projectId, function (story) {
-			console.log("2");
-			console.log(story);
-		});
-
-		stories.insertFirst(s[2], projectId, function (story) {
-			console.log("2");
-			console.log(story);
-		});
-
-		stories.insertFirst(s[2], projectId, function (story) {
-			console.log("2");
-			console.log(story);
-		});
-
+		hacks.runAddTest(stories, projectId);
 	};
 
 	$scope._test = function() {

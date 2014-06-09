@@ -3,6 +3,7 @@
 // and my understanding.
 
 CircleBlvd.Services.hacks = function ($timeout) {
+	var that = this;
 	var focusElement = function (elementId) {
 		var element = document.getElementById(elementId);
 		if (element) {
@@ -14,8 +15,64 @@ CircleBlvd.Services.hacks = function ($timeout) {
 		}
 	};
 
+
+	this.runAddTest = function (stories, circleId) {
+		var projectId = circleId;
+		var s = [{
+   			"summary": "one",
+   			"projectId": "1"
+		},{
+   			"summary": "two",
+   			"projectId": "1"
+		},{
+   			"summary": "three",
+   			"projectId": "1"
+		}];
+
+		stories.insertFirst(s[0], projectId, function (story) {
+			console.log("0");
+			console.log(story);
+		});
+
+		stories.insertFirst(s[1], projectId, function (story) {
+			console.log("1");
+			console.log(story);
+		});
+
+		stories.insertFirst(s[2], projectId, function (story) {
+			console.log("2");
+			console.log(story);
+		});
+
+		stories.insertFirst(s[2], projectId, function (story) {
+			console.log("2");
+			console.log(story);
+		});
+
+		stories.insertFirst(s[2], projectId, function (story) {
+			console.log("2");
+			console.log(story);
+		});
+
+		stories.insertFirst(s[2], projectId, function (story) {
+			console.log("2");
+			console.log(story);
+		});
+
+		stories.insertFirst(s[2], projectId, function (story) {
+			console.log("2");
+			console.log(story);
+		});
+
+		stories.insertFirst(s[2], projectId, function (story) {
+			console.log("2");
+			console.log(story);
+		});
+	};
+
 	return {
-		focus: focusElement
+		focus: focusElement,
+		runAddTest: that.runAddTest
 	}
 };
 CircleBlvd.Services.hacks.$inject = ['$timeout'];
