@@ -41,7 +41,20 @@ angular.module('myApp', [
 		$routeProvider.when('/initialize', {templateUrl: 'partials/initialize.html', controller: InitializeCtrl});
 		$routeProvider.when('/fix', {templateUrl: 'partials/fix.html', controller: FixCtrl});
 		$routeProvider.otherwise({redirectTo: '/'});
-	}]);
+	}])
+	.factory('$exceptionHandler', ['$injector', function ($injector) {
+        return function (exception, cause) {
+        	var $route = $injector.get("$route");
+        	var $log = $injector.get("$log");
+        	// Only seeing this in Safari ...
+        	if (exception.name === "HIERARCHY_REQUEST_ERR") {
+        		$log.error("TopLevelCtrl: Hierarchy request error caught. Reloading.");
+        		$route.reload();
+        		return;
+        	}
+        	$log.error.apply($log, arguments);
+        };
+    }]);
 	// .
 	// config(['$locationProvider', function ($locationProvider) {
 	// 	$locationProvider.html5Mode(true);
