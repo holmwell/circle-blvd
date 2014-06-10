@@ -74,7 +74,7 @@
        <li><a href="#/signin">Sign in</a></li>
     </ul> -->
 
-    <ul class="menu visible-xs visible-sm col-xs-12 debug" ng-show="isSignedIn()">
+    <ul class="menu visible-xs visible-sm col-xs-12 debug" ng-if="isSignedIn()">
       <li><a href="#/archives">Archives</a></li>
       <li><a href="#/profile">Profile</a></li>
       <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
