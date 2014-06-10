@@ -185,11 +185,13 @@ function HomeCtrl(session, stories, hacks,
 
 	$scope.archive = function (story) {
 		var storyToArchive = stories.get(story.id);
+		removeFromView(story, storyToArchive);
 		$http.put('/data/story/archive', storyToArchive)
 		.success(function (data) {
-			removeFromView(story, storyToArchive);
+			// nbd.
 		})
 		.error(function (data) {
+			// TODO: Account for server down
 			console.log(data);
 		});
 	};
@@ -208,6 +210,7 @@ function HomeCtrl(session, stories, hacks,
 			// nbd.
 		})
 		.error(function (data, status) {
+			// TODO: Account for server down
 			console.log('failure');
 			console.log(status);
 			console.log(data);
