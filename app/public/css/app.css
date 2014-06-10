@@ -195,6 +195,7 @@ h4, h5 {
 /* home */
 #backlog {
   padding-top: 1ex;
+  padding-right: 1.5ex;
 }
 .storyWrapper {
 
@@ -321,7 +322,11 @@ h4, h5 {
 }
 .paddy, .dragging-story {
   padding-top: 0.75ex;
-  padding-bottom: 0.75ex; 
+  padding-bottom: 0.75ex;
+  padding-left: 1ex; 
+}
+.paddy .summary {
+  padding-left: 1ex;
 }
 
 .entry {
@@ -626,6 +631,21 @@ button:focus {
 .notify.notified {
   cursor: default;
   opacity: 0.1;
+}
+
+.phone-backlog-status {
+  text-align: center;
+  padding-left: 0;
+}
+.phone-backlog-status .done-status {
+  margin-left: 0;
+  padding-left: 0;
+}
+.phone-summary {
+  padding-left: 0;
+}
+.phone-row.mine {
+  color: #1E69B5;
 }
 
 .backlog-status, .backlog-mine {
