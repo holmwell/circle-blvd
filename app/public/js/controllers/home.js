@@ -684,13 +684,14 @@ function HomeCtrl(session, stories, hacks,
 	};
 
 	$scope.isStoryMine = function (story) {
-		if (story.owner) {
+		if (story.owner && $scope.getAccountName) {
 			var owner = story.owner.toLowerCase();
-			if ($scope.getAccountName) { // defined in TopLevelCtrl
-				var member = $scope.getAccountName().toLowerCase();
+			var member = $scope.getAccountName();
+			if (member) {
+				member = member.toLowerCase();
 				if (owner === member) {
 					return true;
-				}	
+				}
 			}
 		}
 		return false;
