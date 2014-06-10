@@ -195,16 +195,17 @@ function HomeCtrl(session, stories, hacks,
 	};
 
 	$scope.remove = function (story) {
-		// TODO: This one time all the stories after the
-		// removed story were no longer shown, but the
-		// data was fine on the server so a refresh 
-		// took care of everything. Look into this data
+		// TODO: Sometimes all the stories after the
+		// removed story are no longer shown, but the
+		// data is fine on the server so a refresh 
+		// takes care of everything. Look into this data
 		// display issue.
 		var storyToRemove = stories.get(story.id);
+		removeFromView(story, storyToRemove);
 		
 		$http.put('/data/story/remove', storyToRemove)
 		.success(function (data) {
-			removeFromView(story, storyToRemove);
+			// nbd.
 		})
 		.error(function (data, status) {
 			console.log('failure');
