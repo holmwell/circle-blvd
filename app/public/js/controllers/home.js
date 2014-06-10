@@ -754,87 +754,7 @@ function HomeCtrl(session, stories, hacks,
 		}
 	};
 
-	var init = function() {
-		$scope.owners = [];
-		$scope.stories = storiesList;
-
-		$http.get('/data/' + circleId + '/first-story')
-		.success(function (firstStory) {
-
-			$http.get('/data/' + circleId + '/stories')
-			.success(function (data) {
-
-				storiesList = [];
-				stories.init(data);
-				stories.setFirst(stories.get(firstStory.id));
-				stories.get(firstStory.id).isFirstAtLoad = true;
-
-				if (stories.isListBroken()) {
-					$scope.isBacklogBroken = true;
-					return;
-				}
-
-				// TODO: If we don't have a first story, relax.
-				var currentStory = stories.getFirst();
-				var isAfterNextMeeting = false;
-
-				while (currentStory) {
-					storiesList.push(currentStory); // <3 pass by reference	
-
-					if (isAfterNextMeeting) {
-						currentStory.isAfterNextMeeting = true;
-					}
-					else if (currentStory.isNextMeeting) {					
-						isAfterNextMeeting = true;
-					}
-
-					var nextStoryId = currentStory.nextId;
-					if (nextStoryId) {
-						currentStory = stories.get(nextStoryId);
-					}
-					else {
-						currentStory = undefined;
-					}
-				}
-
-				$scope.stories = storiesList;
-				$timeout(makeStoriesDraggable, 0);
-				scrollToStorySpecifiedByUrl();
-
-				// For designing
-				// $scope.select(stories.getFirst());
-			})
-			.error(function (data, status) {
-				console.log('failure');
-				console.log(status);
-				console.log(data);
-			});
-		})
-		.error(function (data, status) {
-			console.log('failure');
-			console.log(status);
-			console.log(data);
-
-			if (status === 401 && $scope.isSignedIn()) {
-				// We're not actually signed in.
-				$scope.signOut();
-			}
-		});
-
-		$http.get("/data/" + circleId + "/users/names")
-		.success(function (names) {
-			$scope.owners = names;
-		})
-		.error(function (data, status) {
-			console.log('get names failure');
-			console.log(status);
-			console.log(data);			
-		});
-
-		$scope.$on('$viewContentLoaded', function() {
-			activateDragAndDrop();
-		});
-
+	var addKeyListener = function () {
 		$scope.$watch('keyboard.isShiftDown', function (newValue, oldValue) {
 			$scope.isAltMode = newValue;
 			// UX: Maybe once something is marked as 'isMoving' it
@@ -848,7 +768,89 @@ function HomeCtrl(session, stories, hacks,
 			// 	});
 			// }
 		});
+	};
 
+
+	var buildStoryList = function (firstStory, serverStories) {
+		storiesList = [];
+
+		stories.init(serverStories);
+		stories.setFirst(stories.get(firstStory.id));
+		stories.get(firstStory.id).isFirstAtLoad = true;
+
+		if (stories.isListBroken()) {
+			$scope.isBacklogBroken = true;
+			return;
+		}
+
+		// TODO: If we don't have a first story, relax.
+		var currentStory = stories.getFirst();
+		var isAfterNextMeeting = false;
+
+		while (currentStory) {
+			storiesList.push(currentStory); // <3 pass by reference	
+
+			if (isAfterNextMeeting) {
+				currentStory.isAfterNextMeeting = true;
+			}
+			else if (currentStory.isNextMeeting) {					
+				isAfterNextMeeting = true;
+			}
+
+			var nextStoryId = currentStory.nextId;
+			if (nextStoryId) {
+				currentStory = stories.get(nextStoryId);
+			}
+			else {
+				currentStory = undefined;
+			}
+		}
+
+		$scope.stories = storiesList;
+		
+		// For designing
+		// $scope.select(stories.getFirst());
+	};
+
+	var init = function() {
+		$scope.owners = [];
+
+		var handleInitError = function (data, status) {
+			console.log('failure');
+			console.log(status);
+			console.log(data);
+
+			if (status === 401 && $scope.isSignedIn()) {
+				// We're not actually signed in.
+				$scope.signOut();
+			}
+		};
+
+		$http.get('/data/' + circleId + '/first-story')
+		.success(function (firstStory) {
+
+			$http.get('/data/' + circleId + '/stories')
+			.success(function (serverStories) {
+				buildStoryList(firstStory, serverStories);
+				$timeout(makeStoriesDraggable, 0);
+				scrollToStorySpecifiedByUrl();
+			})
+			.error(handleInitError);
+
+			$http.get("/data/" + circleId + "/users/names")
+			.success(function (names) {
+				$scope.owners = names;
+			})
+			.error(handleInitError);
+
+		}).error(handleInitError);
+
+		
+		$scope.$on('$viewContentLoaded', function() {
+			activateDragAndDrop();
+		});
+
+		addKeyListener();
 		// UX: Hide story-entry panel at first.
 		// $scope.showEntry();
 	};
