@@ -127,6 +127,14 @@
   clear: left;
 }
 
+.container-fluid.main {
+  background: white;
+  padding: 3em;
+  padding-top: 0;
+  padding-right: 1.75ex;
+  padding-left: 1.75ex;  
+}
+
 .container {
   background: white;
   padding: 3em;
