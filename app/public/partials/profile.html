@@ -2,7 +2,7 @@
 
 <p ng-show="!isSignedIn()">Please <a href="#/signin">sign in</a>.</p>
 
-<div ng-show="isSignedIn()">
+<div ng-show="isSignedIn()" class="hidden-xs">
 	<div class="row">
 		<div class="col-xs-3"><input ng-model="name" type="text" class="form-control"/></div>
 		<div class="col-xs-3"><input ng-model="email" type="text" class="form-control"/></div>
@@ -62,4 +62,7 @@
 	</div>
 </div>
 
-
+<div class="visible-xs">
+Sorry, please use something with a larger screen to
+edit your profile. This will be fixed within a week. :-)
+</div>
