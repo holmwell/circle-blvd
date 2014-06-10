@@ -9,7 +9,7 @@ function HomeCtrl(session, stories, hacks,
 		$route.reload();
 	};
 
-	var projectId = session.activeCircle;
+	var circleId = session.activeCircle;
 	var thisY = undefined;
 	var selectedStory = undefined;
 
@@ -21,41 +21,43 @@ function HomeCtrl(session, stories, hacks,
 	var isDragging = false;
 
 	var getLastStoryId = function () {
-		return "last-" + projectId;
+		return "last-" + circleId;
 	};
 
-	$scope.isAdding = [];
-	$scope.isAdding['story'] = false;
-	$scope.isAdding['deadline'] = false;
+	var entryPanel = function () {
+		$scope.isAdding = [];
+		$scope.isAdding['story'] = false;
+		$scope.isAdding['deadline'] = false;
 
-	$scope.showEntry = function (panelName) {
-		if (!panelName) {
-			$scope.isAddingNew = true;
-			$scope.showEntry('story');
-			// TODO: Focus for all the story types
-			hacks.focus('storyEntry');
-		}
-		else {
-			for (var pName in $scope.isAdding) {
-				$scope.isAdding[pName] = false;
+		$scope.showEntry = function (panelName) {
+			if (!panelName) {
+				$scope.isAddingNew = true;
+				$scope.showEntry('story');
+				// TODO: Focus for all the story types
+				hacks.focus('storyEntry');
 			}
-			$scope.isAdding[panelName] = true;
-			hacks.focus(panelName + 'Entry');
-		}
-	};
-	$scope.hideEntry = function () {
-		$scope.isAddingNew = undefined;
-	};
+			else {
+				for (var pName in $scope.isAdding) {
+					$scope.isAdding[pName] = false;
+				}
+				$scope.isAdding[panelName] = true;
+				hacks.focus(panelName + 'Entry');
+			}
+		};
 
-	$scope.toggleAltMode = function () {
-		if ($scope.isManualAltMode) {
-			$scope.isManualAltMode = false;
-		}
-		else {
-			$scope.isManualAltMode = true;
-		}
-	}
+		$scope.hideEntry = function () {
+			$scope.isAddingNew = undefined;
+		};
 
+		$scope.toggleAltMode = function () {
+			if ($scope.isManualAltMode) {
+				$scope.isManualAltMode = false;
+			}
+			else {
+				$scope.isManualAltMode = true;
+			}
+		}	
+	}();
 
 	$scope.select = function (story) {
 		if (isDragging) {
@@ -98,7 +100,7 @@ function HomeCtrl(session, stories, hacks,
 	};
 
 	var insertNewStory = function (newStory, callback) {
-		stories.insertFirst(newStory, projectId, function (serverStory) {
+		stories.insertFirst(newStory, circleId, function (serverStory) {
 			// add the new story to the front of the backlog.
 			storiesList.unshift(serverStory);
 			if (callback) {
@@ -280,7 +282,7 @@ function HomeCtrl(session, stories, hacks,
 
 		$http.get('/data/story/' + storyId)
 		.success(function (story) {
-			if (story.projectId !== projectId) {
+			if (story.projectId !== circleId) {
 				// switch the active circle
 				var circleFacade = {
 					id: story.projectId
@@ -363,65 +365,57 @@ function HomeCtrl(session, stories, hacks,
 				console.log(err);
 				return;
 			}
-			// If the moved story was the first story, the preMove.storyAfter
-			// is now the first story (if it exists).
-			if (stories.getFirst().id === movedStory.id && preMove.storyAfter) {
-				stories.setFirst(preMove.storyAfter);
-			}
 
-			// We need to update 'nextId' of the following:
-			// 1. The story before the moved story, before it was moved.		
-			if (preMove.storyBefore) {
-				preMove.storyBefore.nextId = preMove.storyAfter ? preMove.storyAfter.id : getLastStoryId();
-			}
-			
-			// 2. The story before the moved story, after it was moved.
-			if (postMove.storyBefore) {
-				postMove.storyBefore.nextId = movedStory.id;
-			}
-			else {
-				// No need to set the "nextId" on the "storyBefore," because 
-				// there isn't one. Instead, we know that the moved story
-				// is now the first story.
-				stories.setFirst(movedStory);
-			}
-
-			// 3. The story that was moved, unless it's now the last story.
-			movedStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();
-			
-			// The YUI drag-and-drop stuff manipulates the DOM, 
-			// but doesn't touch our view-model, so we need to 
-			// update our stories array to reflect the new order
-			//  of things.
-			var applyNextMeeting = function (stories) {
-				var isAfterNextMeeting = false;
-				for (var key in stories) {
-					if (isAfterNextMeeting) {
-						stories[key].isAfterNextMeeting = true;
-					}
-					else if (stories[key].isNextMeeting) {				
-						isAfterNextMeeting = true;
-					}
-					else {
-						stories[key].isAfterNextMeeting = false;
-					}
-				}
-				return stories;
-			};
-
-			// TODO: Use this in a future optimization
-			var findStoryIndex = function (story) {
-				// O(n)
-				for (var index in $scope.stories) {
-					if ($scope.stories[index].id === story.id) {
-						return index;
-					}
+			var updateModelStoryOrder = function () {
+				// If the moved story was the first story, the preMove.storyAfter
+				// is now the first story (if it exists).
+				if (stories.getFirst().id === movedStory.id && preMove.storyAfter) {
+					stories.setFirst(preMove.storyAfter);
 				}
 
-				return -1;
-			};
+				// We need to update 'nextId' of the following:
+				// 1. The story before the moved story, before it was moved.		
+				if (preMove.storyBefore) {
+					preMove.storyBefore.nextId = preMove.storyAfter ? preMove.storyAfter.id : getLastStoryId();
+				}
+				
+				// 2. The story before the moved story, after it was moved.
+				if (postMove.storyBefore) {
+					postMove.storyBefore.nextId = movedStory.id;
+				}
+				else {
+					// No need to set the "nextId" on the "storyBefore," because 
+					// there isn't one. Instead, we know that the moved story
+					// is now the first story.
+					stories.setFirst(movedStory);
+				}
+
+				// 3. The story that was moved, unless it's now the last story.
+				movedStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();	
+			}();
+			
 
 			var updateViewModelStoryOrder = function () {
+				// The YUI drag-and-drop stuff manipulates the DOM, 
+				// but doesn't touch our view-model, so we need to 
+				// update our stories array to reflect the new order
+				//  of things.
+				var applyNextMeeting = function (stories) {
+					var isAfterNextMeeting = false;
+					for (var key in stories) {
+						if (isAfterNextMeeting) {
+							stories[key].isAfterNextMeeting = true;
+						}
+						else if (stories[key].isNextMeeting) {				
+							isAfterNextMeeting = true;
+						}
+						else {
+							stories[key].isAfterNextMeeting = false;
+						}
+					}
+					return stories;
+				};
+
 				var storiesInNewOrder = [];
 
 				if (stories.isListBroken()) {
@@ -750,7 +744,7 @@ function HomeCtrl(session, stories, hacks,
 	};
 
 	$scope.test = function () {
-		hacks.runAddTest(stories, projectId);
+		hacks.runAddTest(stories, circleId);
 	};
 
 	$scope._test = function() {
@@ -764,10 +758,10 @@ function HomeCtrl(session, stories, hacks,
 		$scope.owners = [];
 		$scope.stories = storiesList;
 
-		$http.get('/data/' + projectId + '/first-story')
+		$http.get('/data/' + circleId + '/first-story')
 		.success(function (firstStory) {
 
-			$http.get('/data/' + projectId + '/stories')
+			$http.get('/data/' + circleId + '/stories')
 			.success(function (data) {
 
 				storiesList = [];
@@ -827,7 +821,7 @@ function HomeCtrl(session, stories, hacks,
 			}
 		});
 
-		$http.get("/data/" + projectId + "/users/names")
+		$http.get("/data/" + circleId + "/users/names")
 		.success(function (names) {
 			$scope.owners = names;
 		})
