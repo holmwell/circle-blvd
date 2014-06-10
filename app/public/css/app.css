@@ -649,7 +649,7 @@ button:focus {
 .phone-summary {
   padding-left: 0;
 }
-.phone-row.mine, .summary.mine {
+.phone-row.mine {
   color: #1E69B5;
 }
 
