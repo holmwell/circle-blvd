@@ -354,7 +354,89 @@ function HomeCtrl(session, stories, hacks,
 			return;
 		}
 
-		var newNextId = storyAfter.id;
+		var updateModelStoryOrder = function () {
+			// If the moved story was the first story, the preMove.storyAfter
+			// is now the first story (if it exists).
+			if (stories.getFirst().id === movedStory.id && preMove.storyAfter) {
+				stories.setFirst(preMove.storyAfter);
+			}
+
+			// We need to update 'nextId' of the following:
+			// 1. The story before the moved story, before it was moved.		
+			if (preMove.storyBefore) {
+				preMove.storyBefore.nextId = preMove.storyAfter ? preMove.storyAfter.id : getLastStoryId();
+			}
+			
+			// 2. The story before the moved story, after it was moved.
+			if (postMove.storyBefore) {
+				postMove.storyBefore.nextId = movedStory.id;
+			}
+			else {
+				// No need to set the "nextId" on the "storyBefore," because 
+				// there isn't one. Instead, we know that the moved story
+				// is now the first story.
+				stories.setFirst(movedStory);
+			}
+
+			// 3. The story that was moved, unless it's now the last story.
+			movedStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();	
+		}();
+		
+
+		var updateViewModelStoryOrder = function () {
+			// The YUI drag-and-drop stuff manipulates the DOM, 
+			// but doesn't touch our view-model, so we need to 
+			// update our stories array to reflect the new order
+			//  of things.
+			var applyNextMeeting = function (stories) {
+				var isAfterNextMeeting = false;
+				for (var key in stories) {
+					if (isAfterNextMeeting) {
+						stories[key].isAfterNextMeeting = true;
+					}
+					else if (stories[key].isNextMeeting) {				
+						isAfterNextMeeting = true;
+					}
+					else {
+						stories[key].isAfterNextMeeting = false;
+					}
+				}
+				return stories;
+			};
+
+			var storiesInNewOrder = [];
+
+			if (stories.isListBroken()) {
+				$scope.isBacklogBroken = true;
+				return;
+			}
+
+			var firstStory = stories.getFirst();
+			var currentStory = firstStory;
+			
+			while (currentStory) {
+				storiesInNewOrder.push(currentStory);
+				currentStory = stories.get(currentStory.nextId);
+			}
+
+			if (storiesInNewOrder.length === storiesList.length) {
+				// Update isAfterNextMeeting for all stories
+				storiesInNewOrder = applyNextMeeting(storiesInNewOrder);
+
+				// Update our view with the proper story order
+				//
+				// TODO: We really only need to update the range of
+				// stories affected, not all of them, but that can 
+				// be a performance optimization later.
+				for (var key in storiesInNewOrder) {
+					storiesList[key] = stories.get(storiesInNewOrder[key].id);
+				}
+			}
+			else {
+				console.log("Something unknown happened with the move. Need to refresh page.")
+			}
+		}(); // closure
+
 		stories.move(movedStory, postMove.storyAfter, function (err, response) {
 			if (err) {
 				// We failed. Probably because of a data integrity issue
@@ -365,89 +447,6 @@ function HomeCtrl(session, stories, hacks,
 				console.log(err);
 				return;
 			}
-
-			var updateModelStoryOrder = function () {
-				// If the moved story was the first story, the preMove.storyAfter
-				// is now the first story (if it exists).
-				if (stories.getFirst().id === movedStory.id && preMove.storyAfter) {
-					stories.setFirst(preMove.storyAfter);
-				}
-
-				// We need to update 'nextId' of the following:
-				// 1. The story before the moved story, before it was moved.		
-				if (preMove.storyBefore) {
-					preMove.storyBefore.nextId = preMove.storyAfter ? preMove.storyAfter.id : getLastStoryId();
-				}
-				
-				// 2. The story before the moved story, after it was moved.
-				if (postMove.storyBefore) {
-					postMove.storyBefore.nextId = movedStory.id;
-				}
-				else {
-					// No need to set the "nextId" on the "storyBefore," because 
-					// there isn't one. Instead, we know that the moved story
-					// is now the first story.
-					stories.setFirst(movedStory);
-				}
-
-				// 3. The story that was moved, unless it's now the last story.
-				movedStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();	
-			}();
-			
-
-			var updateViewModelStoryOrder = function () {
-				// The YUI drag-and-drop stuff manipulates the DOM, 
-				// but doesn't touch our view-model, so we need to 
-				// update our stories array to reflect the new order
-				//  of things.
-				var applyNextMeeting = function (stories) {
-					var isAfterNextMeeting = false;
-					for (var key in stories) {
-						if (isAfterNextMeeting) {
-							stories[key].isAfterNextMeeting = true;
-						}
-						else if (stories[key].isNextMeeting) {				
-							isAfterNextMeeting = true;
-						}
-						else {
-							stories[key].isAfterNextMeeting = false;
-						}
-					}
-					return stories;
-				};
-
-				var storiesInNewOrder = [];
-
-				if (stories.isListBroken()) {
-					$scope.isBacklogBroken = true;
-					return;
-				}
-
-				var firstStory = stories.getFirst();
-				var currentStory = firstStory;
-				
-				while (currentStory) {
-					storiesInNewOrder.push(currentStory);
-					currentStory = stories.get(currentStory.nextId);
-				}
-
-				if (storiesInNewOrder.length === storiesList.length) {
-					// Update isAfterNextMeeting for all stories
-					storiesInNewOrder = applyNextMeeting(storiesInNewOrder);
-
-					// Update our view with the proper story order
-					//
-					// TODO: We really only need to update the range of
-					// stories affected, not all of them, but that can 
-					// be a performance optimization later.
-					for (var key in storiesInNewOrder) {
-						storiesList[key] = stories.get(storiesInNewOrder[key].id);
-					}
-				}
-				else {
-					console.log("Something unknown happened with the move. Need to refresh page.")
-				}
-			}(); // closure
 		});
 	};
 
@@ -609,7 +608,7 @@ function HomeCtrl(session, stories, hacks,
 		// Even though we're waiting for viewContentLoaded, 
 		// I guess we need to yield to whatever else is happening.
 		$timeout(function () {
-			// Use the demo from http://yuilibrary.com/yui/docs/dd/list-drag.html
+			// Reference: http://yuilibrary.com/yui/docs/dd/list-drag.html
 			var gesturesIfTouch = Modernizr.touch ? 'dd-gestures' : 'dd-drop';
 			YUI({}).use('dd-proxy', 'dd-drop', gesturesIfTouch, function (Y) {
 				// keep a local instance of Y around for adding draggable
