@@ -146,10 +146,12 @@ function HomeCtrl(session, stories, hacks,
 
 		storyToSave.newComment = story.newComment;
 		
+		$timeout(function () {
+			$scope.deselect(story);	
+		});
 		stories.set(story.id, storyToSave, function (savedStory) {
 			story.newComment = undefined;
 			story.comments = savedStory.comments;
-			$scope.deselect(story);
 		});
 	};
 
