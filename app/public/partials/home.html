@@ -7,21 +7,21 @@
 	<p><a href="#/fix">Follow this link</a>, please.</p>
 </div>
 
-<div class="entry-facade col-xs-offset-2 col-xs-8 no-select" ng-hide="isAddingNew || isBacklogBroken">
+<div class="entry-facade col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-8 no-select" ng-hide="isAddingNew || isBacklogBroken">
 	<div class="row entry-facade-container">
-		<div class="col-xs-offset-2 col-xs-8 debug show-entry">
+		<div class="col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-8 debug show-entry">
 		+ <a ng-click="showEntry()" class="jsLink text-select">Add story</a>
 		</div>
 
-		<div class="col-xs-2 alt-mode" 
+		<div class="col-xs-2 col-md-8 alt-mode" 
 			ng-class="{alt: isManualAltMode || isAltMode}"
 			ng-click="toggleAltMode()" title="inbox mode"><i class="glyphicon glyphicon-align-justify"></i></div>
 	</div>
 </div>
 
-<div class="entry col-xs-offset-2 col-xs-8" ng-show="isAddingNew">
+<div class="entry col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-8" ng-show="isAddingNew">
 	<div class="row">
-		<div class="col-xs-offset-2 col-xs-8 debug">
+		<div class="col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-8 debug">
 			<ul class="entry-nav nav nav-pills row">
 				<li ng-class="{ active: isAdding['story'] }">
 					<a class="jsLink" ng-click="showEntry('story')">Story</a>
@@ -57,13 +57,13 @@
 			</div>
 		</div>
 
-		<div class="col-xs-2 alt-mode" 
+		<div class="col-xs-2 col-md-2 alt-mode" 
 		ng-class="{alt: isManualAltMode || isAltMode}"
 		ng-click="toggleAltMode()" title="inbox mode"><i class="glyphicon glyphicon-align-justify"></i></div>
 	</div>
 </div>
 
-<div id="backlog" class="col-xs-offset-2 col-xs-8 debug">
+<div id="backlog" class="col-xs-offset-2 col-xs-8 col-md-offset-2 col-md-8 debug">
 	<div class="storyWrapper row debug no-select" ng-repeat="story in stories"
 		ng-hide="(isAltMode || isManualAltMode)
 		&& (!story.isMoving 
@@ -71,8 +71,8 @@
 		&& !story.isDeadline 
 		&& !story.isNextMeeting)" data-story-id="{{story.id}}">
 
-		<div class="col-xs-2 debug">
-			<div class="backlog-mine col-xs-9 debug"
+		<div class="col-xs-2 cold-md-2 debug">
+			<div class="backlog-mine col-xs-9 col-md-9 debug"
 				ng-class="{done: isStoryDone(story)}">
 				<div ng-show="isStoryMine(story)" ng-click="bumpStatus(story)">
 					<i class="bump-status debug glyphicon glyphicon-record" 
@@ -81,7 +81,7 @@
 					ng-show="isStoryDone(story)"></i>
 				</div>
 			</div>
-			<div class="backlog-status col-xs-3 debug no-select">
+			<div class="backlog-status col-xs-3 col-md-3 debug no-select">
 				<i class="done-status" ng-show="story.isDeadline && !story.isAfterNextMeeting" 
 				ng-click="archive(story)" title="archive deadline"></i>
 				<i class="done-status" ng-show="isStoryDone(story)" ng-click="archive(story)" 
@@ -94,7 +94,7 @@
 			</div>
 		</div>
 
-		<div class="story col-xs-8 debug no-select" ng-class="{ 
+		<div class="story col-xs-8 col-md-8 debug no-select" ng-class="{ 
 				selected: story.isSelected, 
 				'not-selected': !story.isSelected,
 				first: story.isFirstStory,
@@ -107,10 +107,10 @@
 			<div ng-if="story.isSelected" class="text-select">
 				<form>
 					<div class="summary row">
-						<div class="col-xs-9">
+						<div class="col-xs-9 col-md-9">
 							<input id="boxForStory{{story.id}}" class="form-control"
 						type="text" ng-model="story.summary"/></div>
-						<div class="col-xs-3">
+						<div class="col-xs-3 col-md-3">
 							<div class="deselect"><a ng-click="deselect(story, $event)">Hide details</a></div>
 						</div>
 					</div>
@@ -137,28 +137,28 @@
 
 					<div class="status" ng-hide="story.isNextMeeting || story.isDeadline">How's it going?
 						<div class="row">
-							<div class="col-xs-2 debug">
+							<div class="col-xs-2 col-md-2 debug">
 								<a ng-class="{ active: isStorySad(story) }"
 								ng-click="setStoryStatus(story, 'sad')"
 								class="btn btn-default sad form-control">:-(</a>
 							</div>
-							<div class="col-xs-1 wider debug">
+							<div class="col-xs-1 col-md-1 wider debug">
 								<a ng-class="{ active: isStoryNew(story) }"
 								ng-click="setStoryStatus(story, '')"
 								class="btn btn-default question neutral form-control">
 								<span class="txt">?</span></a>
 							</div>
-							<div class="col-xs-3 wider">
+							<div class="col-xs-3 col-md-3 wider">
 								<a ng-class="{ active: isStoryAssigned(story) }"
 								ng-click="setStoryStatus(story, 'assigned')"
 								class="btn btn-default neutral form-control">:-)</a>
 							</div>
-							<div class="col-xs-3 wider">
+							<div class="col-xs-3 col-md-3 wider">
 								<a ng-class="{ active: isStoryActive(story) }"
 								ng-click="setStoryStatus(story, 'active')"
 								class="btn btn-default in-progress form-control">:-) :-)</a>
 							</div>
-							<div class="col-xs-3 wider">
+							<div class="col-xs-3 col-md-3 wider">
 								<a ng-class="{ active: isStoryDone(story) }"
 								ng-click="setStoryStatus(story, 'done')"
 								class="btn btn-default done form-control">Done!</a>
@@ -186,14 +186,14 @@
 			</div>
 
 			<div class="row no-select" ng-show="!story.isSelected" id="story-{{$index}}">
-				<div class="col-xs-10 paddy">
+				<div class="col-xs-10 col-md-10 paddy">
 					<span class="text-select">{{story.summary}}</span></div>
-				<div class="col-xs-2 grippy">
+				<div class="col-xs-2 col-md-2 grippy">
 					<div class="pull-right grippy-viz">
 						<span class="grippy-bar top"></span>
 						<span class="grippy-bar"></span>
 						<div class="row">
-							<div class="col-xs-offset-5">
+							<div class="col-xs-offset-5 col-md-offset-5">
 								<div class="glyphicon glyphicon-move">&nbsp;</div>
 							</div>
 						</div>
@@ -205,7 +205,7 @@
 
 		</div>
 
-		<div class="backlog-owner col-xs-2 debug no-select" 
+		<div class="backlog-owner col-xs-2 col-md-2 debug no-select" 
 			ng-class="{'after': story.isAfterNextMeeting}"
 			ng-click="select(story)">
 			<span class="text-select">{{story.owner}}</span><span ng-show="isStoryNew(story)">?</span>
