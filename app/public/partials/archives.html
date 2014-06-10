@@ -1,6 +1,6 @@
-<div id="backlog" class="col-xs-offset-2 col-xs-8 archives">
+<div id="backlog" class="col-xs-12 col-sm-offset-2 col-sm-8 archives">
 	<div class="storyWrapper row no-select" ng-repeat="archive in archives">
-		<div class="archive col-xs-offset-2 col-xs-8 no-select" 
+		<div class="archive col-xs-12 col-sm-offset-2 col-sm-8 no-select" 
 		ng-click="select(archive)"
 		ng-class="{ 
 			selected: archive.isSelected, 
@@ -35,6 +35,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-xs-2">&nbsp;</div>
+		<div class="hidden-xs col-sm-2">&nbsp;</div>
 	</div>
 </div>
