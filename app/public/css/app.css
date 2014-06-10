@@ -87,7 +87,7 @@
 }
 
 .menu {
-  padding-left: 0;
+  padding-left: 2.50ex;
   list-style: none;
 
   /*margin: auto;*/
@@ -100,7 +100,6 @@
 }
 .menu.col-xs-12 {
   margin-top: 1ex;
-  padding-left: 2.50ex;
 }
 
 .menu > li {
@@ -140,8 +139,9 @@
   padding: 3em;
   padding-top: 0;
   padding-right: 1.75ex;
-  padding-left: 1.75ex;  
-  max-width: 1350px !important;  
+  padding-left: 1.75ex;
+
+  max-width: 850px;  
 }
 
 .container {
@@ -373,6 +373,9 @@ h4, h5 {
   text-align: right;
   padding-bottom: 0;
   padding-right: 1.5ex;
+}
+.alignWithStoryList, .story, .archive {
+  max-width: 550px;
 }
 
 .alt-mode {
