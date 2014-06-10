@@ -316,6 +316,10 @@ h4, h5 {
   margin: 0;
 }
 
+.summary-input {
+  padding-right: 3.25ex;
+}
+
 .new-story {
   padding-top: 1.1ex;
   padding-bottom: 1.1ex;
@@ -644,7 +648,7 @@ button:focus {
 .phone-summary {
   padding-left: 0;
 }
-.phone-row.mine {
+.phone-row.mine, .summary.mine {
   color: #1E69B5;
 }
 
