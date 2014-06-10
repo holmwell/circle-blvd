@@ -712,37 +712,6 @@ function HomeCtrl(session, stories, hacks,
 	};
 
 
-	$scope.debug = function() {
-		console.log("Scope array: ");
-		$scope.stories.forEach(function (el, index) {
-			if (index < 7) {
-				console.log(index);
-				console.log(el);	
-			}
-		});
-
-		console.log("Array: ");
-		storiesList.forEach(function (el, index) {
-			if (index < 7) {
-				console.log(index);
-				console.log(el);	
-			}
-		});
-
-		// console.log("Assoc array: ");
-		// var ss = stories.all();
-		// var counter = 0;
-		// for (var storyId in ss) {
-		// 	if (counter < 7) {
-		// 		console.log(ss[storyId]);
-		// 		counter++;	
-		// 	}
-		// };
-
-		// console.log("First story: ");
-		// console.log(stories.getFirst());
-	};
-
 	$scope.test = function () {
 		hacks.runAddTest(stories, circleId);
 	};
