@@ -68,12 +68,12 @@
     </div>
      -->
 
-    <h2 class="debug col-xs-3"><a href="/">Circle Blvd.</a></h2>
-    <ul class="menu col-xs-4" ng-show="!isSignedIn()">
+    <h2 class="debug col-xs-12 col-md-3 title"><a href="/">Circle&nbsp;Blvd.</a></h2>
+    <!-- <ul class="menu col-xs-2 col-md-4" ng-show="!isSignedIn()">
        <li><a href="#/signin">Sign in</a></li>
-    </ul>
+    </ul> -->
 
-    <ul class="menu col-xs-4 debug" ng-show="isSignedIn()">
+    <ul class="menu visible-xs visible-sm col-xs-12 debug" ng-show="isSignedIn()">
       <li><a href="#/archives">Archives</a></li>
       <li><a href="#/profile">Profile</a></li>
       <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
@@ -81,15 +81,29 @@
       <li><a class="jsLink" ng-click="signOut()">Sign out</a></li>
     </ul> 
 
+    <!-- TODO: This duplicate menu is lame. -->
+    <ul class="menu hidden-xs hidden-sm col-md-4 debug" ng-show="isSignedIn()">
+      <li><a href="#/archives">Archives</a></li>
+      <li><a href="#/profile">Profile</a></li>
+      <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
+      
+      <li><a class="jsLink" ng-click="signOut()">Sign out</a></li>
+    </ul> 
   </div>
   <div class="view" ng-view></div>
 </div>
 
-<div class="footer">
-  circle boulevard . v<span app-version></span> . 
+<div class="footer hidden-xs">circle boulevard . v<span app-version></span> . 
   <a href="https://github.com/secret-project/circle-blvd">source code</a> on GitHub .
   <span>some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a></span>
 </div>
+
+<div class="footer visible-xs">
+  <div>circle boulevard . v<span app-version></span></div>
+  <div><span>some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a></span></div>
+  <div><a href="https://github.com/secret-project/circle-blvd">source code</a> on GitHub</div>
+</div>
+
 </div>
 
   <!-- In production use:

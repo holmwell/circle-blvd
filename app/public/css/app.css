@@ -82,6 +82,10 @@
   /*font-family: 'Headland One', serif;*/
   /*font-size: larger;*/
 }
+.title {
+  margin-bottom: 0;
+}
+
 .menu {
   padding-left: 0;
   list-style: none;
@@ -93,6 +97,10 @@
 
   /*font-size: larger;
   width: 100%;*/
+}
+.menu.col-xs-12 {
+  margin-top: 1ex;
+  padding-left: 2.50ex;
 }
 
 .menu > li {
