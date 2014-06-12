@@ -19,7 +19,7 @@
 	</div>
 </div>
 
-<div class="entry col-xs-12" ng-show="isAddingNew">
+<div class="entry" ng-show="isAddingNew">
 	<div class="row">
 		<div class="col-xs-12 col-sm-offset-2 col-sm-8 debug">
 			<ul class="entry-nav nav nav-pills row alignWithStoryList">
@@ -62,8 +62,7 @@
 		ng-click="toggleAltMode()" title="inbox mode"><i class="glyphicon glyphicon-align-justify"></i></div>
 	</div>
 </div>
-
-<div id="backlog" class="col-xs-12 debug">
+<div id="backlog" class="debug">
 	<div class="storyWrapper row debug no-select" ng-repeat="story in stories"
 		ng-hide="(isAltMode || isManualAltMode)
 		&& (!story.isMoving 
@@ -120,7 +119,6 @@
 
 					<div class="top-info" ng-hide="story.isNextMeeting || story.isDeadline">
 						<div class="owner">Who's doing this?
-							<!-- autocomplete="off"  -->
 							<input type="text" ng-model="story.owner" typeahead-owners 
 							class="typeahead form-control" />
 						</div>
@@ -213,11 +211,11 @@
 				</div>
 			</div>
 
-			<div ng-hide="story.isSelected" 
-				class="row no-select phone-row hidden-sm hidden-md hidden-lg" 
+ 			<div class="no-select phone-row hidden-sm hidden-md hidden-lg" 
 				ng-class="{mine: isStoryMine(story)}"
-				 id="story-{{$index}}">
-				<div class="col-xs-11 paddy">
+				ng-hide="story.isSelected" 
+				id="story-{{$index}}">
+ 				<div class="col-xs-11 paddy">
 					<div class="phone-backlog-status col-xs-2 debug no-select">
 						<i class="done-status" ng-show="story.isDeadline && !story.isAfterNextMeeting" 
 						ng-click="archive(story)" title="archive deadline"></i>
@@ -226,28 +224,28 @@
 						<i class="active-status" ng-show="isStoryActive(story)"></i>
 						<i class="sad-status glyphicon glyphicon-stop" 
 						ng-show="isStorySad(story)"></i>
-						<i class="new-status glyphicon glyphicon-gift"
-						ng-show="(isStoryNew(story) && isStoryMine(story))"></i>
+						<span class="new-status glyphicon glyphicon-gift"
+						ng-show="(isStoryNew(story) && isStoryMine(story))"></span>
 					</div>
 					<div class="text-select phone-summary col-xs-10">
 						<span>{{story.summary}}</span>
 					</div>
 				</div>
+				
 				<div class="col-xs-1 grippy" ng-hide="isAndroid">
 					<div class="pull-right grippy-viz">
 						<span class="grippy-bar top"></span>
 						<span class="grippy-bar"></span>
-						<div class="row">
-							<div class="col-xs-offset-5">
+						<div>
+							<div class="col-xs-offset-4">
 								<div class="glyphicon glyphicon-move">&nbsp;</div>
 							</div>
 						</div>
 						<span class="grippy-bar top"></span>
 						<span class="grippy-bar"></span>
 					</div>
-				</div>
+				</div> 
 			</div>
-
 		</div>
 
 		<div class="backlog-owner hidden-xs col-sm-2 debug no-select" 

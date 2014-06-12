@@ -76,6 +76,7 @@
   padding-right: 1.4em;*/
   padding: 1px;
   padding-top: 0;
+  padding-left: 0;
 /*  text-align: center;*/
 
   /*background-color: #666;*/
@@ -136,11 +137,7 @@
 
 .container-fluid.main {
   background: white;
-  padding: 3em;
-  padding-top: 0;
-  padding-right: 1.75ex;
-  padding-left: 1.75ex;
-
+  padding-bottom: 3em;
   max-width: 850px;  
 }
 
@@ -199,7 +196,7 @@ h4, h5 {
   padding-right: 1.5ex;
 }
 .storyWrapper {
-
+  padding-left: 1ex;
 }
 .story, .archive {
   background-color: #ddd;
@@ -232,11 +229,18 @@ h4, h5 {
   color: white;
 }
 
+
 .grippy {
   margin-left: -2ex;
   padding-right: 0;
   cursor: move;
   margin-top: 1px;
+}
+.phone-row .paddy {
+  padding-left: 0;
+}
+.phone-row .grippy {
+  margin-left: 0;
 }
 .grippy .glyphicon {
   font-size: 8pt;
@@ -328,14 +332,15 @@ h4, h5 {
 .paddy, .dragging-story {
   padding-top: 0.75ex;
   padding-bottom: 0.75ex;
-  padding-left: 1ex; 
+  /*padding-left: 1ex; */
 }
 .paddy .summary {
   padding-left: 1ex;
 }
 
 .entry {
-
+  padding-left: 1ex;
+  padding-right: 1.5ex;
 }
 .entry-nav {
 
@@ -644,7 +649,7 @@ button:focus {
 .phone-backlog-status {
   text-align: center;
   padding-top: 0.25ex;
-  padding-left: 1.15ex;
+  padding-left: 0;
 }
 .phone-backlog-status .done-status {
   margin-left: 0;
