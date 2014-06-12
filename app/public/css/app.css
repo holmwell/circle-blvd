@@ -48,6 +48,15 @@
   user-select: text;
 }
 
+.navbar-title {
+  color: #f6f6f6;
+  text-align: center;
+}
+.navbar-title h2 {
+  font-size: 14pt;
+  margin-top: 1.5ex;
+}
+
 .topMenu, .header {
   /*display: none;*/
 }
@@ -99,8 +108,9 @@
   /*font-size: larger;
   width: 100%;*/
 }
-.menu.col-xs-12 {
+.menu.visible-xs {
   margin-top: 1ex;
+  text-align: center;
 }
 
 .menu > li {
