@@ -44,11 +44,17 @@
     <div class="collapse navbar-collapse" id="navigation-circles">
       <ul class="nav navbar-nav">
         <li ng-repeat="circle in circleList()" ng-class="{active: isActiveCircle(circle)}">
-          <a class="jsLink" ng-click="setActiveCircle(circle, true)">{{circle.name}}</a>
+          <a class="jsLink" 
+            data-toggle="collapse" 
+            data-target="#navigation-circles"
+            ng-click="setActiveCircle(circle, true)">{{circle.name}}</a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li ng-show="hasMainframeAccess()"><a href="#/mainframe">Mainframe access</a></li>
+        <li ng-show="hasMainframeAccess()"><a 
+          data-toggle="collapse" 
+          data-target="#navigation-circles"
+          href="#/mainframe">Mainframe access</a></li>
       </ul>
     </div>
   </div> 
