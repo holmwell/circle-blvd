@@ -1,63 +1,70 @@
-<h3>Profile</h3>
 
-<p ng-show="!isSignedIn()">Please <a href="#/signin">sign in</a>.</p>
+<div ng-show="!isSignedIn()">
+	<h3>Profile</h3>
+	<p>Please <a href="#/signin">sign in</a>.</p>
+</div>
 
 <div ng-show="isSignedIn()">
-	<div class="row">
-		<div class="col-sm-4"><input ng-model="name" type="text" class="form-control"/></div>
-		<div class="col-sm-4"><input ng-model="email" type="text" class="form-control"/></div>
-		<div class="col-sm-3"><button class="btn btn-default pull-right" ng-click="updateUser(name, email)" >Save</button></div>
-	</div>
-	<p>{{messages.user}}</p>
-
-	<h5>Email address used for notifications</h5>
-	<div class="row">
-		<div class="col-sm-4"><input ng-model="notificationEmail" type="email" class="form-control"/></div>
-		<div class="col-sm-4 input-aligned">People can see this address.</div>
-		<div class="col-sm-3">
-			<button class="btn btn-default pull-right" 
-			ng-click="updateNotificationEmail(notificationEmail)">Save</button> 
+	<div class="col-sm-offset-1">
+		<h5>Profile</h5>
+		<div class="row">
+			<div class="col-sm-4"><input ng-model="name" 
+				type="text" class="form-control" placeholder="Name"/></div>
+			<div class="col-sm-4"><input ng-model="email" 
+				type="text" class="form-control" placeholder="Email"/></div>
+			<div class="col-sm-3"><button class="btn btn-default pull-right" ng-click="updateUser(name, email)" >Save</button></div>
 		</div>
-	</div>
-	<p>{{messages.notificationEmail}}</p>
+		<p>{{messages.user}}</p>
 
-	<h5>Change password</h5>
-	<div class="row">
-		<div class="col-sm-4"><input ng-model="pass1" type="password" placeholder="New password" class="form-control"></div>
-		<div class="col-sm-4"><input ng-model="pass2" type="password" placeholder="Again" class="form-control"></div>
-		<div class="col-sm-3"><button class="btn btn-default pull-right" ng-click="updatePassword(pass1, pass2)">Update</button></div>
-	</div>
-	<p>{{messages.password}}</p>
-
-	<div class="donations" ng-show="supportsPayments">
-		<h5>Subscription plan</h5>
-		<div class="row plans">
-			<div ng-repeat="plan in plans">
-				<div class="col-sm-3 plan" 
-					ng-class="{active: (activePlan === plan)}" 
-					ng-click="setPlan(plan)">
-					<div ng-if="plan.name === 'Supporter'">
-						<span class="support-circle"></span>
-					</div>
-					<div ng-if="plan.name === 'Organizer'">
-						<span class="support-circle"></span>
-						<span class="support-circle"></span>
-						<span class="support-circle"></span>
-					</div>
-					<div ng-if="plan.name === 'Patron'">
-						<span class="support-circle"></span>
-						<span class="support-circle"></span>
-						<span class="support-circle"></span>
-						<span class="support-circle"></span>
-						<span class="support-circle"></span>
-					</div>
-					<div class="name">{{plan.name}}</div>
-					<div class="amount">{{plan.displayAmount}} per month</div>
-				</div>
+		<h5>Notifications email address</h5>
+		<div class="row">
+			<div class="col-sm-4"><input ng-model="notificationEmail" type="email" class="form-control"/></div>
+			<div class="col-sm-4 input-aligned">People can see this address.</div>
+			<div class="col-sm-3">
+				<button class="btn btn-default pull-right" 
+				ng-click="updateNotificationEmail(notificationEmail)">Save</button> 
 			</div>
-			<div class="col-sm-2 checkout"><button class="btn btn-default pull-right" ng-click="openStripeCheckout($event)">Checkout</button></div>
 		</div>
+		<p>{{messages.notificationEmail}}</p>
 
-		<p ng-show="activePlan.name" class="col-sm-9 subtle cancel"><a class="jsLink subtle" ng-click="cancelSubscription()">cancel subscription</a></p>
+		<h5>Change password</h5>
+		<div class="row">
+			<div class="col-sm-4"><input ng-model="pass1" type="password" placeholder="New password" class="form-control"></div>
+			<div class="col-sm-4"><input ng-model="pass2" type="password" placeholder="Again" class="form-control"></div>
+			<div class="col-sm-3"><button class="btn btn-default pull-right" ng-click="updatePassword(pass1, pass2)">Update</button></div>
+		</div>
+		<p>{{messages.password}}</p>
+
+		<div class="donations" ng-show="supportsPayments">
+			<h5>Subscription plan</h5>
+			<div class="row plans">
+				<div ng-repeat="plan in plans">
+					<div class="col-sm-3 plan" 
+						ng-class="{active: (activePlan === plan)}" 
+						ng-click="setPlan(plan)">
+						<div ng-if="plan.name === 'Supporter'">
+							<span class="support-circle"></span>
+						</div>
+						<div ng-if="plan.name === 'Organizer'">
+							<span class="support-circle"></span>
+							<span class="support-circle"></span>
+							<span class="support-circle"></span>
+						</div>
+						<div ng-if="plan.name === 'Patron'">
+							<span class="support-circle"></span>
+							<span class="support-circle"></span>
+							<span class="support-circle"></span>
+							<span class="support-circle"></span>
+							<span class="support-circle"></span>
+						</div>
+						<div class="name">{{plan.name}}</div>
+						<div class="amount">{{plan.displayAmount}} per month</div>
+					</div>
+				</div>
+				<div class="col-sm-2 checkout"><button class="btn btn-default pull-right" ng-click="openStripeCheckout($event)">Subscribe</button></div>
+			</div>
+
+			<p ng-show="activePlan.name" class="col-sm-9 subtle cancel"><a class="jsLink subtle" ng-click="cancelSubscription()">cancel subscription</a></p>
+		</div>
 	</div>
 </div>
