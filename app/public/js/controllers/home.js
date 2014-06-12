@@ -2,6 +2,10 @@ function HomeCtrl(session, stories, hacks,
 	$scope, $timeout, $http, 
 	$location, $routeParams, $route) {
 
+	$scope.isAndroid = function() {
+        return /Android/i.test(navigator.userAgent);
+    }(); // closure
+
 	// HACK: Until we can figure out how to stop this properly,
 	// reload the page when this happens.
 	var handleHierarchyRequestErr = function (e) {
