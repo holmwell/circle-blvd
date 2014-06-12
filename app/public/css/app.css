@@ -643,7 +643,8 @@ button:focus {
 
 .phone-backlog-status {
   text-align: center;
-  padding-left: 0;
+  padding-top: 0.25ex;
+  padding-left: 1.15ex;
 }
 .phone-backlog-status .done-status {
   margin-left: 0;
@@ -696,6 +697,11 @@ button:focus {
   margin-top: 1px;
   margin-left: 0.6ex;
 }
+.phone-backlog-status .new-status,
+.phone-backlog-status .sad-status {
+  margin-left: 0.35ex;
+}
+
 .done-status, .active-status {
   display: inline-block;
 
