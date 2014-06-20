@@ -36,12 +36,19 @@ directive('appendLinky', ['$filter', function ($filter) {
 		}
 	};
 }]).
-directive('story', function () {
+directive('spStory', function () {
 	return {
 		restrict: 'E',
 		templateUrl: 'partials/story.html',
 		controller: StoryCtrl
 	};
+}).
+directive('spStoryList', function () {
+	return {
+		restrict: 'E',
+		templateUrl: 'partials/storyList.html',
+		controller: StoryListCtrl
+	}
 }).
 directive('autosize', ['$timeout', function ($timeout) {
 	return {

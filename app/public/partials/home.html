@@ -62,13 +62,4 @@
 		ng-click="toggleAltMode()" title="inbox mode"><i class="glyphicon glyphicon-align-justify"></i></div>
 	</div>
 </div>
-<div id="backlog" class="debug">
-	<div class="storyWrapper row debug no-select" ng-repeat="story in stories"
-		ng-hide="(isAltMode || isManualAltMode)
-		&& (!story.isMoving 
-		&& story.isAfterNextMeeting
-		&& !story.isDeadline 
-		&& !story.isNextMeeting)" data-story-id="{{story.id}}">
-		<story/>
-	</div> <!-- ng-repeat -->
-</div> <!-- backlog -->
+<sp-story-list/>
