@@ -11,6 +11,9 @@ function DocsCtrl(session, $scope) {
 		"nextId": "2",
 		"isFirstStory": true,
 		"summary": "This story is done.",
+		"description": "Hi! This is the first story in this story-list " +
+		"demonstration. Please stomp around and see what this thing can " +
+		"do.",
 		"owner": "Phil",
 		"status": "done",
 		"createdBy": {
@@ -18,7 +21,7 @@ function DocsCtrl(session, $scope) {
 		},
 		"comments": [
 		  {
-			"text": "Comment!",
+			"text": "Stories can have comments. :-)",
 			"createdBy": {
 			  "name": "Phil",
 			},
@@ -35,49 +38,73 @@ function DocsCtrl(session, $scope) {
 	  "1": firstStory,
 	  "2": {
 		"id": "2",
-		"nextId": "3",
+		"nextId": "2.5",
 		"summary": "This one is in progress",
+		"description": "They're called 'stories' because, well, we " +
+		"don't know why. However, 'tasks' sounds a bit boring, don't you " +
+		"think?",
 		"status": "active",
 		"createdBy": {
 		  "name": "Phil",
 		}
 	  },
+	  "2.5": {
+		"id": "2.5",
+		"nextId": "3",
+		"summary": "This is a milepost",
+		"status": "",
+		"description": "Mileposts can be useful if things need to be " + 
+		"done before or after a specific event.",
+		isDeadline: true
+	  },
 	  "3": {
 		"id": "3",
-		"nextId": "3.5",
-		"summary": "Nobody is assigned to this story",
+		"nextId": "3.25",
+		"owner": me,
+	  	"summary": "You're assigned to this new story",
+	  	"description": "Mash the tiny circle on the left to bump the " +
+	  	"status of this story along. Once a story is 'done', it can " + 
+	  	"be archived by pressing the large circle. Try it!",
 		"createdBy": {
 		  "name": "Phil",
 		}
 	  },
+	  "3.25": {
+		"id": "3.25",
+		"nextId": "3.5",
+		"summary": "Next meeting",
+		"description": "What needs to be done before your next meeting? " +
+		"Move this special story to bring your team's focus to the top of " + 
+		"your story list.",
+		"isNextMeeting": true,
+	  },
 	  "3.5": {
 	  	"id": "3.5",
 	  	"nextId": "4",
-	  	"owner": me,
-	  	"summary": "You're assigned to this new story",
+		"summary": "Nobody is assigned to this story",
+		"description": "Stories without confirmed owners have a question mark" + 
+		"next to them.",
 	  	"createdBy": {
 		  "name": "Phil",
 		}
 	  },
 	  "4": {
 		"id": "4",
-		"nextId": "5",
+		"nextId": "6",
 		"summary": "There's an issue with this story",
+		"description": "Of course, sometimes stories need to be talked about.",
 		"status": "sad",
 		"createdBy": {
 		  "name": "Phil",
 		}
 	  },
-	  "5": {
-		"id": "5",
-		"nextId": "6",
-		"summary": "Next meeting",
-		"isNextMeeting": true,
-	  },
 	  "6": {
 		"id": "6",
 		"nextId": "7",
 		"summary": "Use the grippy cross, on the right, to move stories",
+		"description": "This works on desktops, laptops, iPads and iPhones, " +
+		"but not on Android things (yet).",
+		"owner": me,
 		"status": "",
 		"createdBy": {
 		  "name": "Phil",
@@ -87,7 +114,7 @@ function DocsCtrl(session, $scope) {
 		"id": "7",
 		"nextId": "8",
 		"summary": "Click stories to see details",
-		"description": ":-)",
+		"description": "Thanks. :-)",
 		"createdBy": {
 		  "name": "Phil",
 		}
@@ -97,7 +124,7 @@ function DocsCtrl(session, $scope) {
 		"nextId": "9",
 		"summary": "Use mileposts as waypoints in your journey",
 		"status": "",
-		"description": "Things.",
+		"description": "They're the best.",
 		isDeadline: true
 	  },
 	  "9": {
