@@ -438,17 +438,21 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 			}
 		}(); // closure
 
-		stories.move(movedStory, postMove.storyAfter, function (err, response) {
-			if (err) {
-				// We failed. Probably because of a data integrity issue
-				// on the server that we need to wait out. 
-				//
-				// TODO: Get the latest list of stories, and notify
-				// the guest what's up.
-				console.log(err);
-				return;
-			}
-		});
+		// Without this $timeout, there is a slight delay
+		// in facade mode.
+		$timeout(function() {
+			stories.move(movedStory, postMove.storyAfter, function (err, response) {
+				if (err) {
+					// We failed. Probably because of a data integrity issue
+					// on the server that we need to wait out. 
+					//
+					// TODO: Get the latest list of stories, and notify
+					// the guest what's up.
+					console.log(err);
+					return;
+				}
+			});
+		}, 0);
 	};
 
 	var attachToDragEvents = function (Y) {

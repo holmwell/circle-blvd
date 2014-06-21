@@ -1,137 +1,132 @@
 function DocsCtrl(session, $scope) {
-	
+
+	var me = "Me";
+
+	$scope.whoami = me;	
 	$scope.isFacade = true;
 
-	var storiesBlob = {
-	  "13a7b00b3837a7abf3e0077df726181e": {
-	    "id": "13a7b00b3837a7abf3e0077df726181e",
-	    "nextId": "13a7b00b3837a7abf3e0077df7262af9",
-	    "isFirstStory": true,
-	    "summary": "first",
-	    "owner": "Phil",
-	    "status": "done",
-	    "createdBy": {
-	      "name": "Phil",
-	    },
-	    "comments": [
-	      {
-	        "text": "Comment!",
-	        "createdBy": {
-	          "name": "Phil",
-	        },
-	        "timestamp": 1402388429872
-	      }
-	    ]
+	var firstStory = {
+		"_id": "1",
+		"id": "1",
+		"nextId": "2",
+		"isFirstStory": true,
+		"summary": "This story is done.",
+		"owner": "Phil",
+		"status": "done",
+		"createdBy": {
+		  "name": "Phil",
+		},
+		"comments": [
+		  {
+			"text": "Comment!",
+			"createdBy": {
+			  "name": "Phil",
+			},
+			"timestamp": 1402388429872
+		  }
+		]
+	};
+
+	var stories1 = {
+		"1": firstStory
+	};
+
+	var stories2 = {
+	  "1": firstStory,
+	  "2": {
+		"id": "2",
+		"nextId": "3",
+		"summary": "This one is in progress",
+		"status": "active",
+		"createdBy": {
+		  "name": "Phil",
+		}
 	  },
-	  "13a7b00b3837a7abf3e0077df7262af9": {
-	    "id": "13a7b00b3837a7abf3e0077df7262af9",
-	    "nextId": "13a7b00b3837a7abf3e0077df72612df",
-	    "summary": "second",
-	    "createdBy": {
-	      "name": "Phil",
-	    }
+	  "3": {
+		"id": "3",
+		"nextId": "3.5",
+		"summary": "Nobody is assigned to this story",
+		"createdBy": {
+		  "name": "Phil",
+		}
 	  },
-	  "13a7b00b3837a7abf3e0077df72612df": {
-	    "id": "13a7b00b3837a7abf3e0077df72612df",
-	    "nextId": "13a7b00b3837a7abf3e0077df72611eb",
-	    "summary": "third",
-	    "createdBy": {
-	      "name": "Phil",
-	    }
+	  "3.5": {
+	  	"id": "3.5",
+	  	"nextId": "4",
+	  	"owner": me,
+	  	"summary": "You're assigned to this new story",
+	  	"createdBy": {
+		  "name": "Phil",
+		}
 	  },
-	  "13a7b00b3837a7abf3e0077df72611eb": {
-	    "id": "13a7b00b3837a7abf3e0077df72611eb",
-	    "nextId": "13a7b00b3837a7abf3e0077df725ffc3",
-	    "summary": "fourth",
-	    "createdBy": {
-	      "name": "Phil",
-	    }
+	  "4": {
+		"id": "4",
+		"nextId": "5",
+		"summary": "There's an issue with this story",
+		"status": "sad",
+		"createdBy": {
+		  "name": "Phil",
+		}
 	  },
-	  "13a7b00b3837a7abf3e0077df725ffc3": {
-	    "id": "13a7b00b3837a7abf3e0077df725ffc3",
-	    "nextId": "13a7b00b3837a7abf3e0077df725abaa",
-	    "summary": "fifth",
-	    "owner": "Phil",
-	    "status": "",
-	    "createdBy": {
-	      "name": "Phil",
-	    }
+	  "5": {
+		"id": "5",
+		"nextId": "6",
+		"summary": "Next meeting",
+		"isNextMeeting": true,
 	  },
-	  "13a7b00b3837a7abf3e0077df725abaa": {
-	    "id": "13a7b00b3837a7abf3e0077df725abaa",
-	    "nextId": "13a7b00b3837a7abf3e0077df725e31d",
-	    "summary": "sixth",
-	    "status": "",
-	    "createdBy": {
-	      "name": "Phil",
-	    }
+	  "6": {
+		"id": "6",
+		"nextId": "7",
+		"summary": "Use the grippy cross, on the right, to move stories",
+		"status": "",
+		"createdBy": {
+		  "name": "Phil",
+		}
 	  },
-	  "13a7b00b3837a7abf3e0077df725e31d": {
-	    "id": "13a7b00b3837a7abf3e0077df725e31d",
-	    "nextId": "13a7b00b3837a7abf3e0077df71f8e5a",
-	    "summary": "seventh",
-	    "createdBy": {
-	      "name": "Phil",
-	    }
+	  "7": {
+		"id": "7",
+		"nextId": "8",
+		"summary": "Click stories to see details",
+		"description": ":-)",
+		"createdBy": {
+		  "name": "Phil",
+		}
 	  },
-	  "13a7b00b3837a7abf3e0077df71f8e5a": {
-	    "id": "13a7b00b3837a7abf3e0077df71f8e5a",
-	    "nextId": "13a7b00b3837a7abf3e0077df725ef78",
-	    "summary": "Next meeting",
-	    "status": "",
-	    "description": "Things.",
-	    "isNextMeeting": true
+	  "8": {
+		"id": "8",
+		"nextId": "9",
+		"summary": "Use mileposts as waypoints in your journey",
+		"status": "",
+		"description": "Things.",
+		isDeadline: true
 	  },
-	  "13a7b00b3837a7abf3e0077df725ef78": {
-	    "id": "13a7b00b3837a7abf3e0077df725ef78",
-	    "nextId": "13a7b00b3837a7abf3e0077df725f26e",
-	    "summary": "eighth",
-	    "owner": "Phil",
-	    "status": "",
-	    "createdBy": {
-	      "name": "Phil",
-	    }
+	  "9": {
+		"id": "9",
+		"nextId": "10",
+		"summary": "Have fun :-)",
+		"status": "",
+		"createdBy": {
+		  "name": "Phil",
+		}
 	  },
-	  "13a7b00b3837a7abf3e0077df725f26e": {
-	    "id": "13a7b00b3837a7abf3e0077df725f26e",
-	    "nextId": "last-13a7b00b3837a7abf3e0077df71f876b",
-	    "summary": "ninth",
-	    "createdBy": {
-	      "name": "Phil",
-	    }
+	  "10": {
+		"id": "10",
+		"nextId": "last-demo",
+		"summary": "That's it.",
+		"createdBy": {
+		  "name": "Phil",
+		}
 	  }
 	};
 
-	var firstStory = {
-	  "_id": "13a7b00b3837a7abf3e0077df726181e",
-	  "_rev": "59-01e39d97e7caeb4ed6d2db51990a70aa",
-	  "summary": "first",
-	  "createdBy": {
-	    "name": "Phil",
-	  },
-	  "nextId": "13a7b00b3837a7abf3e0077df7262af9",
-	  "type": "story",
-	  "timestamp": 1402384319785,
-	  "id": "13a7b00b3837a7abf3e0077df726181e",
-	  "isFirstStory": true,
-	  "lastTransactionId": "bc4f1a43-e92b-47c7-a9ec-aa7cd713638d",
-	  "owner": "Phil",
-	  "status": "done",
-	  "comments": [
-	    {
-	      "text": "Comment!",
-	      "createdBy": {
-	        "name": "Phil",
-	        "id": "1eb1c0dd20e4f32dc68b882315017df6"
-	      },
-	      "timestamp": 1402388429872
-	    }
-	  ]
+	$scope.lesson1 = {
+		firstStory: firstStory,
+		allStories: stories1
 	};
 
-	$scope.data = {
+	$scope.lesson2 = {
 		firstStory: firstStory,
-		allStories: storiesBlob
+		allStories: stories2
 	};
 }
 DocsCtrl.$inject = ['session', '$scope'];
