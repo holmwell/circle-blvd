@@ -69,30 +69,6 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 		}
 	};
 
-	$scope.$on('storyNotify', function (e, story, event) {
-		if (!story.isNotifying && !story.isOwnerNotified) {
-			story.isNotifying = true;
-
-			var notificationSuccessful = function () {
-				story.isNotifying = undefined;
-				story.isOwnerNotified = true;
-			};
-
-			$http.post('/data/story/notify/new', story)
-			.success(function (data) {
-				notificationSuccessful();
-			})
-			.error (function (data, status) {
-				story.isNotifying = undefined;
-				console.log("Notify error");
-				console.log(status);
-				console.log(data);
-			});
-
-			event.stopPropagation();
-		}		
-	});
-
 	var scrollToStorySpecifiedByUrl = function () {
 		var storyId = $routeParams.storyId;
 		if (!storyId) {

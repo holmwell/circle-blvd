@@ -199,6 +199,36 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 		stories.save(serverStory);
 	});
 
+	$scope.$on('storyNotify', function (e, story, event) {
+		if (!story.isNotifying && !story.isOwnerNotified) {
+			story.isNotifying = true;
+
+			var notificationSuccessful = function () {
+				story.isNotifying = undefined;
+				story.isOwnerNotified = true;
+			};
+
+			event.stopPropagation();
+
+			if (isFacade) {
+				var oneSecond = 1000;
+				$timeout(notificationSuccessful, oneSecond);
+				return;
+			}
+
+			$http.post('/data/story/notify/new', story)
+			.success(function (data) {
+				notificationSuccessful();
+			})
+			.error (function (data, status) {
+				story.isNotifying = undefined;
+				console.log("Notify error");
+				console.log(status);
+				console.log(data);
+			});
+		}		
+	});
+
 	$scope.$on('scrollToStory', function (e, storyId) {
 		// Special stories
 		if (storyId === "next-meeting") {
