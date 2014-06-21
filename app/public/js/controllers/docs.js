@@ -1,4 +1,4 @@
-function DocsCtrl(session, $scope, $http) {
+function DocsCtrl(session, $scope) {
 	
 	var storiesBlob = {
 	  "13a7b00b3837a7abf3e0077df726181e": {
@@ -127,34 +127,9 @@ function DocsCtrl(session, $scope, $http) {
 	  ]
 	};
 
-	var buildStoryList = function (firstStory, stories) {
-		storiesList = [];
-
-		var currentStory = firstStory;
-		var isAfterNextMeeting = false;
-
-		while (currentStory) {
-			storiesList.push(currentStory); // <3 pass by reference	
-
-			if (isAfterNextMeeting) {
-				currentStory.isAfterNextMeeting = true;
-			}
-			else if (currentStory.isNextMeeting) {					
-				isAfterNextMeeting = true;
-			}
-
-			var nextStoryId = currentStory.nextId;
-			if (nextStoryId) {
-				currentStory = stories[nextStoryId];
-			}
-			else {
-				currentStory = undefined;
-			}
-		}
-
-		$scope.tmpStories = storiesList;
+	$scope.data = {
+		firstStory: firstStory,
+		allStories: storiesBlob
 	};
-
-	buildStoryList(firstStory, storiesBlob);
 }
-DocsCtrl.$inject = ['session', '$scope', '$http'];
+DocsCtrl.$inject = ['session', '$scope'];
