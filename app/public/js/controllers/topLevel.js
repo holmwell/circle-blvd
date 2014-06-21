@@ -141,8 +141,12 @@ function TopLevelCtrl(session, $scope, $http, $location, $route) {
 				session.save();
 			})
 			.error(function (data, status, headers, config) {
-				if ($scope.isSignedIn() || path !== '/signin') {
+				if ($scope.isSignedIn()) {
 					$scope.signOut();	
+				}
+
+				if (path !== '/signin' && path !== '/docs') {
+					$scope.signOut();
 				}
 			});
 		});	
