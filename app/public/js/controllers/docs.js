@@ -14,7 +14,7 @@ function DocsCtrl(session, $scope) {
 		"description": "Hi! This is the first story in this story-list " +
 		"demonstration. Please stomp around and see what this thing can " +
 		"do.",
-		"owner": "Phil",
+		"owner": "Alaina",
 		"status": "done",
 		"createdBy": {
 		  "name": "Phil",
@@ -39,6 +39,7 @@ function DocsCtrl(session, $scope) {
 	  "2": {
 		"id": "2",
 		"nextId": "2.5",
+		"owner": "Nicholas",
 		"summary": "This one is in progress",
 		"description": "They're called 'stories' because, well, we " +
 		"don't know why. However, 'tasks' sounds a bit boring, don't you " +
