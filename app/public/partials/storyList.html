@@ -1,6 +1,6 @@
 <div id="backlog" class="debug">
 	<div class="storyWrapper row debug no-select" ng-repeat="story in stories"
-		ng-hide="(isAltMode || isManualAltMode)
+		ng-hide="enableAltMode
 		&& (!story.isMoving 
 		&& story.isAfterNextMeeting
 		&& !story.isDeadline 

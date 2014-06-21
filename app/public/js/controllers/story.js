@@ -1,4 +1,8 @@
-function StoryCtrl($scope) {
+function StoryCtrl($scope, $timeout) {
+
+	$scope.isAndroid = function() {
+        return /Android/i.test(navigator.userAgent);
+    }(); // closure
 
 	var isStory = function (story) {
 		if (!story || story.isDeadline || story.isNextMeeting) {
@@ -62,6 +66,13 @@ function StoryCtrl($scope) {
 		return false;
 	};
 
+	$scope.setStoryStatus = function (story, status) {
+		if (story) {
+			story.status = status;			
+			$scope.$emit('storyChanged', story);
+		}
+	};
+
 	var statusOrder = ['sad','assigned','active','done'];
 	$scope.bumpStatus = function (story) {
 		if (story) {
@@ -83,5 +94,51 @@ function StoryCtrl($scope) {
 			}
 		}
 	};
+
+	$scope.select = function (story) {
+		// if (isDragging) {
+		// 	// Do nothing. We're dragging. See the note
+		// 	// in 'drag:end' as to why.
+		// 	return;
+		// }
+
+		// Do not refocus stuff if we're already on this story.
+		if (!story.isSelected) {
+			$scope.$emit('beforeStorySelected');
+			story.isSelected = true;
+			$scope.$emit('storySelected', story);
+		}	
+	};
+
+	$scope.deselect = function (story, event) {
+		if (story && story.isSelected) {
+			story.isSelected = false;
+			
+			$scope.$emit('storyDeselected', story, event);
+
+			if (event) {
+				event.stopPropagation();	
+			}
+		}
+	};
+
+	$scope.archive = function (story) {
+		$scope.$emit('storyArchived', story);
+	};
+
+	$scope.remove = function (story) {
+		$scope.$emit('storyRemoved', story);
+	};
+
+	$scope.notify = function (story, event) {
+		$scope.$emit('storyNotify', story, event);
+	};
+
+	$scope.save = function (story) {
+		$timeout(function () {
+			$scope.deselect(story);	
+		});
+		$scope.$emit('storySaved', story);
+	};
 }
-StoryCtrl.$inject = ['$scope'];
+StoryCtrl.$inject = ['$scope', '$timeout'];

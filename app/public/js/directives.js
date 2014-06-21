@@ -47,7 +47,12 @@ directive('spStoryList', function () {
 	return {
 		restrict: 'E',
 		templateUrl: 'partials/storyList.html',
-		controller: StoryListCtrl
+		controller: StoryListCtrl,
+		scope: {
+			stories: '=',
+			owners: '=',
+			enableAltMode: '='
+		}
 	}
 }).
 directive('autosize', ['$timeout', function ($timeout) {

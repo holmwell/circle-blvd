@@ -2,10 +2,6 @@ function HomeCtrl(session, stories, hacks,
 	$scope, $timeout, $http, 
 	$location, $routeParams, $route) {
 
-	$scope.isAndroid = function() {
-        return /Android/i.test(navigator.userAgent);
-    }(); // closure
-
 	// HACK: Until we can figure out how to stop this properly,
 	// reload the page when this happens.
 	var handleHierarchyRequestErr = function (e) {
@@ -63,45 +59,31 @@ function HomeCtrl(session, stories, hacks,
 		}	
 	}();
 
-	$scope.select = function (story) {
-		if (isDragging) {
-			// Do nothing. We're dragging. See the note
-			// in 'drag:end' as to why.
-			return;
+	$scope.$on('beforeStorySelected', function (e) {
+		// Deselect the story that was selected previously
+		if (selectedStory) {
+			selectedStory.isSelected = false;
 		}
+	});
 
-		// Do not refocus stuff if we're already on this story.
-		if (!story.isSelected) {
-			// Deselect the story that was selected previously
-			if (selectedStory) {
-				selectedStory.isSelected = false;
-			}
+	$scope.$on('storySelected', function (e, story) {
+		selectedStory = story;
 
-			story.isSelected = true;
-			selectedStory = story;
+		// Bring the focus to the default input box, 
+		// which is likely the summary text.
+		//
+		// We do need this timeout wrapper around focus
+		// for this to work, for whatever reason.
+		$timeout(function () {
+			var boxId = "boxForStory" + story.id;
+			hacks.focus(boxId);
+		});
+	});
 
-			// Bring the focus to the default input box, 
-			// which is likely the summary text.
-			//
-			// We do need this timeout wrapper around focus
-			// for this to work, for whatever reason.
-			$timeout(function () {
-				var boxId = "boxForStory" + story.id;
-				hacks.focus(boxId);
-			});
-		}	
-	};
+	$scope.$on('storyDeselected', function (e, story, event) {
+		selectedStory = undefined;
+	});
 
-	$scope.deselect = function (story, event) {
-		if (story && story.isSelected) {
-			story.isSelected = false;
-			
-			selectedStory = undefined;
-			if (event) {
-				event.stopPropagation();	
-			}
-		}
-	};
 
 	var insertNewStory = function (newStory, callback) {
 		stories.insertFirst(newStory, circleId, function (serverStory) {
@@ -137,7 +119,7 @@ function HomeCtrl(session, stories, hacks,
 		}
 	};
 
-	$scope.save = function (story) {
+	$scope.$on('storySaved', function (e, story) {
 		var storyToSave = stories.get(story.id);
 		
 		// TODO: We can probably just have this on the 
@@ -150,14 +132,11 @@ function HomeCtrl(session, stories, hacks,
 
 		storyToSave.newComment = story.newComment;
 		
-		$timeout(function () {
-			$scope.deselect(story);	
-		});
 		stories.set(story.id, storyToSave, function (savedStory) {
 			story.newComment = undefined;
 			story.comments = savedStory.comments;
 		});
-	};
+	});
 
 	var removeFromView = function (viewStory, serverStory) {
 
@@ -189,7 +168,7 @@ function HomeCtrl(session, stories, hacks,
 		// $timeout(makeStoriesDraggable, 0);
 	};
 
-	$scope.archive = function (story) {
+	$scope.$on('storyArchived', function (e, story) {
 		var storyToArchive = stories.get(story.id);
 		removeFromView(story, storyToArchive);
 		$http.put('/data/story/archive', storyToArchive)
@@ -200,9 +179,9 @@ function HomeCtrl(session, stories, hacks,
 			// TODO: Account for server down
 			console.log(data);
 		});
-	};
+	});
 
-	$scope.remove = function (story) {
+	$scope.$on('storyRemoved', function (e, story) {
 		// TODO: Sometimes all the stories after the
 		// removed story are no longer shown, but the
 		// data is fine on the server so a refresh 
@@ -221,9 +200,9 @@ function HomeCtrl(session, stories, hacks,
 			console.log(status);
 			console.log(data);
 		});
-	};
+	});
 
-	$scope.notify = function (story, event) {
+	$scope.$on('storyNotify', function (e, story, event) {
 		if (!story.isNotifying && !story.isOwnerNotified) {
 			story.isNotifying = true;
 
@@ -245,7 +224,7 @@ function HomeCtrl(session, stories, hacks,
 
 			event.stopPropagation();
 		}		
-	};
+	});
 
 	var scrollToStorySpecifiedByUrl = function () {
 		var storyId = $routeParams.storyId;
@@ -630,15 +609,6 @@ function HomeCtrl(session, stories, hacks,
 		}, 0);
 	};
 
-	$scope.setStoryStatus = function (story, status) {
-		if (story) {
-			story.status = status;
-			// TODO: Do we need this serverStory runaround?
-			var serverStory = stories.get(story.id);
-			stories.save(serverStory);
-		}
-	};
-
 
 	$scope.test = function () {
 		hacks.runAddTest(stories, circleId);
@@ -743,8 +713,14 @@ function HomeCtrl(session, stories, hacks,
 		}).error(handleInitError);
 
 		
-		$scope.$on('$viewContentLoaded', function() {
+		$scope.$on('$viewContentLoaded', function (e) {
 			activateDragAndDrop();
+		});
+
+		$scope.$on('storyChanged', function (e, story) {
+			// TODO: Do we need this serverStory runaround?
+			var serverStory = stories.get(story.id);
+			stories.save(serverStory);
 		});
 
 		addKeyListener();

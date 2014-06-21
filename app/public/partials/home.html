@@ -62,4 +62,8 @@
 		ng-click="toggleAltMode()" title="inbox mode"><i class="glyphicon glyphicon-align-justify"></i></div>
 	</div>
 </div>
-<sp-story-list/>
+<sp-story-list 
+	stories="stories" 
+	owners="owners" 
+	enable-alt-mode="(isManualAltMode || isAltMode)"
+/>
