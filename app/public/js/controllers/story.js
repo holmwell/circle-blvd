@@ -53,9 +53,9 @@ function StoryCtrl($scope, $timeout) {
 	};
 
 	$scope.isStoryMine = function (story) {
-		if (story.owner && $scope.getAccountName) {
+		if (story.owner && $scope.accountName) {
 			var owner = story.owner.toLowerCase();
-			var member = $scope.getAccountName();
+			var member = $scope.accountName;
 			if (member) {
 				member = member.toLowerCase();
 				if (owner === member) {

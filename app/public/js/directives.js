@@ -49,7 +49,8 @@ directive('spStoryList', function () {
 		templateUrl: 'partials/storyList.html',
 		controller: StoryListCtrl,
 		scope: {
-			stories: '=',
+			data: '=',
+			accountName: '=',
 			owners: '=',
 			enableAltMode: '='
 		}
