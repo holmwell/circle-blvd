@@ -1,5 +1,7 @@
 function DocsCtrl(session, $scope) {
 	
+	$scope.isFacade = true;
+
 	var storiesBlob = {
 	  "13a7b00b3837a7abf3e0077df726181e": {
 	    "id": "13a7b00b3837a7abf3e0077df726181e",

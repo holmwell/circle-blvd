@@ -1,6 +1,7 @@
 CircleBlvd.Services.stories = function ($http) {
 
 	var s = {};
+	var isFacade = false;
 
 	var getStory = function (storyId) {
 		return s[storyId];
@@ -11,6 +12,13 @@ CircleBlvd.Services.stories = function ($http) {
 	};
 
 	var saveStory = function (story, callback) {
+		if (isFacade) {
+			if (callback) {
+				callback(story);
+			}
+			return;
+		}
+
 		$http.put('/data/story/', story)
 		.success(function (savedStory) {
 			if (callback) {
@@ -52,11 +60,19 @@ CircleBlvd.Services.stories = function ($http) {
 	}(); // closure
 
 	var addStory = function (story, callback) {
-		$http.post('/data/story/', story)
-		.success(function (newStory) {
+		var onSuccess = function (newStory) {
 			s[newStory.id] = newStory;
 			callback(newStory);
-		})
+		};
+
+		if (isFacade) {
+			// TODO: Need a faux id
+			onSuccess(story);
+			return;
+		}
+
+		$http.post('/data/story/', story)
+		.success(onSuccess)
 		.error(function (data, status) {
 			// TODO: Show that something went wrong.
 			// Most likely there was a data conflict
@@ -146,6 +162,9 @@ CircleBlvd.Services.stories = function ($http) {
 	var stories = function() {
 
 		return {
+			setFacade: function (val) {
+				isFacade = val;
+			},
 			setFirst: usefulStories.setFirst,
 			getFirst: usefulStories.getFirst,
 			hasFirst: usefulStories.hasFirst,
@@ -164,6 +183,11 @@ CircleBlvd.Services.stories = function ($http) {
 				}
 				else {
 					body.newNextId = getLastStoryId(story.projectId);
+				}
+
+				if (isFacade) {
+					callback();
+					return;
 				}
 
 				$http.put('/data/story/move', body)

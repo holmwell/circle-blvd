@@ -4,6 +4,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 	var selectedStory = undefined;
 	var storiesList = [];
 	var stories = CircleBlvd.Services.stories($http);
+	var isFacade = false;
 
 	// HACK: Until we can figure out how to stop this properly,
 	// reload the page when this happens.
@@ -133,6 +134,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 	$scope.$on('storyArchived', function (e, story) {
 		var storyToArchive = stories.get(story.id);
 		removeFromView(story, storyToArchive);
+		
+		if (isFacade) {
+			return;
+		}
+
 		$http.put('/data/story/archive', storyToArchive)
 		.success(function (data) {
 			// nbd.
@@ -152,6 +158,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 		var storyToRemove = stories.get(story.id);
 		removeFromView(story, storyToRemove);
 		
+		if (isFacade) {
+			return;
+		}
+
 		$http.put('/data/story/remove', storyToRemove)
 		.success(function (data) {
 			// nbd.
@@ -587,6 +597,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 
 	$scope.$watch('$viewContentLoaded', function (e) {
 		activateDragAndDrop();
+	});
+
+	$scope.$watch('isFacade', function (newVal) {
+		isFacade = newVal;
+		stories.setFacade(isFacade);
 	});
 
 	$scope.test = function () {

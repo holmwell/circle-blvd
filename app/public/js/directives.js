@@ -52,7 +52,8 @@ directive('spStoryList', function () {
 			data: '=',
 			accountName: '=',
 			owners: '=',
-			enableAltMode: '='
+			enableAltMode: '=',
+			isFacade: '='
 		}
 	}
 }).
