@@ -65,6 +65,10 @@ function TopLevelCtrl(session, $scope, $http, $location, $route) {
 		}
 	};
 
+	$scope.isCurrentPath = function (val) {
+		return $location.path() === val;
+	};
+
 	$scope.$on('setActiveCircle', function (e, circle, refreshPage, callback) {
 		$scope.setActiveCircle(circle, refreshPage);
 		if (!refreshPage && callback) {

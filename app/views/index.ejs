@@ -53,11 +53,12 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li ng-show="hasMainframeAccess()"><a 
+        <li ng-show="hasMainframeAccess()"
+          ng-class="{active: isCurrentPath('/mainframe')}"><a 
           data-toggle="collapse" 
           data-target="#navigation-circles"
           href="#/mainframe">Mainframe access</a></li>
-        <li><a 
+        <li ng-class="{active: isCurrentPath('/docs')}"><a 
           data-toggle="collapse" 
           data-target="#navigation-circles"
           href="#/docs">Documentation</a></li> 
