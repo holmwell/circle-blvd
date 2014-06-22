@@ -296,7 +296,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 	var idAttr = 'data-story-id';
 	var preMoveStoryBefore = undefined;
 	var preMoveStoryAfter = undefined;
-	var isDragging = false;
 
 	var getLastStoryId = function () {
 		return "last-" + circleId;
@@ -508,9 +507,9 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 			// on touch devices, and I can't figure out how
 			// to stop it. So, in select(story) we don't
 			// do anything when isDragging is true.
-			isDragging = true;
+			$scope.$broadcast('spIsDragging', true);
 			$timeout(function () {
-				isDragging = false;
+				$scope.$broadcast('spIsDragging', false);
 			}, 500);
 		});
 

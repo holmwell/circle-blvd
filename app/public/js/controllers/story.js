@@ -95,12 +95,17 @@ function StoryCtrl($scope, $timeout) {
 		}
 	};
 
+	var isDragging = false;
+	$scope.$on('spIsDragging', function (e, val) {
+		isDragging = val;
+	});
+
 	$scope.select = function (story) {
-		// if (isDragging) {
-		// 	// Do nothing. We're dragging. See the note
-		// 	// in 'drag:end' as to why.
-		// 	return;
-		// }
+		if (isDragging) {
+			// Do nothing. We're dragging. See the note
+			// in 'drag:end' as to why.
+			return;
+		}
 
 		// Do not refocus stuff if we're already on this story.
 		if (!story.isSelected) {
