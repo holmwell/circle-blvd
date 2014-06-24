@@ -1,5 +1,11 @@
 function SignInCtrl(signInName, session, $scope, $location, $http) {
 
+	$scope.signup = {};
+
+	$scope.signUp = function() {
+		$scope.signup.message = "Thank you. :-)";
+	};
+
 	$scope.signIn = function() {
 		var success = function(data, status, headers, config) {
 			$scope.message = "Success!";

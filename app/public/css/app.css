@@ -765,6 +765,12 @@ label.relax {
 .signin-section {
   padding-top: 2.4em;
 }
+.thanks {
+  background-color: gold;
+  padding: 1.25ex;
+  padding-left: 1.5ex;
+  cursor: default;
+}
 
 /* archive */
 .archives {
