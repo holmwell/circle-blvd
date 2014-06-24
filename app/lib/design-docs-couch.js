@@ -367,6 +367,26 @@ var archivesDesignDoc = {
 };
 designDocs.add(archivesDesignDoc);
 
+
+var adminDesignDoc = {
+	url: '_design/admin',
+	body: 
+	{
+		version: "1.0.1",
+		language: "javascript",
+		views: {
+			waitlist: {
+				map: function (doc) {
+					if (doc.type === "waitlist") {
+						emit(doc.timestamp, doc);
+					}
+				}
+			}
+		}
+	}
+};
+designDocs.add(adminDesignDoc);
+
 var createDesignDocs = function (database, callback) {
 	designDocs.saveToDatabase(database, callback);
 };

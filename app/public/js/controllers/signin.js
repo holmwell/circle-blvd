@@ -3,7 +3,25 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 	$scope.signup = {};
 
 	$scope.signUp = function() {
-		$scope.signup.message = "Thank you. :-)";
+		var success = function (data) {
+			$scope.signup.message = "Thank you. :-)";	
+		}
+		
+		var failure = function (data) {
+			$scope.signup.message = 
+			"Sorry, our computers aren't working. " + 
+			"Please try again at a later time.";
+		};
+
+		var data = {
+			circle: $scope.signup.circle,
+			things: $scope.signup.things,
+			email: $scope.signup.email
+		};
+
+		$http.post('/data/signup/waitlist', data)
+		.success(success)
+		.error(failure);
 	};
 
 	$scope.signIn = function() {

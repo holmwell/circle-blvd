@@ -1200,6 +1200,22 @@ var configureSuccessful = function () {
 		});
 	});
 
+	app.post("/data/signup/waitlist", function (req, res) {
+		var data = req.body;
+		var request = {
+			circle: data.circle,
+			things: data.things,
+			email: data.email
+		};
+
+		db.waitlist.add(request, function (err, body) {
+			if (err) {
+				return handleError(err, res);
+			}
+			res.send(200);
+		});
+	});
+
 	// The secret to bridging Angular and Express in a 
 	// way that allows us to pass any path to the client.
 	// 
