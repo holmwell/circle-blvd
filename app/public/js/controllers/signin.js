@@ -118,6 +118,88 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 		$scope.rememberMe = true;
 	};
 
+
+	var me = "Me";
+
+	$scope.whoami = me;	
+	$scope.isFacade = true;
+
+	var firstStory = {
+		"_id": "1",
+		"id": "1",
+		"nextId": "2",
+		"isFirstStory": true,
+		"summary": "Circle Blvd is for groups of 3-10 people",
+		"description": "Hi! This is the first story in this story-list " +
+		"demonstration. Please stomp around and see what this thing can " +
+		"do.",
+		"owner": "Alaina",
+		"status": "done",
+		"createdBy": {
+		  "name": "Phil",
+		},
+		"comments": [
+		  {
+			"text": "A bigger demo is at http://circleblvd.org/#/docs. :-)",
+			"createdBy": {
+			  "name": "Phil",
+			},
+			"timestamp": 1402388429872
+		  }
+		]
+	};
+
+	var introStories = {
+	  "1": firstStory,
+	  "2": {
+		"id": "2",
+		"nextId": "3",
+		"owner": me,
+		"summary": "Manage tasks, keep track of progress, and know what's up",
+		"description": "These things are called 'stories' because, well, we " +
+		"don't know why. However, 'tasks' sounds a bit boring, don't you " +
+		"think?",
+		"status": "",
+		"createdBy": {
+		  "name": "Phil",
+		}
+	  },
+	  "3": {
+		"id": "3",
+		"nextId": "4",
+		"summary": "Made for volunteer organizations",
+		"status": "",
+		"description": "Mileposts can be useful if things need to be " + 
+		"done before or after a specific event.",
+		isDeadline: true
+	  },
+	  "4": {
+		"id": "4",
+		"nextId": "5",
+		"summary": "Plan, focus, and relax",
+		"description": "What needs to be done before your next meeting? " +
+		"Move this special story to bring your team's focus to the top of " + 
+		"your story list.",
+		"isNextMeeting": true,
+	  },
+	  "5": {
+		"id": "5",
+		"nextId": "last-intro",
+		"owner": "Phil",
+	  	"summary": "Created in Corvallis, Oregon",
+	  	"description": ":-)",
+		"status": "active",
+		"createdBy": {
+		  "name": "Phil",
+		}
+	  }
+	};
+
+	$scope.introduction = {
+		firstStory: firstStory,
+		allStories: introStories
+	};
+
 	init();	
 }
 SignInCtrl.$inject = ['signInName', 'session', '$scope', '$location', '$http'];
