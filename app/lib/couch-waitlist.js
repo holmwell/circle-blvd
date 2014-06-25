@@ -15,7 +15,7 @@ module.exports = function () {
 		database.insert(doc, callback);
 	};
 
-	var getWaitlist = function () {
+	var getWaitlist = function (callback) {
 		couch.view("admin/waitlist", callback);
 	};
 

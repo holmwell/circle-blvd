@@ -1216,6 +1216,15 @@ var configureSuccessful = function () {
 		});
 	});
 
+	app.get("/data/waitlist", ensureMainframeAccess, function (req, res) {
+		db.waitlist.get(function (err, waitlist) {
+			if (err) {
+				return handleError(err, res);
+			}
+			res.send(200, waitlist);
+		});
+	});
+
 	// The secret to bridging Angular and Express in a 
 	// way that allows us to pass any path to the client.
 	// 

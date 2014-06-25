@@ -41,6 +41,16 @@ function MainframeCtrl(session, $scope, $http) {
 	};
 
 
+	var getLatestWaitlistData = function () {
+		var getWaitlistSuccess = function (data) {
+			$scope.waitlist = data;
+		}
+		$http.get('/data/waitlist')
+		.success(getWaitlistSuccess)
+		.error(handleError);
+	};
+
+
 	$scope.updateSetting = function (setting) {
 		$http.put('/data/setting', setting)
 		.success(function() {
@@ -84,6 +94,7 @@ function MainframeCtrl(session, $scope, $http) {
 
 	var init = function () {
 		getLatestCircleData();
+		getLatestWaitlistData();
 		getLatestSettingData();
 	}
 	init();

@@ -895,6 +895,12 @@ label.relax {
   margin: 0;
 }
 
+.waitlist-request {
+  padding: 1ex;
+}
+.waitlist-request .things {
+  white-space: pre;  
+}
 
 
 /* Typeahead */
