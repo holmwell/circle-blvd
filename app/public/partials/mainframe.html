@@ -1,77 +1,77 @@
+<div class="content">
 <h3>Mainframe controls!</h3>
 
 <p ng-show="!isSignedIn()">Please <a href="#/signin">sign in</a>.</p>
 
 <div ng-show="isSignedIn()">
-
-<form id="circleForm">
-	<h4>Circles</h4>
-	<div class="row">
-		<div class="col-xs-3">
-			<div><input type="text" ng-model="circle.name" 
-				placeholder="Circle name" class="form-control"/></div>
-			<div><input type="email" ng-model="circle.adminEmail" 
-				placeholder="Admin email address" class="form-control"/></div>
-			<div><button class="btn btn-default" ng-click="addCircle(circle)">Add circle</button></div>
-		</div>
-	</div>
-</form>
-
-<ul class="adminList">
-	<li ng-repeat="circle in circles" ng-class-odd="'odd'">
+	<form id="circleForm">
+		<h4>Circles</h4>
 		<div class="row">
-			<div class="col-xs-3">{{circle.name}}</div>
-		</div>
-	</li>
-</ul>
-
-<h4>Waitlist</h4>
-<ul class="adminList">
-	<li ng-repeat="request in waitlist" ng-class-odd="'odd'">
-		<div class="waitlist-request">
-			<div><em>{{request.circle}}</em></div>
-			<div class="things">{{request.things}}</div>
-			<div>{{request.email}}</div>
-		</div>
-	</li>
-</ul>
-<p ng-show="waitlist.length === 0">(There are no waitlist requests at this time.)</p>
-
-<h4 id="settingForm" class="clear">Settings</h4>
-<div class="adminList">
-	<div ng-repeat="setting in settings" class="setting-row" ng-class-odd="'odd'">
-		<form ng-show="!isBooleanSetting(setting)">
-			<div class="row">
-				<label class="name col-xs-2">{{setting.name}}</label>
-				<div class="col-xs-3" ng-hide="setting.visibility === 'secret'">
-					<input type="text" ng-model="setting.value" placeholder="Value" class="form-control"/>
-				</div>
-				<div class="col-xs-3" ng-show="setting.visibility === 'secret'">
-					<input type="password" ng-model="setting.value" placeholder="(secret)" class="form-control"/>
-				</div>
-				<div class="name col-xs-2">{{setting.visibility}}</div>
-				<div class="col-xs-2">
-					<button class="btn btn-default" ng-click="updateSetting(setting)">Save</button>
-				</div>
+			<div class="col-xs-3">
+				<div><input type="text" ng-model="circle.name" 
+					placeholder="Circle name" class="form-control"/></div>
+				<div><input type="email" ng-model="circle.adminEmail" 
+					placeholder="Admin email address" class="form-control"/></div>
+				<div><button class="btn btn-default" ng-click="addCircle(circle)">Add circle</button></div>
 			</div>
-		</form>
+		</div>
+	</form>
 
-
-		<form ng-show="isBooleanSetting(setting)">
+	<ul class="adminList">
+		<li ng-repeat="circle in circles" ng-class-odd="'odd'">
 			<div class="row">
-				<label class="name col-xs-2">{{setting.name}}</label>
-				<div class="col-xs-3">
-					<input type="checkbox" ng-model="setting.value"/>
-				</div>
-				<div class="name col-xs-2">{{setting.visibility}}</div>
-				<div class="col-xs-2">
-					<button class="btn btn-default" ng-click="updateSetting(setting)">Save</button>
-				</div>
+				<div class="col-xs-3">{{circle.name}}</div>
 			</div>
-		</form>
+		</li>
+	</ul>
+
+	<h4>Waitlist</h4>
+	<ul class="adminList">
+		<li ng-repeat="request in waitlist" ng-class-odd="'odd'">
+			<div class="waitlist-request">
+				<div><em>{{request.circle}}</em></div>
+				<div class="things">{{request.things}}</div>
+				<div>{{request.email}}</div>
+			</div>
+		</li>
+	</ul>
+	<p ng-show="waitlist.length === 0">(There are no waitlist requests at this time.)</p>
+
+	<h4 id="settingForm" class="clear">Settings</h4>
+	<div class="adminList">
+		<div ng-repeat="setting in settings" class="setting-row" ng-class-odd="'odd'">
+			<form ng-show="!isBooleanSetting(setting)">
+				<div class="row">
+					<label class="name col-xs-2">{{setting.name}}</label>
+					<div class="col-xs-3" ng-hide="setting.visibility === 'secret'">
+						<input type="text" ng-model="setting.value" placeholder="Value" class="form-control"/>
+					</div>
+					<div class="col-xs-3" ng-show="setting.visibility === 'secret'">
+						<input type="password" ng-model="setting.value" placeholder="(secret)" class="form-control"/>
+					</div>
+					<div class="name col-xs-2">{{setting.visibility}}</div>
+					<div class="col-xs-2">
+						<button class="btn btn-default" ng-click="updateSetting(setting)">Save</button>
+					</div>
+				</div>
+			</form>
+
+
+			<form ng-show="isBooleanSetting(setting)">
+				<div class="row">
+					<label class="name col-xs-2">{{setting.name}}</label>
+					<div class="col-xs-3">
+						<input type="checkbox" ng-model="setting.value"/>
+					</div>
+					<div class="name col-xs-2">{{setting.visibility}}</div>
+					<div class="col-xs-2">
+						<button class="btn btn-default" ng-click="updateSetting(setting)">Save</button>
+					</div>
+				</div>
+			</form>
+		</div>
 	</div>
 </div>
 
 </div>
-
 

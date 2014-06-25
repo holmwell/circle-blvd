@@ -82,11 +82,11 @@
 
 .header {
   margin-bottom: 2em;
-/*  padding-left: 1.4em;
-  padding-right: 1.4em;*/
   padding: 1px;
   padding-top: 0;
-  padding-left: 0;
+  padding-left: 2ex;
+  padding-right: 2ex;
+
 /*  text-align: center;*/
 
   /*background-color: #666;*/
@@ -148,7 +148,8 @@
 
 .container-fluid.main {
   background: white;
-  padding-bottom: 3em;
+  padding-left: 0;
+  padding-right: 0;
   max-width: 850px;  
 }
 
@@ -189,6 +190,12 @@ h4, h5 {
   clear: left;
 }
 
+.content {
+  padding-left: 2ex;
+  padding-right: 2ex;
+  padding-bottom: 3em;
+}
+
 .footer {
   color: #555;
   text-align: center;
@@ -217,6 +224,7 @@ h4, h5 {
   padding-left: 1ex;
 }
 .story, .archive {
+  color: #222;
   background-color: #ddd;
   padding: 0.5ex;
   padding-left: 1.5ex;
@@ -769,6 +777,7 @@ button:focus {
   margin-bottom: 0.5em;
   font-size: 36pt;
   font-weight: bold;
+  color: gold;
 }
 .actionRow {
   margin-left: 0;
@@ -782,6 +791,48 @@ label.relax {
 .signin-section {
   padding-top: 2.4em;
 }
+
+.signin .welcome {
+  color: #f6f6f6;
+  background-color: #181818;
+
+  width: 100%;
+  float: left;
+  padding-bottom: 3.5em;
+}
+.signin .welcome input {
+  color: #f6f6f6;
+  border-color: #222;
+  background-color: #333;
+}
+
+.signin .intro {
+  width: 100%;
+  float: left;
+}
+.signin .storyListWrapper {
+  padding-left: 2ex;
+  padding-right: 2ex;
+}
+
+
+.signin .signup {
+  background-color: #333;
+  color: #ccc;
+
+  float: left;
+  width: 100%;
+  margin-top: 3.5em;
+  padding-bottom: 3.5em;
+}
+.signin .signup input,
+.signin .signup textarea {
+  color: #ccc;
+  border-color: #222;
+  background-color: #444;
+}
+
+
 .thanks {
   background-color: gold;
   padding: 1.25ex;
@@ -917,6 +968,14 @@ label.relax {
 }
 .waitlist-request .things {
   white-space: pre;  
+}
+
+/* documentation */
+.docs {
+  padding: 0;
+}
+.docs h3 {
+  margin-top: 1.4em;
 }
 
 

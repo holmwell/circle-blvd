@@ -69,7 +69,7 @@
 
 
 <div class="container-fluid main debug">
-  <div class="header row debug">
+  <div class="header row debug ng-cloak" ng-if="isSignedIn()">
     <!--
     <div class="navbar navbar-default" role="navigation" ng-cloak ng-show="isSignedIn()">
       <div class="container-fluid">
@@ -85,12 +85,12 @@
     </div>
      -->
 
-    <h2 class="debug hidden-xs col-sm-3 title" ng-if="isSignedIn()"><a href="/">Circle&nbsp;Blvd.</a></h2>
+    <h2 class="debug hidden-xs col-sm-3 title"><a href="/">Circle&nbsp;Blvd.</a></h2>
     <!-- <ul class="menu col-xs-2 col-md-4" ng-show="!isSignedIn()">
        <li><a href="#/signin">Sign in</a></li>
     </ul> -->
 
-    <ul class="menu visible-xs debug ng-cloak" ng-if="isSignedIn()">
+    <ul class="menu visible-xs debug">
       <li><a href="/">List</a></li>
       <li><a href="#/archives">Archives</a></li>
       <li><a href="#/profile">Profile</a></li>
@@ -100,7 +100,7 @@
     </ul> 
 
     <!-- TODO: This duplicate menu is lame. -->
-    <ul class="menu hidden-xs col-sm-9 debug" ng-show="isSignedIn()">
+    <ul class="menu hidden-xs col-sm-9 debug">
       <li><a href="#/archives">Archives</a></li>
       <li><a href="#/profile">Profile</a></li>
       <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>

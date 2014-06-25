@@ -1,11 +1,13 @@
-<div class="col-sm-offset-2 col-sm-8">
-	<p>Hi! This is a story list. The main idea is that stories closer to the top want to be completed before the ones closer to the bottom.</p>
-	<p>Play around with it. Maybe start by moving the 'Next meeting' around.</p>
-</div>
+<div class="content">
+	<div class="col-sm-offset-2 col-sm-8 docs">
+		<h3 ng-show="!isSignedIn()">Documentation</h3>
+		<p>Hi! This is a story list. The main idea is that stories closer to the top want to be completed before the ones closer to the bottom.</p>
+		<p>Play around with it. Maybe start by moving the 'Next meeting' around.</p>
+	</div>
 
-<sp-story-list 
-	data="lesson2" 
-	account-name="whoami"
-	owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
-	is-facade="isFacade"
-/>
+	<sp-story-list 
+		data="lesson2" 
+		account-name="whoami"
+		owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
+		is-facade="isFacade"></sp-story-list>
+</div>

@@ -1,46 +1,53 @@
 <div class="signin">
-<h1>Circle&nbsp;Blvd.</h1>
+	<div class="welcome">
+		<h1>Circle&nbsp;Blvd.</h1>
 
-<div class="col-sm-offset-2 col-sm-8">
-	<form>
-		<h4>Welcome.</h4>
-		<div><input type="text" ng-model="user.email" placeholder="Email address" class="form-control"/></div>
-		<div><input type="password" ng-model="user.password" placeholder="Password" class="form-control"/></div>
-		<div class="actionRow">
-			<div class="checkbox-inline remember pull-left">
-				<label class="relax"><input type="checkbox" ng-model="rememberMe"/>Remember me</label>
-			</div>
-			<button class="btn btn-default pull-right" type="submit" ng-click="signIn()">Sign in</button> 
+		<div class="col-sm-offset-2 col-sm-8">
+			<form>
+				<h4>Welcome.</h4>
+				<div><input type="text" ng-model="user.email" placeholder="Email address" class="form-control"/></div>
+				<div><input type="password" ng-model="user.password" placeholder="Password" class="form-control"/></div>
+				<div class="actionRow">
+					<div class="checkbox-inline remember pull-left">
+						<label class="relax"><input type="checkbox" ng-model="rememberMe"/>Remember me</label>
+					</div>
+					<button class="btn btn-default pull-right" type="submit" ng-click="signIn()">Sign in</button> 
+				</div>
+			</form>
+			<div>{{message}}</div>
 		</div>
-	</form>
-	<div>{{message}}</div>
-</div>
-
-<div class="col-sm-offset-2 col-sm-8 clear signin-section">
-	<h4>Work as a team.</h4>
-</div>
-
-<sp-story-list
-	data="introduction" 
-	account-name="whoami"
-	owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
-	is-facade="isFacade"></sp-story-list>
-
-<form>
-	<div class="col-sm-offset-2 col-sm-8 clear signin-section">
-		<h4>Sign up for an account.</h4>
-		<p>Circle Blvd. is new, so we're only opening a few accounts at a time. If you would like to be on the waitlist, please let us know here. Thank you.</p>
-		<div><input type="text" ng-model="signup.circle" placeholder="Group name" class="form-control"/></div>
-		<div><textarea autosize ng-model="signup.things" 
-			placeholder="Anything you'd like to say? How did you hear about us?" class="form-control"/></div>
-		<div><input type="text" ng-model="signup.email" placeholder="Email address" class="form-control"/></div>
-		<button class="btn btn-default pull-right" 
-			ng-hide="signup.message"
-			type="submit" ng-click="signUp()">Sign up</button> 
 	</div>
-	<div class="col-sm-offset-2 col-sm-8 clear ng-cloak"
-		ng-show="signup.message">
-		<div class="thanks story deadline not-selected">{{signup.message}}</div>
+
+	<div class="intro">
+		<div class="col-sm-offset-2 col-sm-8 clear signin-section">
+			<h4>Work as a team.</h4>
+		</div>
+		<div class="storyListWrapper">
+			<sp-story-list
+				data="introduction" 
+				account-name="whoami"
+				owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
+				is-facade="isFacade"></sp-story-list>
+		</div>
 	</div>
-</form>
+
+	<div class="signup">
+		<form>
+			<div class="col-sm-offset-2 col-sm-8 clear signin-section">
+				<h4>Sign up for an account.</h4>
+				<p>Circle Blvd. is new, so we're only opening a few accounts at a time. If you would like to be on the waitlist, please let us know here. Thank you.</p>
+				<div><input type="text" ng-model="signup.circle" placeholder="Group name" class="form-control"/></div>
+				<div><textarea autosize ng-model="signup.things" 
+					placeholder="Anything you'd like to say?" class="form-control"/></div>
+				<div><input type="text" ng-model="signup.email" placeholder="Email address" class="form-control"/></div>
+				<button class="btn btn-default pull-right" 
+					ng-hide="signup.message"
+					type="submit" ng-click="signUp()">Sign up</button> 
+			</div>
+			<div class="col-sm-offset-2 col-sm-8 clear ng-cloak"
+				ng-show="signup.message">
+				<div class="thanks story deadline not-selected">{{signup.message}}</div>
+			</div>
+		</form>
+	</div>
 </div>
