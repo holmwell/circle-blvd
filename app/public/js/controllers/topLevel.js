@@ -142,6 +142,16 @@ function TopLevelCtrl(session, $scope, $http, $location, $route) {
 		scrollToTop();
 	});
 
+	$scope.showErrorModal = function () {
+		var options = {
+			// In defaults we trust!
+		};
+		$('#errorModal').modal(options);
+	};
+
+	$scope.reload = function () {
+		$route.reload();
+	};
 
 	var init = function() {
 		$scope.$on('$routeChangeSuccess', function () {

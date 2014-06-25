@@ -29,6 +29,27 @@
 </head>
 <body ng-controller="TopLevelCtrl" ng-keydown="keydown($event)" ng-keyup="keyup($event)">
 <div id="topLevel">
+  <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" 
+    aria-labelledby="errorTitle" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title" id="errorTitle">Sorry, something didn't work</h4>
+        </div>
+        <div class="modal-body">
+          <p>Sorry, we failed to save what you did just now. We're still 
+            working on making the website perfect, and it seems we have
+            a bit of work to do.</p>
+          <p>If you keep seeing this message, please let us know.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="reload()">Refresh page</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
  <div class="navbar navbar-inverse topMenu" role="navigation" ng-cloak>
   <div class="container-fluid">
