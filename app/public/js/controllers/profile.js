@@ -1,6 +1,6 @@
 'use strict';
 
-function ProfileCtrl(session, $scope, $http) {
+function ProfileCtrl(session, $scope, $http, errors) {
 	$scope.supportsPayments = false;
 	$scope.activePlan = {};
 
@@ -61,7 +61,7 @@ function ProfileCtrl(session, $scope, $http) {
 			}
 		})
 		.error(function (data, status) {
-			console.log(data);
+			errors.handle(data, status);
 		});
 	};
 
@@ -102,8 +102,8 @@ function ProfileCtrl(session, $scope, $http) {
 		.success(function() {
 			messages.password = "Password updated.";
 		})
-		.error(function (data) {
-			console.log(data);
+		.error(function (data, status) {
+			errors.handle(data, status);
 		});
 	};
 
@@ -128,8 +128,7 @@ function ProfileCtrl(session, $scope, $http) {
 					session.save();
 				})
 				.error(function (data, status) {
-					console.log(data);
-					console.log(status);
+					errors.handle(data, status);
 				});
 			}
 		});
@@ -166,8 +165,7 @@ function ProfileCtrl(session, $scope, $http) {
 				updateScope();
 			})
 			.error(function (data, status) {
-				console.log(data);
-				console.log(status);
+				errors.handle(data, status);
 			});
 		};
 	}
@@ -177,7 +175,7 @@ function ProfileCtrl(session, $scope, $http) {
 	.success(function (data) {
 		if (session.user.id !== data.id) {
 			$scope.signOut();
-			console.log("Sorry, we thought you were someone else for a second. Please sign in again.");
+			// "Sorry, we thought you were someone else for a second. Please sign in again."
 		}
 		else {
 			updateScope();
@@ -186,8 +184,8 @@ function ProfileCtrl(session, $scope, $http) {
 	.error(function (data, status) {
 		if (status === 401 && session && session.user) {
 			$scope.signOut();
-			console.log("The server was restarted. Please sign in again.");			
+			// "The server was restarted. Please sign in again."
 		}
 	});
 }
-ProfileCtrl.$inject = ['session', '$scope', '$http'];
+ProfileCtrl.$inject = ['session', '$scope', '$http', 'errors'];

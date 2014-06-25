@@ -1,4 +1,4 @@
-function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
+function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors) {
 
 	var circleId = undefined;
 	var selectedStory = undefined;
@@ -9,7 +9,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 	// HACK: Until we can figure out how to stop this properly,
 	// reload the page when this happens.
 	var handleHierarchyRequestErr = function (e) {
-		console.log("Hierarchy request error. Reloading page.");
+		errors.log("Hierarchy request error. Reloading page.");
 		$route.reload();
 	};
 
@@ -143,9 +143,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 		.success(function (data) {
 			// nbd.
 		})
-		.error(function (data) {
-			// TODO: Account for server down
-			console.log(data);
+		.error(function (data, status) {
+			errors.handle(data, status);
 		});
 	});
 
@@ -167,10 +166,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 			// nbd.
 		})
 		.error(function (data, status) {
-			// TODO: Account for server down
-			console.log('failure');
-			console.log(status);
-			console.log(data);
+			errors.handle(data, status);
 		});
 	});
 
@@ -222,9 +218,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 			})
 			.error (function (data, status) {
 				story.isNotifying = undefined;
-				console.log("Notify error");
-				console.log(status);
-				console.log(data);
+				errors.handle(data, status);
 			});
 		}		
 	});
@@ -284,8 +278,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 			}
 		})
 		.error(function (data, status) {
-			console.log(data);
-			console.log(status);
+			errors.log(data, status);
 		});
 	});
 
@@ -433,7 +426,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 				}
 			}
 			else {
-				console.log("Something unknown happened with the move. Need to refresh page.")
+				errors.handle("Something unknown happened with the move. Need to refresh page.", "client");
 			}
 		}(); // closure
 
@@ -444,10 +437,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 				if (err) {
 					// We failed. Probably because of a data integrity issue
 					// on the server that we need to wait out. 
-					//
-					// TODO: Get the latest list of stories, and notify
-					// the guest what's up.
-					console.log(err);
+					errors.handle(err.data, err.status);
 					return;
 				}
 			});
@@ -648,4 +638,4 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks) {
 		}
 	};
 }
-StoryListCtrl.$inject = ['$scope', '$timeout', '$http', '$location', '$route', 'hacks'];
+StoryListCtrl.$inject = ['$scope', '$timeout', '$http', '$location', '$route', 'hacks', 'errors'];

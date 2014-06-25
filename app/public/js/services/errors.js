@@ -1,12 +1,22 @@
 CircleBlvd.Services.errors = function ($rootScope, $http) {
 
-	var handleError = function (err) {
+	var logError = function (data, status) {
+		console.log(data);
+		console.log(status);
+	};
+
+	var handleError = function (data, status) {
+		var err = {
+			data: data,
+			status: status
+		};
 		$rootScope.$broadcast('circleblvd-error', err);
-		console.log(err);
+		logError(data, status);
 	};
 
 	return {
-		handle: handleError
+		handle: handleError,
+		log: logError
 	};
 };
 CircleBlvd.Services.errors.$inject = ['$rootScope', '$http'];

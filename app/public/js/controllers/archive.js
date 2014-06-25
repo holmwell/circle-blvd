@@ -1,4 +1,4 @@
-function ArchivesCtrl(session, $scope, $http) {
+function ArchivesCtrl(session, $scope, $http, errors) {
 	var projectId = session.activeCircle;
 	var selectedArchive = undefined;
 
@@ -37,12 +37,11 @@ function ArchivesCtrl(session, $scope, $http) {
 		.success(function (data) {
 			$scope.archives = data;
 		})
-		.error(function (data) {
-			console.log("Failed to get archives.");
-			console.log(data);
+		.error(function (data, status) {
+			errors.log(data, status);
 		});
 	};
 
 	init();
 }
-ArchivesCtrl.$inject = ['session', '$scope', '$http'];
+ArchivesCtrl.$inject = ['session', '$scope', '$http', 'errors'];

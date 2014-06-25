@@ -1,4 +1,4 @@
-function FixCtrl(session, $scope, $http, $route) {
+function FixCtrl(session, $scope, $http, $route, errors) {
 	var projectId = session.activeCircle;
 	var stories = [];
 	var storiesHash = {};
@@ -13,8 +13,7 @@ function FixCtrl(session, $scope, $http, $route) {
 			$route.reload();
 		})
 		.error(function (data, status) {
-			console.log(data);
-			console.log(status);
+			errors.handle(data, status);
 		});
 	};
 
@@ -129,7 +128,6 @@ function FixCtrl(session, $scope, $http, $route) {
 					for (var storyId in data) {
 						if (data[storyId].nextId === currentStory.id) {
 							if (firstGroupHash[storyId]) {
-								console.log()
 								data[storyId].broken = true;
 								firstGroup.splice(0, 0, data[storyId]);
 								break;
@@ -201,16 +199,12 @@ function FixCtrl(session, $scope, $http, $route) {
 				}
 			})
 			.error(function (data, status) {
-				console.log('failure');
-				console.log(status);
-				console.log(data);
+				errors.log(data, status);
 			});
 		})
 		.error(function (data, status) {
-			console.log('failure');
-			console.log(status);
-			console.log(data);
-
+			errors.log(data, status);
+			
 			if (status === 401 && $scope.isSignedIn()) {
 				// We're not actually signed in.
 				$scope.signOut();
@@ -220,4 +214,4 @@ function FixCtrl(session, $scope, $http, $route) {
 
 	init();
 } 
-FixCtrl.$inject = ['session', '$scope', '$http', '$route'];
+FixCtrl.$inject = ['session', '$scope', '$http', '$route', 'errors'];

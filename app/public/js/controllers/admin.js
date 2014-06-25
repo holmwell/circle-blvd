@@ -1,6 +1,6 @@
 'use strict';
 
-function AdminCtrl(session, $scope, $http) {
+function AdminCtrl(session, $scope, $http, errors) {
 
 	var activeCircle = session.activeCircle;
 	var impliedGroup = undefined;
@@ -14,7 +14,7 @@ function AdminCtrl(session, $scope, $http) {
 	};
 
 	var addUserFailure = function() {
-		console.log("Sad inside add user. :(");
+		errors.handle("Sad inside add user. :(");
 	};
 
 	$scope.isGroupImplied = function (group) {
@@ -26,8 +26,7 @@ function AdminCtrl(session, $scope, $http) {
 
 	$scope.addUser = function(userName, userEmail, userPassword, userGroups) {
 		if (!impliedGroup) {
-			// TODO: Error. Not allowed.
-			console.log("Attempt to add a user to a circle without an implied group.");
+			errors.handle("Attempt to add a user to a circle without an implied group.");
 			return;
 		}
 
@@ -68,8 +67,8 @@ function AdminCtrl(session, $scope, $http) {
 		.success(function() {
 			getLatestUserData();
 		})
-		.error(function (data) {
-			console.log(data);
+		.error(function (data, status) {
+			errors.handle(data, status);
 		});
 	};
 
@@ -86,7 +85,7 @@ function AdminCtrl(session, $scope, $http) {
 		if (status === 401 && $scope.isSignedIn()) {
 			// && is admin ...
 			$scope.signOut();
-			console.log("The server was restarted. Please sign in again.");
+			// "The server was restarted. Please sign in again."
 		}
 	};
 
@@ -131,8 +130,7 @@ function AdminCtrl(session, $scope, $http) {
 		$http.get('/data/' + activeCircle + '/groups')
 		.success(getGroupsSuccess)
 		.error(function (data, status) {
-			console.log(data);
-			console.log(status);
+			errors.log(data, status);
 		});
 	};
 
@@ -141,10 +139,8 @@ function AdminCtrl(session, $scope, $http) {
 		getLatestGroupData();
 	};
 
-	var addGroupFailure = function(things, status) {
-		console.log(things);
-		console.log(status);
-		console.log("Sad inside add group. :(");
+	var addGroupFailure = function(data, status) {
+		errors.handle(data, status);
 	};
 
 	$scope.addGroup = function (groupName) {
@@ -163,8 +159,8 @@ function AdminCtrl(session, $scope, $http) {
 		.success(function() {
 			getLatestGroupData();
 		})
-		.error(function (data) {
-			console.log(data);
+		.error(function (data, status) {
+			errors.handle(data, status);
 		});
 	};
 
@@ -177,4 +173,4 @@ function AdminCtrl(session, $scope, $http) {
 
 	init();
 }
-AdminCtrl.$inject = ['session', '$scope', '$http'];
+AdminCtrl.$inject = ['session', '$scope', '$http', 'errors'];

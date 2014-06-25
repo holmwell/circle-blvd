@@ -1,10 +1,9 @@
 'use strict';
 
-function MainframeCtrl(session, $scope, $http) {
+function MainframeCtrl(session, $scope, $http, errors) {
 
 	var handleError = function (data, status) {
-		console.log(data);
-		console.log(status);
+		errors.handle(data, status);
 	};
 
 	var getLatestCircleData = function () {
@@ -99,4 +98,4 @@ function MainframeCtrl(session, $scope, $http) {
 	}
 	init();
 }
-MainframeCtrl.$inject = ['session', '$scope', '$http'];
+MainframeCtrl.$inject = ['session', '$scope', '$http', 'errors'];
