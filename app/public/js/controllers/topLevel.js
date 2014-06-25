@@ -153,6 +153,10 @@ function TopLevelCtrl(session, $scope, $http, $location, $route) {
 		$route.reload();
 	};
 
+	$scope.$on('circleblvd-error', function (e, err) {
+		$scope.showErrorModal();
+	});
+
 	var init = function() {
 		$scope.$on('$routeChangeSuccess', function () {
 			var path = $location.path();
