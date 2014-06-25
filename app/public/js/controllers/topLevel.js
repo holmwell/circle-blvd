@@ -1,6 +1,6 @@
 'use strict';
 
-function TopLevelCtrl(session, $scope, $http, $location, $route) {
+function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout) {
 
 	$scope.keyboard = {};
 
@@ -136,10 +136,20 @@ function TopLevelCtrl(session, $scope, $http, $location, $route) {
 		}, 100);
 	};
 
+	var collapseNavbar = function () {
+		$timeout(function () {
+			var navbar = $('#navigation-circles');
+			if (navbar.hasClass('collapse') && navbar.hasClass('in')) {
+				navbar.collapse('hide');
+			}
+		}, 100);
+	};
+
 	// This is very brittle. Please feel free to create
 	// a better solution.
 	$scope.$on('$viewContentLoaded', function() {
 		scrollToTop();
+		collapseNavbar();
 	});
 
 	$scope.showErrorModal = function () {
@@ -195,4 +205,4 @@ function TopLevelCtrl(session, $scope, $http, $location, $route) {
 
 	init();
 }
-TopLevelCtrl.$inject = ['session', '$scope', '$http', '$location', '$route'];
+TopLevelCtrl.$inject = ['session', '$scope', '$http', '$location', '$route', '$timeout'];
