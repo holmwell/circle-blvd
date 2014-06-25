@@ -1,8 +1,14 @@
 function SignInCtrl(signInName, session, $scope, $location, $http) {
 
 	$scope.signup = {};
+	$scope.signup.once = false;
 
 	$scope.signUp = function() {
+		if ($scope.signup.once) {
+			return;
+		}
+		$scope.signup.once = true;
+
 		var success = function (data) {
 			$scope.signup.message = "Thank you. :-)";	
 		}
