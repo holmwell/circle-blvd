@@ -76,6 +76,23 @@ function TopLevelCtrl(session, $scope, $http, $location, $route) {
 		}
 	});
 
+	$scope.getActiveCircleName = function () {
+		if (!session || !session.activeCircle || !session.circleList) {
+			return;
+		}
+
+		var activeCircle = undefined;
+		angular.forEach(session.circleList, function (circle) {
+			if (circle.id === session.activeCircle) {
+				activeCircle = circle;
+			}
+		});
+
+		if (activeCircle) {
+			return activeCircle.name;
+		}
+	};
+
 	$scope.isActiveCircle = function (circle) {
 		if (!circle || !session) {
 			return false;

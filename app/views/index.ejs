@@ -40,7 +40,9 @@
           <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="/">O</a>
-      <div class="navbar-title visible-xs" ng-if="isSignedIn()"><h2>Circle Blvd</h2></div>
+      <div class="navbar-title visible-xs" ng-if="isSignedIn()">
+        <h2>{{getActiveCircleName()}}</h2>
+      </div>
     </div>
 
     <div class="collapse navbar-collapse" id="navigation-circles">
