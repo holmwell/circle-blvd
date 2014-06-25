@@ -6,7 +6,7 @@
   <title>Circle Blvd.</title>
   
   <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-  <link href='//fonts.googleapis.com/css?family=Headland+One' rel='stylesheet' type='text/css'>
+  <link href='//fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="css/app.css">
 
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -85,12 +85,12 @@
     </div>
      -->
 
-    <h2 class="debug hidden-xs col-sm-3 title"><a href="/">Circle&nbsp;Blvd.</a></h2>
+    <h2 class="debug hidden-xs col-sm-3 title" ng-if="isSignedIn()"><a href="/">Circle&nbsp;Blvd.</a></h2>
     <!-- <ul class="menu col-xs-2 col-md-4" ng-show="!isSignedIn()">
        <li><a href="#/signin">Sign in</a></li>
     </ul> -->
 
-    <ul class="menu visible-xs debug" ng-if="isSignedIn()">
+    <ul class="menu visible-xs debug ng-cloak" ng-if="isSignedIn()">
       <li><a href="/">List</a></li>
       <li><a href="#/archives">Archives</a></li>
       <li><a href="#/profile">Profile</a></li>
