@@ -865,8 +865,16 @@ label.relax {
 }
 
 /* profile */
+.profile .basics .btn, .profile .password .btn {
+  margin-top: 1.2em;
+}
+
+.profile .message {
+  margin-top: 1ex;
+}
+
 .input-aligned {
-  margin-top: 0.5ex;
+  margin-top: 1ex;
 }
 .support-circle {
   display: inline-block;
@@ -883,6 +891,12 @@ label.relax {
   background-repeat: no-repeat;
 
   opacity: 0.6;
+}
+.profile {
+  padding-bottom: 2.4em;
+}
+.donations, .profile .password {
+  padding-top: 2.4em;
 }
 .donations .plans {
   margin-left: 0em;
@@ -923,8 +937,9 @@ label.relax {
 
 .donations .cancel {
   text-align: center;
-  padding-top: 1.2em;
+  padding-top: 1.5em;
   padding-left: 3ex;
+  margin-bottom: 0;
 }
 
 /* admin */
