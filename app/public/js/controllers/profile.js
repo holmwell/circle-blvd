@@ -1,6 +1,12 @@
 'use strict';
 
 function ProfileCtrl(session, $scope, $http, errors) {
+	var messages = {};
+	var feedback = {};
+
+	$scope.messages = messages;
+	$scope.feedback = feedback;
+
 	$scope.supportsPayments = false;
 	$scope.activePlan = {};
 
@@ -47,47 +53,77 @@ function ProfileCtrl(session, $scope, $http, errors) {
 		}
 	};
 
-	var messages = {};
-	$scope.messages = messages;
+	var saveUserProperty = function (propName, val, callback) {
+		var data = {};
+		data.id = session.user.id;
+		data[propName] = val;
 
-	var saveUser = function (user, callback) {
-		$http.put('/data/user', user)
-		.success(function() {
-			session.user = user;
-			session.save();
+		$http.put('/data/user/' + propName, data)
+		.success(function () {
+			feedback[propName] = "success";
 
 			if (callback) {
 				callback();
 			}
 		})
 		.error(function (data, status) {
-			errors.handle(data, status);
+			feedback[propName] = "error";
+			messages[propName] = data;
+			
+			var err = {
+				data: data,
+				status: status
+			}
+
+			if (callback) {
+				callback(err);
+			}
 		});
 	};
 
-	$scope.updateUser = function (name, email) {
-		var data = session.user;
-		data.name = name;
-		data.email = email;
-
-		saveUser(data, function () {
-			messages.user = "Profile updated."
+	var updateName = function (name) {
+		saveUserProperty("name", name, function (err) {
+			if (err) {
+				return;
+			}
+			session.user.name = name;
+			session.save();
 		});
 	};
 
-	$scope.updateNotificationEmail = function (address) {
+	var updateEmail = function (email) {
+		saveUserProperty("email", email, function (err) {
+			if (err) {
+				return;
+			}
+			session.user.email = email;
+			session.save();
+		});
+	};
+
+	var updateNotificationEmail = function (address) {
 		if (!address) {
+			feedback.notificationEmail = "error";
 			messages.notificationEmail = "Sorry, we'd like an email address."
 			return;
 		}
-		var data = session.user;
-		data.notifications = session.user.notifications || {};
-		data.notifications.email = address;
 
-		saveUser(data, function () {
-			messages.notificationEmail = "Address updated.";
+		saveUserProperty("notificationEmail", address, function (err) {
+			if (err) {
+				return;
+			}
+			session.user.notifications = session.user.notifications || {};
+			session.user.notifications.email = address;
+			session.save();
 		});
 	};
+
+	$scope.saveProfile = function (name, email, notificationEmail) {
+		updateName(name);
+		updateEmail(email);
+		updateNotificationEmail(notificationEmail);
+	};
+
 
 	$scope.updatePassword = function (pass1, pass2) {
 		if (pass1 !== pass2) {
@@ -169,6 +205,14 @@ function ProfileCtrl(session, $scope, $http, errors) {
 			});
 		};
 	}
+
+	$scope.isSuccess = function (val) {
+		return val === "success";
+	};
+
+	$scope.isError = function (val) {
+		return val === "failure";
+	};
 	
 	// Get our data as a check to see if we should even be here.
 	$http.get('/data/user')

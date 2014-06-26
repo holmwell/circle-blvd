@@ -177,7 +177,16 @@ module.exports = function () {
 			user._rev = body._rev;
 			user.type = body.type;
 
-			database.insert(user, callback);
+			database.insert(user, function (err, body) {
+				if (err) {
+					if (err.error === 'conflict') {
+						// It happens ... try again.
+						updateUser(user, callback);
+						return;
+					}
+				}
+				callback(err, body);
+			});
 		});
 	};
 

@@ -6,24 +6,51 @@
 
 <div ng-show="isSignedIn()" class="profile">
 	<div class="col-sm-offset-1 row clear basics">
-		<h5 class="col-xs-12">Name</h5>
-		<div class="col-sm-6"><input ng-model="name" type="text" class="form-control" placeholder="Name"/></div>
+		<div class="col-sm-6 clear">
+			<div class="form-group has-{{feedback.name}}"
+				ng-class="{
+					'has-feedback': feedback.name
+				}">
+				<label for="profileName">Name</label>
+				<input id="profileName" ng-model="name" type="text" class="form-control" placeholder="Name"/>
+				<span ng-show="isSuccess(feedback.name)" class="glyphicon glyphicon-ok form-control-feedback"></span>
+				<div>{{messages.name}}</div>
+			</div>
+		</div>
 
-		<h5 class="col-xs-12">Email for signing in</h5>
-		<div class="col-sm-6"><input ng-model="email" type="text" class="form-control" placeholder="Email"/></div>
-		<p>{{messages.user}}</p>
+		<div class="col-sm-6 clear">
+			<div class="form-group has-{{feedback.email}}"
+				ng-class="{
+					'has-feedback': feedback.email
+				}"
+				>
+				<label for="profileEmail">Email for signing in</label>
+				<input id="profileEmail" ng-model="email" type="text" class="form-control" placeholder="Email"/>
+				<span ng-show="isSuccess(feedback.email)" class="glyphicon glyphicon-ok form-control-feedback"></span>
+				<div>{{messages.email}}</div>
+			</div>
+		</div>
 
-		<h5 class="col-xs-12">Email for notifications</h5>
-		<div class="col-sm-6"><input ng-model="notificationEmail" type="email" class="form-control"/></div>
+		<div class="col-sm-6 clear">
+			<div class="form-group has-{{feedback.notificationEmail}}"
+				ng-class="{
+					'has-feedback': feedback.notificationEmail
+				}"
+				>
+				<label for="notificationEmail">Email for notifications</label>
+				<input id="notificationEmail" ng-model="notificationEmail" type="email" class="form-control" placeholder="Notification email"/>
+				<span ng-show="isSuccess(feedback.notificationEmail)" class="glyphicon glyphicon-ok form-control-feedback"></span>
+				<div>{{messages.notificationEmail}}</div>
+			</div>
+		</div>
 		<div class="col-sm-6 input-aligned">People can see this address.</div>
-		<div class="col-xs-12">
+
+		<div class="col-sm-6 clear">
 			<button class="btn btn-default" 
-			ng-click="updateNotificationEmail(notificationEmail)">Save changes</button> 
-			<p class="message">{{messages.notificationEmail}}</p>
+			ng-click="saveProfile(name, email, notificationEmail)">Save changes</button> 
 		</div>
 	</div>
 		
-
 	<div class="col-sm-offset-1 row clear">
 		<div class="donations" ng-show="supportsPayments">
 			<h5 class="col-xs-12">Subscription plan</h5>

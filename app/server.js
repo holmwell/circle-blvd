@@ -233,7 +233,11 @@ var configureSuccessful = function () {
 	
 	// User routes (account actions. requires login access)
 	app.get("/data/user", ensureAuthenticated, userRoutes.user);
-	app.put("/data/user", ensureAuthenticated, userRoutes.update);
+
+	app.put("/data/user/name", ensureAuthenticated, userRoutes.updateName);
+	app.put("/data/user/email", ensureAuthenticated, userRoutes.updateEmail);
+	app.put("/data/user/notificationEmail", ensureAuthenticated, userRoutes.updateNotificationEmail)
+
 	app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
 
 	// User routes (circle actions. requires admin access)
