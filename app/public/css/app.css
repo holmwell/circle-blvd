@@ -1043,3 +1043,15 @@ label.relax {
 .twitter-typeahead input:focus, .twitter-typeahead input:hover {
   background-color: white !important;
 }
+
+.pulse {
+  background-color: gold !important;
+  color: black;
+}
+
+.color-transition {
+  -webkit-transition: background-color 0.75s ease, color 0.75s ease;
+  -moz-transition: background-color 0.75s ease, color 0.75s ease;
+  -o-transition: background-color 0.75s ease, color 0.75s ease;
+  transition: background-color 0.75s ease, color 0.75s ease;
+}

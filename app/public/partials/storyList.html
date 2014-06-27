@@ -1,10 +1,12 @@
 <div id="backlog" class="debug clear">
-	<div class="storyWrapper row debug no-select" ng-repeat="story in stories"
+	<div class="storyWrapper row debug no-select" 
+		data-story-id="{{story.id}}"
+		ng-repeat="story in stories"
 		ng-hide="enableAltMode
 		&& (!story.isMoving 
 		&& story.isAfterNextMeeting
 		&& !story.isDeadline 
-		&& !story.isNextMeeting)" data-story-id="{{story.id}}">
+		&& !story.isNextMeeting)">
 		<sp-story/>
-	</div> <!-- ng-repeat -->
-</div> <!-- backlog -->
+	</div>
+</div>

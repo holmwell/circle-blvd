@@ -139,9 +139,9 @@ function StoryCtrl($scope, $timeout) {
 		$scope.$emit('storyNotify', story, event);
 	};
 
-	$scope.save = function (story) {
+	$scope.save = function (story, event) {
 		$timeout(function () {
-			$scope.deselect(story);	
+			$scope.deselect(story, event);	
 		});
 		$scope.$emit('storySaved', story);
 	};

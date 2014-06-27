@@ -55,6 +55,29 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 		// $scope.select(stories.getFirst());
 	};
 
+	var pulse = function (story) {
+		var qStory = $("[data-story-id='" + story.id + "']");
+		qStory = qStory.find('.story');
+
+		if (qStory.hasClass('pulse')) {
+			return;
+		}
+
+		// Use CSS to flash a different colored background
+		// for a moment then fade to whatever we were.
+		qStory.addClass('pulse');
+		$timeout(function () {
+			qStory.addClass('color-transition');	
+		}, 10);
+		
+  		$timeout(function () { 
+  			qStory.removeClass('pulse');
+  			$timeout(function () {
+  				qStory.removeClass('color-transition');
+  			}, 500);
+  		}, 25);	
+	};
+
 	$scope.$watch('data', function (newVal) {
 		if (newVal) {
 			circleId = newVal.circleId;
@@ -87,8 +110,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 		});
 	});
 
+
 	$scope.$on('storyDeselected', function (e, story, event) {
 		selectedStory = undefined;
+		pulse(story);
 	});
 
 	$scope.$on('insertNewStory', function (e, newStory, callback) {
@@ -190,6 +215,9 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 	});
 
 	$scope.$on('storyChanged', function (e, story) {
+		if (!story.isSelected) {
+			pulse(story);	
+		}
 		// TODO: Do we need this serverStory runaround?
 		var serverStory = stories.get(story.id);
 		stories.save(serverStory);

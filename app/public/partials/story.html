@@ -106,7 +106,7 @@
 							<textarea autosize placeholder="Add comment or link ..." ng-model="story.newComment" class="form-control"/>
 						</div>
 
-						<button class="saveBtn pull-right topSaveBtn btn btn-default" type="submit" ng-click="save(story)">Save</button>
+						<button class="saveBtn pull-right topSaveBtn btn btn-default" type="submit" ng-click="save(story, $event)">Save</button>
 						<div class="comment" ng-repeat="comment in story.comments | reverse" ng-class-odd="'odd'">
 							<div class="text" append-linky ng-model="comment.text"><span class="name">{{comment.createdBy.name}}: </span></div>
 						</div>
@@ -114,7 +114,7 @@
 
 					<div class="action-buttons">
 						<button ng-hide="story.isNextMeeting" class="hidden-xs removeBtn" type="button" ng-click="remove(story)">Remove story</button>
-						<button ng-show="story.isNextMeeting || story.isDeadline" class="saveBtn pull-right btn btn-default" type="submit" ng-click="save(story)">Save</button>
+						<button ng-show="story.isNextMeeting || story.isDeadline" class="saveBtn pull-right btn btn-default" type="submit" ng-click="save(story, $event)">Save</button>
 					</div>
 				</form>
 			</div>
