@@ -31,14 +31,13 @@ exports.updateName = function (req, res) {
 
 	var onError = function (err) {
 		console.log(err);
-		res.send(500, "Sorry, the website is broken right now.");
+		res.send(500, err);
 	};
 
 	basicChecks(req, res, function () {
 		var data = req.body;
 		var user = req.user;
-		user.name = data.name;
-		db.users.update(user, onSuccess, onError);
+		db.users.updateName(user, data.name, onSuccess, onError);
 	});
 };
 
@@ -48,15 +47,13 @@ exports.updateEmail = function (req, res) {
 	};
 
 	var onError = function (err) {
-		console.log(err);
-		res.send(500, "Sorry, the website is broken right now.");
+		res.send(500, err);
 	};
 	
 	basicChecks(req, res, function () {
 		var data = req.body;
 		var user = req.user;
-		user.email = data.email;
-		db.users.update(user, onSuccess, onError);
+		db.users.updateEmail(user, data.email, onSuccess, onError);
 	});
 };
 

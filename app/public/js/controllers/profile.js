@@ -61,6 +61,7 @@ function ProfileCtrl(session, $scope, $http, errors) {
 		$http.put('/data/user/' + propName, data)
 		.success(function () {
 			feedback[propName] = "success";
+			messages[propName] = null;
 
 			if (callback) {
 				callback();
