@@ -131,7 +131,7 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 			})
 			.error(handleInitError);
 
-			$http.get("/data/" + circleId + "/users/names")
+			$http.get("/data/" + circleId + "/members/names")
 			.success(function (names) {
 				$scope.owners = names;
 			})

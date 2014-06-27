@@ -55,7 +55,7 @@ function AdminCtrl(session, $scope, $http, errors) {
 			level: "member"
 		});	
 		
-		$http.post('/data/' + activeCircle + '/user', data)
+		$http.post('/data/' + activeCircle + '/member', data)
 		.success(addMemberSuccess)
 		.error(addMemberFailure);
 	};
@@ -63,7 +63,7 @@ function AdminCtrl(session, $scope, $http, errors) {
 	$scope.removeMember = function (member) {
 		var data = member;
 
-		$http.put('/data/' + activeCircle + '/user/remove', data)
+		$http.put('/data/' + activeCircle + '/member/remove', data)
 		.success(function() {
 			getLatestMemberData();
 		})
@@ -90,7 +90,7 @@ function AdminCtrl(session, $scope, $http, errors) {
 	};
 
 	var getLatestMemberData = function() {
-		$http.get('/data/' + activeCircle + '/users')
+		$http.get('/data/' + activeCircle + '/members')
 		.success(getMembersSuccess)
 		.error(getMembersFailure);
 	};

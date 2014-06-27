@@ -241,7 +241,7 @@ var configureSuccessful = function () {
 	app.put("/data/user/password", ensureAuthenticated, userRoutes.updatePassword);
 
 	// User routes (circle actions. requires admin access)
-	app.get("/data/:circleId/users", ensureAdminCircleAccess, function (req, res) {
+	app.get("/data/:circleId/members", ensureAdminCircleAccess, function (req, res) {
 		var circleId = req.params.circleId;
 		db.users.findByCircleId(circleId, function (err, users) {
 			if (err) {
@@ -251,7 +251,7 @@ var configureSuccessful = function () {
 		});
 	});
 
-	app.put("/data/:circleId/user/remove", ensureAdminCircleAccess, function (req, res) {
+	app.put("/data/:circleId/member/remove", ensureAdminCircleAccess, function (req, res) {
 		// usersRoutes.remove
 		var circleId = req.params.circleId;
 		var reqUser = req.body;
@@ -281,7 +281,7 @@ var configureSuccessful = function () {
 		});
 	});
 
-	app.post("/data/:circleId/user", ensureAdminCircleAccess, function (req, res) {
+	app.post("/data/:circleId/member", ensureAdminCircleAccess, function (req, res) {
 		var circleId = req.params.circleId;
 		var user = req.body;
 
@@ -327,7 +327,7 @@ var configureSuccessful = function () {
 		});
 	});
 
-	app.get("/data/:circleId/users/names", ensureCircleAccess, function (req, res) {
+	app.get("/data/:circleId/members/names", ensureCircleAccess, function (req, res) {
 		var circleId = req.params.circleId;
 		db.users.findNamesByCircleId(circleId, function (err, names) {
 			if (err) {
