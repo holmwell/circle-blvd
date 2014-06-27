@@ -962,7 +962,7 @@ label.relax {
   margin-left: -1.5ex;
 }
 
-.adminList .removeUser {
+.adminList .removeMember {
   padding-left: 3.5ex; /* for centering */
   cursor: pointer;
 }

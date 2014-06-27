@@ -5,16 +5,16 @@ function AdminCtrl(session, $scope, $http, errors) {
 	var activeCircle = session.activeCircle;
 	var impliedGroup = undefined;
 
-	var addUserSuccess = function() {
-		$scope.userName = "";
-		$scope.userEmail = "";
-		$scope.userPassword = "";
+	var addMemberSuccess = function() {
+		$scope.memberName = "";
+		$scope.memberEmail = "";
+		$scope.memberPassword = "";
 		
-		getLatestUserData();
+		getLatestMemberData();
 	};
 
-	var addUserFailure = function() {
-		errors.handle("Sad inside add user. :(");
+	var addMemberFailure = function() {
+		errors.handle("Sad inside add member. :(");
 	};
 
 	$scope.isGroupImplied = function (group) {
@@ -24,21 +24,21 @@ function AdminCtrl(session, $scope, $http, errors) {
 		return false;
 	};
 
-	$scope.addUser = function(userName, userEmail, userPassword, userGroups) {
+	$scope.addMember = function(memberName, memberEmail, memberPassword, memberGroups) {
 		if (!impliedGroup) {
-			errors.handle("Attempt to add a user to a circle without an implied group.");
+			errors.handle("Attempt to add a member to a circle without an implied group.");
 			return;
 		}
 
 		var data = {
-			name: userName,
-			email: userEmail,
-			password: userPassword,
+			name: memberName,
+			email: memberEmail,
+			password: memberPassword,
 			memberships: []
 		};
 
-		for (var groupId in userGroups) {
-			if (userGroups[groupId] === true) {
+		for (var groupId in memberGroups) {
+			if (memberGroups[groupId] === true) {
 				data.memberships.push({
 					circle: activeCircle,
 					group: groupId,
@@ -56,32 +56,32 @@ function AdminCtrl(session, $scope, $http, errors) {
 		});	
 		
 		$http.post('/data/' + activeCircle + '/user', data)
-		.success(addUserSuccess)
-		.error(addUserFailure);
+		.success(addMemberSuccess)
+		.error(addMemberFailure);
 	};
 
-	$scope.removeUser = function (user) {
-		var data = user;
+	$scope.removeMember = function (member) {
+		var data = member;
 
 		$http.put('/data/' + activeCircle + '/user/remove', data)
 		.success(function() {
-			getLatestUserData();
+			getLatestMemberData();
 		})
 		.error(function (data, status) {
 			errors.handle(data, status);
 		});
 	};
 
-	var getUsersSuccess = function(data, status, headers, config) {
+	var getMembersSuccess = function(data, status, headers, config) {
 		if (data === {}) {
 			// do nothing. 
 		}
 		else {
-			$scope.users = data;
+			$scope.members = data;
 		}
 	};
 
-	var getUsersFailure = function(data, status, headers, config) { 
+	var getMembersFailure = function(data, status, headers, config) { 
 		if (status === 401 && $scope.isSignedIn()) {
 			// && is admin ...
 			$scope.signOut();
@@ -89,10 +89,10 @@ function AdminCtrl(session, $scope, $http, errors) {
 		}
 	};
 
-	var getLatestUserData = function() {
+	var getLatestMemberData = function() {
 		$http.get('/data/' + activeCircle + '/users')
-		.success(getUsersSuccess)
-		.error(getUsersFailure);
+		.success(getMembersSuccess)
+		.error(getMembersFailure);
 	};
 
 
@@ -165,9 +165,9 @@ function AdminCtrl(session, $scope, $http, errors) {
 	};
 
 	var init = function () {
-		$scope.userGroups = {};
+		$scope.memberGroups = {};
 
-		getLatestUserData();
+		getLatestMemberData();
 		getLatestGroupData();
 	}
 
