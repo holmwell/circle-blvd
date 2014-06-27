@@ -2,7 +2,7 @@
 
 /* Services */
 angular.module('CircleBlvd.services', []).
-  value('version', '0.6.4'). // a simple value service
+  value('version', '0.6.5'). // a simple value service
   factory('hacks', CircleBlvd.Services.hacks).
   factory('signInName', CircleBlvd.Services.signInName).
   factory('session', CircleBlvd.Services.session).
