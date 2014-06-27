@@ -78,6 +78,39 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
   		}, 25);	
 	};
 
+	var scrollToAndPulse = function (story) {
+		var qStory = $("[data-story-id='" + story.id + "']");
+		qStory = qStory.find('.story');
+		if (!qStory) {
+			return;
+		}
+
+		var shouldScroll = true;
+		var bodyScrollTop = $('body').prop('scrollTop');		
+		if (bodyScrollTop < qStory.offset().top) {
+			shouldScroll = false;
+		}
+
+		if (shouldScroll) {
+			var delay = 500;
+			// Give the story time to close before
+			// starting the scroll animation.
+			$timeout(function () {
+				$('body').animate({
+					// scrollTopWhenSelected
+					scrollTop: qStory.offset().top - 20
+				}, delay);
+
+				$timeout(function () {
+					pulse(story);
+				}, delay + 75);
+			}, 100);
+		}
+		else {
+			pulse(story);
+		}
+	};
+
 	$scope.$watch('data', function (newVal) {
 		if (newVal) {
 			circleId = newVal.circleId;
@@ -98,7 +131,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 
 	$scope.$on('storySelected', function (e, story) {
 		selectedStory = story;
-
 		// Bring the focus to the default input box, 
 		// which is likely the summary text.
 		//
@@ -113,7 +145,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 
 	$scope.$on('storyDeselected', function (e, story, event) {
 		selectedStory = undefined;
-		pulse(story);
+		scrollToAndPulse(story);		
 	});
 
 	$scope.$on('insertNewStory', function (e, newStory, callback) {
