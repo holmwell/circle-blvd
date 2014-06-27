@@ -56,22 +56,27 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 	};
 
 	var pulse = function (story) {
+		var pulseClass = "pulse";
+		if ((story.isDeadline && story.isAfterNextMeeting) 
+			|| story.isNextMeeting) {
+			pulseClass = "pulse-milepost";
+		}
 		var qStory = $("[data-story-id='" + story.id + "']");
 		qStory = qStory.find('.story');
 
-		if (qStory.hasClass('pulse')) {
+		if (qStory.hasClass(pulseClass)) {
 			return;
 		}
 
 		// Use CSS to flash a different colored background
 		// for a moment then fade to whatever we were.
-		qStory.addClass('pulse');
+		qStory.addClass(pulseClass);
 		$timeout(function () {
 			qStory.addClass('color-transition');	
 		}, 10);
 		
   		$timeout(function () { 
-  			qStory.removeClass('pulse');
+  			qStory.removeClass(pulseClass);
   			$timeout(function () {
   				qStory.removeClass('color-transition');
   			}, 500);

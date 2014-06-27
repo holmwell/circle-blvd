@@ -1048,6 +1048,10 @@ label.relax {
   background-color: gold !important;
   color: black;
 }
+.pulse-milepost {
+  background-color: #606 !important;
+  color: white;
+}
 
 .color-transition {
   -webkit-transition: background-color 0.75s ease, color 0.75s ease;
