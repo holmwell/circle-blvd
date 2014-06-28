@@ -283,42 +283,45 @@ var configureSuccessful = function () {
 
 	app.post("/data/:circleId/member", ensureAdminCircleAccess, function (req, res) {
 		var circleId = req.params.circleId;
-		var user = req.body;
+		var member = req.body;
 
-		db.users.findByEmail(user.email, function (err, userAccount) {
+		// TODO: Get the memberships from the server side.
+		// The client should only need to specify user data
+		// and the group names.
+		var addMembershipsToAccount = function (account) {
+			member.memberships.forEach(function (newMembership) {
+				account.memberships.push(newMembership);
+			});
+
+			db.users.update(account, 
+				function (body) {
+					res.send(201);
+				},
+				function (err) {
+					handleError(err, res);
+				}
+			);
+		};
+
+		db.users.findByEmail(member.email, function (err, userAccount) {
 			if (err) {
 				return handleError(err, res);
 			}
 
-			var accountFound = function (account) {
-				user.memberships.forEach(function (newMembership) {
-					account.memberships.push(newMembership);
-				});
-
-				db.users.update(account, 
-					function (body) {
-						res.send(201);
-					},
-					function (err) {
-						handleError(err, res);
-					}
-				);
-			};
-
 			if (userAccount) {
-				accountFound(userAccount);
+				addMembershipsToAccount(userAccount);
 			}
 			else {
 				var isReadOnly = false;
 				var memberships = [];
 				db.users.add(
-					user.name,
-					user.email, 
-					user.password,
+					member.name,
+					member.email, 
+					member.password,
 					[], // no memberships at first
-					user.isReadOnly,
+					member.isReadOnly,
 					function (user) {
-						accountFound(user);
+						addMembershipsToAccount(user);
 					}, 
 					function (err) {
 						handleError(err, res);
