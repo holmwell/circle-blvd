@@ -423,6 +423,35 @@ var configureSuccessful = function () {
 		})
 	});
 
+	var addStoriesForNewCircle = function (newCircle, callback) {
+		var nextMeeting = {};	
+		nextMeeting.projectId = newCircle._id;
+		nextMeeting.summary = "Next meeting";
+		nextMeeting.isNextMeeting = true;
+
+		var stories = [];
+		stories.push(nextMeeting);
+
+		var currentIndex = 0;
+
+		var addStory = function (story) {
+			db.stories.add(story, function (err, body) {
+				if (err) {
+					return callback(err);
+				}
+				currentIndex++;
+				if (currentIndex >= stories.length) {
+					callback();
+				}
+				else {
+					addStory(stories[currentIndex]);
+				}
+			});	
+		};
+
+		addStory(stories[currentIndex]);
+	};
+
 	var createCircle = function(circleName, adminEmailAddress, callback) {
 		var circle = {
 			name: circleName
@@ -445,12 +474,7 @@ var configureSuccessful = function () {
 				isPermanent: true
 			};
 
-			var nextMeeting = {};	
-			nextMeeting.projectId = newCircle._id;
-			nextMeeting.summary = "Next meeting";
-			nextMeeting.isNextMeeting = true;
-
-			db.stories.add(nextMeeting, function (err, body) {
+			addStoriesForNewCircle(newCircle, function (err, body) {
 				if (err) {
 					return callback(err);
 				}
