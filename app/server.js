@@ -601,15 +601,15 @@ var configureSuccessful = function () {
 	// });
 
 	// // TODO: Ensure circle access
-	// app.get("/data/group/:groupId", ensureAuthenticated, function (req, res) {
-	// 	var groupId = req.params.groupId;
-	// 	db.groups.findById(groupId, function (err, group) {
-	// 		if (err) {
-	// 			return handleError(err, res);
-	// 		}
-	// 		res.send(200, group);
-	// 	});
-	// });
+	app.get("/data/group/:groupId", ensureAuthenticated, function (req, res) {
+		var groupId = req.params.groupId;
+		db.groups.findById(groupId, function (err, group) {
+			if (err) {
+				return handleError(err, res);
+			}
+			res.send(200, group);
+		});
+	});
 
 	// // TODO: Ensure circle access
 	// app.put("/data/group/remove", ensureAdministrator, function (req, res) {
