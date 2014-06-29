@@ -550,52 +550,56 @@ var configureSuccessful = function () {
 		});
 	});
 
-	var addGroup = function (group, res) {
-		db.groups.add(group, 
-			function (group) {
-				res.send(200, group);
-			},
-			function (err) {
-				handleError(err, res);
-			}
-		);
-	};
+	// TODO: We'll turn groups on at a later time, as we
+	// transition toward hosting larger groups, but in the 
+	// mean time this is just a security hole.
+	// 
+	// var addGroup = function (group, res) {
+	// 	db.groups.add(group, 
+	// 		function (group) {
+	// 			res.send(200, group);
+	// 		},
+	// 		function (err) {
+	// 			handleError(err, res);
+	// 		}
+	// 	);
+	// };
 
 	// TODO: Ensure circle access
-	app.post("/data/group", ensureAdministrator, function (req, res) {
-		var data = req.body;
+	// app.post("/data/group", ensureAdministrator, function (req, res) {
+	// 	var data = req.body;
 
-		var group = {};	
-		group.projectId = data.projectId;
-		group.name = data.name;
+	// 	var group = {};	
+	// 	group.projectId = data.projectId;
+	// 	group.name = data.name;
 
-		addGroup(group, res);
-	});
+	// 	addGroup(group, res);
+	// });
 
-	// TODO: Ensure circle access
-	app.get("/data/group/:groupId", ensureAuthenticated, function (req, res) {
-		var groupId = req.params.groupId;
-		db.groups.findById(groupId, function (err, group) {
-			if (err) {
-				return handleError(err, res);
-			}
-			res.send(200, group);
-		});
-	});
+	// // TODO: Ensure circle access
+	// app.get("/data/group/:groupId", ensureAuthenticated, function (req, res) {
+	// 	var groupId = req.params.groupId;
+	// 	db.groups.findById(groupId, function (err, group) {
+	// 		if (err) {
+	// 			return handleError(err, res);
+	// 		}
+	// 		res.send(200, group);
+	// 	});
+	// });
 
-	// TODO: Ensure circle access
-	app.put("/data/group/remove", ensureAdministrator, function (req, res) {
-		var group = req.body;
+	// // TODO: Ensure circle access
+	// app.put("/data/group/remove", ensureAdministrator, function (req, res) {
+	// 	var group = req.body;
 
-		db.groups.remove(group, 
-			function () {
-				res.send(200);
-			},
-			function (err) {
-				handleError(err, res);
-			}
-		);
-	});
+	// 	db.groups.remove(group, 
+	// 		function () {
+	// 			res.send(200);
+	// 		},
+	// 		function (err) {
+	// 			handleError(err, res);
+	// 		}
+	// 	);
+	// });
 
 
 	// Story routes
