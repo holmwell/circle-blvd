@@ -36,15 +36,19 @@
 	<div class="signup">
 		<form>
 			<div class="col-sm-offset-2 col-sm-8 clear signin-section">
-				<h4>Sign up for an account.</h4>
-				<p>Circle Blvd. is new, so we're only opening a few accounts at a time. If you would like to be on the waitlist, please let us know here. Thank you.</p>
-				<div><input type="text" ng-model="signup.circle" placeholder="Group name" class="form-control"/></div>
-				<div><textarea autosize ng-model="signup.things" 
-					placeholder="Anything you'd like to say?" class="form-control"/></div>
-				<div><input type="text" ng-model="signup.email" placeholder="Email address" class="form-control"/></div>
+				<h4>Create a circle.</h4>
+				<label for="signupCircleName" class="sr-only">What's the name of your circle?</label>
+				<div><input id="signupCircleName" type="text" ng-model="signup.circle" placeholder="Circle name" class="form-control"/></div>
+
+				<label for="signupEmail">How will you be signing in?</label>
+				<div><input id="signupEmail" type="text" ng-model="signup.email" placeholder="Email address" class="form-control"/></div>
+				<div><input type="password" ng-model="signup.password" placeholder="Password" class="form-control"/></div>
+				
+				<label for="signupName">What's your name?</label>
+				<div><input id="signupName" type="text" ng-model="signup.name" placeholder="First name" class="form-control"/></div>
 				<button class="btn btn-default pull-right" 
 					ng-hide="signup.message"
-					type="submit" ng-click="signUp()">Sign up</button> 
+					type="submit" ng-click="signUp()">Create</button> 
 			</div>
 			<div class="col-sm-offset-2 col-sm-8 clear ng-cloak"
 				ng-show="signup.message">

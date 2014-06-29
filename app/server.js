@@ -423,17 +423,14 @@ var configureSuccessful = function () {
 		})
 	});
 
-	app.post("/data/circle", ensureMainframeAccess, function (req, res) {
-		var circle = req.body.circle;
-		var admin = req.body.admin;
-
-		if (!admin.email) {
-			return res.send(400, "An email address for an administrative user is required when making a circle.");
-		}
+	var createCircle = function(circleName, adminEmailAddress, callback) {
+		var circle = {
+			name: circleName
+		};
 
 		db.circles.add(circle, function (err, newCircle) {
 			if (err) {
-				return handleError(err, res);
+				return callback(err);
 			}
 
 			var administrativeGroup = {
@@ -455,17 +452,17 @@ var configureSuccessful = function () {
 
 			db.stories.add(nextMeeting, function (err, body) {
 				if (err) {
-					return handleError(err, res);;
+					return callback(err);
 				}
 
 				db.groups.add(administrativeGroup, function (adminGroup) {
 					db.groups.add(impliedGroup, function (memberGroup) {
-						db.users.findByEmail(admin.email, function (err, adminAccount) {
+						db.users.findByEmail(adminEmailAddress, function (err, adminAccount) {
 							if (err) {
-								return handleError(err, res);
+								return callback(err);
 							}
 
-							var accountFound = function (account) {
+							var addCircleMembershipsToAdmin = function (account) {
 								// admin access
 								account.memberships.push({
 									circle: newCircle._id,
@@ -481,44 +478,52 @@ var configureSuccessful = function () {
 
 								db.users.update(account, 
 									function (body) {
-										res.send(200, newCircle);
+										callback(null, newCircle);
 									},
 									function (err) {
-										handleError(err, res);
+										callback(err);
 									}
 								);
 							};
 
 							if (adminAccount) {
-								accountFound(adminAccount);
+								addCircleMembershipsToAdmin(adminAccount);
 							}
 							else {
-								var isReadOnly = false;
-								var memberships = [];
-								db.users.add("Admin",
-									admin.email, 
-									"public", // TODO: Change 
-									memberships,
-									isReadOnly,
-									function (user) {
-										accountFound(user);
-									}, 
-									function (err) {
-										handleError(err, res);
-									});
+								var err = {};
+								err.message = "Admin account was not found. Cannot create circle " +
+								"witout an exiting admin account.";
+								callback(err);
 							}
 						});
 					},
 					function (err) {
 						// failure adding member group
-						return handleError(err, res);
+						callback(err);
 					});
 				},
 				function (err) {
 					// failure adding admin group
-					return handleError(err, res);
+					callback(err);
 				});
 			});
+		});
+	};
+
+	app.post("/data/circle", ensureMainframeAccess, function (req, res) {
+		var circle = req.body.circle;
+		var admin = req.body.admin;
+
+		if (!admin.email) {
+			return res.send(400, "An email address for an administrative user is required when making a circle.");
+		}
+
+		createCircle(circle.name, admin.email, function (err, newCircle) {
+			if (err) {
+				return handleError(err, res);
+			}
+
+			res.send(200, newCircle);
 		});
 	});
 
@@ -1204,6 +1209,52 @@ var configureSuccessful = function () {
 
 			user.subscription = null;
 			db.users.update(user, onSuccess, onError);
+		});
+	});
+
+	app.post("/data/signup/now", function (req, res) {
+		var data = req.body;
+
+		var proposedAccount = {
+			name: data.name,
+			email: data.email,
+			password: data.password
+		};
+
+		var proposedCircle = {
+			name: data.circle
+		};
+
+		var userAccountCreated = function (newAccount) {
+			createCircle(proposedCircle.name, newAccount.email, function (err, newCircle) {
+				if (err) {
+					handleError(err, res);
+				}
+				res.send(200, newCircle);
+			});
+		};
+
+		db.users.findByEmail(proposedAccount.email, function (err, accountExists) {
+			if (err) {
+				return handleError(err, res);
+			}
+
+			if (accountExists) {
+				return res.send(400, "That email address is already being used. Maybe try signing in?")
+			}
+
+			var isReadOnly = false;
+
+			db.users.add(
+				proposedAccount.name,
+				proposedAccount.email, 
+				proposedAccount.password,
+				[], // no memberships at first
+				isReadOnly,
+				userAccountCreated, 
+				function (err) {
+					handleError(err, res);
+				});
 		});
 	});
 

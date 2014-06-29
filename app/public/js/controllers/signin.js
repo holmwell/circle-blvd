@@ -3,33 +3,6 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 	$scope.signup = {};
 	$scope.signup.once = false;
 
-	$scope.signUp = function() {
-		if ($scope.signup.once) {
-			return;
-		}
-		$scope.signup.once = true;
-
-		var success = function (data) {
-			$scope.signup.message = "Thank you. :-)";	
-		}
-		
-		var failure = function (data) {
-			$scope.signup.message = 
-			"Sorry, our computers aren't working. " + 
-			"Please try again at a later time.";
-		};
-
-		var data = {
-			circle: $scope.signup.circle,
-			things: $scope.signup.things,
-			email: $scope.signup.email
-		};
-
-		$http.post('/data/signup/waitlist', data)
-		.success(success)
-		.error(failure);
-	};
-
 	$scope.signIn = function() {
 		var success = function(data, status, headers, config) {
 			$scope.message = "Success!";
@@ -132,6 +105,46 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 
 		signIn($scope.user, success, failure);
 	};
+
+
+	$scope.signUp = function() {
+		if ($scope.signup.once) {
+			return;
+		}
+		$scope.signup.once = true;
+
+		var success = function (data) {
+			$scope.signup.message = "Thank you. :-)";
+	
+			$scope.user = {};
+			$scope.user.email = $scope.signup.email;
+			$scope.user.password = $scope.signup.password;
+
+			session.lastLocationPath = "/";
+			$scope.signIn();
+		};
+		
+		var failure = function (data, status) {
+			var message = "Sorry, our computers aren't working. " + 
+			"Please try again at a later time.";
+			if (status === 400) {
+				message = data;
+			}
+			$scope.signup.message = message;
+		};
+
+		var data = {
+			circle: $scope.signup.circle,
+			name: $scope.signup.name,
+			email: $scope.signup.email,
+			password: $scope.signup.password
+		};
+
+		$http.post('/data/signup/now', data)
+		.success(success)
+		.error(failure);
+	};
+
 
 	var init = function () {
 		$scope.user = {};
