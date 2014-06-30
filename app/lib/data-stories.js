@@ -180,6 +180,10 @@ module.exports = function () {
 					if (err) {
 						return failure(err);
 					}
+					if (!firstStory) {
+						return foundNextId(getLastId(story));
+					}
+
 					getNextIdForInsert(story, firstStory._id, callback);
 				});
 			}

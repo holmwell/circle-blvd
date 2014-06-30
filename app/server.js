@@ -424,17 +424,58 @@ var configureSuccessful = function () {
 	});
 
 	var addStoriesForNewCircle = function (newCircle, callback) {
-		var nextMeeting = {};	
-		nextMeeting.projectId = newCircle._id;
+		
+		var newStory = function () {
+			var story = {};
+			story.projectId = newCircle._id;
+			return story;
+		};
+
+		var welcome = newStory();
+		welcome.summary = "Welcome to Circle Blvd. (open me)";
+		welcome.isFirstStory = true;
+
+		var addStories = newStory();
+		addStories.summary = "Add stories";
+
+		var addTeamMembers = newStory();
+		addTeamMembers.summary = "Add team members";
+
+		var nextMeeting = newStory();
 		nextMeeting.summary = "Next meeting";
 		nextMeeting.isNextMeeting = true;
 
-		var stories = [];
-		stories.push(nextMeeting);
+		var seeDocs = newStory();
+		seeDocs.summary = "Check out the documentation for more details";
+
+		var readyMilepost = newStory();
+		readyMilepost.isDeadline = true;
+		readyMilepost.summary = "Ready to go!";
+
+		var subscribe = newStory();
+		subscribe.summary = "Subscribe";
+
+		var haveFun = newStory();
+		haveFun.summary = "Have fun :-)";
+
+		var stories = [
+			welcome,
+			addStories,
+			addTeamMembers,
+			nextMeeting,
+			seeDocs,
+			readyMilepost,
+			subscribe,
+			haveFun
+		];
+		stories.reverse();
 
 		var currentIndex = 0;
 
-		var addStory = function (story) {
+		var addStory = function (story, nextId) {
+			if (nextId) {
+				story.nextId = nextId;
+			}
 			db.stories.add(story, function (err, body) {
 				if (err) {
 					return callback(err);
@@ -444,7 +485,7 @@ var configureSuccessful = function () {
 					callback();
 				}
 				else {
-					addStory(stories[currentIndex]);
+					addStory(stories[currentIndex], body.id);
 				}
 			});	
 		};
