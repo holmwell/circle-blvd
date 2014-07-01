@@ -290,7 +290,14 @@ var configureSuccessful = function () {
 		// and the group names.
 		var addMembershipsToAccount = function (account) {
 			member.memberships.forEach(function (newMembership) {
-				account.memberships.push(newMembership);
+				// Basic data validation
+				if (newMembership.circle === circleId) {
+					var m = {};
+					m.circle = newMembership.circle;
+					m.group = newMembership.group;
+					m.level = newMembership.level;
+					account.memberships.push(m);
+				}
 			});
 
 			db.users.update(account, 
