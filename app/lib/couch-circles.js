@@ -17,7 +17,9 @@ module.exports = function () {
 
 		for (var membershipKey in user.memberships) {
 			var membership = user.memberships[membershipKey];
-			circleIds.push(membership.circle);
+			if (membership.circle) {
+				circleIds.push(membership.circle);	
+			}
 		}
 
 		couch.fetch(circleIds, callback);
