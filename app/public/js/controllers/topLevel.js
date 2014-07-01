@@ -179,6 +179,23 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout) {
 			$http.get('/data/user')
 			.success(function (user) {
 				session.user = user;
+
+				var buildCircleList = function() {
+					var circleList = {};
+					var memberships = user.memberships;
+					for (var key in memberships) {
+						if (memberships[key].circle) {
+							circleList[memberships[key].circle] = {
+								_id: memberships[key].circle, 
+								id: memberships[key].circle,
+								name: memberships[key].circleName
+							};
+						}
+					}
+
+					session.circleList = circleList;
+				}(); // closure
+				
 				session.save();
 			})
 			.error(function (data, status, headers, config) {

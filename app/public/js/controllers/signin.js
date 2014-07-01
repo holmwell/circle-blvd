@@ -11,22 +11,6 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 			if ($scope.rememberMe) {
 				signInName.set(user.email);	
 			}
-
-			var buildCircleList = function() {
-				var circleList = {};
-				var memberships = user.memberships;
-				for (var key in memberships) {
-					if (memberships[key].circle) {
-						circleList[memberships[key].circle] = {
-							_id: memberships[key].circle, 
-							id: memberships[key].circle,
-							name: memberships[key].circleName
-						};
-					}
-				}
-
-				session.circleList = circleList;
-			}(); // closure
 			
 			var getDefaultCircle = function (user, callback) {
 				var defaultGroup = undefined;
