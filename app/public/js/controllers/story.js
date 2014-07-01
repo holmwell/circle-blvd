@@ -145,5 +145,9 @@ function StoryCtrl($scope, $timeout) {
 		});
 		$scope.$emit('storySaved', story);
 	};
+
+	$scope.saveComment = function (story, event) {
+		$scope.$emit('storyCommentSaved', story);
+	};
 }
 StoryCtrl.$inject = ['$scope', '$timeout'];

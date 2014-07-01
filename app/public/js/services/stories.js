@@ -31,6 +31,30 @@ CircleBlvd.Services.stories = function ($http) {
 		});
 	};
 
+	var saveStoryComment = function (story, comment, callback) {
+		if (isFacade) {
+			if (callback) {
+				callback(story);
+			}
+			return;
+		}
+
+		var data = {};
+		data.circleId = story.projectId;
+		data.storyId = story.id;
+		data.comment = comment;
+		$http.put('/data/story/comment', data)
+		.success(function (savedStory) {
+			if (callback) {
+				callback(savedStory);
+			}
+		})
+		.error(function (data, status) {
+			console.log(status);
+			console.log(data);			
+		});
+	};
+
 	var usefulStories = function() {
 		var s = {};
 		s.first = undefined;
@@ -203,6 +227,7 @@ CircleBlvd.Services.stories = function ($http) {
 				});
 			},
 			save: saveStory,
+			saveComment: saveStoryComment,
 			get: getStory, 
 			getPrevious: getPreviousStory,
 			set: function (storyId, story, callback) {

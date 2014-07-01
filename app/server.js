@@ -1038,6 +1038,35 @@ var configureSuccessful = function () {
 		});
 	});
 
+	var getComment = function (text, req) {
+		var comment = {
+			text: text,
+			createdBy: getCreatedBy(req),
+			timestamp: Date.now()
+		};
+
+		return comment;
+	};
+
+	var saveStoryWithComment = function (story, req, res) {
+		db.stories.save(story, 
+			function (savedStory) {
+				if (story.newComment) {
+					var params = {
+						story: savedStory,
+						comment: story.newComment,
+						user: req.user
+					};
+					sendCommentNotification(params, req);	
+				}
+				res.send(200, savedStory);
+			},
+			function (err) {
+				handleError(err, res);
+			}
+		);
+	};
+
 	app.put("/data/story/", ensureAuthenticated, function (req, res) {
 		var story = req.body;
 		var commentText = undefined;
@@ -1045,32 +1074,32 @@ var configureSuccessful = function () {
 			// TODO: This is an opportunity to clean up the API?
 			// In other words, add /data/story/comment? Maybe.
 			if (story.newComment) {
-				var comment = {
-					text: story.newComment,
-					createdBy: getCreatedBy(req),
-					timestamp: Date.now()
-				};
-
-				story.newComment = comment;
+				story.newComment = getComment(story.newComment, req);
 			}
-
-			db.stories.save(story, 
-				function (savedStory) {
-					if (story.newComment) {
-						var params = {
-							story: savedStory,
-							comment: story.newComment,
-							user: req.user
-						};
-						sendCommentNotification(params, req);	
-					}
-					res.send(200, savedStory);
-				},
-				function (err) {
-					handleError(err, res);
-				}
-			);
+			saveStoryWithComment(story, req, res);
 		});	
+	});
+
+	app.put("/data/story/comment", ensureAuthenticated, function (req, res) {
+		// circleId, storyId, comment
+		var data = req.body;
+		if (!data.circleId || !data.storyId || !data.comment) {
+			return res.send(400, "Missing circleId, storyId or comment.");
+		}
+
+		ensureIsCircle(data.circleId, req, res, function () {
+			db.docs.get(data.storyId, function (err, story) {
+				if (err) {
+					return handleError(err, res);
+				}
+				if (story.projectId !== data.circleId) {
+					return res.send(400);
+				}
+
+				story.newComment = getComment(data.comment, req);
+				saveStoryWithComment(story, req, res);
+			});
+		});
 	});
 
 	// TODO: Refactor out the circle access

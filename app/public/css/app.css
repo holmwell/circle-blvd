@@ -620,11 +620,18 @@ button:focus {
   margin-right: 10px;
   margin-top: 0;
 }
+.saveCommentBtn {
+  margin-right: 3px;
+}
 .topSaveBtn {
   margin-top: 1ex;
 }
 .saveBtn:hover, .topSaveBtn:hover {
   background-color: white;
+}
+.saveCommentBtn:hover {
+  background-color: #f6f6f6;
+  border: solid 1px #ccc;
 }
 
 .removeBtn {

@@ -251,6 +251,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 		});
 	});
 
+	$scope.$on('storyCommentSaved', function (e, story) {
+		stories.saveComment(story, story.newComment, function (savedStory) {
+			story.newComment = undefined;
+			story.comments = savedStory.comments;
+		});
+	});
+
 	$scope.$on('storyChanged', function (e, story) {
 		if (!story.isSelected) {
 			pulse(story);	
