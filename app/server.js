@@ -617,11 +617,38 @@ var configureSuccessful = function () {
 			return res.send(400, "A 'name' property is required, for naming the circle.");
 		}
 
-		createCircle(circleName, admin.email, function (err, newCircle) {
+		db.circles.findByUser(req.user, function (err, rawCircles) {
 			if (err) {
 				return handleError(err, res);
 			}
-			res.send(200, newCircle);
+
+			// TODO: Need to remove dups from the view
+			var circles = {};
+			rawCircles.forEach(function (circle) {
+				circles[circle._id] = circle;
+			});
+
+			var circlesCreatedCount = 0;
+			for (var key in circles) {
+				var circle = circles[key];
+				if (circle.createdBy
+				&& circle.createdBy.id === req.user._id) {
+					circlesCreatedCount++;
+				}
+			}
+
+			// TODO: Put this hard-coded value into the settings.
+			var maxCircleCount = 4;
+			if (circlesCreatedCount >= maxCircleCount) {
+				return res.send(403, "Sorry, you can only create " + maxCircleCount + " circles.");
+			}
+
+			createCircle(circleName, admin.email, function (err, newCircle) {
+				if (err) {
+					return handleError(err, res);
+				}
+				res.send(200, newCircle);
+			});
 		});
 	});
 

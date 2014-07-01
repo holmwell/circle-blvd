@@ -52,7 +52,7 @@
 	</div>
 		
 	<div class="col-sm-offset-1 row clear">
-		<div class="circles">
+		<form class="circles">
 			<h5 class="col-xs-12">Circles</h5>
 			<div class="clear">
 				<ul>
@@ -68,10 +68,11 @@
 						ng-click="createCircle(newCircleName)">Create circle</button>
 					</span>
 				</div>
-				<p class="message">{{messages.circle}}</p>
+				<div class="pull-left" ng-show="isCreatingCircle">&nbsp;...</div>
+				<p class="message clear">{{messages.circle}}</p>
 			</div>
 			
-		</div>
+		</form>
 	</div>
 
 	<div class="col-sm-offset-1 row clear">

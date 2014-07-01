@@ -27,6 +27,24 @@ function ProfileCtrl(session, $scope, $http, errors) {
 		stripeAmount: 10000
 	});
 
+	var updateCircles = function () {
+		$http.get("/data/circles")
+		.success(function (data) {
+			var rawCircleData = data;
+			var circles = {};
+			// TODO: Need to change the view to remove duplicates,
+			// as data.length === memberships.length, rather than
+			// circle length.
+			rawCircleData.forEach(function (circle) {
+				circles[circle._id] = circle;
+			});
+			$scope.circles = circles;
+		})
+		.error(function (data, status) {
+			errors.log(data, status);
+		});
+	};
+
 	var updateScope = function () {
 		if (session.user) {
 			$scope.name = session.user.name;
@@ -51,21 +69,7 @@ function ProfileCtrl(session, $scope, $http, errors) {
 				$scope.activePlan = {};
 			}
 
-			$http.get("/data/circles")
-			.success(function (data) {
-				var rawCircleData = data;
-				var circles = {};
-				// TODO: Need to change the view to remove duplicates,
-				// as data.length === memberships.length, rather than
-				// circle length.
-				rawCircleData.forEach(function (circle) {
-					circles[circle._id] = circle;
-				});
-				$scope.circles = circles;
-			})
-			.error(function (data, status) {
-				errors.log(data, status);
-			});
+			updateCircles();
 		}
 	};
 
@@ -141,20 +145,34 @@ function ProfileCtrl(session, $scope, $http, errors) {
 		updateNotificationEmail(notificationEmail);
 	};
 
+	$scope.isCreatingCircle = false;
 	$scope.createCircle = function (circleName) {
-		if (!circleName) {
+		if (!circleName || $scope.isCreatingCircle) {
 			return;
 		}
+		$scope.isCreatingCircle = true;
+
+		var finishUp = function () {
+			$scope.newCircleName = undefined;
+			$scope.isCreatingCircle = false;
+		};
+
 		var data = {};
 		data.name = circleName;
 		$http.post("/data/circle/", data)
 		.success(function () {
 			messages.circle = "Circle created.";
-			$scope.newCircleName = undefined;
+			finishUp();
+			updateCircles();
 		})
 		.error(function (data, status) {
+			finishUp();
+			if (status === 403) {
+				messages.circle = data;
+				return;
+			}
 			errors.handle(data, status);
-		})
+		});
 	};
 
 
