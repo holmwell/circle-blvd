@@ -30,10 +30,14 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout) {
 		return false;
 	};
 
-	var isInGroup = function (groupName) {
+	var isInGroup = function (groupName, circleId) {
 		if ($scope.isSignedIn()) {
 			var memberships = session.user.memberships;
 			for (var membershipKey in memberships) {
+				if (circleId && memberships[membershipKey].circle !== circleId) {
+					continue;
+				}
+
 				if (memberships[membershipKey].name === groupName) {
 					return true;
 				}
@@ -43,7 +47,7 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout) {
 	};
 
 	$scope.isAdmin = function () {
-		return isInGroup("Administrative");
+		return isInGroup("Administrative", session.activeCircle);
 	};
 
 	$scope.hasMainframeAccess = function () {
