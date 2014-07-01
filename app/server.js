@@ -414,7 +414,17 @@ var configureSuccessful = function () {
 	});
 
 	// Circles!
-	app.get("/data/circles", ensureMainframeAccess, function (req, res) {
+	app.get("/data/circles", ensureAuthenticated, function (req, res) {
+		db.circles.findByUser(req.user, function (err, circles) {
+			if (err) {
+				return handleError(err, res);
+			}
+
+			res.send(200, circles);
+		});
+	});
+
+	app.get("/data/circles/all", ensureMainframeAccess, function (req, res) {
 		db.circles.getAll(function (err, circles) {
 			if (err) {
 				return handleError(err, res);
@@ -510,32 +520,38 @@ var configureSuccessful = function () {
 		addStory(stories[currentIndex]);
 	};
 
-	var createCircle = function(circleName, adminEmailAddress, callback) {
+	var createCircle = function (circleName, adminEmailAddress, callback) {
 		var circle = {
 			name: circleName
 		};
 
-		db.circles.add(circle, function (err, newCircle) {
+		db.users.findByEmail(adminEmailAddress, function (err, adminAccount) {
 			if (err) {
 				return callback(err);
 			}
 
-			var administrativeGroup = {
-				name: "Administrative",
-				projectId: newCircle._id,
-				isPermanent: true
+			circle.createdBy = {
+				name: adminAccount.name,
+				id: adminAccount._id
 			};
 
-			var impliedGroup = {
-				name: "_implied",
-				projectId: newCircle._id,
-				isPermanent: true
-			};
-
-			db.users.findByEmail(adminEmailAddress, function (err, adminAccount) {
+			db.circles.add(circle, function (err, newCircle) {
 				if (err) {
 					return callback(err);
 				}
+
+				var administrativeGroup = {
+					name: "Administrative",
+					projectId: newCircle._id,
+					isPermanent: true
+				};
+
+				var impliedGroup = {
+					name: "_implied",
+					projectId: newCircle._id,
+					isPermanent: true
+				};
+
 				addStoriesForNewCircle(newCircle, adminAccount, function (err, body) {
 					if (err) {
 						return callback(err);
@@ -593,7 +609,23 @@ var configureSuccessful = function () {
 		});
 	};
 
-	app.post("/data/circle", ensureMainframeAccess, function (req, res) {
+	app.post("/data/circle", ensureAuthenticated, function (req, res) {
+		var circleName = req.body.name;
+		var admin = req.user;
+
+		if (!circleName) {
+			return res.send(400, "A 'name' property is required, for naming the circle.");
+		}
+
+		createCircle(circleName, admin.email, function (err, newCircle) {
+			if (err) {
+				return handleError(err, res);
+			}
+			res.send(200, newCircle);
+		});
+	});
+
+	app.post("/data/circle/admin", ensureMainframeAccess, function (req, res) {
 		var circle = req.body.circle;
 		var admin = req.body.admin;
 

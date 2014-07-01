@@ -50,6 +50,22 @@ function ProfileCtrl(session, $scope, $http, errors) {
 			else {
 				$scope.activePlan = {};
 			}
+
+			$http.get("/data/circles")
+			.success(function (data) {
+				var rawCircleData = data;
+				var circles = {};
+				// TODO: Need to change the view to remove duplicates,
+				// as data.length === memberships.length, rather than
+				// circle length.
+				rawCircleData.forEach(function (circle) {
+					circles[circle._id] = circle;
+				});
+				$scope.circles = circles;
+			})
+			.error(function (data, status) {
+				errors.log(data, status);
+			});
 		}
 	};
 
@@ -134,6 +150,7 @@ function ProfileCtrl(session, $scope, $http, errors) {
 		$http.post("/data/circle/", data)
 		.success(function () {
 			messages.circle = "Circle created.";
+			$scope.newCircleName = undefined;
 		})
 		.error(function (data, status) {
 			errors.handle(data, status);

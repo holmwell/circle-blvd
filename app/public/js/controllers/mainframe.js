@@ -18,7 +18,7 @@ function MainframeCtrl(session, $scope, $http, errors) {
 			}
 		};
 
-		$http.get('/data/circles')
+		$http.get('/data/circles/all')
 		.success(getCirclesSuccess)
 		.error(handleError);
 	};

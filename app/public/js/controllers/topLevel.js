@@ -57,7 +57,7 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout) {
 	};
 
 	$scope.setActiveCircle = function (circle, refreshPage) {
-		session.activeCircle = circle.id;
+		session.activeCircle = circle._id;
 		session.save();
 		if (refreshPage) {
 			$location.path("/");
