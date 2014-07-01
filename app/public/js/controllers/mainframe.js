@@ -34,7 +34,7 @@ function MainframeCtrl(session, $scope, $http, errors) {
 			}
 		};
 
-		$http.post('/data/circle', data)
+		$http.post('/data/circle/admin', data)
 		.success(getLatestCircleData)
 		.error(handleError);
 	};

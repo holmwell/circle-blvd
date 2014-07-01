@@ -898,7 +898,7 @@ label.relax {
 .profile {
   padding-bottom: 2.4em;
 }
-.donations, .profile .password {
+.donations, .profile .circles, .profile .password {
   padding-top: 2.4em;
 }
 .donations .plans {

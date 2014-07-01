@@ -52,6 +52,23 @@
 	</div>
 		
 	<div class="col-sm-offset-1 row clear">
+		<div class="circles">
+			<h5 class="col-xs-12">Circles</h5>
+			<div class="col-sm-6">
+				<div class="input-group">
+					<input ng-model="newCircleName" type="text" class="form-control" placeholder="New circle name"/>
+					<span class="input-group-btn">
+						<button class="btn btn-default" 
+						ng-click="createCircle(newCircleName)">Create circle</button>
+					</span>
+				</div>
+				<p class="message">{{messages.circle}}</p>
+			</div>
+			
+		</div>
+	</div>
+
+	<div class="col-sm-offset-1 row clear">
 		<div class="donations" ng-show="supportsPayments">
 			<h5 class="col-xs-12">Subscription plan</h5>
 			<div class="row plans">

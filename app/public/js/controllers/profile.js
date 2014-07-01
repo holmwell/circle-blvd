@@ -125,6 +125,21 @@ function ProfileCtrl(session, $scope, $http, errors) {
 		updateNotificationEmail(notificationEmail);
 	};
 
+	$scope.createCircle = function (circleName) {
+		if (!circleName) {
+			return;
+		}
+		var data = {};
+		data.name = circleName;
+		$http.post("/data/circle/", data)
+		.success(function () {
+			messages.circle = "Circle created.";
+		})
+		.error(function (data, status) {
+			errors.handle(data, status);
+		})
+	};
+
 
 	$scope.updatePassword = function (pass1, pass2) {
 		if (pass1 !== pass2) {
