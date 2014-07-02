@@ -56,8 +56,8 @@ module.exports = function () {
 		});
 	};
 
-	var findArchivesByCircleId = function (circleId, callback) {
-		couch.archives.findByCircleId(circleId, callback);
+	var findArchivesByCircleId = function (circleId, params, callback) {
+		couch.archives.findByCircleId(circleId, params, callback);
 	};
 
 	return {

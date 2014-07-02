@@ -777,12 +777,26 @@ var configureSuccessful = function () {
 
 	app.get("/data/:circleId/archives", ensureCircleAccess, function (req, res) {
 		var circleId = req.params.circleId;
-		db.archives.findByCircleId(circleId, function (err, archives) {
+		var query = req.query;
+		var defaultLimit = 251; // TODO: Settings
+
+		var limit = query.limit || defaultLimit;
+		var startKey = query.startKey;
+		var params = {
+			limit: limit,
+			startKey: startKey
+		};
+
+		db.archives.findByCircleId(circleId, params, function (err, archives) {
 			if (err) {
 				return handleError(err, res);
 			}
 			res.send(200, archives);
 		});
+	});
+
+	app.get("/data/:circleId/archives", ensureCircleAccess, function (req, res) {
+
 	});
 
 

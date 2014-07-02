@@ -15,12 +15,22 @@ module.exports = function () {
 		database.bulk(bulkDoc, options, callback);
 	};
 
-	var findArchivesByCircleId = function (circleId, callback) {
+	var findArchivesByCircleId = function (circleId, params, callback) {
 		var options = {
 			startkey: [circleId, {}],
 			endkey: [circleId],
 			descending: true
 		};
+
+		if (params) {
+			if (params.limit) {
+				options.limit = params.limit;				
+			}
+			if (params.startKey) {
+				options.startKey = [circleId, params.startKey];
+			}
+		}
+
 		couch.view("archives/byCircleId", options, function (err, rows) {
 			callback(err, rows);
 		});
