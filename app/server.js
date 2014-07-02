@@ -1282,6 +1282,24 @@ var configureSuccessful = function () {
 		var nextMeeting = db.stories.getNextMeetingByProjectId(projectId, handleNextMeeting);
 	});
 
+	app.post('/payment/donate', function (req, res) {
+		var data = req.body;
+
+		stripe.charges.create({
+			amount: data.stripeAmount,
+			currency: "usd",
+			card: data.stripeTokenId,
+			description: "Donation",
+			statement_description: "Donation"
+		}, function (err, charge) {
+			if (err) {
+				return handleError(err, res);
+			}
+
+			res.send(200);
+		});
+	});
+
 	app.post('/payment/subscribe', ensureAuthenticated, function (req, res) {
 		var data = req.body;
 		var user = req.user;

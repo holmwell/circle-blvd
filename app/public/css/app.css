@@ -795,7 +795,7 @@ button:focus {
 label.relax {
   font-weight: normal;
 }
-.signin-section {
+.signin-section, .donate-section {
   padding-top: 2.4em;
 }
 
@@ -827,7 +827,7 @@ label.relax {
 }
 
 
-.signin .signup {
+.signin .signup, .signin .donate {
   background-color: #333;
   color: #ccc;
 
@@ -845,13 +845,35 @@ label.relax {
 .signup label {
   font-weight: normal;
 }
-
-
 .thanks {
   background-color: gold;
   padding: 1.25ex;
   padding-left: 1.5ex;
   cursor: default;
+}
+
+.signin .donate {
+  margin-top: 0;
+  background-color: black;
+  text-align: center;
+  padding-bottom: 1.9em;
+}
+.signin .donate .links {
+  margin-top: 1.1em;
+}
+.signin .donate .links a {
+  color: goldenrod;
+}
+
+/* donate */
+.donations {
+  padding-bottom: 3.5em;
+}
+.donations .btn-wrapper {
+  text-align: center;
+}
+.donations .received {
+  margin-top: 1.2em;
 }
 
 /* archive */

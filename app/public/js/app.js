@@ -37,6 +37,7 @@ angular.module('myApp', [
 		$routeProvider.when('/signin', {templateUrl: 'partials/signin.html', controller: SignInCtrl});
 		$routeProvider.when('/profile', {templateUrl: 'partials/profile.html', controller: ProfileCtrl});
 		$routeProvider.when('/docs', {templateUrl: 'partials/docs.html', controller: DocsCtrl});
+		$routeProvider.when('/donate', {templateUrl: 'partials/donate.html', controller: DonateCtrl});
 		$routeProvider.when('/admin', {templateUrl: 'partials/admin.html', controller: AdminCtrl});
 		$routeProvider.when('/mainframe', {templateUrl: 'partials/mainframe.html', controller: MainframeCtrl});
 		$routeProvider.when('/initialize', {templateUrl: 'partials/initialize.html', controller: InitializeCtrl});
