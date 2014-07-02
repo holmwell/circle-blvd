@@ -872,6 +872,10 @@ label.relax {
 .donations .btn-wrapper {
   text-align: center;
 }
+.donations .btn-wrapper .btn {
+  margin-top: 1.1em;
+  margin-right: 10px;
+}
 .donations .received {
   margin-top: 1.2em;
 }

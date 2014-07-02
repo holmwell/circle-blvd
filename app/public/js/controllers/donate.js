@@ -1,8 +1,18 @@
 function DonateCtrl(session, $scope, $http, errors) {
 
-	$scope.donation = {
+	$scope.donate5 = {
+		displayAmount: "$5.00",
+		stripeAmount: 500
+	};
+
+	$scope.donate20 = {
 		displayAmount: "$20.00",
 		stripeAmount: 2000
+	};
+
+	$scope.donate100 = {
+		displayAmount: "$100.00",
+		stripeAmount: 10000
 	};
 
 	var stripeKey = session.settings['stripe-public-key'].value;
@@ -28,8 +38,8 @@ function DonateCtrl(session, $scope, $http, errors) {
 			}
 		});
 
-		$scope.openStripeCheckout = function (e) {
-			var donation = $scope.donation;
+		$scope.openStripeCheckout = function (e, donation) {
+			$scope.donation = donation;
 			
 			stripeHandler.open({
 				name: 'Circle Blvd.',

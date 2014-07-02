@@ -16,8 +16,10 @@
 
 		<p>Thank you.</p>
 
-		<div class="btn-wrapper" ng-hide="isDonationSuccess">
-			<button class="btn btn-primary" ng-click="openStripeCheckout($event)">Donate $20</button>
+		<div class="btn-wrapper row" ng-hide="isDonationSuccess">
+			<button class="col-xs-12 col-sm-offset-1 col-sm-3 btn btn-default" ng-click="openStripeCheckout($event, donate5)">Donate $5</button>
+			<button class="col-xs-12 col-sm-3 btn btn-default" ng-click="openStripeCheckout($event, donate20)">Donate $20</button>
+			<button class="col-xs-12 col-sm-3 btn btn-default" ng-click="openStripeCheckout($event, donate100)">Donate $100</button>
 		</div>
 		<div class="received alert alert-info ng-cloak" ng-show="isDonationSuccess">
 			<p>Your donation has been received. Thank you for making this website and the
