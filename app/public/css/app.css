@@ -900,6 +900,12 @@ label.relax {
   color: white;
 }
 
+.archives .timestamp {
+  padding-top: 1.25ex;
+  text-align: right;
+  color: #aaa;
+}
+
 /* profile */
 .profile .basics .btn, .profile .password .btn {
   margin-top: 1.2em;
