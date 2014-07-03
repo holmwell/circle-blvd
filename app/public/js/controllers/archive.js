@@ -1,4 +1,4 @@
-function ArchivesCtrl(session, $scope, $http, errors) {
+function ArchivesCtrl(session, $scope, $http, $filter, errors) {
 	var projectId = session.activeCircle;
 	var selectedArchive = undefined;
 
@@ -32,6 +32,30 @@ function ArchivesCtrl(session, $scope, $http, errors) {
 		}
 	};
 
+	$scope.isArchiveSameDateAsPrevious = function (archive, index) {
+		if (index === 0) {
+			return false;
+		}
+
+		var previous = $scope.archives[index-1];
+
+		var date1 = $filter('date')(archive.timestamp, 'mediumDate');
+		var date2 = $filter('date')(previous.timestamp, 'mediumDate');
+
+		return date1 === date2;
+	};
+
+	$scope.getTimestampFilter = function (archive) {
+		var date = new Date(archive.timestamp);
+		var now = new Date();
+		if (now.getFullYear() === date.getFullYear()) {
+			return 'MMM d';
+		}
+		else {
+			return 'mediumDate';
+		}
+	};
+
 	var init = function () {
 		$http.get('/data/' + projectId + '/archives')
 		.success(function (data) {
@@ -44,4 +68,4 @@ function ArchivesCtrl(session, $scope, $http, errors) {
 
 	init();
 }
-ArchivesCtrl.$inject = ['session', '$scope', '$http', 'errors'];
+ArchivesCtrl.$inject = ['session', '$scope', '$http', '$filter', 'errors'];

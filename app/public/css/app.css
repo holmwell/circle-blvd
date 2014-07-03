@@ -577,6 +577,10 @@ button:focus {
 .commentArea textarea {
   height: 3em;
 }
+.commentArea .btn-wrapper {
+  text-align: right;
+}
+
 .commentHeading {
   margin-right: 10px;
   /*border-bottom: solid 1px #fff;*/
@@ -904,6 +908,10 @@ label.relax {
   padding-top: 1.25ex;
   text-align: right;
   color: #aaa;
+}
+.archives .same-as-above {
+  font-weight: normal;
+  color: #ddd;
 }
 
 /* profile */

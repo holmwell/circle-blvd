@@ -2,7 +2,10 @@
 <div id="backlog" class="col-xs-12 archives">
 	<div class="storyWrapper row no-select" ng-repeat="archive in archives">
 		<div class="hidden-xs col-sm-2">
-			<div class="timestamp text-select">{{archive.timestamp | date : 'mediumDate'}}</div>
+			<div class="timestamp text-select"
+			ng-class="{ 'same-as-above': isArchiveSameDateAsPrevious(archive, $index) }">
+				<span>{{ archive.timestamp | date: getTimestampFilter(archive) }}</span>
+			</div>
 		</div>
 		<div class="archive col-xs-12 col-sm-8 no-select" 
 		ng-click="select(archive)"
