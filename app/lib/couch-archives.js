@@ -26,8 +26,8 @@ module.exports = function () {
 			if (params.limit) {
 				options.limit = params.limit;				
 			}
-			if (params.startKey) {
-				options.startKey = [circleId, params.startKey];
+			if (params.startkey) {
+				options.startkey = [circleId, params.startkey];
 			}
 		}
 

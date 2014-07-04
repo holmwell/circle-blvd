@@ -781,10 +781,10 @@ var configureSuccessful = function () {
 		var defaultLimit = 251; // TODO: Settings
 
 		var limit = query.limit || defaultLimit;
-		var startKey = query.startKey;
+		var startkey = query.startkey;
 		var params = {
 			limit: limit,
-			startKey: startKey
+			startkey: startkey
 		};
 
 		db.archives.findByCircleId(circleId, params, function (err, archives) {
