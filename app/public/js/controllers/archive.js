@@ -1,6 +1,7 @@
 function ArchivesCtrl(session, $scope, $http, $filter, errors) {
 	var projectId = session.activeCircle;
 	var selectedArchive = undefined;
+	var perPageLimit = 251;
 
 	$scope.select = function (archive) {
 		if (archive.justDeselected) {
@@ -56,9 +57,40 @@ function ArchivesCtrl(session, $scope, $http, $filter, errors) {
 		}
 	};
 
-	var init = function () {
-		$http.get('/data/' + projectId + '/archives')
+	var getArchivesUrl = function (circleId, limit, timestamp) {
+		var archivesUrl = '/data/' + projectId + '/archives';
+
+		if (limit) {
+			archivesUrl += '?limit=' + limit;	
+			if (timestamp) {
+				archivesUrl += '&startkey=' + timestamp;
+			}
+		}
+
+		return archivesUrl;
+	}
+
+	$scope.showArchivesAt = function (timestamp) {
+		var archivesUrl = getArchivesUrl(projectId, perPageLimit, timestamp);
+		$http.get(archivesUrl)
 		.success(function (data) {
+			if (data) {
+				$scope.lastArchiveOnPage = data.pop();
+			}
+			$scope.archives	= $scope.archives.concat(data);
+		})
+		.error(function (status, data) {
+			errors.log(data, status);
+		});
+	};
+
+	var init = function () {
+		var archivesUrl = getArchivesUrl(projectId, perPageLimit); 
+		$http.get(archivesUrl)
+		.success(function (data) {
+			if (data) {
+				$scope.lastArchiveOnPage = data.pop();
+			}
 			$scope.archives = data;
 		})
 		.error(function (data, status) {
