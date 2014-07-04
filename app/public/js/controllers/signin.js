@@ -130,6 +130,15 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 		.error(failure);
 	};
 
+	$scope.isPaymentEnabled = function () {
+		if (session.settings) {
+			if (session.settings['stripe-public-key']) {
+				return true;
+			}
+			return false;
+		}
+		return false;
+	};
 
 	var init = function () {
 		$scope.user = {};
