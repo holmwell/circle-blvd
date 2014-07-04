@@ -1,5 +1,7 @@
 
 exports.index = function(req, res){
-	var params = {};
+	var params = {
+		host: req.get('Host')
+	};
 	res.render('index', params);
 };
