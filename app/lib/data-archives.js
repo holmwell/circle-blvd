@@ -60,8 +60,13 @@ module.exports = function () {
 		couch.archives.findByCircleId(circleId, params, callback);
 	};
 
+	var countArchivesByCircleId = function (circleId, callback) {
+		couch.archives.countByCircleId(circleId, callback);
+	};
+
 	return {
 		addStories: addStoriesToArchive,
-		findByCircleId: findArchivesByCircleId
+		findByCircleId: findArchivesByCircleId,
+		countByCircleId: countArchivesByCircleId
 	};
 }(); // closure

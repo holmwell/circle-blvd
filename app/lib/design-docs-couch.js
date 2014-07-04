@@ -352,7 +352,7 @@ var archivesDesignDoc = {
 	url: '_design/archives',
 	body: 
 	{
-		version: "1.0.1",
+		version: "1.0.2",
 		language: "javascript",
 		views: {
 			byCircleId: {
@@ -361,6 +361,15 @@ var archivesDesignDoc = {
 						emit([doc.projectId, doc.sortIndex], doc);
 					}
 				}
+			},
+
+			countByCircleId: {
+				map: function (doc) {
+					if (doc.type === "archive" && doc.projectId) {
+						emit(doc.projectId);
+					}
+				},
+				reduce : "_count"
 			}
 		}
 	}

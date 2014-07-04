@@ -36,8 +36,15 @@ module.exports = function () {
 		});
 	};
 
+	var countArchivesByCircleId = function (circleId, callback) {
+		couch.findOneByKey("archives/countByCircleId", circleId, function (err, count) {
+			callback(err, count);
+		});
+	};
+
 	return {
 		add: addArchives,
-		findByCircleId: findArchivesByCircleId
+		findByCircleId: findArchivesByCircleId,
+		countByCircleId: countArchivesByCircleId
 	};
 }(); // closure

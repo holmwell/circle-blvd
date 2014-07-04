@@ -791,14 +791,20 @@ var configureSuccessful = function () {
 			if (err) {
 				return handleError(err, res);
 			}
+
 			res.send(200, archives);
 		});
 	});
 
-	app.get("/data/:circleId/archives", ensureCircleAccess, function (req, res) {
-
+	app.get("/data/:circleId/archives/count", ensureCircleAccess, function (req, res) {
+		var circleId = req.params.circleId;
+		db.archives.countByCircleId(circleId, function (err, count) {
+			if (err) {
+				return handleError(err, res);
+			}
+			res.send(200, count.toString());
+		});
 	});
-
 
 	var getNewNotificationMessage = function (story, req) {
 		var message = "Hi. You've been requested to look at a new story on Circle Blvd.\n\n";
