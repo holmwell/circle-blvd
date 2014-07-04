@@ -149,5 +149,23 @@ function StoryCtrl($scope, $timeout) {
 	$scope.saveComment = function (story, event) {
 		$scope.$emit('storyCommentSaved', story);
 	};
+
+	$scope.getTimestampFilter = function (comment) {
+		var date = new Date(comment.timestamp);
+		var now = new Date();
+		if (now.getDate() === date.getDate()
+		&& now.getMonth() === date.getMonth()
+		&& now.getFullYear() === date.getFullYear()) {
+			// Today
+			return "'at' h:mm a";
+		}
+		else if (now.getFullYear() === date.getFullYear()) {
+			// This year
+			return "'on' MMM d";
+		}
+		else {
+			return "'on' MMM d, y";
+		}
+	};
 }
 StoryCtrl.$inject = ['$scope', '$timeout'];

@@ -114,7 +114,10 @@
 						
 						<div class="comments clear">
 							<div class="comment" ng-repeat="comment in story.comments | reverse" ng-class-odd="'odd'">
-								<div class="text" append-linky ng-model="comment.text"><span class="name">{{comment.createdBy.name}}: </span></div>
+								<div class="text" append-linky ng-model="comment.text"><span class="name">{{comment.createdBy.name}}, </span><span class="timestamp">{{
+									comment.timestamp | date: getTimestampFilter(comment)
+								}}: </span></div>
+
 							</div>
 						</div>
 					</div>
