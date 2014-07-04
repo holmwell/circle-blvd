@@ -367,7 +367,29 @@ var configureSuccessful = function () {
 	// Settings!
 	app.get("/data/settings", function (req, res) { // public
 		var onSuccess = function (settings) {
-			res.send(200, settings);
+			db.settings.getAuthorized(function (privateSettings) {
+				// Computed settings.
+				var smtpEnabledSetting = {
+					type: "setting",
+					name: "smtp-enabled",
+					visibility: "public"
+				};
+
+				if (privateSettings['smtp-login'] 
+					&& privateSettings['smtp-login'].value) {
+					smtpEnabledSetting.value = true;
+				}
+				else {
+					smtpEnabledSetting.value = false;
+				}
+
+				settings['smtp-enabled'] = smtpEnabledSetting;
+				res.send(200, settings);
+			},
+			function (err) {
+				// Ignore
+				res.send(200, settings);
+			});
 		};
 
 		onFailure = function (err) {

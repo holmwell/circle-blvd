@@ -1,4 +1,4 @@
-function StoryCtrl($scope, $timeout) {
+function StoryCtrl(session, $scope, $timeout) {
 
 	$scope.isAndroid = function() {
         return /Android/i.test(navigator.userAgent);
@@ -167,5 +167,12 @@ function StoryCtrl($scope, $timeout) {
 			return "'on' MMM d, y";
 		}
 	};
+
+	$scope.isNotificationEnabled = function () {
+		if (session.settings && session.settings['smtp-enabled'].value) {
+			return true;
+		}
+		return false;
+	};
 }
-StoryCtrl.$inject = ['$scope', '$timeout'];
+StoryCtrl.$inject = ['session', '$scope', '$timeout'];

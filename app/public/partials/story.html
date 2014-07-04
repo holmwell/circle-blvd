@@ -192,6 +192,7 @@
 			<span class="text-select">{{story.owner}}</span><span ng-show="isStoryNew(story)">?</span>
 			<div 
 				class="notify" 
+				ng-if="isNotificationEnabled()"
 				ng-class="{ notified: story.isOwnerNotified }"
 				ng-show="story.owner && isStoryNew(story)"
 				title="notify owner"><i class="glyphicon glyphicon-envelope" ng-click="notify(story, $event)"></i>
