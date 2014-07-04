@@ -1,13 +1,68 @@
 // settings.js
-var db   = require('./dataAccess.js').instance();
-var uuid = require('node-uuid');
+var db    = require('./dataAccess.js').instance();
+var uuid  = require('node-uuid');
+var async = require('async');
 
 
 module.exports = function () {
 	
-	// TODO: This only sets settings if they're not
-	// already created. This isn't always what we want.
-	var set = function (settings, callback) {
+	var set = function (settings, fnCallback) {
+		var tasks = [];
+		settings.forEach(function (setting) {
+			tasks.push(function (callback) {
+				db.settings.update(setting, callback);				
+			});
+		});
+		async.parallel(tasks, fnCallback);
+	};
+
+	var init = function (callback) {
+		// Visibility definitions:
+		//   public: visible to all
+		//   private: visible to administrators
+		//   secret: visible to the database and computer memory
+		var settings = [{
+			name: "demo",
+			value: false,
+			visibility: "public"
+		},{
+			name: 'session-secret',
+			value: uuid.v4(),
+			visibility: "secret"
+		},{
+			name: "smtp-login",
+			value: null,
+			visibility: "private"
+		},{
+			name: "smtp-password",
+			value: null,
+			visibility: "secret"
+		},{
+			name: "smtp-service",
+			value: "Zoho",
+			visibility: "private"
+		},{ 
+			name: "ssl-ca-path",
+			value: null,
+			visibility: "private"
+		},{
+			name: "ssl-cert-path",
+			value: null,
+			visibility: "private"
+		},{
+			name: "ssl-key-path",
+			value: null,
+			visibility: "private"
+		},{
+			name: "stripe-public-key",
+			value: null,
+			visibility: "public"
+		},{
+			name: "stripe-secret-key",
+			value: null,
+			visibility: "secret"
+		}];
+
 		var settingsTable = {};
 		var initialized = {};
 		settings.forEach(function (setting) {
@@ -67,56 +122,6 @@ module.exports = function () {
 				}
 			}
 		});
-	};
-
-	var init = function (callback) {
-		// Visibility definitions:
-		//   public: visible to all
-		//   private: visible to administrators
-		//   secret: visible to the database and computer memory
-		var defaultSettings = [{
-			name: "demo",
-			value: false,
-			visibility: "public"
-		},{
-			name: 'session-secret',
-			value: uuid.v4(),
-			visibility: "secret"
-		},{
-			name: "smtp-login",
-			value: null,
-			visibility: "private"
-		},{
-			name: "smtp-password",
-			value: null,
-			visibility: "secret"
-		},{
-			name: "smtp-service",
-			value: "Zoho",
-			visibility: "private"
-		},{ 
-			name: "ssl-ca-path",
-			value: null,
-			visibility: "private"
-		},{
-			name: "ssl-cert-path",
-			value: null,
-			visibility: "private"
-		},{
-			name: "ssl-key-path",
-			value: null,
-			visibility: "private"
-		},{
-			name: "stripe-public-key",
-			value: null,
-			visibility: "public"
-		},{
-			name: "stripe-secret-key",
-			value: null,
-			visibility: "secret"
-		}];
-
-		set(defaultSettings, callback);
 	};
 
 	var initWhenReady = function (callback) {

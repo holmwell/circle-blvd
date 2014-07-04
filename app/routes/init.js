@@ -6,89 +6,105 @@ var settings  = require('../lib/settings.js');
 
 exports.init = function (req, res, app) {
 	var data = req.body;
+
+	var admin  = data.admin;
+	var ssl    = data.ssl;
+	var smtp   = data.smtp;
+	var stripe = data.stripe;
+
 	var defaultCircleId = "1";
 
-	var handleOptionalSettings = function (err, fnCallback) {
+	var handleOptionalSettings = function (fnCallback) {
 
 		var tasks = [];
+		db.settings.getAll(function onSuccess (defaultSettings) {
+			if (ssl && ssl.certPath && ssl.certKey) {
+				var sslSettings = [];
 
-		if (ssl && ssl.certPath && ssl.certKey) {
-			var sslSettings = [{
-				name: "ssl-cert-path",
-				value: ssl.certPath,
-				visibility: "private"
-			},{
-				name: "ssl-key-path",
-				value: ssl.certKey,
-				visibility: "private"
-			}];
+				var certPath = defaultSettings['ssl-cert-path'];
+				certPath.value = ssl.certPath;
 
-			// ssl.caPath is optional
-			if (ssl.caPath) {
-				sslSettings.push({ 
-					name: "ssl-ca-path",
-					value: null,
-					visibility: "private"
-				});
-			}
-			
-			tasks.push(function (callback) {
-				settings.set(sslSettings, function (err) {
-					if (err) {
-						return callback(err);
-					}
-					sslServer.create(app, callback);
-				});
-			});
-		}
+				var certKey = defaultSettings['ssl-key-path'];
+				certKey = ssl.certKey;
 
-		if (smtp && smtp.login && smtp.password) {
-			// smtp.service is optional
-			var smtpSettings = [{
-				name: "smtp-login",
-				value: smtp.login,
-				visibility: "private"
-			},{
-				name: "smtp-password",
-				value: smtp.password,
-				visibility: "secret"
-			}];
+				sslSettings.push(certPath);
+				sslSettings.push(certKey);
 
-			if (smtp.service) {
-				smtpSettings.push({
-					name: "smtp-service",
-					value: smtp.service,
-					visibility: "private"
+				// ssl.caPath is optional
+				if (ssl.caPath) {
+					var caPath = defaultSettings['ssl-ca-path'];
+					caPath.value = ssl.caPath;
+					sslSettings.push(caPath);
+				}
+				
+				tasks.push(function (callback) {
+					settings.set(sslSettings, function (err) {
+						if (err) {
+							return callback(err);
+						}
+						sslServer.create(app, callback);
+					});
 				});
 			}
 
-			tasks.push(function (callback) {
-				settings.set(smtpSettings, callback);
-			});
-		}
+			if (smtp && smtp.login && smtp.password) {
+				// smtp.service is optional
+				var smtpSettings = [];
 
-		if (stripe && stripe.public && stripe.secret) {
-			var stripeSettings = [{
-				name: "stripe-public-key",
-				value: null,
-				visibility: "public"
-			},{
-				name: "stripe-secret-key",
-				value: null,
-				visibility: "secret"
-			}];
+				var smtpLogin = defaultSettings['smtp-login'];
+				smtpLogin.value = smtp.login;
 
-			tasks.push(function (callback) {
-				settings.set(stripeSettings, callback);
-			});
-		}
+				var smtpPassword = defaultSettings['smtp-password'];
+				smtpPassword.value = smtp.password;
 
-		if (tasks.length > 0) {
-			async.parallel(tasks, fnCallback);
+				smtpSettings.push(smtpLogin);
+				smtpSettings.push(smtpPassword);
+
+				if (smtp.service) {
+					var smtpService = defaultSettings['smtp-service'];
+					smtpService.value = smtp.service;
+					smtpSettings.push(smtpService);
+				}
+
+				tasks.push(function (callback) {
+					settings.set(smtpSettings, callback);
+				});
+			}
+
+			if (stripe && stripe.public && stripe.secret) {
+				var stripeSettings = [];
+
+				var stripePublic = defaultSettings['stripe-public-key'];
+				stripePublic.value = stripe.public;
+
+				var stripeSecret = defaultSettings['stripe-secret-key'];
+				stripeSecret.value = stripe.secret;
+
+				stripeSettings.push(stripePublic);
+				stripeSettings.push(stripeSecret);
+
+				tasks.push(function (callback) {
+					settings.set(stripeSettings, callback);
+				});
+			}
+
+			if (tasks.length > 0) {
+				async.parallel(tasks, fnCallback);
+			}
+			else {
+				fnCallback();
+			}
+		},
+		function onError (err) {
+			fnCallback(err);
+		});
+	};
+
+	var handleOptionsCallback = function (err) {
+		if (err) {
+			return onError(err);
 		}
-		else {
-			fnCallback();
-		}
+		return onSuccess();
 	};
 
 	var onSuccess = function() {
@@ -111,7 +127,7 @@ exports.init = function (req, res, app) {
 			if (err) {
 				return onError(err);
 			}
-			return onSuccess(body);
+			return handleOptionalSettings(handleOptionsCallback);
 		});
 	};
 
@@ -127,8 +143,8 @@ exports.init = function (req, res, app) {
 		var isReadOnly = false;
 		db.users.add(
 			"Admin", 
-			data.email, 
-			data.password, 
+			admin.email, 
+			admin.password, 
 			adminMemberships,
 			isReadOnly,
 			addNextMeeting, onError

@@ -42,7 +42,13 @@ function InitializeCtrl($scope, $location, $http) {
 			console.log(JSON.stringify(data));
 		};
 
-		$http.put('/data/initialize', $scope.user)
+		var data = {};
+		data.admin  = $scope.user;
+		data.ssl    = $scope.ssl;
+		data.smtp   = $scope.smtp;
+		data.stripe = $scope.stripe;
+
+		$http.put('/data/initialize', data)
 		.success(initializeSuccess)
 		.error(initializeFailure);
 	};

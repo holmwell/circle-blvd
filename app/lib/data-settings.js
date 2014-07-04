@@ -60,6 +60,19 @@ module.exports = function () {
 		});
 	};
 
+	// TODO: Refactor, get rid of the save setting stuff.
+	var updateSetting = function (setting, callback) {
+		saveSetting(setting, 
+			function success (newSetting) {
+				callback(null, newSetting);
+			},
+			function failure (err) {
+				callback(err);
+			}
+		);
+	};
+
+
 	var getSettings = function (success, failure) {
 		couch.settings.get(function (err, settings) {
 			if (err) {
@@ -110,6 +123,7 @@ module.exports = function () {
 		getAuthorized: getAuthorizedSettings,
 		getPrivate: getPrivateSettings,
 		getAll: getAllSettings,
-		save: saveSetting
+		save: saveSetting,
+		update: updateSetting
 	};
 }(); // closure
