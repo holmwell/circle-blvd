@@ -102,6 +102,12 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 	var init = function() {
 		$scope.owners = [];
 
+		if (circleId === undefined) {
+			// What is happening? Nothing.
+			$scope.signOut();
+			return;
+		}
+
 		var handleInitError = function (data, status) {
 			console.log('failure');
 			console.log(status);
