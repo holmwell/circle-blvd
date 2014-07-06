@@ -4,7 +4,6 @@ var https    = require('https');
 var fs       = require('fs');
 var request  = require('request');
 var path     = require('path');
-var uuid     = require('node-uuid');
 var mailer   = require('nodemailer');
 var routes   = require('./routes');
 

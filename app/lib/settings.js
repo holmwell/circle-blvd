@@ -1,5 +1,7 @@
 // settings.js
-var db  = require('./dataAccess.js').instance();
+var db   = require('./dataAccess.js').instance();
+var uuid = require('node-uuid');
+
 
 module.exports = function () {
 	
