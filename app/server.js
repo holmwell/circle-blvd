@@ -13,15 +13,13 @@ var ensure   = require('./lib/auth-ensure.js');
 var db       = require('./lib/dataAccess.js').instance();
 
 var sslServer = require('./lib/https-server.js');
+var payment   = require('./lib/payment.js');
 
 var usersRoutes = require('./routes/users');
 var userRoutes 	= require('./routes/user');
 var initRoutes 	= require('./routes/init');
 
 var couchSessionStore = require('./lib/couch-session-store.js');
-
-var stripeProcessor = require('stripe');
-var stripe = undefined;
 
 var app = express();
 
@@ -296,7 +294,7 @@ var configureSuccessful = function () {
 					tryToCreateHttpsServer();
 				}
 				if (setting.name === 'stripe-secret-key') {
-					stripe = stripeProcessor(setting.value);
+					payment.setApiKey(setting.value);
 				}
 				res.send(200);
 			},
@@ -1191,7 +1189,7 @@ var configureSuccessful = function () {
 	app.post('/payment/donate', function (req, res) {
 		var data = req.body;
 
-		stripe.charges.create({
+		payment.stripe.charges.create({
 			amount: data.stripeAmount,
 			currency: "usd",
 			card: data.stripeTokenId,
@@ -1246,7 +1244,7 @@ var configureSuccessful = function () {
 				}
 			};
 
-			stripe.customers.create(newCustomer, function (err, customer) {
+			payment.stripe.customers.create(newCustomer, function (err, customer) {
 				if (err) {
 					return handleError(err, res);
 				}
@@ -1269,7 +1267,7 @@ var configureSuccessful = function () {
 				card: data.stripeTokenId,
 				plan: planId
 			};
-			stripe.customers.updateSubscription(
+			payment.stripe.customers.updateSubscription(
 				customerId, subscriptionId, newPlan,
 				function (err, subscription) {
 					if (err) {
@@ -1297,7 +1295,7 @@ var configureSuccessful = function () {
 		// Just delete the Stripe customer, since they
 		// only have one subscription anyway.
 		var customerId = user.subscription.customerId;
-		stripe.customers.del(customerId, function (err, confirm) {
+		payment.stripe.customers.del(customerId, function (err, confirm) {
 			if (err) {
 				return handleError(err, res);
 			}
@@ -1609,7 +1607,7 @@ app.configure(function() {
 
 		var stripeApiKey = settings['stripe-secret-key'];
 		if (stripeApiKey) {
-			stripe = stripeProcessor(stripeApiKey.value);
+			payment.setApiKey(stripeApiKey.value);
 		}
 
 		initAuthentication();
