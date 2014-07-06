@@ -5,56 +5,12 @@ var uuid = require('node-uuid');
 
 module.exports = function () {
 	
-	var init = function (callback) {
-		// Visibility definitions:
-		//   public: visible to all
-		//   private: visible to administrators
-		//   secret: visible to the database and computer memory
-		var defaultSettings = [{
-			name: "demo",
-			value: false,
-			visibility: "public"
-		},{
-			name: 'session-secret',
-			value: uuid.v4(),
-			visibility: "secret"
-		},{
-			name: "smtp-login",
-			value: null,
-			visibility: "private"
-		},{
-			name: "smtp-password",
-			value: null,
-			visibility: "secret"
-		},{
-			name: "smtp-service",
-			value: "Zoho",
-			visibility: "private"
-		},{ 
-			name: "ssl-ca-path",
-			value: null,
-			visibility: "private"
-		},{
-			name: "ssl-cert-path",
-			value: null,
-			visibility: "private"
-		},{
-			name: "ssl-key-path",
-			value: null,
-			visibility: "private"
-		},{
-			name: "stripe-public-key",
-			value: null,
-			visibility: "public"
-		},{
-			name: "stripe-secret-key",
-			value: null,
-			visibility: "secret"
-		}];
-
+	// TODO: This only sets settings if they're not
+	// already created. This isn't always what we want.
+	var set = function (settings, callback) {
 		var settingsTable = {};
 		var initialized = {};
-		defaultSettings.forEach(function (setting) {
+		settings.forEach(function (setting) {
 			settingsTable[setting.name] = setting;
 			initialized[setting.name] = undefined;
 		});
@@ -113,6 +69,56 @@ module.exports = function () {
 		});
 	};
 
+	var init = function (callback) {
+		// Visibility definitions:
+		//   public: visible to all
+		//   private: visible to administrators
+		//   secret: visible to the database and computer memory
+		var defaultSettings = [{
+			name: "demo",
+			value: false,
+			visibility: "public"
+		},{
+			name: 'session-secret',
+			value: uuid.v4(),
+			visibility: "secret"
+		},{
+			name: "smtp-login",
+			value: null,
+			visibility: "private"
+		},{
+			name: "smtp-password",
+			value: null,
+			visibility: "secret"
+		},{
+			name: "smtp-service",
+			value: "Zoho",
+			visibility: "private"
+		},{ 
+			name: "ssl-ca-path",
+			value: null,
+			visibility: "private"
+		},{
+			name: "ssl-cert-path",
+			value: null,
+			visibility: "private"
+		},{
+			name: "ssl-key-path",
+			value: null,
+			visibility: "private"
+		},{
+			name: "stripe-public-key",
+			value: null,
+			visibility: "public"
+		},{
+			name: "stripe-secret-key",
+			value: null,
+			visibility: "secret"
+		}];
+
+		set(defaultSettings, callback);
+	};
+
 	var initWhenReady = function (callback) {
 		var tenSeconds = 10000;
 		db.whenReady(function () {
@@ -123,6 +129,7 @@ module.exports = function () {
 	};
 
 	return {
-		init: initWhenReady
+		init: initWhenReady,
+		set: set
 	};
 }();

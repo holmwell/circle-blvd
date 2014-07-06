@@ -1,8 +1,95 @@
-var db = require('../lib/dataAccess.js').instance();
+var async = require('async');
 
-exports.init = function (req, res) {
+var db        = require('../lib/dataAccess.js').instance();
+var sslServer = require('../lib/https-server.js');
+var settings  = require('../lib/settings.js');
+
+exports.init = function (req, res, app) {
 	var data = req.body;
 	var defaultCircleId = "1";
+
+	var handleOptionalSettings = function (err, fnCallback) {
+
+		var tasks = [];
+
+		if (ssl && ssl.certPath && ssl.certKey) {
+			var sslSettings = [{
+				name: "ssl-cert-path",
+				value: ssl.certPath,
+				visibility: "private"
+			},{
+				name: "ssl-key-path",
+				value: ssl.certKey,
+				visibility: "private"
+			}];
+
+			// ssl.caPath is optional
+			if (ssl.caPath) {
+				sslSettings.push({ 
+					name: "ssl-ca-path",
+					value: null,
+					visibility: "private"
+				});
+			}
+			
+			tasks.push(function (callback) {
+				settings.set(sslSettings, function (err) {
+					if (err) {
+						return callback(err);
+					}
+					sslServer.create(app, callback);
+				});
+			});
+		}
+
+		if (smtp && smtp.login && smtp.password) {
+			// smtp.service is optional
+			var smtpSettings = [{
+				name: "smtp-login",
+				value: smtp.login,
+				visibility: "private"
+			},{
+				name: "smtp-password",
+				value: smtp.password,
+				visibility: "secret"
+			}];
+
+			if (smtp.service) {
+				smtpSettings.push({
+					name: "smtp-service",
+					value: smtp.service,
+					visibility: "private"
+				});
+			}
+
+			tasks.push(function (callback) {
+				settings.set(smtpSettings, callback);
+			});
+		}
+
+		if (stripe && stripe.public && stripe.secret) {
+			var stripeSettings = [{
+				name: "stripe-public-key",
+				value: null,
+				visibility: "public"
+			},{
+				name: "stripe-secret-key",
+				value: null,
+				visibility: "secret"
+			}];
+
+			tasks.push(function (callback) {
+				settings.set(stripeSettings, callback);
+			});
+		}
+
+		if (tasks.length > 0) {
+			async.parallel(tasks, fnCallback);
+		}
+		else {
+			fnCallback();
+		}
+	};
 
 	var onSuccess = function() {
 		res.send(200);
