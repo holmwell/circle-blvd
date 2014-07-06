@@ -1508,18 +1508,12 @@ app.configure(function() {
 		configureSuccessful();
 	};
 
-	var tenSeconds = 10000;
-	db.whenReady(function () {
-		settings.init(function (err, settings) {
-			if (err) {
-				console.log(err);
-			}
-			else {
-				initSettingsOk(settings);
-			}
-		});
-	}, tenSeconds);
-
-	// TODO: Do we need to wait a little bit to ensure the
-	// servers are started before our thread exits?
+	settings.init(function (err, settings) {
+		if (err) {
+			console.log(err);
+		}
+		else {
+			initSettingsOk(settings);
+		}
+	});
 });

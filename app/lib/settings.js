@@ -1,6 +1,5 @@
 // settings.js
-var db = {};
-db.settings = require('./data-settings.js');
+var db  = require('./dataAccess.js').instance();
 
 module.exports = function () {
 	
@@ -112,7 +111,16 @@ module.exports = function () {
 		});
 	};
 
+	var initWhenReady = function (callback) {
+		var tenSeconds = 10000;
+		db.whenReady(function () {
+			init(callback);
+		}, tenSeconds);
+		// TODO: Do we need to wait a little bit to ensure the
+		// servers are started before our thread exits?		
+	};
+
 	return {
-		init: init
+		init: initWhenReady
 	};
 }();
