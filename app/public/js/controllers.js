@@ -50,14 +50,14 @@ function InitializeCtrl($scope, $location, $http) {
 			if (err.code === 1) {
 				// Permanent failure.
 				$scope.error.type = 'alert-danger'
-				$scope.error[messageLocation] = "Sorry, the website failed to initalize. " +
+				$scope.error[messageLocation] = "Sorry, the website failed to initialize. " +
 				"That's odd, though. Is CouchDB running? There should be a log in the server " +
 				"console that has more-technical detail.";
 			}
 			else if (err.code === 2) {
 				// Failure of optional things.
 				$scope.error.type = 'alert-warning'
-				$scope.error[messageLocation] = "Sorry, the website failed to initalize completely. " +
+				$scope.error[messageLocation] = "Sorry, the website failed to initialize completely. " +
 				"Some things will work, but the optional configuration settings might not be in place.";
 			}
 			else {

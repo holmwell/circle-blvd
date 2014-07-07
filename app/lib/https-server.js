@@ -16,31 +16,41 @@ var getServerOptions = function (callback) {
 		
 		var options = undefined;
 
-		if (sslKeyPath && sslCertPath) {
-			if (sslCaPath) {
-				// TODO: It would be nice to restart the server if we
-				// find ourselves with a new sslCaPath and we're already up.
-				options = {
-					key: fs.readFileSync(sslKeyPath),
-					cert: fs.readFileSync(sslCertPath),
-					ca: fs.readFileSync(sslCaPath)
-				};	
-			}
-			else {
-				options = {
-					key: fs.readFileSync(sslKeyPath),
-					cert: fs.readFileSync(sslCertPath)
-				};	
+		try {
+			if (sslKeyPath && sslCertPath) {
+				if (sslCaPath) {
+					// TODO: It would be nice to restart the server if we
+					// find ourselves with a new sslCaPath and we're already up.
+					options = {
+						key: fs.readFileSync(sslKeyPath),
+						cert: fs.readFileSync(sslCertPath),
+						ca: fs.readFileSync(sslCaPath)
+					};	
+				}
+				else {
+					options = {
+						key: fs.readFileSync(sslKeyPath),
+						cert: fs.readFileSync(sslCertPath)
+					};	
+				}
 			}
 		}
+		catch (err) {
+			callback(err);
+			return;
+		}
 
-		callback(options);
+		callback(null, options);
 	});
 };
 
 var tryToCreateHttpsServer = function (app, callback) {
 	
-	getServerOptions(function (options) {
+	getServerOptions(function (err, options) {
+		if (err) {
+			return callback(err);
+		}
+
 		if (options) {
 			// TODO: It would be nice to turn off the https server when new settings are
 			// presented. For now, just turning on is good enough.
