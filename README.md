@@ -1,9 +1,10 @@
 circle blvd.
 ===============
-Manage projects. 
+For groups of people to get on the same page, Circle Blvd is for managing tasks, keeping track of progress, and knowing who is doing what in your group projects. The suggested group size is 3-10 people, but there is no practical limit to the number of accounts.
 
-Good for teams of 3-10 people with one project, like a small business
-or volunteer organization.
+This software is free, and it runs on Mac, Linux, and Windows. You can install it on your own computer, using instructions below as a guide, or you can create an account on [https://circleblvd.org](https://circleblvd.org), which is also free, supported by donations of happy members.
+
+Documentation is at [https://circleblvd.org/#/docs](https://circleblvd.org/#/docs). Have fun! 
 
 
 running on AWS
@@ -22,12 +23,15 @@ If you can run CouchDB on your system, you can run Circle Blvd.
 2. CouchDB >= 1.0
 
 ### Installation
-* `(start CouchDB)`
-* `git clone https://github.com/secret-project/circle-blvd.git`
-* `cd circle-blvd/app/`
-* `npm install --production`
-* `node server.js`
-* `Go to http://localhost:3000`
+1. Install and start CouchDB
+2. Do the standard command prompt things:
+
+        git clone https://github.com/secret-project/circle-blvd.git
+        cd circle-blvd/app/
+        npm install --production
+        node server.js
+  
+3. Go to [http://localhost:3000](http://localhost:3000)
 
 for developers
 -----------------
