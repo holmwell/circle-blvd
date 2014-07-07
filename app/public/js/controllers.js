@@ -3,7 +3,15 @@
 /* Controllers */
 function InitializeCtrl($scope, $location, $http) {
 
-	$scope.initialize = function() {
+	$scope.error = {};
+
+	$scope.initialize = function (messageLocation) {
+		if (!$scope.user) {
+			$scope.error.type = "alert-info";
+			$scope.error[messageLocation] = "Yeah, so, please enter in some login credentials.";
+			return;
+		}
+
 		$scope.user.name = "Administrator";
 
 		// TODO: This code is duplicated here because I don't know
@@ -38,6 +46,25 @@ function InitializeCtrl($scope, $location, $http) {
 
 		var initializeFailure = function(data, status, headers, config) {
 			// TODO: Display error.
+			var err = data;
+			if (err.code === 1) {
+				// Permanent failure.
+				$scope.error.type = 'alert-danger'
+				$scope.error[messageLocation] = "Sorry, the website failed to initalize. " +
+				"That's odd, though. Is CouchDB running? There should be a log in the server " +
+				"console that has more-technical detail.";
+			}
+			else if (err.code === 2) {
+				// Failure of optional things.
+				$scope.error.type = 'alert-warning'
+				$scope.error[messageLocation] = "Sorry, the website failed to initalize completely. " +
+				"Some things will work, but the optional configuration settings might not be in place.";
+			}
+			else {
+				$scope.error.type = 'alert-info';
+				$scope.error[messageLocation] = "It seems the server was shut off, or something unexpected like that.";
+			}
+
 			console.log("Failure to initialize");
 			console.log(JSON.stringify(data));
 		};

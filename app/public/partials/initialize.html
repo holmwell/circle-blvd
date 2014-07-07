@@ -6,9 +6,12 @@
 		<div class="clear col-sm-5">
 			<input type="email" ng-model="user.email" placeholder="Email address" class="form-control"/>
 			<input type="password" ng-model="user.password" placeholder="Password" class="form-control"/>
-			<button id="initialize" class='btn btn-default' ng-click="initialize()">Finish!</button>
+			<button id="initialize" class='btn btn-default' ng-click="initialize('top')">Finish!</button>
 		</div>
-		
+		<div class="clear alert {{error.type}}" ng-show="error.top">{{error.top}} 
+			<span ng-show="error.type === 'alert-warning'">To see if the site works, you can <a href="/">click here</a>.</span>
+		</div>
+
 		<h3 class="col-xs-12">SSL certificate locations (optional)</h3>
 		<p class="col-xs-12">Tell Circle Blvd. to use an SSL certificate to always use https. This can be done later.</p>
 		<div class="col-sm-5">
@@ -31,7 +34,9 @@
 			<input type="text" ng-model="stripe.public" placeholder="stripe public key" class="form-control"/>
 			<input type="password" ng-model="stripe.secret" placeholder="stripe secret key" class="form-control"/>
 
-			<button class='btn btn-default' ng-click="initialize()">Finish!</button>
+			<button class='btn btn-default' ng-click="initialize('bottom')">Finish!</button>
 		</div>
+		<div class="clear alert {{error.type}}" ng-show="error.bottom">{{error.bottom}}
+		<span ng-show="error.type === 'alert-warning'">To see if the site works, you can <a href="/">click here</a>.</span></div>
 	</form>
 </div>

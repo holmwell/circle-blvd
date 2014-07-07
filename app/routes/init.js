@@ -25,7 +25,7 @@ exports.init = function (req, res, app) {
 				certPath.value = ssl.certPath;
 
 				var certKey = defaultSettings['ssl-key-path'];
-				certKey = ssl.certKey;
+				certKey.value = ssl.certKey;
 
 				sslSettings.push(certPath);
 				sslSettings.push(certKey);
@@ -42,7 +42,10 @@ exports.init = function (req, res, app) {
 						if (err) {
 							return callback(err);
 						}
-						sslServer.create(app, callback);
+						sslServer.create(app, function (err) {
+							console.log(err);
+							return callback("The HTTPS server could not be started.");
+						});
 					});
 				});
 			}
@@ -100,9 +103,16 @@ exports.init = function (req, res, app) {
 		});
 	};
 
+	var handleOptionalError = function (err) {
+		res.send(500, {
+			code: 2,
+			error: err
+		});
+	};
+
 	var handleOptionsCallback = function (err) {
 		if (err) {
-			return onError(err);
+			return handleOptionalError(err);
 		}
 		return onSuccess();
 	};
@@ -112,7 +122,10 @@ exports.init = function (req, res, app) {
 	};
 
 	var onError = function (err) {
-		res.send(500, err);
+		res.send(500, {
+			code: 1,
+			error: err
+		});
 	};
 
 	// TODO: This should be consolidated with
