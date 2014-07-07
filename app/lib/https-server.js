@@ -1,4 +1,7 @@
 // https-server.js
+var fs    = require('fs');
+var https = require('https');
+
 var db = {};
 db.settings = require('./data-settings.js');
 

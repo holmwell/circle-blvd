@@ -1,7 +1,5 @@
 var express  = require('express');
 var http     = require('http');
-var https    = require('https');
-var fs       = require('fs');
 var request  = require('request');
 var path     = require('path');
 var mailer   = require('nodemailer');
