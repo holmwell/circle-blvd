@@ -38,6 +38,7 @@ module.exports = function () {
 
 	var countArchivesByCircleId = function (circleId, callback) {
 		couch.findOneByKey("archives/countByCircleId", circleId, function (err, count) {
+			count = count || 0;
 			callback(err, count);
 		});
 	};
