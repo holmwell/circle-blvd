@@ -9,8 +9,12 @@ module.exports = function () {
 		stripe = stripeProcessor(secretKey);
 	};
 
+	var getStripe = function () {
+		return stripe;
+	}
+
 	return {
 		setApiKey: setApiKey,
-		stripe: stripe
+		stripe: getStripe
 	};
-}(); // closure
+};

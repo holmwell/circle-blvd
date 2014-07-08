@@ -10,7 +10,7 @@ var ensure   = require('./lib/auth-ensure.js');
 var db       = require('./lib/dataAccess.js').instance();
 
 var sslServer = require('./lib/https-server.js');
-var payment   = require('./lib/payment.js');
+var payment   = require('./lib/payment.js')();
 var settings  = require('./lib/settings.js');
 
 var usersRoutes = require('./routes/users');
@@ -1187,7 +1187,7 @@ var configureSuccessful = function () {
 	app.post('/payment/donate', function (req, res) {
 		var data = req.body;
 
-		payment.stripe.charges.create({
+		payment.stripe().charges.create({
 			amount: data.stripeAmount,
 			currency: "usd",
 			card: data.stripeTokenId,
@@ -1242,7 +1242,7 @@ var configureSuccessful = function () {
 				}
 			};
 
-			payment.stripe.customers.create(newCustomer, function (err, customer) {
+			payment.stripe().customers.create(newCustomer, function (err, customer) {
 				if (err) {
 					return handleError(err, res);
 				}
@@ -1265,7 +1265,7 @@ var configureSuccessful = function () {
 				card: data.stripeTokenId,
 				plan: planId
 			};
-			payment.stripe.customers.updateSubscription(
+			payment.stripe().customers.updateSubscription(
 				customerId, subscriptionId, newPlan,
 				function (err, subscription) {
 					if (err) {
@@ -1293,7 +1293,7 @@ var configureSuccessful = function () {
 		// Just delete the Stripe customer, since they
 		// only have one subscription anyway.
 		var customerId = user.subscription.customerId;
-		payment.stripe.customers.del(customerId, function (err, confirm) {
+		payment.stripe().customers.del(customerId, function (err, confirm) {
 			if (err) {
 				return handleError(err, res);
 			}
