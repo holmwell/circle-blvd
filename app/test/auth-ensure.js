@@ -42,18 +42,18 @@ var expectFail = function (server, test) {
 	.end(test.done);
 };
 
-test.auth.isAuthenticated = function (test) {
+test.auth['is authenticated'] = function (test) {
 	var server = createServer(isAuthenticated, unit.auth);
 	expectPass(server, test);
 };
 
-test.auth.isNotAuthenticated = function (test) {
+test.auth['not authenticated'] = function (test) {
 	var server = createServer(isNotAuthenticated, unit.auth);
 	expectFail(server, test);
 };
 
 
-test.mainframe.isMainframe = function (test) {
+test.mainframe['has mainframe access'] = function (test) {
 	var isMainframe = function (req, res, next) {
 		req.user.memberships.push({
 			name: "Mainframe"
@@ -68,7 +68,7 @@ test.mainframe.isMainframe = function (test) {
 	expectPass(server, test);
 };
 
-test.mainframe.isNotMainframe = function (test) {
+test.mainframe['no mainframe access'] = function (test) {
 	var isNotMainframe = function (req, res, next) {
 		req.user.memberships.push({
 			name: "Not mainframe"
@@ -83,12 +83,12 @@ test.mainframe.isNotMainframe = function (test) {
 };
 
 
-test.circle.circleMissing = function (test) {
+test.circle['no circleId specified'] = function (test) {
 	var server = createServer(isAuthenticated, unit.circle);
 	expectFail(server, test);
 };
 
-test.circle.isNotCircle = function (test) {
+test.circle['is not in circle'] = function (test) {
 	var isNotCircle = function (req, res, next) {
 		req.params.circleId = "nope";
 		req.user.memberships.push({
@@ -104,7 +104,7 @@ test.circle.isNotCircle = function (test) {
 	expectFail(server, test);
 };
 
-test.circle.isCircle = function (test) {
+test.circle['is in circle'] = function (test) {
 	var isCircle = function (req, res, next) {
 		req.params.circleId = "yes";
 		req.user.memberships.push({
@@ -117,6 +117,54 @@ test.circle.isCircle = function (test) {
 		isCircle, unit.circle);
 
 	expectPass(server, test);
+};
+
+test.circle['is in circle, not admin'] = function (test) {
+	var isCircleNotAdmin = function (req, res, next) {
+		req.params.circleId = "yes";
+		req.user.memberships.push({
+			circle: "yes",
+			name: "nope"
+		});
+		next();
+	};
+
+	var server = createServer(isAuthenticated,
+		isCircleNotAdmin, unit.circleAdmin);
+
+	expectFail(server, test);
+};
+
+test.circle['is in circle, is admin'] = function (test) {
+	var isCircleAdmin = function (req, res, next) {
+		req.params.circleId = "yes";
+		req.user.memberships.push({
+			circle: "yes",
+			name: "Administrative"
+		});
+		next();
+	};
+
+	var server = createServer(isAuthenticated,
+		isCircleAdmin, unit.circleAdmin);
+
+	expectPass(server, test);
+};
+
+test.circle['is admin, not in circle'] = function (test) {
+	var isAdminNotCircle = function (req, res, next) {
+		req.params.circleId = "yes";
+		req.user.memberships.push({
+			circle: "nope",
+			name: "Administrative"
+		});
+		next();
+	};
+
+	var server = createServer(isAuthenticated,
+		isAdminNotCircle, unit.circleAdmin);
+
+	expectFail(server, test);
 };
 
 
@@ -164,4 +212,4 @@ function createServer (middleware) {
 	return app;
 };
 
-exports['auth-ensure'] = test;
+exports[''] = test;
