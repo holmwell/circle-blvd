@@ -103,8 +103,6 @@ var ensureMainframeAccess = function (req, res, next) {
 
 
 
-
-
 module.exports = function () {
 	// TODO: This API is a bit wonky.
 	return {
