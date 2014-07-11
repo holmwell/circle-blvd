@@ -39,8 +39,10 @@ If you're making the software or managing deployments, you
 might like to know:
 
 ### Testing
-* Uses `karma` and `jasmine` for now.
-* `scripts/test.sh`
+
+        npm test
+
+Uses `nodeunit` for now.
 
 ### Deployment
 There is an assume-it-all-works deployment outline here: [https://gist.github.com/exclsr/ab5b674d6d15b335d60f][2]
