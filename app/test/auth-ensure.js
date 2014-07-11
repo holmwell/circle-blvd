@@ -8,6 +8,7 @@ var request = require('supertest');
 var test = {};
 test.auth = {};
 test.mainframe = {};
+test.circle = {};
 
 test.dependencies = function (test) {
 	var middlewares = [
@@ -41,18 +42,18 @@ var expectFail = function (server, test) {
 	.end(test.done);
 };
 
-test.auth.IsAuthenticated = function (test) {
+test.auth.isAuthenticated = function (test) {
 	var server = createServer(isAuthenticated, unit.auth);
 	expectPass(server, test);
 };
 
-test.auth.IsNotAuthenticated = function (test) {
+test.auth.isNotAuthenticated = function (test) {
 	var server = createServer(isNotAuthenticated, unit.auth);
 	expectFail(server, test);
 };
 
 
-test.mainframe.IsMainframe = function (test) {
+test.mainframe.isMainframe = function (test) {
 	var isMainframe = function (req, res, next) {
 		req.user.memberships.push({
 			name: "Mainframe"
@@ -67,7 +68,7 @@ test.mainframe.IsMainframe = function (test) {
 	expectPass(server, test);
 };
 
-test.mainframe.IsNotMainframe = function (test) {
+test.mainframe.isNotMainframe = function (test) {
 	var isNotMainframe = function (req, res, next) {
 		req.user.memberships.push({
 			name: "Not mainframe"
@@ -79,6 +80,43 @@ test.mainframe.IsNotMainframe = function (test) {
 		unit.mainframe);
 
 	expectFail(server, test);
+};
+
+
+test.circle.circleMissing = function (test) {
+	var server = createServer(isAuthenticated, unit.circle);
+	expectFail(server, test);
+};
+
+test.circle.isNotCircle = function (test) {
+	var isNotCircle = function (req, res, next) {
+		req.params.circleId = "nope";
+		req.user.memberships.push({
+			circle: "yes"
+		});
+		next();
+	};
+
+	var server = createServer(isAuthenticated,
+		isNotCircle,
+		unit.circle);
+
+	expectFail(server, test);
+};
+
+test.circle.isCircle = function (test) {
+	var isCircle = function (req, res, next) {
+		req.params.circleId = "yes";
+		req.user.memberships.push({
+			circle: "yes"
+		});
+		next();
+	};
+
+	var server = createServer(isAuthenticated,
+		isCircle, unit.circle);
+
+	expectPass(server, test);
 };
 
 
@@ -107,6 +145,13 @@ function createServer (middleware) {
 		next();
 	};
 	app.use(user);
+
+	// Basic request stuff
+	var request = function (req, res, next) {
+		req.params = {};
+		next();
+	};
+	app.use(request);
 
 	// Accept multiple params of middleware as our args
 	for (var index in arguments) {
