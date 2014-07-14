@@ -52,11 +52,18 @@ module.exports = function () {
 		});
 	};
 
+	var count = function countCircles(callback) {
+		couch.findOneByKey("circles/count", null, function (err, count) {
+			count = count || 0;
+			callback(err, count);
+		});
+	};
 
 	return {
 		add: addCircle,
 		getAll: getAllCircles,
 		findByUser: findCirclesByUser,
-		update: updateCircle
+		update: updateCircle,
+		count: count
 	};
 }();

@@ -26,6 +26,14 @@ module.exports = function () {
 			value: false,
 			visibility: "public"
 		},{
+			name: "limit-circles",
+			value: 300,
+			visibility: "private"
+		},{
+			name: "limit-stories-per-circle",
+			value: 1000,
+			visibility: "private"
+		},{
 			name: 'session-secret',
 			value: uuid.v4(),
 			visibility: "secret"

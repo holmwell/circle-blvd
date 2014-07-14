@@ -506,39 +506,74 @@ var configureSuccessful = function () {
 			return res.send(400, "A 'name' property is required, for naming the circle.");
 		}
 
-		db.circles.findByUser(req.user, function (err, rawCircles) {
-			if (err) {
-				return handleError(err, res);
+		// Add the circle if we're under the server limit.
+		checkCircleLimit(addCircle);
+
+		function checkCircleLimit(callback) {
+			db.settings.getAll(onSuccess, onError);
+			function onSuccess(settings) {
+				checkSettings(settings, callback);
+			} 
+			function onError(err) {
+				handleError(err, res);
+			};
+		}
+
+		function checkSettings(settings, callback) {
+			if (!settings['limit-circles']) {
+				// No limit!
+				return callback(); 
 			}
 
-			// TODO: Need to remove dups from the view
-			var circles = {};
-			rawCircles.forEach(function (circle) {
-				circles[circle._id] = circle;
-			});
-
-			var circlesCreatedCount = 0;
-			for (var key in circles) {
-				var circle = circles[key];
-				if (circle.createdBy
-				&& circle.createdBy.id === req.user._id) {
-					circlesCreatedCount++;
-				}
-			}
-
-			// TODO: Put this hard-coded value into the settings.
-			var maxCircleCount = 4;
-			if (circlesCreatedCount >= maxCircleCount) {
-				return res.send(403, "Sorry, you can only create " + maxCircleCount + " circles.");
-			}
-
-			createCircle(circleName, admin.email, function (err, newCircle) {
+			var limit = settings['limit-circles'].value;
+			db.circles.count(function (err, count) {
 				if (err) {
 					return handleError(err, res);
 				}
-				res.send(200, newCircle);
+				if (count >= limit) {
+					res.send(403, "Sorry, our computers have reached their circle creation limit," +
+						" and no more can be made, by anyone, at this time.");
+					return;
+				}
+				return callback();
 			});
-		});
+		}
+
+		function addCircle() {
+			db.circles.findByUser(req.user, function (err, rawCircles) {
+				if (err) {
+					return handleError(err, res);
+				}
+
+				// TODO: Need to remove dups from the view
+				var circles = {};
+				rawCircles.forEach(function (circle) {
+					circles[circle._id] = circle;
+				});
+
+				var circlesCreatedCount = 0;
+				for (var key in circles) {
+					var circle = circles[key];
+					if (circle.createdBy
+					&& circle.createdBy.id === req.user._id) {
+						circlesCreatedCount++;
+					}
+				}
+
+				// TODO: Put this hard-coded value into the settings.
+				var maxCircleCount = 4;
+				if (circlesCreatedCount >= maxCircleCount) {
+					return res.send(403, "Sorry, you can only create " + maxCircleCount + " circles.");
+				}
+
+				createCircle(circleName, admin.email, function (err, newCircle) {
+					if (err) {
+						return handleError(err, res);
+					}
+					res.send(200, newCircle);
+				});
+			});
+		}
 	});
 
 	app.post("/data/circle/admin", ensure.mainframe, function (req, res) {

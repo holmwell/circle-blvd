@@ -149,7 +149,7 @@ var circlesDesignDoc = {
 	url: '_design/circles',
 	body: 
 	{
-		version: "1.0.0",
+		version: "1.0.1",
 		language: "javascript",
 		views: {
 			byName: {
@@ -166,6 +166,15 @@ var circlesDesignDoc = {
 						emit(doc._id, doc);
 					}
 				}
+			},
+
+			count: {
+				map: function (doc) {
+					if (doc.type === "circle") {
+						emit(null, doc._id);
+					}
+				},
+				reduce : "_count"
 			}
 		}
 	}

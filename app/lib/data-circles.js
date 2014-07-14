@@ -24,8 +24,13 @@ module.exports = function () {
 		couch.circles.update(circle, callback);
 	};
 
+	var count = function countCircles (callback) {
+		couch.circles.count(callback);
+	};
+	
 	return {
 		add: addCircle,
+		count: count,
 		getAll: function (callback) {
 			couch.circles.getAll(callback);
 		},
