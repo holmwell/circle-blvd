@@ -498,18 +498,10 @@ var configureSuccessful = function () {
 		});
 	};
 
-	app.post("/data/circle", ensure.auth, function (req, res) {
-		var circleName = req.body.name;
-		var admin = req.user;
+	var checkCircleLimit = function (res, next) {
+		checkLimit(next);
 
-		if (!circleName) {
-			return res.send(400, "A 'name' property is required, for naming the circle.");
-		}
-
-		// Add the circle if we're under the server limit.
-		checkCircleLimit(addCircle);
-
-		function checkCircleLimit(callback) {
+		function checkLimit (callback) {
 			db.settings.getAll(onSuccess, onError);
 			function onSuccess(settings) {
 				checkSettings(settings, callback);
@@ -538,6 +530,19 @@ var configureSuccessful = function () {
 				return callback();
 			});
 		}
+	};
+
+
+	app.post("/data/circle", ensure.auth, function (req, res) {
+		var circleName = req.body.name;
+		var admin = req.user;
+
+		if (!circleName) {
+			return res.send(400, "A 'name' property is required, for naming the circle.");
+		}
+
+		// Add the circle if we're under the server limit.
+		checkCircleLimit(res, addCircle);
 
 		function addCircle() {
 			db.circles.findByUser(req.user, function (err, rawCircles) {
@@ -1387,46 +1392,49 @@ var configureSuccessful = function () {
 	app.post("/data/signup/now", function (req, res) {
 		var data = req.body;
 
-		var proposedAccount = {
-			name: data.name,
-			email: data.email,
-			password: data.password
-		};
+		// Add the circle if we're under the server limit.
+		checkCircleLimit(res, function () {
+			var proposedAccount = {
+				name: data.name,
+				email: data.email,
+				password: data.password
+			};
 
-		var proposedCircle = {
-			name: data.circle
-		};
+			var proposedCircle = {
+				name: data.circle
+			};
 
-		var userAccountCreated = function (newAccount) {
-			createCircle(proposedCircle.name, newAccount.email, function (err, newCircle) {
-				if (err) {
-					handleError(err, res);
-				}
-				res.send(200, newCircle);
-			});
-		};
-
-		db.users.findByEmail(proposedAccount.email, function (err, accountExists) {
-			if (err) {
-				return handleError(err, res);
-			}
-
-			if (accountExists) {
-				return res.send(400, "That email address is already being used. Maybe try signing in?")
-			}
-
-			var isReadOnly = false;
-
-			db.users.add(
-				proposedAccount.name,
-				proposedAccount.email, 
-				proposedAccount.password,
-				[], // no memberships at first
-				isReadOnly,
-				userAccountCreated, 
-				function (err) {
-					handleError(err, res);
+			var userAccountCreated = function (newAccount) {
+				createCircle(proposedCircle.name, newAccount.email, function (err, newCircle) {
+					if (err) {
+						handleError(err, res);
+					}
+					res.send(200, newCircle);
 				});
+			};
+
+			db.users.findByEmail(proposedAccount.email, function (err, accountExists) {
+				if (err) {
+					return handleError(err, res);
+				}
+
+				if (accountExists) {
+					return res.send(400, "That email address is already being used. Maybe try signing in?")
+				}
+
+				var isReadOnly = false;
+
+				db.users.add(
+					proposedAccount.name,
+					proposedAccount.email, 
+					proposedAccount.password,
+					[], // no memberships at first
+					isReadOnly,
+					userAccountCreated, 
+					function (err) {
+						handleError(err, res);
+					});
+			});
 		});
 	});
 
