@@ -739,6 +739,10 @@ module.exports = function () {
 		});
 	};
 
+	var countByCircleId = function (circleId, callback) {
+		couch.stories.countByCircleId(circleId, callback);
+	};
+
 	// Turn on processing queue.
 	// TODO: Probably put this in the API, to be called
 	// at a higher level.
@@ -754,6 +758,7 @@ module.exports = function () {
 		getFirstByProjectId: getFirstStory,
 		getNextMeetingByProjectId: getNextMeeting,
 		save: saveStory,
-		fix: updateStory
+		fix: updateStory,
+		countByCircleId: countByCircleId
 	};
 }(); // closure

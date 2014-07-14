@@ -398,6 +398,13 @@ module.exports = function () {
 		});
 	};
 
+	var countByCircleId = function (circleId, callback) {
+		couch.findOneByKey("stories/countByCircleId", circleId, function (err, count) {
+			count = count || 0;
+			callback(err, count);
+		});
+	};
+
 	return {
 		addToQueue: addStoryToQueue,
 		nextInQueue: nextStoryInQueue,
@@ -409,6 +416,7 @@ module.exports = function () {
 		findFirst: findFirstByProjectId,
 		findNextMeeting: findNextMeetingByProjectId,
 		transaction: storiesTransaction,
-		update: updateStory
+		update: updateStory,
+		countByCircleId: countByCircleId
 	};
 }(); // closure

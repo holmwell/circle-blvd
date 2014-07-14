@@ -971,7 +971,42 @@ var configureSuccessful = function () {
 			var story = copyStory(data);
 			story.createdBy = getCreatedBy(req);
 
-			addStory(story, res);			
+			// Add the story if we're under the server limit.
+			checkStoryLimit(function () {
+				addStory(story, res);
+			});
+
+			function checkStoryLimit(callback) {
+				db.settings.getAll(onSuccess, onError);
+				function onSuccess(settings) {
+					checkSettings(settings, callback);
+				} 
+				function onError(err) {
+					handleError(err, res);
+				};
+			}
+
+			function checkSettings(settings, callback) {
+				if (!settings['limit-stories-per-circle']) {
+					// No limit!
+					return callback(); 
+				}
+
+				var limit = settings['limit-stories-per-circle'].value;
+				db.stories.countByCircleId(story.projectId, function (err, count) {
+					if (err) {
+						return handleError(err, res);
+					}
+					if (count >= limit) {
+						// TODO: Add validation-specific instructions, after 
+						// we have an account validation mechanism.
+						res.send(403, "Sorry, this circle has reached its story-creation limit," +
+							" and no more can be made at the moment.");
+						return;
+					}
+					return callback();
+				});
+			}
 		});
 	});
 

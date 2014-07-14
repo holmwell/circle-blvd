@@ -234,7 +234,7 @@ var storiesDesignDoc = {
 	url: '_design/stories',
 	body: 
 	{
-		version: "1.0.13",
+		version: "1.0.14",
 		language: "javascript",
 		views: {
 			byProjectId: {
@@ -292,6 +292,15 @@ var storiesDesignDoc = {
 						}
 					}
 				}
+			},
+
+			countByCircleId: {
+				map: function (doc) {
+					if (doc.type === "story" && doc.projectId) {
+						emit(doc.projectId);
+					}
+				},
+				reduce : "_count"
 			}
 		},
 
