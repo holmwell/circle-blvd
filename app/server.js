@@ -2,6 +2,7 @@ var express  = require('express');
 var http     = require('http');
 var request  = require('request');
 var path     = require('path');
+var async    = require('async');
 var mailer   = require('nodemailer');
 var routes   = require('./routes');
 
@@ -962,6 +963,15 @@ var configureSuccessful = function () {
 		return createdBy;
 	};
 
+	// for async operations
+	var getSettings = function (callback) {
+		db.settings.getAll(function onSuccess(settings) {
+			callback(null, settings);
+		}, function onError(err) {
+			callback(err);
+		});
+	};
+
 	// TODO: Ensure that the circleId specified in this
 	// story is valid. Otherwise people can hack around
 	// ways of accessing stories.
@@ -981,18 +991,34 @@ var configureSuccessful = function () {
 				addStory(story, res);
 			});
 
-			function checkStoryLimit(callback) {
-				db.settings.getAll(onSuccess, onError);
-				function onSuccess(settings) {
-					checkSettings(settings, callback);
-				} 
-				function onError(err) {
-					handleError(err, res);
-				};
+			function getCircle (callback) {
+				db.docs.get(story.projectId, function (err, circle) {
+					if (err) {
+						return callback(err);
+					}
+
+					if (circle.type !== "circle") {
+						return callback("Sorry, the projectId specified is not a circle.");
+					}
+
+					callback(null, circle);
+				});
 			}
 
-			function checkSettings(settings, callback) {
-				if (!settings['limit-stories-per-circle']) {
+			function checkStoryLimit(callback) {
+				async.parallel([getSettings, getCircle], function (err, results) {
+					if (err) {
+						return handleError(err, res);
+					}
+
+					var settings = results[0];
+					var circle = results[1];
+					checkSettings(settings, circle, callback);
+				});
+			}
+
+			function checkSettings(settings, circle, callback) {
+				if (!settings['limit-stories-per-circle'] || !circle.isAnonymous) {
 					// No limit!
 					return callback(); 
 				}

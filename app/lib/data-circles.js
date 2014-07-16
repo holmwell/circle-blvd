@@ -6,7 +6,8 @@ module.exports = function () {
 	var addCircle = function (circle, callback) {
 		var newCircle = {
 			name: circle.name,
-			createdBy: circle.createdBy
+			createdBy: circle.createdBy,
+			isAnonymous: true
 		};
 
 		couch.circles.add(newCircle, function (err, body) {
