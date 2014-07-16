@@ -103,7 +103,20 @@ CircleBlvd.Services.stories = function ($http) {
 			// that could not be resolved.
 			console.log(status);
 			console.log(data);
-			callback(null);
+			var id = "error-" + Date.now();
+			var facade = null;
+			if (status === 403) {
+				var description = "Hi! Thanks for using Circle Blvd so much!\n\n" + 
+				"Please tell Phil this is happening, and he'll fix this problem right away.";
+				facade = {
+					id: id,
+					summary: data,
+					description: description,
+					type: "story"
+				};
+				s[id] = facade;
+			}
+			callback(facade);
 		});
 	};
 
