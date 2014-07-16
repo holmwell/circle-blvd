@@ -112,7 +112,8 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 		var failure = function (data, status) {
 			var message = "Sorry, our computers aren't working. " + 
 			"Please try again at a later time.";
-			if (status === 400) {
+			if (status === 400 || status === 403) {
+				// we have a well-known error.
 				message = data;
 			}
 			$scope.signup.message = message;
