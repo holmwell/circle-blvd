@@ -47,19 +47,22 @@
 	<div class="signup">
 		<form>
 			<div class="col-sm-offset-2 col-sm-8 clear signin-section">
-				<h4>Create a circle.</h4>
+				<h4>Start today.</h4>
+				<p>To get started, we just need a name for your team, a signin address,
+					and a name that people in your group will recognize you by.</p>
 				<label for="signupCircleName" class="sr-only">What's the name of your circle?</label>
-				<div><input id="signupCircleName" type="text" ng-model="signup.circle" placeholder="Circle name" class="form-control"/></div>
+				<div><input id="signupCircleName" type="text" ng-model="signup.circle" placeholder="Circle or group name" class="form-control"/></div>
 
 				<label for="signupEmail">How will you be signing in?</label>
 				<div><input id="signupEmail" type="text" ng-model="signup.email" placeholder="Email address" class="form-control"/></div>
 				<div><input type="password" ng-model="signup.password" placeholder="Password" class="form-control"/></div>
 				
 				<label for="signupName">What's your name?</label>
-				<div><input id="signupName" type="text" ng-model="signup.name" placeholder="First name" class="form-control"/></div>
+				<div><input id="signupName" type="text" ng-model="signup.name" 
+					placeholder="First name, full name, or nickname" class="form-control"/></div>
 				<button class="btn btn-default pull-right" 
 					ng-hide="signup.message"
-					type="submit" ng-click="signUp()">Create</button> 
+					type="submit" ng-click="signUp()">Create circle</button> 
 			</div>
 			<div class="col-sm-offset-2 col-sm-8 clear ng-cloak"
 				ng-show="signup.message">
