@@ -834,6 +834,18 @@ label.relax {
   padding-right: 2ex;
 }
 
+.signin .free {
+  background-color: gold;
+  width: 100%;
+  float: left;
+
+  margin-top: 3.5em;
+  padding-bottom: 2.5em;
+}
+.signin .free a {
+  color: #333;
+  text-decoration: underline;
+}
 
 .signin .signup, .signin .donate {
   background-color: #333;
@@ -844,6 +856,10 @@ label.relax {
   margin-top: 3.5em;
   padding-bottom: 3.5em;
 }
+.signin .signup {
+  margin-top: 0;
+}
+
 .signin .signup input,
 .signin .signup textarea {
   color: #ccc;
