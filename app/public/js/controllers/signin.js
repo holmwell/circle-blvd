@@ -69,6 +69,11 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 
 		var failure = function(data, status, headers, config) {
 			$scope.message = "Sorry, please try something else."
+			if (status === 429) {
+				$scope.message = "Sorry, it seems someone is trying " + 
+				"to guess your password, so we aren't allowing any more sign-in " + 
+				"attempts, today. Please call us to be allowed into the site.";
+			}
 		};
 
 		// TODO: This should probably be inside a resource, or whatever

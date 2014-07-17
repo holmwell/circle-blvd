@@ -69,16 +69,66 @@ var verify = function(email, password, callback) {
 			return callback(new Error('Unknown user ' + email));
 		}
 
+		var updateUser = false;
+		if (user.auth 
+			&& user.auth.signinFailures
+			&& user.auth.signinFailures.length > 0) {
+
+			// Reset attempts if it has been more than
+			// one day since the last failure.
+			var now = Date.now();
+			var lastFailure = user.auth.signinFailures.pop();
+			var oneDay = 1000 * 60 * 60 * 24;
+			if (now - lastFailure > oneDay) {
+				user.auth.signinFailures = [];
+				updateUser = true;
+			}
+
+			var tooManyFailures = 25;
+			if(user.auth.signinFailures.length >= tooManyFailures) {
+				var error = {
+					code: 429,
+					status: "Too many failed attempts."
+				}
+				return callback(error);
+			}
+		}
+
 		var success = function () {
 			getUserWithFriendlyGroups(user, callback);
 		}
 
 		var failure = function() {
 			// TODO: Use error codes
-			callback(new Error("Invalid password"));		
+			var error = {
+				code: 401,
+				status: "Invalid password",
+				user: user
+			};
+
+			callback(error);
 		}
 
-		db.users.validatePassword(user, password, success, failure);	
+		var callValidatePassword = function callValidatePassword(user) {
+			db.users.validatePassword(user, password, success, failure);
+		};
+
+		if (updateUser) {
+			db.users.update(user, function onSuccess (savedUser) {
+				callValidatePassword(savedUser);
+			},
+			function onError(err) {
+				// We don't really care about this in the moment,
+				// as it should be self-correcting in the future,
+				// or the database is down and the next call will
+				// fail anyway.
+				console.log(err);
+				callValidatePassword(user);
+			});
+		}
+		else {
+			callValidatePassword(user);
+		}
 	});
 };
 

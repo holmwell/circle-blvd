@@ -55,12 +55,33 @@ var authenticateLocal = function(req, res, next) {
 		publicUser.memberships = dbUser.memberships;
 		publicUser.notifications = dbUser.notifications;
 
-		res.send(200, publicUser);
+		db.users.recordSigninSuccess(dbUser, function (err, savedUser) {
+			if (err) {
+				logError(err);
+			}
+			res.send(200, publicUser);
+		});
 	};
 
-	var failure = function(error) {
+	var failure = function (error, user) {
 		logError(error);
-		res.send(401, "Unauthorized"); 
+		var code = error.code || 401;
+		var message = "Unauthorized";
+		if (code === 429) {
+			message = "Too many attempts";
+		}
+
+		if (error.user) {
+			db.users.recordSigninFailure(error.user, function (err, savedUser) {
+				if (err) {
+					logError(err);
+				}
+				res.send(code, message);
+			});
+		}
+		else {
+			res.send(code, message);			
+		}
 	};
 
 	var middleware = auth.local(req, success, failure);

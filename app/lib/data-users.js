@@ -211,6 +211,47 @@ module.exports = function () {
 		});
 	};
 
+	var recordSigninFailure = function (user, callback) {
+		findUserById(user.id, function (err, dbUser) {
+			if (err || !dbUser) {
+				return callback(err);
+			}
+			dbUser.auth = dbUser.auth || {};
+			if (!dbUser.auth.signinFailures) {
+				dbUser.auth.signinFailures = [];
+			}
+			dbUser.auth.signinFailures.push(Date.now());
+
+			updateUser(dbUser, function onSuccess (savedUser) {
+				callback(null, savedUser);
+			},
+			function onError (error) {
+				callback(error);
+			});
+		});
+	};
+
+	var recordSigninSuccess = function (user, callback) {
+		findUserById(user.id, function (err, dbUser) {
+			if (err || !dbUser) {
+				return callback(err);
+			}
+			if (dbUser.auth && dbUser.auth.signinFailures) {
+				dbUser.auth.signinFailures = [];
+				updateUser(dbUser, function onSuccess (savedUser) {
+					callback(null, savedUser);
+				},
+				function onError (error) {
+					callback(error);
+				});
+			}
+			else {
+				// No auth object to reset. Do nothing.
+				callback();
+			}
+		});
+	};
+
 	return { 
 		add: addUser,
 		remove: removeUser,
@@ -225,6 +266,8 @@ module.exports = function () {
 		updateEmail: updateUserEmail,
 		updatePassword: updateUserPassword,
 		validatePassword: validateUserPassword,
+		recordSigninFailure: recordSigninFailure,
+		recordSigninSuccess: recordSigninSuccess,
 		getAll: function(callback) {
 			couch.users.getAll(callback);
 		},
