@@ -119,7 +119,7 @@ var configureSuccessful = function () {
 
 	app.put("/data/setting", ensure.mainframe, function (req, res) {
 		var data = req.body;
-		db.settings.update(data, guard(res, function (setting) {
+		var onSettingsUpdate = function (setting) {
 			if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
 				// TODO: Tell the client if we started the server?
 				tryToCreateHttpsServer();
@@ -128,8 +128,11 @@ var configureSuccessful = function () {
 				payment.setApiKey(setting.value);
 			}
 			res.send(200);
-		}));
+		};
+
+		db.settings.update(data, guard(res, onSettingsUpdate));;
 	});
+
 
 	// Circles!
 	app.get("/data/circles", ensure.auth, function (req, res) {
