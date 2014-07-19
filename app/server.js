@@ -44,19 +44,6 @@ var handleError = function (err, res) {
 };
 
 // Middleware for data access
-var send = function (fn) {
-	var middleware = function (req, res, next) {
-		fn(function (err, data) {
-			if (err) {
-				return handleError(err, res);
-			}
-			res.send(200, data);
-		});
-	};
-
-	return middleware;
-};
-
 var handle = function (res) {
 	var fn = function (err, data) {
 		if (err) {
@@ -65,6 +52,14 @@ var handle = function (res) {
 		res.send(200, data);
 	}
 	return fn;
+};
+
+var send = function (fn) {
+	var middleware = function (req, res, next) {
+		fn(handle(res));
+	};
+
+	return middleware;
 };
 
 var data = function (fn) {
