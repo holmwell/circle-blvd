@@ -10,11 +10,7 @@ module.exports = function () {
 		stripe = stripeProcessor(secretKey);
 	};
 
-	var getStripe = function () {
-		return stripe;
-	}
-
-	var createDonation = function (stripeTokenId, stripeAmount, callback) {
+	var donate = function (stripeTokenId, stripeAmount, callback) {
 		var donation = {
 			amount: stripeAmount,
 			currency: "usd",
@@ -109,7 +105,7 @@ module.exports = function () {
 		}
 	};
 
-	var cancelSubscription = function (user, callback) {
+	var unsubscribe = function (user, callback) {
 		// Just delete the Stripe customer, since they
 		// only have one subscription anyway.
 		var customerId = user.subscription.customerId;
@@ -135,10 +131,9 @@ module.exports = function () {
 	};
 
 	return {
-		createDonation: createDonation,
+		donate: donate,
 		subscribe: subscribe,
-		cancelSubscription: cancelSubscription,
-		setApiKey: setApiKey,
-		stripe: getStripe
+		unsubscribe: unsubscribe,
+		setApiKey: setApiKey
 	};
 };

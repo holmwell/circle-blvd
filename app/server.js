@@ -814,12 +814,12 @@ var configureSuccessful = function () {
 		var stripeTokenId = data.stripeTokenId;
 		var amount = data.stripeAmount
 
-		payment.createDonation(stripeTokenId, amount, handle(res));
+		payment.donate(stripeTokenId, amount, handle(res));
 	});
 
 	app.post('/payment/subscribe', ensure.auth, function (req, res) {
 		var data = req.body;
-		
+
 		var user = req.user;
 		var stripeTokenId = data.stripeTokenId;
 		var planName = data.planName;
@@ -833,8 +833,7 @@ var configureSuccessful = function () {
 			return res.send(204);
 		}
 
-		// TODO: Pass in the user id and the subscription, that's it.
-		payment.cancelSubscription(user, handle(res));
+		payment.unsubscribe(user, handle(res));
 	});
 
 	app.post("/data/signup/now", function (req, res) {
