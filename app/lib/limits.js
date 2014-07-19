@@ -1,10 +1,10 @@
 // limits.js
+var async = require('async');
 var db = require('./dataAccess.js').instance();
 var errors = require('./errors.js');
 var guard = errors.guard;
 
 module.exports = function () {
-
 
 	var checkCircleLimit = function (req, res, next) {
 		checkLimit(next);
@@ -45,10 +45,66 @@ module.exports = function () {
 		}));
 	};
 
+	var checkUserStoryLimit = function (circleId, next) {
+		
+		checkStoryLimit(next);
+
+		function getCircle (callback) {
+			db.docs.get(circleId, function (err, circle) {
+				if (err) {
+					return callback(err);
+				}
+
+				if (circle.type !== "circle") {
+					return callback("Sorry, the projectId specified is not a circle.");
+				}
+
+				callback(null, circle);
+			});
+		}
+
+		function checkStoryLimit (callback) {
+			async.parallel([db.settings.getAll, getCircle], function (err, results) {
+				if (err) {
+					return callback(err);
+				}
+				var settings = results[0];
+				var circle = results[1];
+				checkSettings(settings, circle, callback);
+			});
+		}
+
+		function checkSettings(settings, circle, callback) {
+			if (!settings['limit-stories-per-circle'] || !circle.isAnonymous) {
+				// No limit!
+				return callback(); 
+			}
+
+			var limit = settings['limit-stories-per-circle'].value;
+			db.stories.countByCircleId(circleId, function (err, count) {
+				if (err) {
+					return callback(err);
+				}
+				if (count >= limit) {
+					// TODO: Add validation-specific instructions, after 
+					// we have an account validation mechanism.
+					var message = "Sorry, this circle has reached its story-creation limit," +
+						" and no more can be made at the moment.";
+
+					var error = new Error(message);
+					error.status = 403;
+					return callback(error);
+				}
+				return callback();
+			});
+		}
+	};
+
 	return {
-		circle: checkCircleLimit,
+		circle: checkCircleLimit, // TODO: Move into 'server' obj
 		users: {
-			circle: checkUserCircleLimit
+			circle: checkUserCircleLimit, 
+			story: checkUserStoryLimit  // TODO: Move into 'circle' obj
 		}
 	};
 }(); // closure

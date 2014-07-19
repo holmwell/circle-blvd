@@ -2,7 +2,6 @@ var express  = require('express');
 var http     = require('http');
 var request  = require('request');
 var path     = require('path');
-var async    = require('async');
 var routes   = require('./routes');
 
 var auth   = require('./lib/auth-local.js');
@@ -292,55 +291,14 @@ var configureSuccessful = function () {
 	// the one specified, which might be a cleaner approach.
 	app.post("/data/story/", ensure.auth, function (req, res) {
 		var data = req.body;
-		ensure.isCircle(data.projectId, req, res, function() {
-			var story = copyStory(data);
-			story.createdBy = getCreatedBy(req);
-
+		var circleId = data.projectId;
+		ensure.isCircle(circleId, req, res, function() {
 			// Add the story if we're under the server limit.
-			checkStoryLimit(function () {
+			limits.users.story(circleId, guard(res, function () {
+				var story = copyStory(data);
+				story.createdBy = getCreatedBy(req);
 				addStory(story, res);
-			});
-
-			function getCircle (callback) {
-				db.docs.get(story.projectId, function (err, circle) {
-					if (err) {
-						return callback(err);
-					}
-
-					if (circle.type !== "circle") {
-						return callback("Sorry, the projectId specified is not a circle.");
-					}
-
-					callback(null, circle);
-				});
-			}
-
-			function checkStoryLimit(callback) {
-				async.parallel([db.settings.getAll, getCircle], guard(res, function (results) {
-					var settings = results[0];
-					var circle = results[1];
-					checkSettings(settings, circle, callback);
-				}));
-			}
-
-			function checkSettings(settings, circle, callback) {
-				if (!settings['limit-stories-per-circle'] || !circle.isAnonymous) {
-					// No limit!
-					return callback(); 
-				}
-
-				var limit = settings['limit-stories-per-circle'].value;
-				db.stories.countByCircleId(story.projectId, guard(res, function (count) {
-					if (count >= limit) {
-						// TODO: Add validation-specific instructions, after 
-						// we have an account validation mechanism.
-						res.send(403, "Sorry, this circle has reached its story-creation limit," +
-							" and no more can be made at the moment.");
-						return;
-					}
-					return callback();
-				}));
-			}
+			}));
 		});
 	});
 
