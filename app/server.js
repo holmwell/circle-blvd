@@ -819,76 +819,12 @@ var configureSuccessful = function () {
 
 	app.post('/payment/subscribe', ensure.auth, function (req, res) {
 		var data = req.body;
+		
 		var user = req.user;
-		var planId = undefined;
+		var stripeTokenId = data.stripeTokenId;
+		var planName = data.planName;
 
-		if (data.planName === 'Supporter') {
-			planId = '2014-06-supporter';
-		}
-		if (data.planName === 'Organizer') {
-			planId = '2014-06-organizer';
-		}
-		if (data.planName === 'Patron') {
-			planId = '2014-06-patron';
-		}
-		if (!planId) {
-			return res.send(400, "Invalid plan name");
-		}
-
-		var onSuccess = function (updatedUser) {
-			res.send(200, updatedUser.subscription);
-		};
-		var onError = function (err) {
-			// TODO: Technically it's possible to update
-			// the Stripe data and not update our own 
-			// data, so we should have a fall-back plan
-			// if that happens.
-			handleError(err, res);
-		};
-
-		if (!user.subscription) {
-			// First time here!
-			var newCustomer = {
-				description: user.name + " (" + user.id + ")",
-				card: data.stripeTokenId,
-				plan: planId,
-				metadata: {
-					"id": user.id
-				}
-			};
-
-			payment.stripe().customers.create(newCustomer, guard(res, function (customer) {
-				var sub = {};
-				sub.created = customer.created;
-				sub.customerId = customer.id;
-				sub.subscriptionId = customer.subscriptions.data[0].id;
-				sub.planName = data.planName;
-
-				user.subscription = sub;
-				db.users.update(user, onSuccess, onError);
-			}));
-		}
-		else {
-			// Returning customer
-			var customerId = user.subscription.customerId;
-			var subscriptionId = user.subscription.subscriptionId;
-			var newPlan = {
-				card: data.stripeTokenId,
-				plan: planId
-			};
-			payment.stripe().customers.updateSubscription(
-				customerId, subscriptionId, newPlan,
-				guard(res, function (subscription) {
-					var newSub = user.subscription;
-					newSub.subscriptionId = subscription.id;
-					newSub.planName = data.planName;
-					newSub.updated = subscription.start;
-
-					user.subscription = newSub;
-					db.users.update(user, onSuccess, onError);
-				})
-			);
-		}
+		payment.subscribe(user, stripeTokenId, planName, handle(res));
 	});
 
 	app.put('/payment/subscribe/cancel', ensure.auth, function (req, res) {

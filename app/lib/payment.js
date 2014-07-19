@@ -26,6 +26,89 @@ module.exports = function () {
 		stripe.charges.create(donation, callback);
 	};
 
+	var subscribe = function (user, stripeTokenId, planName, callback) {
+		var planId = undefined;
+		
+		if (planName === 'Supporter') {
+			planId = '2014-06-supporter';
+		}
+		if (planName === 'Organizer') {
+			planId = '2014-06-organizer';
+		}
+		if (planName === 'Patron') {
+			planId = '2014-06-patron';
+		}
+		if (!planId) {
+			var error = {
+				code: 400,
+				message: "Invalid plan name"
+			};
+			return callback(error);
+		}
+
+		var onSuccess = function (updatedUser) {
+			callback(null, updatedUser.subscription);
+		};
+		var onError = function (err) {
+			// TODO: Technically it's possible to update
+			// the Stripe data and not update our own 
+			// data, so we should have a fall-back plan
+			// if that happens.
+			callback(err);
+		};
+
+		if (!user.subscription) {
+			// First time here!
+			var newCustomer = {
+				description: user.name + " (" + user.id + ")",
+				card: stripeTokenId,
+				plan: planId,
+				metadata: {
+					"id": user.id
+				}
+			};
+
+			stripe.customers.create(newCustomer, function (err, customer) {
+				if (err) {
+					return callback(err);
+				}
+
+				var sub = {};
+				sub.created = customer.created;
+				sub.customerId = customer.id;
+				sub.subscriptionId = customer.subscriptions.data[0].id;
+				sub.planName = planName;
+
+				user.subscription = sub;
+				db.users.update(user, onSuccess, onError);
+			});
+		}
+		else {
+			// Returning customer
+			var customerId = user.subscription.customerId;
+			var subscriptionId = user.subscription.subscriptionId;
+			var newPlan = {
+				card: stripeTokenId,
+				plan: planId
+			};
+			stripe.customers.updateSubscription(
+				customerId, subscriptionId, newPlan,
+				function (err, subscription) {
+					if (err) {
+						return callback(err);
+					}
+					var newSub = user.subscription;
+					newSub.subscriptionId = subscription.id;
+					newSub.planName = planName;
+					newSub.updated = subscription.start;
+
+					user.subscription = newSub;
+					db.users.update(user, onSuccess, onError);
+				}
+			);
+		}
+	};
+
 	var cancelSubscription = function (user, callback) {
 		// Just delete the Stripe customer, since they
 		// only have one subscription anyway.
@@ -47,15 +130,13 @@ module.exports = function () {
 			};
 
 			user.subscription = null;
-			// TODO: Is this a security hole, updating the
-			// entire user like so? It is certainly large and 
-			// clumsy.
 			db.users.update(user, onSuccess, onError);
 		});
 	};
 
 	return {
 		createDonation: createDonation,
+		subscribe: subscribe,
 		cancelSubscription: cancelSubscription,
 		setApiKey: setApiKey,
 		stripe: getStripe
