@@ -5,7 +5,7 @@ var path     = require('path');
 var async    = require('async');
 var routes   = require('./routes');
 
-var auth   = require('./lib/auth.js');
+var auth   = require('./lib/auth-local.js');
 var ensure = require('./lib/auth-ensure.js');
 var limits = require('./lib/limits.js');
 var errors = require('./lib/errors.js');
@@ -63,71 +63,13 @@ var data = function (fn) {
 	return middleware;
 };
 
-// Authentication. 
-var initAuthentication = function () {
-	auth.usernameField('email');
-	auth.passwordField('password');
-	app.use(auth.initialize());
-	// Use passport.session() middleware to support
-	// persistent login sessions.
-	app.use(auth.session());
-};
-
-var authenticateLocal = function(req, res, next) {
-	var success = function() {
-		var dbUser = req.user;
-		var publicUser = {};
-
-		publicUser.id = dbUser.id;
-		publicUser.email = dbUser.email;
-		publicUser.name = dbUser.name;
-		publicUser.memberships = dbUser.memberships;
-		publicUser.notifications = dbUser.notifications;
-
-		db.users.recordSigninSuccess(dbUser, function (err, savedUser) {
-			if (err) {
-				errors.log(err);
-			}
-			res.send(200, publicUser);
-		});
-	};
-
-	var failure = function (error, user) {
-		errors.log(error);
-		var code = error.code || 401;
-		var message = "Unauthorized";
-		if (code === 429) {
-			message = "Too many attempts";
-		}
-
-		if (error.user) {
-			db.users.recordSigninFailure(error.user, function (err, savedUser) {
-				if (err) {
-					errors.log(err);
-				}
-				res.send(code, message);
-			});
-		}
-		else {
-			res.send(code, message);			
-		}
-	};
-
-	var middleware = auth.local(req, success, failure);
-	middleware(req, res, next);
-};
-
 var tryToCreateHttpsServer = function (callback) {
 	sslServer.create(app, callback);
 };
 
 var configureSuccessful = function () {
-	app.post('/auth/signin', authenticateLocal);
-
-	app.get('/auth/signout', function (req, res) {
-		req.logout();
-		res.send(204); // no content
-	});
+	app.post('/auth/signin', auth.signin);
+	app.get('/auth/signout', auth.signout);
 
 	// Data API: Protected by authorization system	
 	// User routes (account actions. requires login access)
@@ -911,8 +853,11 @@ app.configure(function() {
 			payment.setApiKey(stripeApiKey.value);
 		}
 
-		initAuthentication();
+		// Init authentication
+		auth.attach(app);
+		// Routes
 		app.use(app.router);
+		// Catch errors
 		app.use(function (err, req, res, next) {
 			if (err) {
 				return errors.handle(err, res);
