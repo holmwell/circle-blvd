@@ -96,53 +96,7 @@ var configureSuccessful = function () {
 	app.post("/data/:circleId/member", ensure.circleAdmin, function (req, res) {
 		var circleId = req.params.circleId;
 		var member = req.body;
-
-		// TODO: Get the memberships from the server side.
-		// The client should only need to specify user data
-		// and the group names.
-		var addMembershipsToAccount = function (account) {
-			member.memberships.forEach(function (newMembership) {
-				// Basic data validation
-				if (newMembership.circle === circleId) {
-					var m = {};
-					m.circle = newMembership.circle;
-					m.group = newMembership.group;
-					m.level = newMembership.level;
-					account.memberships.push(m);
-				}
-			});
-
-			db.users.update(account, 
-				function (body) {
-					res.send(201);
-				},
-				function (err) {
-					errors.handle(err, res);
-				}
-			);
-		};
-
-		db.users.findByEmail(member.email, guard(res, function (userAccount) {
-			if (userAccount) {
-				addMembershipsToAccount(userAccount);
-			}
-			else {
-				var isReadOnly = false;
-				var memberships = [];
-				db.users.add(
-					member.name,
-					member.email, 
-					member.password,
-					[], // no memberships at first
-					member.isReadOnly,
-					function (user) {
-						addMembershipsToAccount(user);
-					}, 
-					function (err) {
-						errors.handle(err, res);
-					});
-			}
-		}));
+		db.users.addMembership(member, circleId, handle(res));
 	});
 
 	app.get("/data/:circleId/members/names", ensure.circle, function (req, res) {

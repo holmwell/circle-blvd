@@ -252,6 +252,58 @@ module.exports = function () {
 		});
 	};
 
+	var addMembership = function (member, circleId, callback) {
+		// TODO: Get the memberships from the server side.
+		// The client should only need to specify user data
+		// and the group names.
+		var addMembershipsToAccount = function (account) {
+			member.memberships.forEach(function (newMembership) {
+				// Basic data validation
+				if (newMembership.circle === circleId) {
+					var m = {};
+					m.circle = newMembership.circle;
+					m.group = newMembership.group;
+					m.level = newMembership.level;
+					account.memberships.push(m);
+				}
+			});
+
+			updateUser(account, 
+				function (body) {
+					callback();
+				},
+				function (err) {
+					callback(err);
+				}
+			);
+		};
+
+		findUserByEmail(member.email, function (err, userAccount) {
+			if (err) {
+				return callback(err);
+			}
+			if (userAccount) {
+				addMembershipsToAccount(userAccount);
+			}
+			else {
+				var isReadOnly = false;
+				var memberships = [];
+				db.users.add(
+					member.name,
+					member.email, 
+					member.password,
+					[], // no memberships at first
+					member.isReadOnly,
+					function (user) {
+						addMembershipsToAccount(user);
+					}, 
+					function (err) {
+						callback(err);
+					});
+			}
+		});
+	};
+
 	var removeMembership = function (reqUser, circleId, callback) {
 		findUserById(reqUser.id, function (err, user) {
 			if (err) {
@@ -280,6 +332,7 @@ module.exports = function () {
 	return { 
 		add: addUser,
 		remove: removeUser,
+		addMembership: addMembership,
 		removeMembership: removeMembership,
 		findByEmail: findUserByEmail,
 		findById: findUserById, 
