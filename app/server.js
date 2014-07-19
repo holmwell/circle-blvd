@@ -108,33 +108,7 @@ var configureSuccessful = function () {
 	app.put("/data/initialize", initRoutes.init);
 
 	// Settings!
-	app.get("/data/settings", function (req, res) { // public
-		db.settings.get(guard(res, function (settings) {
-			db.settings.getAuthorized(function (err, privateSettings) {
-				if (err) {
-					// Ignore
-					return res.send(200, settings);
-				}
-				// Computed settings.
-				var smtpEnabledSetting = {
-					type: "setting",
-					name: "smtp-enabled",
-					visibility: "public"
-				};
-
-				if (privateSettings['smtp-login'] 
-					&& privateSettings['smtp-login'].value) {
-					smtpEnabledSetting.value = true;
-				}
-				else {
-					smtpEnabledSetting.value = false;
-				}
-
-				settings['smtp-enabled'] = smtpEnabledSetting;
-				res.send(200, settings);
-			});
-		}));
-	});
+	app.get("/data/settings", send(db.settings.get)); // public
 
 	// TODO: This is not used. Assess.
 	app.get("/data/settings/private", 

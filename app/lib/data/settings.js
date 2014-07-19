@@ -18,7 +18,35 @@ module.exports = function () {
 	}
 
 	var getSettings = function (callback) {
-		getSettingsView("public", callback);
+		getSettingsView("public", function (err, settings) {
+			if (err) {
+				return callback(err);
+			}
+
+			// Append public settings computed from private settings.
+			getAuthorizedSettings(function (err, privateSettings) {
+				if (err) {
+					// Ignore
+					return callback(null, settings);
+				}
+				var smtpEnabledSetting = {
+					type: "setting",
+					name: "smtp-enabled",
+					visibility: "public"
+				};
+
+				if (privateSettings['smtp-login'] 
+					&& privateSettings['smtp-login'].value) {
+					smtpEnabledSetting.value = true;
+				}
+				else {
+					smtpEnabledSetting.value = false;
+				}
+
+				settings['smtp-enabled'] = smtpEnabledSetting;
+				callback(null, settings);
+			});
+		});
 	};
 
 	var getAuthorizedSettings = function (callback) {
