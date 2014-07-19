@@ -71,15 +71,13 @@ var configureSuccessful = function () {
 	app.post('/auth/signin', auth.signin);
 	app.get('/auth/signout', auth.signout);
 
-	// Data API: Protected by authorization system	
 	// User routes (account actions. requires login access)
 	app.get("/data/user", ensure.auth, userRoutes.user);
-
 	app.put("/data/user/name", ensure.auth, userRoutes.updateName);
 	app.put("/data/user/email", ensure.auth, userRoutes.updateEmail);
 	app.put("/data/user/notificationEmail", ensure.auth, userRoutes.updateNotificationEmail)
-
 	app.put("/data/user/password", ensure.auth, userRoutes.updatePassword);
+
 
 	// User routes (circle actions. requires admin access)
 	app.get("/data/:circleId/members", ensure.circleAdmin, function (req, res) {
@@ -106,6 +104,7 @@ var configureSuccessful = function () {
 
 	// Init routes
 	app.put("/data/initialize", initRoutes.init);
+
 
 	// Settings!
 	app.get("/data/settings", send(db.settings.get)); // public
@@ -185,18 +184,7 @@ var configureSuccessful = function () {
 	// TODO: We'll turn groups on at a later time, as we
 	// transition toward hosting larger groups, but in the 
 	// mean time this is just a security hole.
-	// 
-	// var addGroup = function (group, res) {
-	// 	db.groups.add(group, 
-	// 		function (group) {
-	// 			res.send(200, group);
-	// 		},
-	// 		function (err) {
-	// 			errors.handle(err, res);
-	// 		}
-	// 	);
-	// };
-
+	//
 	// TODO: Ensure circle access
 	// app.post("/data/group", ensureAdministrator, function (req, res) {
 	// 	var data = req.body;
@@ -205,7 +193,7 @@ var configureSuccessful = function () {
 	// 	group.projectId = data.projectId;
 	// 	group.name = data.name;
 
-	// 	addGroup(group, res);
+	// 	db.groups.add(group, handle(res));
 	// });
 
 	// // TODO: Ensure circle access
@@ -279,7 +267,6 @@ var configureSuccessful = function () {
 	};
 
 	var addStory = function (story, res) {
-		var storyFor2ndTry = copyStory(story);
 		db.stories.add(story, handle(res));
 	};
 
