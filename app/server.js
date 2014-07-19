@@ -21,21 +21,10 @@ var userRoutes 	= require('./routes/user');
 var initRoutes 	= require('./routes/init');
 
 var couchSessionStore = require('./lib/couch-session-store.js');
-
 var app = express();
 
-var initAuthentication = function () {
-	auth.usernameField('email');
-	auth.passwordField('password');
-	app.use(auth.initialize());
-	// Use passport.session() middleware to support
-	// persistent login sessions.
-	app.use(auth.session());
-};
-
-
 // Middleware for data access
-var guard  = errors.guard;
+var guard = errors.guard;
 
 var handle = function (res) {
 	var fn = guard(res, function (data) {
@@ -72,6 +61,15 @@ var data = function (fn) {
 };
 
 // Authentication. 
+var initAuthentication = function () {
+	auth.usernameField('email');
+	auth.passwordField('password');
+	app.use(auth.initialize());
+	// Use passport.session() middleware to support
+	// persistent login sessions.
+	app.use(auth.session());
+};
+
 var authenticateLocal = function(req, res, next) {
 	var success = function() {
 		var dbUser = req.user;
