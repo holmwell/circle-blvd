@@ -3,7 +3,7 @@ var fs    = require('fs');
 var https = require('https');
 
 var db = {};
-db.settings = require('./data-settings.js');
+db.settings = require('./data/settings.js');
 
 var httpsServer = undefined;
 

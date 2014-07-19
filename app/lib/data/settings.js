@@ -1,5 +1,5 @@
 var couch = {};
-couch.settings = require('./couch-settings.js');
+couch.settings = require('./couch/settings.js');
 
 module.exports = function () {
 	
