@@ -101,22 +101,7 @@ var configureSuccessful = function () {
 
 	app.get("/data/:circleId/members/names", ensure.circle, function (req, res) {
 		var circleId = req.params.circleId;
-		db.users.findNamesByCircleId(circleId, guard(res, function (names) {
-			var ignoreCase = function (a, b) {
-				a = a.toLowerCase();
-				b = b.toLowerCase();
-				if (a < b) {
-					return -1;
-				}
-				if (a > b) {
-					return 1;
-				}
-				return 0;
-			};
-
-			names = names.sort(ignoreCase);
-			res.send(200, names);
-		}));
+		db.users.findNamesByCircleId(circleId, handle(res));
 	});
 
 	// Init routes

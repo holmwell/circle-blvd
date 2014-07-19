@@ -32,7 +32,24 @@ module.exports = function () {
 	};
 
 	var findNamesByCircleId = function (circleId, callback) {
-		couch.users.findNamesByCircleId(circleId, callback);
+		couch.users.findNamesByCircleId(circleId, function (err, names) {
+			if (err) {
+				return callback(err);
+			}
+			var ignoreCase = function (a, b) {
+				a = a.toLowerCase();
+				b = b.toLowerCase();
+				if (a < b) {
+					return -1;
+				}
+				if (a > b) {
+					return 1;
+				}
+				return 0;
+			};
+			names = names.sort(ignoreCase);
+			callback(null, names);
+		});
 	};
 
 	var findUsersById = function (idArray, callback) {
