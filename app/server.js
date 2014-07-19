@@ -142,22 +142,10 @@ var configureSuccessful = function () {
 
 	app.get('/auth/signout', function (req, res) {
 		req.logout();
-		// TODO: How to destroy sessions?
-		// if (req.session) {
-		// 	req.session.destroy();	
-		// }
 		res.send(204); // no content
 	});
 
-	// Data API: Protected by authorization system
-
-	// Users routes (global actions. requires admin access)
-	
-	// TODO: Mainframe-access only, when the time comes.
-	// app.get("/data/users", ensureAdministrator, usersRoutes.list);
-	// app.post("/data/user", ensureAdministrator, usersRoutes.add);
-	// app.put("/data/user/remove", ensureAdministrator, usersRoutes.remove);
-	
+	// Data API: Protected by authorization system	
 	// User routes (account actions. requires login access)
 	app.get("/data/user", ensure.auth, userRoutes.user);
 
