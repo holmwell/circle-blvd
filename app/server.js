@@ -43,6 +43,42 @@ var handleError = function (err, res) {
 	res.send(status, message);
 };
 
+// Middleware for data access
+var send = function (fn) {
+	var middleware = function (req, res, next) {
+		fn(function (err, data) {
+			if (err) {
+				return handleError(err, res);
+			}
+			res.send(200, data);
+		});
+	};
+
+	return middleware;
+};
+
+var data = function (fn) {
+	// A generic guard for callbacks. Call the
+	// fn parameter. If there is an error, pass
+	// it up to the error handler. Otherwise
+	// append the result to the request object,
+	// for the next middleware in line.
+	var middleware = function (req, res, next) {
+		fn(function (err, data) {
+			if (err) {
+				return handleError(err, res);
+			}
+			if (req.data) {
+				// TODO: programmer error
+			}
+			req.data = data;
+			next();
+		});
+	};
+
+	return middleware;
+};
+
 // Authentication. 
 var authenticateLocal = function(req, res, next) {
 	var success = function() {
@@ -335,14 +371,7 @@ var configureSuccessful = function () {
 		});
 	});
 
-	app.get("/data/circles/all", ensure.mainframe, function (req, res) {
-		db.circles.getAll(function (err, circles) {
-			if (err) {
-				return handleError(err, res);
-			}
-			res.send(200, circles);
-		})
-	});
+	app.get("/data/circles/all", ensure.mainframe, send(db.circles.getAll));
 
 	var addStoriesForNewCircle = function (newCircle, adminAccount, callback) {
 		
@@ -1501,14 +1530,7 @@ var configureSuccessful = function () {
 		});
 	});
 
-	app.get("/data/waitlist", ensure.mainframe, function (req, res) {
-		db.waitlist.get(function (err, waitlist) {
-			if (err) {
-				return handleError(err, res);
-			}
-			res.send(200, waitlist);
-		});
-	});
+	app.get("/data/waitlist", ensure.mainframe, send(db.waitlist.get));
 
 	// The secret to bridging Angular and Express in a 
 	// way that allows us to pass any path to the client.
@@ -1627,6 +1649,12 @@ app.configure(function() {
 
 		initAuthentication();
 		app.use(app.router);
+		app.use(function (err, req, res, next) {
+			if (err) {
+				return handleError(err, res);
+			}
+			// TODO: Should not get here.
+		});
 		configureSuccessful();
 	};
 
