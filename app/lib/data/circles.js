@@ -21,6 +21,31 @@ module.exports = function () {
 		});
 	};
 
+	var countCreatedByUser = function (user, callback) {
+		couch.circles.findByUser(user, function (err, rawCircles) {
+			if (err) {
+				return callback(err);
+			}
+
+			// TODO: Need to remove dups from the view
+			var circles = {};
+			rawCircles.forEach(function (circle) {
+				circles[circle._id] = circle;
+			});
+
+			var circlesCreatedCount = 0;
+			for (var key in circles) {
+				var circle = circles[key];
+				if (circle.createdBy
+				&& circle.createdBy.id === user._id) {
+					circlesCreatedCount++;
+				}
+			}
+
+			callback(null, circlesCreatedCount);
+		});
+	};
+
 	var updateCircle = function (circle, callback) {
 		couch.circles.update(circle, callback);
 	};
@@ -38,6 +63,7 @@ module.exports = function () {
 		findByUser: function (user, callback) {
 			couch.circles.findByUser(user, callback);
 		},
+		countByUser: countCreatedByUser,
 		update: updateCircle
 	};
 }(); // closure

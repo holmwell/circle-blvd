@@ -33,7 +33,22 @@ module.exports = function () {
 		}
 	};
 
+	var checkUserCircleLimit = function (req, res, next) {
+		db.circles.countByUser(req.user, guard(res, function (count) {
+			// TODO: Put this hard-coded value into the settings.
+			var maxCircleCount = 4;
+			if (count >= maxCircleCount) {
+				return res.send(403, "Sorry, you can only create " + maxCircleCount + " circles.");
+			}
+
+			next();
+		}));
+	};
+
 	return {
-		circle: checkCircleLimit
+		circle: checkCircleLimit,
+		users: {
+			circle: checkUserCircleLimit
+		}
 	};
 }(); // closure

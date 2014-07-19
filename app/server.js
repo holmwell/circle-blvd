@@ -300,43 +300,22 @@ var configureSuccessful = function () {
 		db.circles.findByUser(req.user, handle(res));
 	});
 
-	app.get("/data/circles/all", ensure.mainframe, send(db.circles.getAll));
+	app.get("/data/circles/all", 
+		ensure.mainframe, 
+		send(db.circles.getAll));
 
-
-	app.post("/data/circle", ensure.auth, limits.circle, function (req, res) {
+	app.post("/data/circle", 
+		ensure.auth, limits.circle, limits.users.circle, function (req, res) {
+		//
 		var circleName = req.body.name;
-		var admin = req.user;
+		var user = req.user;
 
 		if (!circleName) {
-			return res.send(400, "A 'name' property is required, for naming the circle.");
+			var message = "A 'name' property is required, for naming the circle.";
+			return res.send(400, message);
 		}
 
-		var addCircle = function () {
-			db.circles.findByUser(req.user, guard(res, function (rawCircles) {
-				// TODO: Need to remove dups from the view
-				var circles = {};
-				rawCircles.forEach(function (circle) {
-					circles[circle._id] = circle;
-				});
-
-				var circlesCreatedCount = 0;
-				for (var key in circles) {
-					var circle = circles[key];
-					if (circle.createdBy
-					&& circle.createdBy.id === req.user._id) {
-						circlesCreatedCount++;
-					}
-				}
-
-				// TODO: Put this hard-coded value into the settings.
-				var maxCircleCount = 4;
-				if (circlesCreatedCount >= maxCircleCount) {
-					return res.send(403, "Sorry, you can only create " + maxCircleCount + " circles.");
-				}
-
-				db.circles.create(circleName, admin.email, handle(res));
-			}));
-		}(); // closure
+		db.circles.create(circleName, user.email, handle(res));
 	});
 
 	app.post("/data/circle/admin", ensure.mainframe, function (req, res) {
@@ -344,7 +323,9 @@ var configureSuccessful = function () {
 		var admin = req.body.admin;
 
 		if (!admin.email) {
-			return res.send(400, "An email address for an administrative user is required when making a circle.");
+			var message = "An email address for an administrative user " +
+				"is required when making a circle.";
+			return res.send(400, message);
 		}
 
 		db.circles.create(circle.name, admin.email, handle(res));
