@@ -811,14 +811,10 @@ var configureSuccessful = function () {
 
 	app.post('/payment/donate', function (req, res) {
 		var data = req.body;
+		var stripeTokenId = data.stripeTokenId;
+		var amount = data.stripeAmount
 
-		payment.stripe().charges.create({
-			amount: data.stripeAmount,
-			currency: "usd",
-			card: data.stripeTokenId,
-			description: "Donation",
-			statement_description: "Donation"
-		}, handle(res));
+		payment.createDonation(stripeTokenId, amount, handle(res));
 	});
 
 	app.post('/payment/subscribe', ensure.auth, function (req, res) {

@@ -13,7 +13,20 @@ module.exports = function () {
 		return stripe;
 	}
 
+	var createDonation = function (stripeTokenId, stripeAmount, callback) {
+		var donation = {
+			amount: stripeAmount,
+			currency: "usd",
+			card: stripeTokenId,
+			description: "Donation",
+			statement_description: "Donation"
+		};
+
+		stripe.charges.create(donation, callback);
+	};
+
 	return {
+		createDonation: createDonation,
 		setApiKey: setApiKey,
 		stripe: getStripe
 	};
