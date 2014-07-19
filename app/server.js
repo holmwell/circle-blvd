@@ -5,11 +5,12 @@ var path     = require('path');
 var async    = require('async');
 var routes   = require('./routes');
 
-var auth     = require('./lib/auth.js');
-var ensure   = require('./lib/auth-ensure.js');
-var errors   = require('./lib/errors.js');
-var db       = require('./lib/dataAccess.js').instance();
-var notify   = require('./lib/notify.js');
+var auth   = require('./lib/auth.js');
+var ensure = require('./lib/auth-ensure.js');
+var limits = require('./lib/limits.js');
+var errors = require('./lib/errors.js');
+var db     = require('./lib/dataAccess.js').instance();
+var notify = require('./lib/notify.js');
 
 var sslServer = require('./lib/https-server.js');
 var payment   = require('./lib/payment.js')();
@@ -34,15 +35,7 @@ var initAuthentication = function () {
 
 
 // Middleware for data access
-var guard = function (res, callback) {
-	var fn = function (err, data) {
-		if (err) {
-			return errors.handle(err, res);
-		}
-		callback(data);
-	};
-	return fn;
-};
+var guard  = errors.guard;
 
 var handle = function (res) {
 	var fn = guard(res, function (data) {
@@ -310,35 +303,7 @@ var configureSuccessful = function () {
 	app.get("/data/circles/all", ensure.mainframe, send(db.circles.getAll));
 
 
-	var checkCircleLimit = function (res, next) {
-		checkLimit(next);
-
-		function checkLimit (callback) {
-			db.settings.getAll(guard(res, function (settings) {
-				checkSettings(settings, callback);
-			}));
-		}
-
-		function checkSettings(settings, callback) {
-			if (!settings['limit-circles']) {
-				// No limit!
-				return callback(); 
-			}
-
-			var limit = settings['limit-circles'].value;
-			db.circles.count(guard(res, function (count) {
-				if (count >= limit) {
-					res.send(403, "Sorry, our computers have reached their circle creation limit," +
-						" and no more can be made, by anyone, at this time.");
-					return;
-				}
-				return callback();
-			}));
-		}
-	};
-
-
-	app.post("/data/circle", ensure.auth, function (req, res) {
+	app.post("/data/circle", ensure.auth, limits.circle, function (req, res) {
 		var circleName = req.body.name;
 		var admin = req.user;
 
@@ -346,10 +311,7 @@ var configureSuccessful = function () {
 			return res.send(400, "A 'name' property is required, for naming the circle.");
 		}
 
-		// Add the circle if we're under the server limit.
-		checkCircleLimit(res, addCircle);
-
-		function addCircle() {
+		var addCircle = function () {
 			db.circles.findByUser(req.user, guard(res, function (rawCircles) {
 				// TODO: Need to remove dups from the view
 				var circles = {};
@@ -374,7 +336,7 @@ var configureSuccessful = function () {
 
 				db.circles.create(circleName, admin.email, handle(res));
 			}));
-		}
+		}(); // closure
 	});
 
 	app.post("/data/circle/admin", ensure.mainframe, function (req, res) {
@@ -826,44 +788,41 @@ var configureSuccessful = function () {
 		payment.unsubscribe(user, handle(res));
 	});
 
-	app.post("/data/signup/now", function (req, res) {
+	app.post("/data/signup/now", limits.circle, function (req, res) {
 		var data = req.body;
 
-		// Add the circle if we're under the server limit.
-		checkCircleLimit(res, function () {
-			var proposedAccount = {
-				name: data.name,
-				email: data.email,
-				password: data.password
-			};
+		var proposedAccount = {
+			name: data.name,
+			email: data.email,
+			password: data.password
+		};
 
-			var proposedCircle = {
-				name: data.circle
-			};
+		var proposedCircle = {
+			name: data.circle
+		};
 
-			var userAccountCreated = function (newAccount) {
-				db.circles.create(proposedCircle.name, newAccount.email, handle(res));
-			};
+		var userAccountCreated = function (newAccount) {
+			db.circles.create(proposedCircle.name, newAccount.email, handle(res));
+		};
 
-			db.users.findByEmail(proposedAccount.email, guard(res, function (accountExists) {
-				if (accountExists) {
-					return res.send(400, "That email address is already being used. Maybe try signing in?")
-				}
+		db.users.findByEmail(proposedAccount.email, guard(res, function (accountExists) {
+			if (accountExists) {
+				return res.send(400, "That email address is already being used. Maybe try signing in?")
+			}
 
-				var isReadOnly = false;
+			var isReadOnly = false;
 
-				db.users.add(
-					proposedAccount.name,
-					proposedAccount.email, 
-					proposedAccount.password,
-					[], // no memberships at first
-					isReadOnly,
-					userAccountCreated, 
-					function (err) {
-						errors.handle(err, res);
-					});
-			}));
-		});
+			db.users.add(
+				proposedAccount.name,
+				proposedAccount.email, 
+				proposedAccount.password,
+				[], // no memberships at first
+				isReadOnly,
+				userAccountCreated, 
+				function (err) {
+					errors.handle(err, res);
+				});
+		}));
 	});
 
 	app.post("/data/signup/waitlist", function (req, res) {
