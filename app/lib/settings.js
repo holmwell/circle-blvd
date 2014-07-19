@@ -22,10 +22,6 @@ module.exports = function () {
 		//   private: visible to administrators
 		//   secret: visible to the database and computer memory
 		var settings = [{
-			name: "demo",
-			value: false,
-			visibility: "public"
-		},{
 			name: "limit-circles",
 			value: 300,
 			visibility: "private"

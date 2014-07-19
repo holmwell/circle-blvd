@@ -149,10 +149,6 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 	var init = function () {
 		$scope.user = {};
 
-		if (session.settings && session.settings['demo']) {
-			$scope.isDemo = session.settings['demo'].value;	
-		}
-
 		var name = signInName.get();
 		if (name) {
 			$scope.user.email = name;

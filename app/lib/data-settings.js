@@ -12,45 +12,12 @@ module.exports = function () {
 		couch.settings.add(newSetting, callback);
 	};
 
-	var handleNewDemoSetting = function (newValue, success, failure) {
-		// TODO: This should probably be in a different place, like
-		// a settings-specific file.
-		var demoEmail = "demo@circleblvd.org";
-		if (newValue) {
-			// Demo mode is turned on!
-			// name, email, password, memberships, isReadOnly, success, failure
-			addUser("Public Demo", demoEmail, "public", [], true, success, failure);
-		}
-		else {
-			// Demo mode is turned off!
-			findUserByEmail(demoEmail, function (err, user) {
-				if (err) {
-					return failure(err);
-				}
-				removeUser(user, success, failure);
-			});
-		}
-	};
-
 	var saveSetting = function(setting, success, failure) {
 		couch.settings.update(setting, function (err, newSetting) {
 			if (err) {
 				return failure(err);
 			}
-
-			if (newSetting.name === "demo") {
-				// TODO: The transactional nature of this code
-				// has the potential to break things, but they 
-				// can probably be fixed through the admin panel.
-				return handleNewDemoSetting(newSetting.value, 
-					function() {
-						success(setting);
-					},
-					failure);
-			}
-			else {
-				return success(newSetting);
-			}
+			return success(newSetting);
 		});
 	};
 
