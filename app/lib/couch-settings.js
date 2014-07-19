@@ -12,22 +12,6 @@ module.exports = function () {
 		couch.view("settings/" + viewName, options, callback);
 	};
 
-	var getSettings = function (callback) {
-		getSettingsView("public", callback);
-	};
-
-	var getAuthorizedSettings = function (callback) {
-		getSettingsView("authorized", callback);
-	};
-
-	var getPrivateSettings = function (callback) {
-		getSettingsView("private", callback);
-	};
-
-	var getAllSettings = function (callback) {
-		getSettingsView("all", callback);
-	};
-
 	var addSetting = function(setting, callback) {
 		setting.type = "setting";
 		database.insert(setting, callback);
@@ -69,10 +53,7 @@ module.exports = function () {
 
 	return {
 		add: addSetting,
-		get: getSettings,
-		getAuthorized: getAuthorizedSettings,
-		getPrivate: getPrivateSettings,
-		getAll: getAllSettings,
+		getView: getSettingsView,
 		update: updateSetting
 	};
 }(); // closure
