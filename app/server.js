@@ -897,24 +897,8 @@ var configureSuccessful = function () {
 			return res.send(204);
 		}
 
-		// Just delete the Stripe customer, since they
-		// only have one subscription anyway.
-		var customerId = user.subscription.customerId;
-		payment.stripe().customers.del(customerId, guard(res, function (confirm) {
-			var onSuccess = function (updatedUser) {
-				res.send(200, updatedUser.subscription);
-			};
-			var onError = function (err) {
-				// TODO: Technically it's possible to update
-				// the Stripe data and not update our own 
-				// data, so we should have a fall-back plan
-				// if that happens.
-				handleError(err, res);
-			};
-
-			user.subscription = null;
-			db.users.update(user, onSuccess, onError);
-		}));
+		// TODO: Pass in the user id and the subscription, that's it.
+		payment.cancelSubscription(user, handle(res));
 	});
 
 	app.post("/data/signup/now", function (req, res) {
