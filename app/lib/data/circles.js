@@ -1,5 +1,5 @@
-var couch = require('./couch.js');
-couch.circles = require('./couch-circles.js');
+var couch = require('./couch/couch.js');
+couch.circles = require('./couch/circles.js');
 
 module.exports = function () {
 

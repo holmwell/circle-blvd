@@ -1,4 +1,4 @@
-var waitlist = require('./couch-waitlist.js');
+var waitlist = require('./couch/waitlist.js');
 
 module.exports = function () {
 	return {

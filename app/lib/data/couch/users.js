@@ -1,5 +1,4 @@
-var encrypt = require('./encrypt.js');
-
+var encrypt = require('../../encrypt.js');
 var couch = require('./couch.js');
 var database = couch.db;
 

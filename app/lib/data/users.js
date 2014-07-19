@@ -1,8 +1,8 @@
 var uuid    = require('node-uuid');
-var encrypt = require('./encrypt.js');
+var encrypt = require('../encrypt.js');
 
-var couch = require('./couch.js');
-var things = require('./couch-users.js');
+var couch = require('./couch/couch.js');
+var things = require('./couch/users.js');
 couch.users = things.users;
 couch.passwords = things.passwords;
 

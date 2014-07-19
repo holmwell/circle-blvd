@@ -1,7 +1,7 @@
 var uuid = require('node-uuid');
-var consumer = require('./queue-consumer.js');
-var couch = require('./couch.js');
-couch.stories = require('./couch-stories.js');
+var consumer = require('../queue-consumer.js');
+var couch = require('./couch/couch.js');
+couch.stories = require('./couch/stories.js');
 
 var events  = require('events');
 

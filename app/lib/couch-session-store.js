@@ -1,5 +1,5 @@
 var designDocs = require('./design-docs-session.js');
-var LocalDatabase = require('./local-database.js');
+var LocalDatabase = require('./data/couch/local-database.js');
 
 module.exports = function (session) {
 	var database = LocalDatabase('circle-blvd-sessions', designDocs);

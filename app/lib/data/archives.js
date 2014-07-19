@@ -1,6 +1,6 @@
-var couch      = require('./couch.js');
-couch.stories  = require('./couch-stories.js');
-couch.archives = require('./couch-archives.js');
+var couch      = require('./couch/couch.js');
+couch.stories  = require('./couch/stories.js');
+couch.archives = require('./couch/archives.js');
 
 module.exports = function () {
 

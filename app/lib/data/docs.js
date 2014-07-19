@@ -1,4 +1,4 @@
-var couch = require('./couch.js');
+var couch = require('./couch/couch.js');
 
 module.exports = function () {
 	return {
