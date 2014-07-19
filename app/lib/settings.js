@@ -92,7 +92,10 @@ module.exports = function () {
 			}
 		};
 
-		db.settings.getAll(function (savedSettings) {
+		db.settings.getAll(function (err, savedSettings) {
+			if (err) {
+				return callback(err);
+			}
 			// var savedSetting;
 			// var defaultSetting;
 			var settingFound;
@@ -113,16 +116,14 @@ module.exports = function () {
 
 				if (!settingFound) {
 					var addSettingToDatabase = function (settingToAdd) {
-						db.settings.add(settingToAdd, 
-							function (body) {
-								settingReady(settingToAdd);
-							},
-							function (err) {
-								callback({
+						db.settings.add(settingToAdd, function (err, body) {
+							if (err) {
+								return callback({
 									message: "Could not set setting: " + settingToAdd.name
 								});
 							}
-						);
+							settingReady(settingToAdd);
+						});
 					}(settingsTable[defaultName]);				
 				}
 				else {

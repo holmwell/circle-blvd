@@ -285,7 +285,11 @@ var configureSuccessful = function () {
 	// Settings!
 	app.get("/data/settings", function (req, res) { // public
 		var onSuccess = function (settings) {
-			db.settings.getAuthorized(function (privateSettings) {
+			db.settings.getAuthorized(function (err, privateSettings) {
+				if (err) {
+					// Ignore
+					return res.send(200, settings);
+				}
 				// Computed settings.
 				var smtpEnabledSetting = {
 					type: "setting",
@@ -303,10 +307,6 @@ var configureSuccessful = function () {
 
 				settings['smtp-enabled'] = smtpEnabledSetting;
 				res.send(200, settings);
-			},
-			function (err) {
-				// Ignore
-				res.send(200, settings);
 			});
 		};
 
@@ -314,50 +314,36 @@ var configureSuccessful = function () {
 			handleError(err, res);
 		};
 
-		db.settings.get(onSuccess, onFailure);
+		db.settings.get(function (err, settings) {
+			if (err) {
+				return onFailure(err);
+			}
+			return onSuccess(settings);
+		});
 	});
 
-	app.get("/data/settings/private", ensure.mainframe, function (req, res) {
-		var onSuccess = function (settings) {
-			res.send(200, settings);
-		};
+	// TODO: This is not used. Assess.
+	app.get("/data/settings/private", 
+		ensure.mainframe, send(db.settings.getPrivate)); 
 
-		onFailure = function (err) {
-			handleError(err, res);
-		};
-
-		db.settings.getPrivate(onSuccess, onFailure);
-	});
-
-	app.get("/data/settings/authorized", ensure.mainframe, function (req, res) {
-		var onSuccess = function (settings) {
-			res.send(200, settings);
-		};
-
-		onFailure = function (err) {
-			handleError(err, res);
-		};
-
-		db.settings.getAuthorized(onSuccess, onFailure);
-	});
+	app.get("/data/settings/authorized", 
+		ensure.mainframe, send(db.settings.getAuthorized));
 
 	app.put("/data/setting", ensure.mainframe, function (req, res) {
 		var data = req.body;
-		db.settings.save(data, 
-			function (setting) {
-				if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
-					// TODO: Tell the client if we started the server?
-					tryToCreateHttpsServer();
-				}
-				if (setting.name === 'stripe-secret-key') {
-					payment.setApiKey(setting.value);
-				}
-				res.send(200);
-			},
-			function (err) {
-				handleError(err, res);
+		db.settings.update(data, function (err, setting) {
+			if (err) {
+				return handleError(err, res);
 			}
-		);
+			if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
+				// TODO: Tell the client if we started the server?
+				tryToCreateHttpsServer();
+			}
+			if (setting.name === 'stripe-secret-key') {
+				payment.setApiKey(setting.value);
+			}
+			res.send(200);
+		});
 	});
 
 	// Circles!
@@ -553,13 +539,12 @@ var configureSuccessful = function () {
 		checkLimit(next);
 
 		function checkLimit (callback) {
-			db.settings.getAll(onSuccess, onError);
-			function onSuccess(settings) {
+			db.settings.getAll(function (err, settings) {
+				if (err) {
+					return handleError(err, res);
+				}
 				checkSettings(settings, callback);
-			} 
-			function onError(err) {
-				handleError(err, res);
-			};
+			});
 		}
 
 		function checkSettings(settings, callback) {
@@ -806,7 +791,15 @@ var configureSuccessful = function () {
 		var message = params.message;
 		var subjectPrefix = params.subjectPrefix;
 
-		db.settings.getAll(function (settings) {
+		db.settings.getAll(function (err, settings) {
+			if (err) {
+				return callback({
+					status: 501,
+					message: "Notifcation failed",
+					error: err
+				});
+			}
+
 			var smtpService = settings['smtp-service'];
 			var smtpUsername = settings['smtp-login'];
 			var smtpPassword = settings['smtp-password'];
@@ -1013,15 +1006,6 @@ var configureSuccessful = function () {
 		return createdBy;
 	};
 
-	// for async operations
-	var getSettings = function (callback) {
-		db.settings.getAll(function onSuccess(settings) {
-			callback(null, settings);
-		}, function onError(err) {
-			callback(err);
-		});
-	};
-
 	// TODO: Ensure that the circleId specified in this
 	// story is valid. Otherwise people can hack around
 	// ways of accessing stories.
@@ -1056,7 +1040,7 @@ var configureSuccessful = function () {
 			}
 
 			function checkStoryLimit(callback) {
-				async.parallel([getSettings, getCircle], function (err, results) {
+				async.parallel([db.settings.getAll, getCircle], function (err, results) {
 					if (err) {
 						return handleError(err, res);
 					}

@@ -17,7 +17,11 @@ exports.init = function (req, res, app) {
 	var handleOptionalSettings = function (fnCallback) {
 
 		var tasks = [];
-		db.settings.getAll(function onSuccess (defaultSettings) {
+		db.settings.getAll(function (err, defaultSettings) {
+			if (err) {
+				return fnCallback(err);
+			}
+
 			if (ssl && ssl.certPath && ssl.certKey) {
 				var sslSettings = [];
 
@@ -97,9 +101,6 @@ exports.init = function (req, res, app) {
 			else {
 				fnCallback();
 			}
-		},
-		function onError (err) {
-			fnCallback(err);
 		});
 	};
 

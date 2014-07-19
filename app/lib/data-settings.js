@@ -2,20 +2,14 @@ var couch = {};
 couch.settings = require('./couch-settings.js');
 
 module.exports = function () {
-	var addSetting = function(setting, success, failure) {
+	var addSetting = function(setting, callback) {
 		var newSetting = {
 			name: setting.name,
 			value: setting.value,
 			visibility: setting.visibility || "private"
 		};
 		
-		couch.settings.add(newSetting, function (err, body) {
-			if (err) {
-				return failure(err);
-			}
-			// TODO: what to return?
-			success(body);
-		});
+		couch.settings.add(newSetting, callback);
 	};
 
 	var handleNewDemoSetting = function (newValue, success, failure) {
@@ -72,58 +66,12 @@ module.exports = function () {
 		);
 	};
 
-
-	var getSettings = function (success, failure) {
-		couch.settings.get(function (err, settings) {
-			if (err) {
-				return failure(err);
-			}
-			else {
-				return success(settings);
-			}
-		});
-	};
-
-	var getAuthorizedSettings = function (success, failure) {
-		couch.settings.getAuthorized(function (err, settings) {
-			if (err) {
-				return failure(err);
-			}
-			else {
-				return success(settings);
-			}
-		});
-	};
-
-	var getPrivateSettings = function (success, failure) {
-		couch.settings.getPrivate(function (err, settings) {
-			if (err) {
-				return failure(err);
-			}
-			else {
-				return success(settings);
-			}
-		});
-	};
-
-	var getAllSettings = function (success, failure) {
-		couch.settings.getAll(function (err, settings) {
-			if (err) {
-				return failure(err);
-			}
-			else {
-				return success(settings);
-			}
-		});
-	};
-
 	return {
 		add: addSetting,
-		get: getSettings,
-		getAuthorized: getAuthorizedSettings,
-		getPrivate: getPrivateSettings,
-		getAll: getAllSettings,
-		save: saveSetting,
+		get: couch.settings.get,
+		getAuthorized: couch.settings.getAuthorized,
+		getPrivate: couch.settings.getPrivate,
+		getAll: couch.settings.getAll,
 		update: updateSetting
 	};
 }(); // closure

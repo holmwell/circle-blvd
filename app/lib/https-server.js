@@ -9,7 +9,11 @@ var httpsServer = undefined;
 
 var getServerOptions = function (callback) {
 	
-	db.settings.getAll(function (settings) {
+	db.settings.getAll(function (err, settings) {
+		if (err) {
+			return callback(err);
+		}
+
 		var sslKeyPath = settings['ssl-key-path'] ? settings['ssl-key-path'].value : undefined;
 		var sslCertPath = settings['ssl-cert-path'] ? settings['ssl-cert-path'].value : undefined;
 		var sslCaPath = settings['ssl-ca-path'] ? settings['ssl-ca-path'].value : undefined;
