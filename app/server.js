@@ -57,6 +57,16 @@ var send = function (fn) {
 	return middleware;
 };
 
+var handle = function (res) {
+	var fn = function (err, data) {
+		if (err) {
+			return handleError(err, res);
+		}
+		res.send(200, data);
+	}
+	return fn;
+};
+
 var data = function (fn) {
 	// A generic guard for callbacks. Call the
 	// fn parameter. If there is an error, pass
@@ -161,12 +171,7 @@ var configureSuccessful = function () {
 	// User routes (circle actions. requires admin access)
 	app.get("/data/:circleId/members", ensure.circleAdmin, function (req, res) {
 		var circleId = req.params.circleId;
-		db.users.findByCircleId(circleId, function (err, users) {
-			if (err) {
-				return handleError(err, res);
-			}
-			res.send(200, users);
-		});
+		db.users.findByCircleId(circleId, handle(res));
 	});
 
 	app.put("/data/:circleId/member/remove", ensure.circleAdmin, function (req, res) {
@@ -348,13 +353,7 @@ var configureSuccessful = function () {
 
 	// Circles!
 	app.get("/data/circles", ensure.auth, function (req, res) {
-		db.circles.findByUser(req.user, function (err, circles) {
-			if (err) {
-				return handleError(err, res);
-			}
-
-			res.send(200, circles);
-		});
+		db.circles.findByUser(req.user, handle(res));
 	});
 
 	app.get("/data/circles/all", ensure.mainframe, send(db.circles.getAll));
@@ -607,12 +606,7 @@ var configureSuccessful = function () {
 					return res.send(403, "Sorry, you can only create " + maxCircleCount + " circles.");
 				}
 
-				createCircle(circleName, admin.email, function (err, newCircle) {
-					if (err) {
-						return handleError(err, res);
-					}
-					res.send(200, newCircle);
-				});
+				createCircle(circleName, admin.email, handle(res));
 			});
 		}
 	});
@@ -625,36 +619,19 @@ var configureSuccessful = function () {
 			return res.send(400, "An email address for an administrative user is required when making a circle.");
 		}
 
-		createCircle(circle.name, admin.email, function (err, newCircle) {
-			if (err) {
-				return handleError(err, res);
-			}
-
-			res.send(200, newCircle);
-		});
+		createCircle(circle.name, admin.email, handle(res));
 	});
 
 	app.put("/data/circle", ensure.mainframe, function (req, res) {
 		var circle = req.body;
-		db.circles.update(circle, function (err, updateCircle) {
-			if (err) {
-				return handleError(err, res);
-			}
-			res.send(200, updateCircle);
-		});
+		db.circles.update(circle, handle(res));
 	});
 
 
 	// Groups!
 	app.get("/data/:circleId/groups", ensure.circle, function (req, res) {
 		var circleId = req.params.circleId;
-		db.groups.findByProjectId(circleId, function (err, groups) {
-			if (err) {
-				return handleError(err, res);
-			}
-			
-			res.send(200, groups);
-		});
+		db.groups.findByProjectId(circleId, handle(res));
 	});
 
 	// TODO: We'll turn groups on at a later time, as we
@@ -686,12 +663,7 @@ var configureSuccessful = function () {
 	// // TODO: Ensure circle access
 	app.get("/data/group/:groupId", ensure.auth, function (req, res) {
 		var groupId = req.params.groupId;
-		db.groups.findById(groupId, function (err, group) {
-			if (err) {
-				return handleError(err, res);
-			}
-			res.send(200, group);
-		});
+		db.groups.findById(groupId, handle(res));
 	});
 
 	// // TODO: Ensure circle access
@@ -712,25 +684,14 @@ var configureSuccessful = function () {
 	// Story routes
 	app.get("/data/:circleId/stories", ensure.circle, function (req, res) {
 		var circleId = req.params.circleId;
-
-		db.stories.findByProjectId(circleId, function (err, stories) {
-			if (err) {
-				return handleError(err, res);
-			}
-			res.send(200, stories);
-		});
+		db.stories.findByProjectId(circleId, handle(res));
 	});
 
 	// TODO: combine this with /stories to return one object with 
 	// both the story list and the first story (in two different things)
 	app.get("/data/:circleId/first-story", ensure.circle, function (req, res) {
 		var circleId = req.params.circleId;
-		db.stories.getFirstByProjectId(circleId, function (err, firstStory) {
-			if (err) {
-				return handleError(err, res);
-			}
-			res.send(200, firstStory);
-		});
+		db.stories.getFirstByProjectId(circleId, handle(res));
 	});
 
 	app.get("/data/:circleId/archives", ensure.circle, function (req, res) {
@@ -745,13 +706,7 @@ var configureSuccessful = function () {
 			startkey: startkey
 		};
 
-		db.archives.findByCircleId(circleId, params, function (err, archives) {
-			if (err) {
-				return handleError(err, res);
-			}
-
-			res.send(200, archives);
-		});
+		db.archives.findByCircleId(circleId, params, handle(res));
 	});
 
 	app.get("/data/:circleId/archives/count", ensure.circle, function (req, res) {
@@ -985,13 +940,7 @@ var configureSuccessful = function () {
 
 	var addStory = function (story, res) {
 		var storyFor2ndTry = copyStory(story);
-		db.stories.add(story, function (err, addedStory) {
-			if (err) {
-				return handleError(err, res);
-			}
-
-			res.send(200, addedStory);
-		});
+		db.stories.add(story, handle(res));
 	};
 
 	var getCreatedBy = function (req) {
@@ -1328,13 +1277,7 @@ var configureSuccessful = function () {
 			card: data.stripeTokenId,
 			description: "Donation",
 			statement_description: "Donation"
-		}, function (err, charge) {
-			if (err) {
-				return handleError(err, res);
-			}
-
-			res.send(200);
-		});
+		}, handle(res));
 	});
 
 	app.post('/payment/subscribe', ensure.auth, function (req, res) {
@@ -1465,12 +1408,7 @@ var configureSuccessful = function () {
 			};
 
 			var userAccountCreated = function (newAccount) {
-				createCircle(proposedCircle.name, newAccount.email, function (err, newCircle) {
-					if (err) {
-						handleError(err, res);
-					}
-					res.send(200, newCircle);
-				});
+				createCircle(proposedCircle.name, newAccount.email, handle(res));
 			};
 
 			db.users.findByEmail(proposedAccount.email, function (err, accountExists) {
@@ -1506,12 +1444,7 @@ var configureSuccessful = function () {
 			email: data.email
 		};
 
-		db.waitlist.add(request, function (err, body) {
-			if (err) {
-				return handleError(err, res);
-			}
-			res.send(200);
-		});
+		db.waitlist.add(request, handle(res));
 	});
 
 	app.get("/data/waitlist", ensure.mainframe, send(db.waitlist.get));
