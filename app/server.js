@@ -7,6 +7,7 @@ var routes   = require('./routes');
 
 var auth     = require('./lib/auth.js');
 var ensure   = require('./lib/auth-ensure.js');
+var errors   = require('./lib/errors.js');
 var db       = require('./lib/dataAccess.js').instance();
 var notify   = require('./lib/notify.js');
 
@@ -31,23 +32,12 @@ var initAuthentication = function () {
 	app.use(auth.session());
 };
 
-// Error handling.
-var logError = function (err) {
-	console.log(err);
-};
-
-var handleError = function (err, res) {
-	var message = err.message || "Internal server error";
-	var status = err.status || 500;
-	logError(err);
-	res.send(status, message);
-};
 
 // Middleware for data access
 var guard = function (res, callback) {
 	var fn = function (err, data) {
 		if (err) {
-			return handleError(err, res);
+			return errors.handle(err, res);
 		}
 		callback(data);
 	};
@@ -102,14 +92,14 @@ var authenticateLocal = function(req, res, next) {
 
 		db.users.recordSigninSuccess(dbUser, function (err, savedUser) {
 			if (err) {
-				logError(err);
+				errors.log(err);
 			}
 			res.send(200, publicUser);
 		});
 	};
 
 	var failure = function (error, user) {
-		logError(error);
+		errors.log(error);
 		var code = error.code || 401;
 		var message = "Unauthorized";
 		if (code === 429) {
@@ -119,7 +109,7 @@ var authenticateLocal = function(req, res, next) {
 		if (error.user) {
 			db.users.recordSigninFailure(error.user, function (err, savedUser) {
 				if (err) {
-					logError(err);
+					errors.log(err);
 				}
 				res.send(code, message);
 			});
@@ -182,7 +172,7 @@ var configureSuccessful = function () {
 				res.send(204);
 			},
 			function (err) {
-				handleError(err, res);
+				errors.handle(err, res);
 			});
 		}));
 	});
@@ -211,7 +201,7 @@ var configureSuccessful = function () {
 					res.send(201);
 				},
 				function (err) {
-					handleError(err, res);
+					errors.handle(err, res);
 				}
 			);
 		};
@@ -233,7 +223,7 @@ var configureSuccessful = function () {
 						addMembershipsToAccount(user);
 					}, 
 					function (err) {
-						handleError(err, res);
+						errors.handle(err, res);
 					});
 			}
 		}));
@@ -420,7 +410,7 @@ var configureSuccessful = function () {
 	// 			res.send(200, group);
 	// 		},
 	// 		function (err) {
-	// 			handleError(err, res);
+	// 			errors.handle(err, res);
 	// 		}
 	// 	);
 	// };
@@ -451,7 +441,7 @@ var configureSuccessful = function () {
 	// 			res.send(200);
 	// 		},
 	// 		function (err) {
-	// 			handleError(err, res);
+	// 			errors.handle(err, res);
 	// 		}
 	// 	);
 	// });
@@ -609,7 +599,7 @@ var configureSuccessful = function () {
 				res.send(200, savedStory);
 			},
 			function (err) {
-				handleError(err, res);
+				errors.handle(err, res);
 			}
 		);
 	};
@@ -688,7 +678,7 @@ var configureSuccessful = function () {
 				res.send(200, response);
 			},
 			function (err) {
-				handleError(err, res);
+				errors.handle(err, res);
 			});
 		});
 	});
@@ -702,7 +692,7 @@ var configureSuccessful = function () {
 				res.send(200, response);
 			},
 			function (err) {
-				handleError(err, res);
+				errors.handle(err, res);
 			});
 		});
 	});
@@ -713,7 +703,7 @@ var configureSuccessful = function () {
 				res.send(200);
 			},
 			function (err) {
-				handleError(err, res);
+				errors.handle(err, res);
 			}
 		);
 	};
@@ -732,7 +722,7 @@ var configureSuccessful = function () {
 				removeStory(story, res);
 			}, 
 			function (err) {
-				handleError(err, res);
+				errors.handle(err, res);
 			});
 		});
 	});
@@ -776,7 +766,7 @@ var configureSuccessful = function () {
 					};
 
 					var onError = function (err) {
-						handleError(err, res);
+						errors.handle(err, res);
 					};
 
 					db.stories.markOwnerNotified(story, onSuccess, onError);
@@ -870,7 +860,7 @@ var configureSuccessful = function () {
 					isReadOnly,
 					userAccountCreated, 
 					function (err) {
-						handleError(err, res);
+						errors.handle(err, res);
 					});
 			}));
 		});
@@ -1004,7 +994,7 @@ app.configure(function() {
 		app.use(app.router);
 		app.use(function (err, req, res, next) {
 			if (err) {
-				return handleError(err, res);
+				return errors.handle(err, res);
 			}
 			// TODO: Should not get here.
 		});
