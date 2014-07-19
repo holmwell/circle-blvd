@@ -276,7 +276,7 @@ var configureSuccessful = function () {
 
 	// Settings!
 	app.get("/data/settings", function (req, res) { // public
-		var onSuccess = function (settings) {
+		db.settings.get(guard(res, function (settings) {
 			db.settings.getAuthorized(function (err, privateSettings) {
 				if (err) {
 					// Ignore
@@ -300,18 +300,7 @@ var configureSuccessful = function () {
 				settings['smtp-enabled'] = smtpEnabledSetting;
 				res.send(200, settings);
 			});
-		};
-
-		onFailure = function (err) {
-			handleError(err, res);
-		};
-
-		db.settings.get(function (err, settings) {
-			if (err) {
-				return onFailure(err);
-			}
-			return onSuccess(settings);
-		});
+		}));
 	});
 
 	// TODO: This is not used. Assess.
