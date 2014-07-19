@@ -34,14 +34,14 @@ directive('appendLinky', ['$filter', function ($filter) {
 directive('spStory', function () {
 	return {
 		restrict: 'E',
-		templateUrl: 'partials/story.html',
+		templateUrl: 'ui/views/story.html',
 		controller: StoryCtrl
 	};
 }).
 directive('spStoryList', function () {
 	return {
 		restrict: 'E',
-		templateUrl: 'partials/storyList.html',
+		templateUrl: 'ui/views/storyList.html',
 		controller: StoryListCtrl,
 		scope: {
 			data: '=',

@@ -28,20 +28,20 @@ angular.module('myApp', [
 	'myApp.directives']).
 	config(['$routeProvider', function ($routeProvider) {
 
-		var homePage = {templateUrl: 'partials/home.html', controller: HomeCtrl};
+		var homePage = {templateUrl: 'ui/views/home.html', controller: HomeCtrl};
 
 		$routeProvider.when('/', homePage);
 		$routeProvider.when('/stories/:storyId', homePage);
 		$routeProvider.when('/stories', homePage);
-		$routeProvider.when('/archives', {templateUrl: 'partials/archives.html', controller: ArchivesCtrl});
-		$routeProvider.when('/signin', {templateUrl: 'partials/signin.html', controller: SignInCtrl});
-		$routeProvider.when('/profile', {templateUrl: 'partials/profile.html', controller: ProfileCtrl});
-		$routeProvider.when('/docs', {templateUrl: 'partials/docs.html', controller: DocsCtrl});
-		$routeProvider.when('/donate', {templateUrl: 'partials/donate.html', controller: DonateCtrl});
-		$routeProvider.when('/admin', {templateUrl: 'partials/admin.html', controller: AdminCtrl});
-		$routeProvider.when('/mainframe', {templateUrl: 'partials/mainframe.html', controller: MainframeCtrl});
-		$routeProvider.when('/initialize', {templateUrl: 'partials/initialize.html', controller: InitializeCtrl});
-		$routeProvider.when('/fix', {templateUrl: 'partials/fix.html', controller: FixCtrl});
+		$routeProvider.when('/archives', {templateUrl: 'ui/views/archives.html', controller: ArchivesCtrl});
+		$routeProvider.when('/signin', {templateUrl: 'ui/views/signin.html', controller: SignInCtrl});
+		$routeProvider.when('/profile', {templateUrl: 'ui/views/profile.html', controller: ProfileCtrl});
+		$routeProvider.when('/docs', {templateUrl: 'ui/views/docs.html', controller: DocsCtrl});
+		$routeProvider.when('/donate', {templateUrl: 'ui/views/donate.html', controller: DonateCtrl});
+		$routeProvider.when('/admin', {templateUrl: 'ui/views/admin.html', controller: AdminCtrl});
+		$routeProvider.when('/mainframe', {templateUrl: 'ui/views/mainframe.html', controller: MainframeCtrl});
+		$routeProvider.when('/initialize', {templateUrl: 'ui/views/initialize.html', controller: InitializeCtrl});
+		$routeProvider.when('/fix', {templateUrl: 'ui/views/fix.html', controller: FixCtrl});
 		$routeProvider.otherwise({redirectTo: '/'});
 	}])
 	.factory('$exceptionHandler', ['$injector', function ($injector) {
