@@ -44,13 +44,20 @@ var handleError = function (err, res) {
 };
 
 // Middleware for data access
-var handle = function (res) {
+var guard = function (res, callback) {
 	var fn = function (err, data) {
 		if (err) {
 			return handleError(err, res);
 		}
+		callback(data);
+	};
+	return fn;
+};
+
+var handle = function (res) {
+	var fn = guard(res, function (data) {
 		res.send(200, data);
-	}
+	}); 
 	return fn;
 };
 
@@ -69,16 +76,13 @@ var data = function (fn) {
 	// append the result to the request object,
 	// for the next middleware in line.
 	var middleware = function (req, res, next) {
-		fn(function (err, data) {
-			if (err) {
-				return handleError(err, res);
-			}
+		fn(guard(res, function (data) {
 			if (req.data) {
 				// TODO: programmer error
 			}
 			req.data = data;
 			next();
-		});
+		}));
 	};
 
 	return middleware;
@@ -174,11 +178,7 @@ var configureSuccessful = function () {
 		var circleId = req.params.circleId;
 		var reqUser = req.body;
 
-		db.users.findById(reqUser.id, function (err, user) {
-			if (err) {
-				return handleError(err, res);
-			}
-
+		db.users.findById(reqUser.id, guard(res, function (user) {
 			var newMemberships = [];
 			user.memberships.forEach(function (membership) {
 				if (membership.circle === circleId) {
@@ -196,7 +196,7 @@ var configureSuccessful = function () {
 			function (err) {
 				handleError(err, res);
 			});
-		});
+		}));
 	});
 
 	app.post("/data/:circleId/member", ensure.circleAdmin, function (req, res) {
@@ -228,11 +228,7 @@ var configureSuccessful = function () {
 			);
 		};
 
-		db.users.findByEmail(member.email, function (err, userAccount) {
-			if (err) {
-				return handleError(err, res);
-			}
-
+		db.users.findByEmail(member.email, guard(res, function (userAccount) {
 			if (userAccount) {
 				addMembershipsToAccount(userAccount);
 			}
@@ -252,16 +248,12 @@ var configureSuccessful = function () {
 						handleError(err, res);
 					});
 			}
-		});
+		}));
 	});
 
 	app.get("/data/:circleId/members/names", ensure.circle, function (req, res) {
 		var circleId = req.params.circleId;
-		db.users.findNamesByCircleId(circleId, function (err, names) {
-			if (err) {
-				return handleError(err, res);
-			}
-
+		db.users.findNamesByCircleId(circleId, guard(res, function (names) {
 			var ignoreCase = function (a, b) {
 				a = a.toLowerCase();
 				b = b.toLowerCase();
@@ -276,7 +268,7 @@ var configureSuccessful = function () {
 
 			names = names.sort(ignoreCase);
 			res.send(200, names);
-		});
+		}));
 	});
 
 	// Init routes
@@ -331,10 +323,7 @@ var configureSuccessful = function () {
 
 	app.put("/data/setting", ensure.mainframe, function (req, res) {
 		var data = req.body;
-		db.settings.update(data, function (err, setting) {
-			if (err) {
-				return handleError(err, res);
-			}
+		db.settings.update(data, guard(res, function (setting) {
 			if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
 				// TODO: Tell the client if we started the server?
 				tryToCreateHttpsServer();
@@ -343,7 +332,7 @@ var configureSuccessful = function () {
 				payment.setApiKey(setting.value);
 			}
 			res.send(200);
-		});
+		}));
 	});
 
 	// Circles!
@@ -533,12 +522,9 @@ var configureSuccessful = function () {
 		checkLimit(next);
 
 		function checkLimit (callback) {
-			db.settings.getAll(function (err, settings) {
-				if (err) {
-					return handleError(err, res);
-				}
+			db.settings.getAll(guard(res, function (settings) {
 				checkSettings(settings, callback);
-			});
+			}));
 		}
 
 		function checkSettings(settings, callback) {
@@ -548,17 +534,14 @@ var configureSuccessful = function () {
 			}
 
 			var limit = settings['limit-circles'].value;
-			db.circles.count(function (err, count) {
-				if (err) {
-					return handleError(err, res);
-				}
+			db.circles.count(guard(res, function (count) {
 				if (count >= limit) {
 					res.send(403, "Sorry, our computers have reached their circle creation limit," +
 						" and no more can be made, by anyone, at this time.");
 					return;
 				}
 				return callback();
-			});
+			}));
 		}
 	};
 
@@ -575,11 +558,7 @@ var configureSuccessful = function () {
 		checkCircleLimit(res, addCircle);
 
 		function addCircle() {
-			db.circles.findByUser(req.user, function (err, rawCircles) {
-				if (err) {
-					return handleError(err, res);
-				}
-
+			db.circles.findByUser(req.user, guard(res, function (rawCircles) {
 				// TODO: Need to remove dups from the view
 				var circles = {};
 				rawCircles.forEach(function (circle) {
@@ -602,7 +581,7 @@ var configureSuccessful = function () {
 				}
 
 				createCircle(circleName, admin.email, handle(res));
-			});
+			}));
 		}
 	});
 
@@ -706,12 +685,9 @@ var configureSuccessful = function () {
 
 	app.get("/data/:circleId/archives/count", ensure.circle, function (req, res) {
 		var circleId = req.params.circleId;
-		db.archives.countByCircleId(circleId, function (err, count) {
-			if (err) {
-				return handleError(err, res);
-			}
+		db.archives.countByCircleId(circleId, guard(res, function (count) {
 			res.send(200, count.toString());
-		});
+		}));
 	});
 
 	var getNewNotificationMessage = function (story, req) {
@@ -984,15 +960,11 @@ var configureSuccessful = function () {
 			}
 
 			function checkStoryLimit(callback) {
-				async.parallel([db.settings.getAll, getCircle], function (err, results) {
-					if (err) {
-						return handleError(err, res);
-					}
-
+				async.parallel([db.settings.getAll, getCircle], guard(res, function (results) {
 					var settings = results[0];
 					var circle = results[1];
 					checkSettings(settings, circle, callback);
-				});
+				}));
 			}
 
 			function checkSettings(settings, circle, callback) {
@@ -1002,10 +974,7 @@ var configureSuccessful = function () {
 				}
 
 				var limit = settings['limit-stories-per-circle'].value;
-				db.stories.countByCircleId(story.projectId, function (err, count) {
-					if (err) {
-						return handleError(err, res);
-					}
+				db.stories.countByCircleId(story.projectId, guard(res, function (count) {
 					if (count >= limit) {
 						// TODO: Add validation-specific instructions, after 
 						// we have an account validation mechanism.
@@ -1014,7 +983,7 @@ var configureSuccessful = function () {
 						return;
 					}
 					return callback();
-				});
+				}));
 			}
 		});
 	});
@@ -1069,17 +1038,14 @@ var configureSuccessful = function () {
 		}
 
 		ensure.isCircle(data.circleId, req, res, function () {
-			db.docs.get(data.storyId, function (err, story) {
-				if (err) {
-					return handleError(err, res);
-				}
+			db.docs.get(data.storyId, guard(res, function (story) {
 				if (story.projectId !== data.circleId) {
 					return res.send(400);
 				}
 
 				story.newComment = getComment(data.comment, req);
 				saveStoryWithComment(story, req, res);
-			});
+			}));
 		});
 	});
 
@@ -1090,11 +1056,7 @@ var configureSuccessful = function () {
 			return res.send(400, "Story id required.");
 		}
 
-		db.docs.get(storyId, function (err, doc) {
-			if (err) {
-				return handleError(err, res);
-			}
-
+		db.docs.get(storyId, guard(res, function (doc) {
 			if (!doc || doc.type !== "story") {
 				return res.send(400, "Story not found");
 			}
@@ -1116,7 +1078,7 @@ var configureSuccessful = function () {
 			else {
 				res.send(403, "Not a member of this circle");
 			}
-		});
+		}));
 	});
 
 	app.put("/data/story/fix", ensure.auth, function (req, res) {
@@ -1194,11 +1156,7 @@ var configureSuccessful = function () {
 				return res.send(412, "Story owner has already been notified.");
 			}
 
-			db.users.findByCircleAndName(story.projectId, story.owner, function (err, owner) {
-				if (err) {
-					return handleError(err, res);
-				}
-
+			db.users.findByCircleAndName(story.projectId, story.owner, guard(res, function (owner) {
 				// Use notification email addresses
 				if (sender.notifications && sender.notifications.email) {
 					sender.email = sender.notifications.email;
@@ -1215,11 +1173,7 @@ var configureSuccessful = function () {
 					subjectPrefix: "new story: "
 				};
 
-				sendStoryNotification(params, function (err, response) {
-					if (err) {
-						return handleError(err, res);
-					}
-
+				sendStoryNotification(params, guard(res, function (response) {
 					var onSuccess = function (savedStory) {
 						res.send(200, response);
 					};
@@ -1229,8 +1183,8 @@ var configureSuccessful = function () {
 					};
 
 					db.stories.markOwnerNotified(story, onSuccess, onError);
-				});
-			});
+				}));
+			}));
 		});
 	});
 
@@ -1239,26 +1193,21 @@ var configureSuccessful = function () {
 		var showNextMeeting = req.body.showNextMeeting;
 		var projectId = req.params.circleId;
 
-		var handleNextMeeting = function (err, nextMeeting) {
-			if (err) {
-				handleError(err, res);
+		var handleNextMeeting = guard(res, function (nextMeeting) {
+			if (showNextMeeting) {
+				// TODO: Should probably be in the data access layer.
+				// TODO: Consider passing in the summary from the client,
+				// as 'meeting' should be a configurable word.
+				var story = {};
+				story.summary = "Next meeting";
+				story.isNextMeeting = true;
+
+				addStory(story, res);
 			}
 			else {
-				if (showNextMeeting) {
-					// TODO: Should probably be in the data access layer.
-					// TODO: Consider passing in the summary from the client,
-					// as 'meeting' should be a configurable word.
-					var story = {};
-					story.summary = "Next meeting";
-					story.isNextMeeting = true;
-
-					addStory(story, res);
-				}
-				else {
-					removeStory(nextMeeting, res);
-				}
+				removeStory(nextMeeting, res);
 			}
-		};
+		});
 
 		var nextMeeting = db.stories.getNextMeetingByProjectId(projectId, handleNextMeeting);
 	});
@@ -1315,11 +1264,7 @@ var configureSuccessful = function () {
 				}
 			};
 
-			payment.stripe().customers.create(newCustomer, function (err, customer) {
-				if (err) {
-					return handleError(err, res);
-				}
-
+			payment.stripe().customers.create(newCustomer, guard(res, function (customer) {
 				var sub = {};
 				sub.created = customer.created;
 				sub.customerId = customer.id;
@@ -1328,7 +1273,7 @@ var configureSuccessful = function () {
 
 				user.subscription = sub;
 				db.users.update(user, onSuccess, onError);
-			});
+			}));
 		}
 		else {
 			// Returning customer
@@ -1340,11 +1285,7 @@ var configureSuccessful = function () {
 			};
 			payment.stripe().customers.updateSubscription(
 				customerId, subscriptionId, newPlan,
-				function (err, subscription) {
-					if (err) {
-						return handleError(err, res);
-					}
-
+				guard(res, function (subscription) {
 					var newSub = user.subscription;
 					newSub.subscriptionId = subscription.id;
 					newSub.planName = data.planName;
@@ -1352,7 +1293,7 @@ var configureSuccessful = function () {
 
 					user.subscription = newSub;
 					db.users.update(user, onSuccess, onError);
-				}
+				})
 			);
 		}
 	});
@@ -1366,11 +1307,7 @@ var configureSuccessful = function () {
 		// Just delete the Stripe customer, since they
 		// only have one subscription anyway.
 		var customerId = user.subscription.customerId;
-		payment.stripe().customers.del(customerId, function (err, confirm) {
-			if (err) {
-				return handleError(err, res);
-			}
-
+		payment.stripe().customers.del(customerId, guard(res, function (confirm) {
 			var onSuccess = function (updatedUser) {
 				res.send(200, updatedUser.subscription);
 			};
@@ -1384,7 +1321,7 @@ var configureSuccessful = function () {
 
 			user.subscription = null;
 			db.users.update(user, onSuccess, onError);
-		});
+		}));
 	});
 
 	app.post("/data/signup/now", function (req, res) {
@@ -1406,11 +1343,7 @@ var configureSuccessful = function () {
 				createCircle(proposedCircle.name, newAccount.email, handle(res));
 			};
 
-			db.users.findByEmail(proposedAccount.email, function (err, accountExists) {
-				if (err) {
-					return handleError(err, res);
-				}
-
+			db.users.findByEmail(proposedAccount.email, guard(res, function (accountExists) {
 				if (accountExists) {
 					return res.send(400, "That email address is already being used. Maybe try signing in?")
 				}
@@ -1427,7 +1360,7 @@ var configureSuccessful = function () {
 					function (err) {
 						handleError(err, res);
 					});
-			});
+			}));
 		});
 	});
 
@@ -1468,11 +1401,7 @@ var configureSuccessful = function () {
 			});
 		};
 
-		usersExist(function (err, exist) {
-			if (err) {
-				return handleError(err, res);
-			}
-			
+		usersExist(guard(res, function (exist) {
 			if (!exist && !req.cookies.initializing) {
 				res.cookie('initializing', 'yep');
 				res.redirect('/#/initialize');
@@ -1481,7 +1410,7 @@ var configureSuccessful = function () {
 				res.clearCookie('initializing');
 				routes.index(req, res);			
 			}
-		});
+		}));
 	});
 
 	http.createServer(app).listen(app.get('port'), function () {
