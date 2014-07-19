@@ -1,0 +1,208 @@
+var mailer = require('nodemailer');
+var db = require('./dataAccess.js').instance();
+
+var getNotificationRecipients = function (accounts) {
+	var recipients = [];
+
+	accounts.forEach(function (account) {
+		var recipient = {
+			name: account.name,
+			email: account.email
+		};
+
+		// Use notification email addresses
+		if (account.notifications && account.notifications.email) {
+			recipient.email = account.notifications.email;
+		}
+		recipients.push(recipient);
+	});
+
+	return recipients;
+};
+
+var getNewNotificationMessage = function (story, req) {
+	var message = "Hi. You've been requested to look at a new story on Circle Blvd.\n\n";
+	if (story.summary) {
+		message += "Summary: " + story.summary + "\n\n";
+	}
+	if (story.description) {
+		message += "Description: " + story.description + "\n\n";	
+	}
+
+	var protocol = req.protocol || "http";
+	message += "View on Circle Blvd:\n" + 
+		protocol + "://" + req.get('Host') + "/#/stories/" + story.id;
+	
+	return message;
+};
+
+var getCommentNotificationMessage = function (comment, story, req) {
+	var message = comment.createdBy.name + " writes: ";
+	message += comment.text;
+
+	var protocol = req.protocol || "http";
+	message += "\n\nView on Circle Blvd:\n" + 
+		protocol + "://" + req.get('Host') + "/#/stories/" + story.id;
+	
+	return message;
+};
+
+// params: story, sender, recipients, message, subjectPrefix
+var sendStoryNotification = function (params, callback) {
+	var story = params.story;
+	var sender = params.sender;
+	var recipients = params.recipients;
+	var message = params.message;
+	var subjectPrefix = params.subjectPrefix;
+
+	db.settings.getAll(function (err, settings) {
+		if (err) {
+			return callback({
+				status: 501,
+				message: "Notifcation failed",
+				error: err
+			});
+		}
+
+		var smtpService = settings['smtp-service'];
+		var smtpUsername = settings['smtp-login'];
+		var smtpPassword = settings['smtp-password'];
+
+		if (!smtpUsername || !smtpPassword || !smtpService) {
+			return callback({
+				status: 501,
+				message: "The server needs SMTP login info before sending notifications. Check the admin page."
+			})
+		}
+
+		smtpService = smtpService.value;
+		smtpUsername = smtpUsername.value;
+		smtpPassword = smtpPassword.value;
+
+		var smtp = mailer.createTransport("SMTP", {
+			service: smtpService,
+			auth: {
+				user: smtpUsername,
+				pass: smtpPassword
+			}
+		});
+
+		var toList = function () {
+			var result = "";
+			recipients.forEach(function (addressee) {
+				result += addressee.name + " <" + addressee.email + ">,"
+			});
+			result = result.slice(0,-1); // remove last comma
+			return result;
+		}(); // closure;
+
+		var opt = {
+			from: sender.name + " via Circle Blvd <" + smtpUsername + ">",
+			to: toList,
+			replyTo: sender.name + " <" + sender.email + ">",
+			subject: subjectPrefix + story.summary,
+			text: message
+		};
+
+		// For testing:
+		// console.log(opt);
+		// callback(null, {ok: true});
+
+		smtp.sendMail(opt, function (err, response) {
+			smtp.close();
+			if (err) {
+				callback(err);
+			}
+			else {
+				callback(null, response);
+			}
+		});
+	});
+};
+
+var sendCommentNotification = function (params, req) {
+	if (!params || !params.comment || !params.story || !params.user) {
+		console.log("Bad call to send-comment notification. Doing nothing.");
+		return;
+	}
+
+	var comment = params.comment;
+	var story = params.story;
+	var sender = params.user;
+	if (sender.notifications && sender.notifications.email) {
+		// Use notification email addresses
+		sender.email = sender.notifications.email;
+	}
+
+	var participants = {};
+	if (story.createdBy) {
+		participants[story.createdBy.id] = {
+			name: story.createdBy.name
+		};
+	}
+
+	if (story.comments) {
+		story.comments.forEach(function (comment) {
+			if (comment.createdBy) {
+				participants[comment.createdBy.id] = {
+					name: comment.createdBy.name
+				};
+			}
+		});
+	}
+
+
+	db.users.findByCircleAndName(story.projectId, story.owner, function (err, owner) {
+		if (story.owner && err) {
+			// Log, but we can continue.
+			console.log("Comment notification: Cannot find story owner for story: " + story.id);
+			console.log(err);
+		}
+		if (owner) {
+			participants[owner._id] = {
+				name: owner.name
+			};
+		}
+
+		// Assert: We have all the participants now
+		var recipientAccountIds = [];
+		for (var accountId in participants) {
+			// Remove the sender from the 'to' list
+			if (accountId !== sender._id) {
+				recipientAccountIds.push(accountId);
+			}
+		}
+
+		if (recipientAccountIds.length === 0) {
+			// We're done!
+			return;
+		}
+
+		db.users.findMany(recipientAccountIds, function (err, accounts) {
+			var sendParams = {
+				story: story,
+				sender: sender,
+				message: getCommentNotificationMessage(comment, story, req),
+				recipients: getNotificationRecipients(accounts),
+				subjectPrefix: "new comment: "
+			};
+
+			sendStoryNotification(sendParams, function (err, response) {
+				if (err) {
+					console.log(err);
+					return;
+				}
+				// Do nothing.
+			});
+		});
+	});
+};
+
+
+module.exports = function () {
+	return {
+		sendStoryNotification: sendStoryNotification,
+		sendCommentNotification: sendCommentNotification,
+		getNewNotificationMessage: getNewNotificationMessage
+	};
+}(); // closure
