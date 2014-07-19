@@ -28,6 +28,9 @@ var guard = errors.guard;
 
 var handle = function (res) {
 	var fn = guard(res, function (data) {
+		if (!data) {
+			return res.send(204); // no content
+		}
 		res.send(200, data);
 	}); 
 	return fn;
@@ -143,29 +146,9 @@ var configureSuccessful = function () {
 	});
 
 	app.put("/data/:circleId/member/remove", ensure.circleAdmin, function (req, res) {
-		// usersRoutes.remove
 		var circleId = req.params.circleId;
 		var reqUser = req.body;
-
-		db.users.findById(reqUser.id, guard(res, function (user) {
-			var newMemberships = [];
-			user.memberships.forEach(function (membership) {
-				if (membership.circle === circleId) {
-					// do nothing
-				}
-				else {
-					newMemberships.push(membership);
-				}
-			});
-
-			user.memberships = newMemberships;
-			db.users.update(user, function (body) {
-				res.send(204);
-			},
-			function (err) {
-				errors.handle(err, res);
-			});
-		}));
+		db.users.removeMembership(reqUser, circleId, handle(res));
 	});
 
 	app.post("/data/:circleId/member", ensure.circleAdmin, function (req, res) {

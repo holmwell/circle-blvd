@@ -252,9 +252,35 @@ module.exports = function () {
 		});
 	};
 
+	var removeMembership = function (reqUser, circleId, callback) {
+		findUserById(reqUser.id, function (err, user) {
+			if (err) {
+				return callback(err);
+			}
+			var newMemberships = [];
+			user.memberships.forEach(function (membership) {
+				if (membership.circle === circleId) {
+					// do nothing
+				}
+				else {
+					newMemberships.push(membership);
+				}
+			});
+
+			user.memberships = newMemberships;
+			updateUser(user, function (body) {
+				callback();
+			},
+			function (err) {
+				callback(err);
+			});
+		});
+	};
+
 	return { 
 		add: addUser,
 		remove: removeUser,
+		removeMembership: removeMembership,
 		findByEmail: findUserByEmail,
 		findById: findUserById, 
 		findByCircleAndName: findUserByCircleAndName,
