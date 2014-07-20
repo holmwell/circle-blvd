@@ -401,24 +401,12 @@ var configureSuccessful = function () {
 		var story = body.story;
 		var newNextId = body.newNextId;
 		ensure.isCircle(story.projectId, req, res, function () {
-			db.stories.move(story, newNextId, function (response) {
-				res.send(200, response);
-			},
-			function (err) {
-				errors.handle(err, res);
-			});
+			db.stories.move(story, newNextId, handle(res));
 		});
 	});
 
 	var removeStory = function (story, res) {
-		db.stories.remove(story, 
-			function () {
-				res.send(200);
-			},
-			function (err) {
-				errors.handle(err, res);
-			}
-		);
+		db.stories.remove(story, handle(res));
 	};
 
 	app.put("/data/story/archive", ensure.auth, function (req, res) {

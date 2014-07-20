@@ -346,7 +346,7 @@ module.exports = function () {
 	};
 
 
-	var moveStory = function (story, newNextId, success, failure) {
+	var moveStory = function (story, newNextId, callback) {
 		var thing = {
 			id: uuid.v4(),
 			action: 'move',
@@ -365,11 +365,9 @@ module.exports = function () {
 			// thing.id. and then we'll callback.
 			ee.once(thing.id, function (err, movedStory) {
 				if (err) {
-					failure(err);
+					return callback(err);
 				}
-				else {
-					success(movedStory);
-				}
+				callback(null, movedStory);
 			});
 		};
 
@@ -621,7 +619,7 @@ module.exports = function () {
 		});
 	};
 
-	var removeStory = function (story, success, failure) {
+	var removeStory = function (story, callback) {
 		var thing = {
 			id: uuid.v4(),
 			action: 'remove',
@@ -639,10 +637,10 @@ module.exports = function () {
 			// thing.id. and then we'll callback.
 			ee.once(thing.id, function (err) {
 				if (err) {
-					failure(err);
+					callback(err);
 				}
 				else {
-					success();
+					callback();
 				}
 			});
 		};
