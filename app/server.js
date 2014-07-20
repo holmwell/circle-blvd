@@ -565,14 +565,9 @@ var configureSuccessful = function () {
 		var usersExist = function(callback) {
 			db.users.count(function (err, count) {
 				if (err) {
-					callback(err);
+					return callback(err);
 				}
-				else if (count > 0) {
-					callback(null, true);
-				}
-				else {
-					callback(null, false);
-				}
+				callback(null, count > 0);
 			});
 		};
 
