@@ -495,30 +495,13 @@ var configureSuccessful = function () {
 		payment.unsubscribe(user, handle(res));
 	});
 
-	app.post("/data/signup/now", limits.circle, function (req, res) {
-		var data = req.body;
-
-		var proposedAccount = {
-			name: data.name,
-			email: data.email,
-			password: data.password
-		};
-
-		var proposedCircle = {
-			name: data.circle
-		};
-
+	var createAccount = function (proposedAccount, circle, callback) {
 		var userAccountCreated = function (newAccount) {
-			db.circles.create(proposedCircle.name, newAccount.email, handle(res));
+			db.circles.create(circle.name, newAccount.email, callback);
 		};
 
-		db.users.findByEmail(proposedAccount.email, guard(res, function (accountExists) {
-			if (accountExists) {
-				return res.send(400, "That email address is already being used. Maybe try signing in?")
-			}
-
+		var addUser = function () {
 			var isReadOnly = false;
-
 			db.users.add(
 				proposedAccount.name,
 				proposedAccount.email, 
@@ -526,10 +509,34 @@ var configureSuccessful = function () {
 				[], // no memberships at first
 				isReadOnly,
 				userAccountCreated, 
-				function (err) {
-					errors.handle(err, res);
-				});
-		}));
+				callback);
+		};
+
+		db.users.findByEmail(proposedAccount.email, function (err, accountExists) {
+			if (err) {
+				return callback(err);
+			}
+			if (accountExists) {
+				var error = new Error("That email address is already being used. Maybe try signing in?");
+				error.status = 400;
+				return callback(error);
+			}
+
+			addUser();
+		});
+	};
+
+	app.post("/data/signup/now", limits.circle, function (req, res) {
+		var data = req.body;
+		var proposedAccount = {
+			name: data.name,
+			email: data.email,
+			password: data.password
+		};
+		var proposedCircle = {
+			name: data.circle
+		};
+		createAccount(proposedAccount, proposedCircle, handle(res));
 	});
 
 	app.post("/data/signup/waitlist", function (req, res) {
