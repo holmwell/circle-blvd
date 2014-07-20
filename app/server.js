@@ -1,8 +1,7 @@
-var express  = require('express');
-var http     = require('http');
-var request  = require('request');
-var path     = require('path');
-var routes   = require('./routes');
+var express = require('express');
+var http    = require('http');
+var path    = require('path');
+var routes  = require('./routes');
 
 var auth   = require('./lib/auth-local.js');
 var ensure = require('./lib/auth-ensure.js');

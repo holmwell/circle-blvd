@@ -11,7 +11,6 @@
     "ejs": "0.8",
     "passport": ">= 0.0.0",
     "passport-local": ">= 0.0.0",
-    "request": ">= 0.0.0",
     "node-uuid": ">=0.0.0",
     "nano": "4.1",
     "nodemailer": "^0.6.3",
