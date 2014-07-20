@@ -363,35 +363,21 @@ var configureSuccessful = function () {
 		});
 	});
 
-	// TODO: Refactor out the circle access
 	app.get("/data/story/:storyId", ensure.auth, function (req, res) {
 		var storyId = req.params.storyId;
 		if (!storyId) {
 			return res.send(400, "Story id required.");
 		}
 
-		db.docs.get(storyId, guard(res, function (doc) {
-			if (!doc || doc.type !== "story") {
+		db.docs.get(storyId, guard(res, function (story) {
+			if (!story || story.type !== "story") {
 				return res.send(400, "Story not found");
 			}
 
-			var circleId = doc.projectId;
-			var memberships = req.user.memberships;
-			var hasAccess = false;
-			memberships.forEach(function (membership) {
-				if (membership.circle === circleId) {
-					hasAccess = true;
-				}
+			var circleId = story.projectId;
+			ensure.isCircle(circleId, req, res, function () {
+				res.send(200, story);
 			});
-
-			if (hasAccess) {
-				// TODO: This is the plain db story document.
-				// Is that ok? Or do we want to process it first?
-				res.send(200, doc);
-			}
-			else {
-				res.send(403, "Not a member of this circle");
-			}
 		}));
 	});
 
