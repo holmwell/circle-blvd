@@ -47,6 +47,52 @@ var getCommentNotificationMessage = function (comment, story, req) {
 	return message;
 };
 
+var newStory = function (story, sender, callback) {
+	if (story.isOwnerNotified) {
+		var err = new Error("Story owner has already been notified.");
+		err.status = 412;
+		return callback(error);
+	}
+
+	db.users.findByCircleAndName(story.projectId, story.owner, function (err, owner) {
+		if (err) {
+			return callback(err);
+		}
+		// Use notification email addresses
+		if (sender.notifications && sender.notifications.email) {
+			sender.email = sender.notifications.email;
+		}
+		if (owner.notifications && owner.notifications.email) {
+			owner.email = owner.notifications.email;
+		}
+
+		var params = {
+			story: story,
+			sender: sender,
+			recipients: [owner],
+			message: getNewNotificationMessage(story, req),
+			subjectPrefix: "new story: "
+		};
+
+		sendStoryNotification(params, function (err, response) {
+			if (err) {
+				return callback(err);
+			}
+
+			var onSuccess = function (savedStory) {
+				callback(null, response);
+			};
+
+			var onError = function (err) {
+				callback(err);
+			};
+
+			db.stories.markOwnerNotified(story, onSuccess, onError);
+		});
+	});
+};
+
+
 // params: story, sender, recipients, message, subjectPrefix
 var sendStoryNotification = function (params, callback) {
 	var story = params.story;
@@ -72,7 +118,7 @@ var sendStoryNotification = function (params, callback) {
 			return callback({
 				status: 501,
 				message: "The server needs SMTP login info before sending notifications. Check the admin page."
-			})
+			});
 		}
 
 		smtpService = smtpService.value;
@@ -120,7 +166,7 @@ var sendStoryNotification = function (params, callback) {
 	});
 };
 
-var sendCommentNotification = function (params, req) {
+var newComment = function (params, req) {
 	if (!params || !params.comment || !params.story || !params.user) {
 		console.log("Bad call to send-comment notification. Doing nothing.");
 		return;
@@ -201,8 +247,7 @@ var sendCommentNotification = function (params, req) {
 
 module.exports = function () {
 	return {
-		sendStoryNotification: sendStoryNotification,
-		sendCommentNotification: sendCommentNotification,
-		getNewNotificationMessage: getNewNotificationMessage
+		newStory: newStory,
+		newComment: newComment
 	};
 }(); // closure

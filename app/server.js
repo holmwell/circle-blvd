@@ -321,7 +321,7 @@ var configureSuccessful = function () {
 						comment: story.newComment,
 						user: req.user
 					};
-					notify.sendCommentNotification(params, req);	
+					notify.newComment(params, req);	
 				}
 				res.send(200, savedStory);
 			},
@@ -440,39 +440,7 @@ var configureSuccessful = function () {
 		var story = req.body;
 		var sender = req.user;
 		ensure.isCircle(story.projectId, req, res, function () {
-			if (story.isOwnerNotified) {
-				return res.send(412, "Story owner has already been notified.");
-			}
-
-			db.users.findByCircleAndName(story.projectId, story.owner, guard(res, function (owner) {
-				// Use notification email addresses
-				if (sender.notifications && sender.notifications.email) {
-					sender.email = sender.notifications.email;
-				}
-				if (owner.notifications && owner.notifications.email) {
-					owner.email = owner.notifications.email;
-				}
-
-				var params = {
-					story: story,
-					sender: sender,
-					recipients: [owner],
-					message: notify.getNewNotificationMessage(story, req),
-					subjectPrefix: "new story: "
-				};
-
-				notify.sendStoryNotification(params, guard(res, function (response) {
-					var onSuccess = function (savedStory) {
-						res.send(200, response);
-					};
-
-					var onError = function (err) {
-						errors.handle(err, res);
-					};
-
-					db.stories.markOwnerNotified(story, onSuccess, onError);
-				}));
-			}));
+			notify.newStory(story, sender, handle(res));
 		});
 	});
 
