@@ -16,7 +16,7 @@ module.exports = function () {
 			return callback();
 		}
 
-		var thing = things.pop();
+		var thing = things.shift();
 		callback(null, thing);
 	};
 
