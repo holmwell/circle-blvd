@@ -50,8 +50,10 @@ module.exports = function () {
 
 
 	this.enqueue = function (thing, callback) {
-		queue.enqueue(thing, function (err, thing) {
-			callback(err, thing);
+		queue.enqueue(thing, function (err) {
+			if (callback) {
+				callback(err);				
+			}
 			// TODO: We could probably clean up this api,
 			// though not sure what would be more intuitive.
 			// 

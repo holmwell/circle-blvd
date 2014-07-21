@@ -7,7 +7,9 @@ module.exports = function () {
 
 	var enqueueThing = function (thing, callback) {
 		things.push(thing);
-		callback();
+		if (callback) {
+			callback();
+		}
 	};
 
 	// callback(err, thing)
