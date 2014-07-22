@@ -9,7 +9,7 @@ process.env.DATABASE_NAME = databaseName;
 var unit = undefined;
 var test = {};
 
-test.setUp = function (done) {
+test['database setup'] = function (test) {
 	var app = require('../app.js');
 	unit = app.express;
 	// CouchDB is not entirely ready when ready is
@@ -18,12 +18,39 @@ test.setUp = function (done) {
 	var halfSecond = 500;
 	app.whenReady(function () {
 		setTimeout(function () {
-			done();
+			test.done();
 		}, halfSecond);	
 	});
 };
 
-test.tearDown = function (done) {
+test['first call does a redirect'] = function (test) {
+	request(unit)
+	.get('/')
+	.expect(302)
+	.end(function (err) {
+		test.ifError(err);
+		test.done();
+	});
+};
+
+test['/data/initialize succeeds'] = function (test) {
+	var data = {};
+	data.admin = {
+		email: 'test@ok.com',
+		password: 'Well, what do you think?'
+	};
+
+	request(unit)
+	.put('/data/initialize')
+	.send(data)
+	.expect(200)
+	.end(function (err) {
+		test.ifError(err);
+		test.done();
+	});
+};
+
+test['database tear down'] = function (test) {
 	var destroyTestDatabase = function (callback) {
 		nano.db.destroy(databaseName, callback);
 	};
@@ -33,17 +60,8 @@ test.tearDown = function (done) {
 
 	var destroy = [destroyTestDatabase, destroyTestSessionsDb];
 	async.series(destroy, function (err, results) {
-		done();
+		test.done();
 	});
-};
-
-test['first call does a redirect'] = function (test) {
-	request(unit)
-	.get('/')
-	.expect(function (res) {
-		test.equal(res.statusCode, 302);
-	})
-	.end(test.done);
 };
 
 exports[''] = test;
