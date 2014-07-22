@@ -7,7 +7,8 @@ var couch = function() {
 	// it does then ask for a new database name. For now, we're
 	// letting future selves figure that out.
 
-	var database = LocalDatabase('circle-blvd', designDocs);
+	var databaseName = process.env.DATABASE_NAME || 'circle-blvd';
+	var database = LocalDatabase(databaseName, designDocs);
 
 	// getView(viewUrl, [options], callback)
 	var getView = function(viewUrl, viewGenerationOptions, callback) {

@@ -2,7 +2,10 @@ var designDocs = require('./design-docs-session.js');
 var LocalDatabase = require('./data/couch/local-database.js');
 
 module.exports = function (session) {
-	var database = LocalDatabase('circle-blvd-sessions', designDocs);
+	var databaseName = process.env.DATABASE_NAME || 'circle-blvd';
+	databaseName += '-sessions';
+	
+	var database = LocalDatabase(databaseName, designDocs);
 
 	var lastMainenanceDate = undefined;
 	var actuallyPerformMaintenance = function () {

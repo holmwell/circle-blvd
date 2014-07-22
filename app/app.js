@@ -638,7 +638,6 @@ var getCookieSettings = function () {
 
 // configure Express
 app.configure(function() {
-	// TODO: Put port in config
 	app.set('port', process.env.PORT || 3000);
 	app.set('ssl-port', process.env.SSL_PORT || 4000);
 	app.set('views', __dirname + '/views');
