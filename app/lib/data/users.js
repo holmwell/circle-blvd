@@ -305,7 +305,7 @@ module.exports = function () {
 			else {
 				var isReadOnly = false;
 				var memberships = [];
-				db.users.add(
+				addUser(
 					member.name,
 					member.email, 
 					member.password,
