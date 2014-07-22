@@ -1,10 +1,13 @@
 var fs = require('fs');
+var path = require('path');
 var version = "0.0.0";
 
-fs.readFile("package.json", "utf-8", readPackageJson);
+var packagePath = path.join(__dirname, "..", "package.json");
+fs.readFile(packagePath, "utf-8", readPackageJson);
+
 function readPackageJson(err, data) {
 	if (err) {
-		console.log("index: Could not read package.json");
+		console.log("index: Could not read package.json at: " + packagePath);
 		return;
 	}
 	var packageJson = JSON.parse(data);
