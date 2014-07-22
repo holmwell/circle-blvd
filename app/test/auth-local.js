@@ -5,7 +5,10 @@
 // test. There's not much in auth-local.js itself
 // to actually test.
 
-var rewire = require('rewire');
+var rewire  = require('rewire');
+var mocks   = require('./lib/mocks.js');
+var request = require('supertest');
+
 var unit   = rewire('../lib/auth-local.js');
 var test   = {};
 
@@ -29,7 +32,8 @@ var authMock = function () {
 
 	var alwaysFred = function (req, success, failure) {
 		var fn = function (req, res, next) {
-			req.user = fred;
+			// Mocks passport.authenticate
+			req.user = fred; 
 			success();
 		};
 
@@ -44,16 +48,21 @@ unit.__set__("db", dbMock);
 unit.__set__("auth", authMock);
 
 test['signin responds'] = function (test) {
-	var req = {};
-	var res = {
-		send: function (status, user) {
-			test.equal(user.name, "Fred");
-			test.equal(req.user.name, "Fred");
-			test.done();
-		}
-	};
-	var next = {};
-	unit.signin(req, res, next);
+	var server = mocks.server(unit.signin);
+	request(server)
+	.get('/')
+	.expect(function (res) {
+		test.equal(res.body.name, "Fred", "User is not returned");
+	})
+	.end(test.done);
+};
+
+test['signout responds'] = function (test) {
+	var server = mocks.server(unit.signout);
+	request(server)
+	.get('/')
+	.expect(204)
+	.end(test.done);
 };
 
 exports[''] = test;

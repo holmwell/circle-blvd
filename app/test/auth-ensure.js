@@ -1,8 +1,7 @@
 // test/auth-ensure.js
 
 var unit = require('../lib/auth-ensure.js');
-
-var express = require('express');
+var mocks = require('./lib/mocks.js');
 var request = require('supertest');
 
 var test = {};
@@ -43,12 +42,12 @@ var expectFail = function (server, test) {
 };
 
 test.auth['is authenticated'] = function (test) {
-	var server = createServer(isAuthenticated, unit.auth);
+	var server = mocks.server(isAuthenticated, unit.auth);
 	expectPass(server, test);
 };
 
 test.auth['not authenticated'] = function (test) {
-	var server = createServer(isNotAuthenticated, unit.auth);
+	var server = mocks.server(isNotAuthenticated, unit.auth);
 	expectFail(server, test);
 };
 
@@ -61,7 +60,7 @@ test.mainframe['has mainframe access'] = function (test) {
 		next();
 	}
 
-	var server = createServer(isAuthenticated, 
+	var server = mocks.server(isAuthenticated, 
 		isMainframe, 
 		unit.mainframe);
 
@@ -75,7 +74,7 @@ test.mainframe['no mainframe access'] = function (test) {
 		});
 		next();
 	};
-	var server = createServer(isAuthenticated, 
+	var server = mocks.server(isAuthenticated, 
 		isNotMainframe, 
 		unit.mainframe);
 
@@ -84,7 +83,7 @@ test.mainframe['no mainframe access'] = function (test) {
 
 
 test.circle['no circleId specified'] = function (test) {
-	var server = createServer(isAuthenticated, unit.circle);
+	var server = mocks.server(isAuthenticated, unit.circle);
 	expectFail(server, test);
 };
 
@@ -97,7 +96,7 @@ test.circle['is not in circle'] = function (test) {
 		next();
 	};
 
-	var server = createServer(isAuthenticated,
+	var server = mocks.server(isAuthenticated,
 		isNotCircle,
 		unit.circle);
 
@@ -113,7 +112,7 @@ test.circle['is in circle'] = function (test) {
 		next();
 	};
 
-	var server = createServer(isAuthenticated,
+	var server = mocks.server(isAuthenticated,
 		isCircle, unit.circle);
 
 	expectPass(server, test);
@@ -129,7 +128,7 @@ test.circle['is in circle, not admin'] = function (test) {
 		next();
 	};
 
-	var server = createServer(isAuthenticated,
+	var server = mocks.server(isAuthenticated,
 		isCircleNotAdmin, unit.circleAdmin);
 
 	expectFail(server, test);
@@ -145,7 +144,7 @@ test.circle['is in circle, is admin'] = function (test) {
 		next();
 	};
 
-	var server = createServer(isAuthenticated,
+	var server = mocks.server(isAuthenticated,
 		isCircleAdmin, unit.circleAdmin);
 
 	expectPass(server, test);
@@ -161,7 +160,7 @@ test.circle['is admin, not in circle'] = function (test) {
 		next();
 	};
 
-	var server = createServer(isAuthenticated,
+	var server = mocks.server(isAuthenticated,
 		isAdminNotCircle, unit.circleAdmin);
 
 	expectFail(server, test);
@@ -180,36 +179,6 @@ var isNotAuthenticated = function (req, res, next) {
 		return false;
 	};
 	next();
-};
-
-
-function createServer (middleware) {
-	var app = express();
-
-	// Assume we have a user
-	var user = function (req, res, next) {
-		req.user = {};
-		req.user.memberships = [];
-		next();
-	};
-	app.use(user);
-
-	// Basic request stuff
-	var request = function (req, res, next) {
-		req.params = {};
-		next();
-	};
-	app.use(request);
-
-	// Accept multiple params of middleware as our args
-	for (var index in arguments) {
-		app.use(arguments[index]);
-	}
-
-	app.use(function (req, res) {
-		res.send(200);
-	});
-	return app;
 };
 
 exports[''] = test;
