@@ -24,7 +24,7 @@ var dbMock = function () {
 	}
 }();
 
-var authMock = function () {
+var alwaysPass = function () {
 	var fred = {
 	   "name": "Fred",
 	   "type": "user"
@@ -44,16 +44,43 @@ var authMock = function () {
 	};
 }();
 
-unit.__set__("db", dbMock);
-unit.__set__("auth", authMock);
+var alwaysFail = function () {
+	return {
+		local: function (req, success, failure) {
+			var fn = function (req, res, next) {
+				var error = new Error("Signin attempt failed");
+				failure(error);
+			};
+			return fn;
+		}
+	};
+}();
 
-test['signin responds'] = function (test) {
+
+var init = function () {
+	unit.__set__("db", dbMock);
+	unit.__set__("auth", alwaysPass);
+	unit.__set__("errors", mocks.errors);	
+}(); // closure
+
+
+test['signin responds with user obj'] = function (test) {
 	var server = mocks.server(unit.signin);
 	request(server)
-	.get('/')
+	.post('/')
 	.expect(function (res) {
 		test.equal(res.body.name, "Fred", "User is not returned");
 	})
+	.end(test.done);
+};
+
+test['signin can respond with 401'] = function (test) {
+	unit.__set__("auth", alwaysFail);
+	var server = mocks.server(unit.signin);
+	var data = {};
+	request(server)
+	.post('/', data)
+	.expect(401)
 	.end(test.done);
 };
 

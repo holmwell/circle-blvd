@@ -30,8 +30,22 @@ var createServer = function(middleware) {
 	return app;
 };
 
+var errors = function () {
+	var doNothing = function () {
+		// nothing!
+	};
+	var throwError = function (error) {
+		throw error;
+	}
+	return {
+		handle: throwError,
+		log: doNothing
+	}
+}();
+
 module.exports = function () {
 	return {
-		server: createServer
+		server: createServer,
+		errors: errors
 	}
 }();
