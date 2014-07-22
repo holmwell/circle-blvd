@@ -15,7 +15,6 @@ exports.init = function (req, res, app) {
 	var defaultCircleId = "1";
 
 	var handleOptionalSettings = function (fnCallback) {
-
 		var tasks = [];
 		db.settings.getAll(function (err, defaultSettings) {
 			if (err) {
@@ -175,6 +174,9 @@ exports.init = function (req, res, app) {
 	};
 
 	db.circles.add(firstCircle, function (err, newCircle) {
+		if (err) {
+			return onError(err);
+		}
 		defaultCircleId = newCircle._id;
 		db.groups.add(mainframeGroup, function (rootGroup) {
 			var adminGroup = {
