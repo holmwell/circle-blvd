@@ -304,13 +304,34 @@ test["Move story is 200"] = function (test) {
 			var firstStory = res.body;
 			test.ok(firstStory.isFirstStory, "first story is first story");
 			test.notEqual(firstStory.id, data.story.id, "first story is different");
+			memberSession.firstStory = firstStory;
 		})
 		.end(finish(test));
 	}
 };
 
-// Check list integrity
 // Remove story
+test["Remove story is 200"] = function (test) {
+	member.put('/data/story/remove')
+	.send(memberSession.firstStory)
+	.expect(204)
+	.end(checkFirstStory);
+
+	function checkFirstStory(err) {
+		test.ifError(err);
+
+		member.get('/data/' + memberSession.circle._id + '/first-story')
+		.expect(200)
+		.expect(function (res) {
+			var firstStory = res.body;
+			test.ok(firstStory.isFirstStory, "first story is first story");
+			test.notEqual(firstStory.id, memberSession.firstStory.id, 
+				"first story is different");
+			memberSession.firstStory = firstStory;
+		})
+		.end(finish(test));
+	}
+};
 
 // Archive story
 
@@ -329,6 +350,7 @@ test["Move story is 200"] = function (test) {
 
 // Paging archives
 // Mainframe: Update setting
+// Check list integrity
 
 test['database tear down'] = function (test) {
 	var destroyTestDatabase = function (callback) {
