@@ -1,5 +1,6 @@
 // app.js
 var express = require('express');
+var events  = require('events');
 var http    = require('http');
 var path    = require('path');
 var routes  = require('./routes');
@@ -20,7 +21,12 @@ var userRoutes 	= require('./routes/user');
 var initRoutes 	= require('./routes/init');
 
 var couchSessionStore = require('./lib/couch-session-store.js');
+
+var ee = new events.EventEmitter();
+var isReady = false;
+
 var app = express();
+
 
 // Middleware for data access
 var guard = errors.guard;
@@ -672,7 +678,7 @@ app.configure(function() {
 			// TODO: Should not get here.
 		});
 		defineRoutes();
-		startServer();
+		ready();
 	};
 
 	settings.init(function (err, settings) {
@@ -684,3 +690,20 @@ app.configure(function() {
 		}
 	});
 });
+
+function ready() {
+	isReady = true;
+	ee.emit('circle-blvd-app-is-ready');
+}
+
+exports.whenReady = function (callback) {
+	if (isReady) {
+		return callback();
+	}
+	ee.once('circle-blvd-app-is-ready', function () {
+		callback();
+	});
+};
+
+exports.express = app;
+exports.startServer = startServer;
