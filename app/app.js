@@ -66,7 +66,7 @@ var tryToCreateHttpsServer = function (callback) {
 	sslServer.create(app, callback);
 };
 
-var configureSuccessful = function () {
+var defineRoutes = function () {
 	app.post('/auth/signin', auth.signin);
 	app.get('/auth/signout', auth.signout);
 
@@ -582,7 +582,9 @@ var configureSuccessful = function () {
 			}
 		}));
 	});
+};
 
+var startServer = function () {
 	http.createServer(app).listen(app.get('port'), function () {
 		console.log("Express http server listening on port " + app.get('port'));
 	});
@@ -596,7 +598,7 @@ var configureSuccessful = function () {
 			console.log(success);
 		}
 	});
-};
+}
 
 var forceHttps = function(req, res, next) {
 	if (!sslServer.isRunning()) {
@@ -669,7 +671,8 @@ app.configure(function() {
 			}
 			// TODO: Should not get here.
 		});
-		configureSuccessful();
+		defineRoutes();
+		startServer();
 	};
 
 	settings.init(function (err, settings) {
