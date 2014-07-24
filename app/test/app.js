@@ -348,6 +348,16 @@ test["Archive story is 204"] = function (test) {
 	}
 };
 
+test['Archives can be counted'] = function (test) {
+	admin.get('/data/' + adminSession.circle._id + '/archives/count')
+	.expect(200)
+	.expect(function (res) {
+		var count = res.text;
+		test.equal(count, "0", "archive count");
+	})
+	.end(finish(test));
+};
+
 // Update story
 test["Update story is 200"] = function (test) {
 	var story = memberSession.firstStory;
@@ -412,6 +422,86 @@ test["Save comment is 200"] = function (test) {
 			}
 			test.ok(commentFound, "comment found");
 			memberSession.firstStory = saved;
+		})
+		.end(finish(test));
+	}
+};
+
+// Archives, again
+test['Archives can be paged'] = function (test) {
+	var storiesToArchive = undefined;
+	var allArchives = undefined;
+	var archivesUrl = "/data/" + memberSession.circle._id + "/archives";
+
+	member.get('/data/' + memberSession.circle._id + '/stories')
+	.expect(200)
+	.expect(function (res) {
+		storiesToArchive = res.body;
+	})
+	.end(archiveStories);
+
+	function archiveStories(err) {
+		test.ifError(err);
+		
+		var archiveStory = function (story) {
+			var fn = function (callback) {
+				member.put("/data/story/archive")
+				.send(story)
+				.expect(204)
+				.end(callback);
+			}
+			return fn;
+		}
+
+		var archiveFunctions = [];
+		for (var key in storiesToArchive) {
+			var story = storiesToArchive[key];
+			if (story.isDeadline || story.isNextMeeting) {
+				continue;
+			}
+			archiveFunctions.push(archiveStory(story));
+		}
+
+		async.series(archiveFunctions, function (err) {
+			test.ifError(err);
+			checkArchives();
+		});
+	}
+
+	function checkArchives() {
+		member.get(archivesUrl)
+		.expect(200)
+		.expect(function (res) {
+			allArchives = res.body;
+		})
+		.end(checkLimitedArchives);
+	}
+
+	function checkLimitedArchives(err) { 
+		test.ifError(err);
+		member.get(archivesUrl)
+		.query({ limit: '2' })
+		.expect(200)
+		.expect(function (res) {
+			var archives = res.body;
+			test.equal(archives.length, 2, "archive length");
+		})
+		.end(checkStartkey);
+	}
+
+	function checkStartkey(err) {
+		test.ifError(err);
+		var startkey = allArchives[1].sortIndex; 
+		member.get(archivesUrl)
+		.query({ 
+			limit: '2',
+			startkey: startkey
+		})
+		.expect(200)
+		.expect(function (res) {
+			var limitedArchives = res.body;
+			test.equal(limitedArchives[0].sortIndex, 
+			 	startkey, "archive start");
 		})
 		.end(finish(test));
 	}
@@ -581,8 +671,7 @@ test['Payment is 400'] = function (test) {
 	}
 };
 
-
-// Paging archives
+// TODO: 
 // Mainframe: Update setting
 // Check list integrity
 
@@ -602,4 +691,3 @@ test['database tear down'] = function (test) {
 };
 
 exports[''] = test;
-
