@@ -546,9 +546,41 @@ test['Change password is 200'] = function (test) {
 	}
 };
 
-// Subscribe
-// Unsubscribe
-// Donate
+// Payment: We'd rather not put our API
+// keys in our code, so this is the best
+// we can do at the app level. 
+// 
+// These are better addressed with unit tests.
+test['Payment is 400'] = function (test) {
+	var data = {
+		stripeTokenId: null,
+		planName: 'Test'
+	}
+	member.post('/payment/subscribe')
+	.send(data)
+	.expect(400)
+	.end(donate);
+
+	function donate(err) {
+		test.ifError(err);
+		var data = {
+			stripeTokenId: null,
+			amount: 100
+		};
+		member.post('/payment/donate')
+		.send(data)
+		.expect(500) // no API key
+		.end(cancelSubscription);
+	}
+
+	function cancelSubscription(err) {
+		test.ifError(err);
+		member.put('/payment/subscribe/cancel')
+		.expect(204) // no plan
+		.end(finish(test));
+	}
+};
+
 
 // Paging archives
 // Mainframe: Update setting

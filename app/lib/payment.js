@@ -35,10 +35,8 @@ module.exports = function () {
 			planId = '2014-06-patron';
 		}
 		if (!planId) {
-			var error = {
-				code: 400,
-				message: "Invalid plan name"
-			};
+			var error = new Error("Invalid plan name");
+			error.status = 400;
 			return callback(error);
 		}
 
