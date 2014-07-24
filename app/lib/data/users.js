@@ -326,6 +326,13 @@ module.exports = function () {
 			if (err) {
 				return callback(err);
 			}
+			
+			if (!user) {
+				var error = new Error("Account not found");
+				error.status = 404;
+				return callback(error);
+			}
+
 			var newMemberships = [];
 			user.memberships.forEach(function (membership) {
 				if (membership.circle === circleId) {
