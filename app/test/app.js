@@ -269,6 +269,23 @@ test['New circle has a first story'] = function (test) {
 	.end(finish(test));
 };
 
+var checkFirstStory = function (oldFirstStory, test) {
+	var fn = function (err) {
+		test.ifError(err);
+
+		member.get('/data/' + memberSession.circle._id + '/first-story')
+		.expect(200)
+		.expect(function (res) {
+			var firstStory = res.body;
+			test.ok(firstStory.isFirstStory, "first story is first story");
+			test.notEqual(firstStory.id, oldFirstStory.id, "first story is different");
+			memberSession.firstStory = firstStory;
+		})
+		.end(finish(test));
+	}
+	return fn;
+}
+
 // Move story
 test["Move story is 200"] = function (test) {
 	var data = {
@@ -292,51 +309,113 @@ test["Move story is 200"] = function (test) {
 			test.equal(movedStory.nextId, data.newNextId, "next id updated");
 			test.ok(!movedStory.isFirstStory, "moved story no longer first");
 		})
-		.end(checkFirstStory);
-	}
-
-	function checkFirstStory(err) {
-		test.ifError(err);
-
-		member.get('/data/' + memberSession.circle._id + '/first-story')
-		.expect(200)
-		.expect(function (res) {
-			var firstStory = res.body;
-			test.ok(firstStory.isFirstStory, "first story is first story");
-			test.notEqual(firstStory.id, data.story.id, "first story is different");
-			memberSession.firstStory = firstStory;
-		})
-		.end(finish(test));
+		.end(checkFirstStory(data.story, test));
 	}
 };
 
 // Remove story
-test["Remove story is 200"] = function (test) {
+test["Remove story is 204"] = function (test) {
 	member.put('/data/story/remove')
 	.send(memberSession.firstStory)
 	.expect(204)
-	.end(checkFirstStory);
+	.end(checkFirstStory(memberSession.firstStory, test));
+};
 
-	function checkFirstStory(err) {
+// Archive story
+test["Archive story is 204"] = function (test) {
+	member.put('/data/story/archive')
+	.send(memberSession.firstStory)
+	.expect(204)
+	.end(checkArchive);
+
+	function checkArchive(err) {
 		test.ifError(err);
 
-		member.get('/data/' + memberSession.circle._id + '/first-story')
+		member.get('/data/' + memberSession.circle._id + '/archives')
 		.expect(200)
 		.expect(function (res) {
-			var firstStory = res.body;
-			test.ok(firstStory.isFirstStory, "first story is first story");
-			test.notEqual(firstStory.id, memberSession.firstStory.id, 
-				"first story is different");
-			memberSession.firstStory = firstStory;
+			var archives = res.body;
+			var newArchiveFound = false;
+			var storyId = memberSession.firstStory.id;
+			for (var index in archives) {
+				if (storyId === archives[index].storyId) {
+					newArchiveFound = true;
+				}
+			}
+			test.ok(newArchiveFound, "new archive found");
+		})
+		.end(checkFirstStory(memberSession.firstStory, test));
+	}
+};
+
+// Update story
+test["Update story is 200"] = function (test) {
+	var story = memberSession.firstStory;
+	story.summary += " summary!";
+	story.description += " description!";
+	story.owner += " owner!";
+	story.newComment = "new comment!";
+
+	member.put('/data/story/')
+	.send(story)
+	.expect(200)
+	.end(checkStory);
+
+	function checkStory(err) {
+		test.ifError(err);
+
+		member.get('/data/story/' + story.id)
+		.expect(200)
+		.expect(function (res) {
+			var saved = res.body;
+			test.equal(saved.summary, story.summary, "story summary");
+			test.equal(saved.description, story.description, "story description");
+			test.equal(saved.owner, story.owner, "story owner");
+			var commentFound = false;
+			for(var key in saved.comments) {
+				if (saved.comments[key].text === story.newComment) {
+					commentFound = true;
+				}
+			}
+			test.ok(commentFound, "comment found");
+			memberSession.firstStory = saved;
 		})
 		.end(finish(test));
 	}
 };
 
-// Archive story
-
-// Update story
 // Add comment
+test["Save comment is 200"] = function (test) {
+	var data = {
+		circleId: memberSession.circle._id,
+		storyId: memberSession.firstStory.id,
+		comment: "comment for testing"
+	};
+
+	member.put('/data/story/comment')
+	.send(data)
+	.expect(200)
+	.end(checkStory);
+
+	function checkStory(err) {
+		test.ifError(err);
+
+		member.get('/data/story/' + data.storyId)
+		.expect(200)
+		.expect(function (res) {
+			var saved = res.body;
+			var commentFound = false;
+			for (var key in saved.comments) {
+				if (saved.comments[key].text === data.comment) {
+					commentFound = true;
+				}
+			}
+			test.ok(commentFound, "comment found");
+			memberSession.firstStory = saved;
+		})
+		.end(finish(test));
+	}
+};
 
 // Add member
 // Remove member
