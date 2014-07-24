@@ -417,8 +417,43 @@ test["Save comment is 200"] = function (test) {
 	}
 };
 
-// Add member
 // Remove member
+test["Remove member is 204"] = function (test) {
+	var memberToRemove = undefined;
+	var storiesUrl = '/data/' + adminSession.circle._id + '/stories';
+
+	member.get('/data/user')
+	.expect(200)
+	.end(function (err, res) {
+		test.ifError(err);
+		memberToRemove = res.body;
+		getStoriesBefore();
+	});
+
+	function getStoriesBefore() {
+		member.get(storiesUrl)
+		.expect(200)
+		.end(removeMember)
+	}
+
+	function removeMember(err) {
+		test.ifError(err);
+		admin
+		.put('/data/' + adminSession.circle._id + '/member/remove')
+		.send(memberToRemove)
+		.expect(204)
+		.end(getStoriesAfter);
+	}
+
+	function getStoriesAfter(err) {
+		test.ifError(err);
+		member
+		.get(storiesUrl)
+		.expect(403)
+		.end(finish(test));
+	}
+};
+
 
 // Update profile
 // Change password
