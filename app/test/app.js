@@ -671,9 +671,59 @@ test['Payment is 400'] = function (test) {
 	}
 };
 
-// TODO: 
-// Mainframe: Update setting
-// Check list integrity
+test['Save settings is 200'] = function (test) {
+	var data = {
+		name: 'limit-circles',
+		value: 88
+	};
+
+	var settings = undefined;
+	// TODO: This API is a bit silly, needing the doc._id
+	admin.get('/data/settings/authorized')
+	.expect(200)
+	.expect(function (res) {
+		settings = res.body;
+	})
+	.end(saveSetting);
+
+	function saveSetting (err) {
+		test.ifError(err);
+		var settingToSave = undefined;
+		for (var key in settings) {
+			if (settings[key].name === data.name) {
+				settingToSave = settings[key];
+			}
+		}
+		settingToSave.value = data.value;
+
+		admin.put('/data/setting')
+		.send(settingToSave)
+		.expect(200)
+		.end(checkSetting);
+	}
+	
+
+	function checkSetting(err) {
+		test.ifError(err);
+		admin.get('/data/settings/authorized')
+		.expect(200)
+		.expect(function (res) {
+			var settings = res.body;
+			var saved = undefined;
+			for (var key in settings) {
+				if (settings[key].name === data.name) {
+					saved = settings[key];
+				}
+			}
+			test.equal(saved.name, data.name, "setting name");
+			test.equal(saved.value, data.value, "setting value");
+		})
+		.end(finish(test));
+	}
+};
+
+// TODO:
+// Check list integrity. Perhaps in a separate test file.
 
 test['database tear down'] = function (test) {
 	var destroyTestDatabase = function (callback) {
