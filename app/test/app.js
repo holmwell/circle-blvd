@@ -456,7 +456,95 @@ test["Remove member is 204"] = function (test) {
 
 
 // Update profile
+test['Update user is 200'] = function (test) {
+	var memberToEdit = undefined
+	member.get('/data/user')
+	.expect(200)
+	.end(function (err, res) {
+		test.ifError(err);
+		memberToEdit = res.body;
+		updateName();
+	});
+
+	function updateName(err) {
+		test.ifError(err);
+		memberToEdit.name = "New name";
+		member.put('/data/user/name')
+		.send(memberToEdit)
+		.expect(200)
+		.end(updateEmail);
+	}
+
+	function updateEmail(err) {
+		test.ifError(err);
+		memberToEdit.email = "new@email";
+		member.put('/data/user/email')
+		.send(memberToEdit)
+		.expect(200)
+		.end(updateNotificationEmail);
+	}
+
+	function updateNotificationEmail(err) {
+		test.ifError(err);
+		memberToEdit.notificationEmail = "notify@email";
+		member.put('/data/user/notificationEmail')
+		.send(memberToEdit)
+		.expect(200)
+		.end(checkMember);
+	}
+
+	function checkMember(err) {
+		test.ifError(err);
+		member.get('/data/user')
+		.expect(200)
+		.expect(function (res) {
+			var saved = res.body;
+			test.equal(saved.name, memberToEdit.name, "member name");
+			test.equal(saved.email, memberToEdit.email, "member email");
+			test.equal(saved.notifications.email, 
+				memberToEdit.notificationEmail, "notification email");
+			memberEmail = saved.email;
+		})
+		.end(finish(test));
+	}
+};
+
 // Change password
+test['Change password is 200'] = function (test) {
+	var data = {
+		password: "newpassword"
+	};
+	member.put('/data/user/password')
+	.send(data)
+	.expect(200)
+	.end(signOut);
+
+	function signOut(err) {
+		test.ifError(err);
+		member.get('/auth/signout')
+		.expect(204)
+		.end(signIn)
+	}
+
+	function signIn(err) {
+		test.ifError(err);
+		var formData = {
+			email: memberEmail,
+			password: data.password
+		};
+		member.post('/auth/signin')
+		.type("form")
+		.send(formData)
+		.expect(200)
+		.end(savePassword);
+	}
+
+	function savePassword(err) {
+		test.ifError(err);
+		memberPassword = data.password;
+		test.done();
+	}
+};
 
 // Subscribe
 // Unsubscribe
