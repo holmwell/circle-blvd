@@ -15,7 +15,7 @@ function readPackageJson(err, data) {
 }
 
 exports.index = function renderIndex(req, res, app){
-	var analyticsId;
+	var analyticsId = false;
 	var settings = app.get('settings');
 	if (settings && settings['google-analytics']) {
 		analyticsId = settings['google-analytics'].value;
