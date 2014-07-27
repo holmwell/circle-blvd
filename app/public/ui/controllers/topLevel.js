@@ -1,6 +1,6 @@
 'use strict';
 
-function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout) {
+function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout, analytics) {
 
 	$scope.keyboard = {};
 
@@ -180,6 +180,9 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout) {
 			if (path !== '/signin') {
 				session.lastLocationPath = $location.path();	
 			}
+
+			analytics.trackPage();
+
 			$http.get('/data/user')
 			.success(function (user) {
 				session.user = user;
@@ -228,4 +231,4 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout) {
 
 	init();
 }
-TopLevelCtrl.$inject = ['session', '$scope', '$http', '$location', '$route', '$timeout'];
+TopLevelCtrl.$inject = ['session', '$scope', '$http', '$location', '$route', '$timeout', 'analytics'];

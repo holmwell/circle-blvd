@@ -2,6 +2,7 @@
 
 /* Services */
 angular.module('CircleBlvd.services', []).
+  factory('analytics', CircleBlvd.Services.analytics).
   factory('hacks', CircleBlvd.Services.hacks).
   factory('signInName', CircleBlvd.Services.signInName).
   factory('session', CircleBlvd.Services.session).

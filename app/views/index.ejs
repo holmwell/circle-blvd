@@ -39,8 +39,7 @@
     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
     ga('create', '<%= analyticsId %>', 'auto');
-    ga('send', 'pageview');
-
+    
   </script>
   <% } %>
 </head>
@@ -174,6 +173,7 @@
 
   <script src="main/app.js"></script>
   
+  <script src="services/analytics.js"></script>
   <script src="services/hacks.js"></script>
   <script src="services/signInName.js"></script>
   <script src="services/session.js"></script>
