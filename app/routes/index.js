@@ -14,10 +14,17 @@ function readPackageJson(err, data) {
 	version = packageJson.version;
 }
 
-exports.index = function renderIndex(req, res){
+exports.index = function renderIndex(req, res, app){
+	var analyticsId;
+	var settings = app.get('settings');
+	if (settings && settings['google-analytics']) {
+		analyticsId = settings['google-analytics'].value;
+	}
+
 	var params = {
 		host: req.get('Host'),
-		version: version
+		version: version,
+		analyticsId: analyticsId
 	};
 	res.render('index', params);
 };

@@ -123,6 +123,11 @@ var defineRoutes = function () {
 
 	app.put("/data/setting", ensure.mainframe, function (req, res) {
 		var data = req.body;
+
+		var invalidateSettingsCache = function () {
+			app.set('settings', null);
+		};
+
 		var onSettingsUpdate = function (setting) {
 			if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
 				// TODO: Tell the client if we started the server?
@@ -131,6 +136,8 @@ var defineRoutes = function () {
 			if (setting.name === 'stripe-secret-key') {
 				payment.setApiKey(setting.value);
 			}
+
+			invalidateSettingsCache();
 			res.send(200);
 		};
 
@@ -584,7 +591,7 @@ var defineRoutes = function () {
 			}
 			else {
 				res.clearCookie('initializing');
-				routes.index(req, res);			
+				routes.index(req, res, app);			
 			}
 		}));
 	});
@@ -618,6 +625,22 @@ var forceHttps = function(req, res, next) {
 		return next();	
 	}
 	res.redirect('https://' + req.get('Host') + req.url);
+};
+
+var appSettings = function (req, res, next) {
+	if (!app.get('settings')) {
+		db.settings.getAll(function (err, settings) {
+			if (err) {
+				errors.log(err);
+				return next();
+			}
+			app.set('settings', settings);
+			next();
+		});
+	}
+	else {
+		next();
+	}
 };
 
 var getCookieSettings = function () {
@@ -667,6 +690,10 @@ app.configure(function() {
 
 		// Init authentication
 		auth.attach(app);
+		
+		// Set settings
+		app.use(appSettings);
+		
 		// Routes
 		app.use(app.router);
 		// Catch errors
