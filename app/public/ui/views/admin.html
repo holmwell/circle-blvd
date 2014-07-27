@@ -5,6 +5,20 @@
 
 <div ng-show="isSignedIn()" class="hidden-xs">
 <form>
+	<h4>Circle name</h4>
+	<div class="row">
+		<div class="col-sm-5">
+			<input ng-model="circleName" class="form-control" type="text" placeholder="Circle name"/>
+		</div>
+		<div class="col-sm-2">
+			<button class="btn btn-default" 
+			ng-click="saveCircleName(circleName)">Save</button>
+			<span>&nbsp;{{messages.name}}</span>
+		</div>
+	</div>
+</form>
+
+<form>
 	<h4>Members</h4>
 	<div class="row">
 		<div class="col-sm-5">

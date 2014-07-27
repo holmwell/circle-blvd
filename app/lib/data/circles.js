@@ -57,6 +57,7 @@ module.exports = function () {
 	return {
 		add: addCircle,
 		count: count,
+		get: couch.circles.get,
 		getAll: function (callback) {
 			couch.circles.getAll(callback);
 		},

@@ -186,6 +186,19 @@ var defineRoutes = function () {
 		db.circles.update(circle, handle(res));
 	});
 
+	app.get("/data/circle/:circleId", ensure.circle, function (req, res) {
+		var circleId = req.params.circleId;
+		db.circles.get(circleId, handle(res));
+	});
+
+	app.put("/data/circle/:circleId/name", ensure.circleAdmin, function (req, res) {
+		var data = req.body;
+		var circleId = req.params.circleId;
+		db.circles.get(circleId, guard(res, function (circle) {
+			circle.name = data.name;
+			db.circles.update(circle, handle(res));
+		}));
+	});
 
 	// Groups!
 	app.get("/data/:circleId/groups", ensure.circle, function (req, res) {

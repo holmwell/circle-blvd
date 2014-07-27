@@ -12,6 +12,22 @@ module.exports = function () {
 		couch.view("circles/byName", callback);
 	};
 
+	var getCircle = function (circleId, callback) {
+		couch.docs.get(circleId, function (err, circle) {
+			if (err) {
+				return callback(err);
+			}
+
+			if (circle.type !== "circle") {
+				var error = new Error("Document is not a circle");
+				error.status = 400;
+				return callback(error);
+			}
+
+			callback(null, circle);
+		});
+	};
+
 	var findCirclesByUser = function (user, callback) {
 		var circleIds = [];
 
@@ -61,6 +77,7 @@ module.exports = function () {
 
 	return {
 		add: addCircle,
+		get: getCircle,
 		getAll: getAllCircles,
 		findByUser: findCirclesByUser,
 		update: updateCircle,

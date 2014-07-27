@@ -1,9 +1,38 @@
 'use strict';
 
-function AdminCtrl(session, $scope, $http, errors) {
+function AdminCtrl(session, $scope, $http, $route, errors) {
 
 	var activeCircle = session.activeCircle;
 	var impliedGroup = undefined;
+	$scope.messages = {};
+
+	var getCircleData = function () {
+		$http.get('/data/circle/' + activeCircle)
+		.success(getCircleSuccess)
+		.error(getCircleFailure);
+
+		function getCircleSuccess(data, status) {
+			$scope.circleName = data.name;
+		}
+
+		function getCircleFailure(data, status) {
+			errors.log(data, status)
+		}
+	};
+
+	$scope.saveCircleName = function (circleName) {
+		var data = {
+			name: circleName
+		};
+		$http.put('/data/circle/' + activeCircle + '/name', data)
+		.success(function () {
+			$scope.messages.name = "Ok!";
+			// TODO: Emit an event and catch it at TopLevelCtrl,
+			// instead of a full page refresh.
+			$route.reload();
+		})
+		.error(errors.handle);
+	};
 
 	var addMemberSuccess = function() {
 		$scope.memberName = "";
@@ -167,10 +196,11 @@ function AdminCtrl(session, $scope, $http, errors) {
 	var init = function () {
 		$scope.memberGroups = {};
 
+		getCircleData();
 		getLatestMemberData();
 		getLatestGroupData();
 	}
 
 	init();
 }
-AdminCtrl.$inject = ['session', '$scope', '$http', 'errors'];
+AdminCtrl.$inject = ['session', '$scope', '$http', '$route', 'errors'];
