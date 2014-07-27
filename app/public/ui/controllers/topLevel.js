@@ -171,6 +171,26 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout, analy
 		$scope.showErrorModal();
 	});
 
+	var enableAnalytics = function () {
+		// Send a few basic things up to Google Analytics,
+		// to measure site activity.
+		$scope.$on('storySelected', function () {
+			analytics.trackEvent('story opened');
+		});
+
+		$scope.$on('storyMoved', function () {
+			analytics.trackEvent('story moved');
+		});
+
+		$scope.$on('storySaved', function () {
+			analytics.trackEvent('story saved');
+		});
+
+		$scope.$on('storyArchived', function () {
+			analytics.trackEvent('story archived');
+		});
+	}(); // closure
+
 	var init = function() {
 		$scope.$on('$routeChangeSuccess', function () {
 			var path = $location.path();

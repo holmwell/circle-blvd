@@ -512,6 +512,9 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 					errors.handle(err.data, err.status);
 					return;
 				}
+				else {
+					$scope.$emit('storyMoved', movedStory);
+				}
 			});
 		}, 0);
 	};
