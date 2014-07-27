@@ -175,19 +175,19 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout, analy
 		// Send a few basic things up to Google Analytics,
 		// to measure site activity.
 		$scope.$on('storySelected', function () {
-			analytics.trackEvent('story opened');
+			analytics.trackEvent('story', 'opened');
 		});
 
 		$scope.$on('storyMoved', function () {
-			analytics.trackEvent('story moved');
+			analytics.trackEvent('story', 'moved');
 		});
 
 		$scope.$on('storySaved', function () {
-			analytics.trackEvent('story saved');
+			analytics.trackEvent('story', 'saved');
 		});
 
 		$scope.$on('storyArchived', function () {
-			analytics.trackEvent('story archived');
+			analytics.trackEvent('story', 'archived');
 		});
 	}(); // closure
 

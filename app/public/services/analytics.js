@@ -9,9 +9,9 @@ CircleBlvd.Services.analytics = function ($window, $location) {
 		}
 	};
 
-	var trackEvent = function (label) {
+	var trackEvent = function (category, action) {
 		if ($window.ga) {
-			$window.ga('send', 'event', 'button', 'click', label);
+			$window.ga('send', 'event', category, action);
 		}
 	};
 
