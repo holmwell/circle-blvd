@@ -1,5 +1,3 @@
-'use strict';
-
 function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors) {
 
 	var circleId = undefined;
