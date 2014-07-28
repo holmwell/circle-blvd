@@ -76,6 +76,9 @@ var defineRoutes = function () {
 	app.post('/auth/signin', auth.signin);
 	app.get('/auth/signout', auth.signout);
 
+	// Search engine things
+	app.get('/sitemap.txt', routes.sitemap);
+
 	// User routes (account actions. requires login access)
 	app.get("/data/user", ensure.auth, userRoutes.user);
 	app.put("/data/user/name", ensure.auth, userRoutes.updateName);

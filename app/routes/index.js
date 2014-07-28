@@ -14,7 +14,7 @@ function readPackageJson(err, data) {
 	version = packageJson.version;
 }
 
-exports.index = function renderIndex(req, res, app){
+exports.index = function renderIndex(req, res, app) {
 	var analyticsId = false;
 	var settings = app.get('settings');
 	if (settings && settings['google-analytics']) {
@@ -27,4 +27,17 @@ exports.index = function renderIndex(req, res, app){
 		analyticsId: analyticsId
 	};
 	res.render('index', params);
+};
+
+exports.sitemap = function renderSitemap(req, res) {
+	var prefix = req.protocol + '://' + req.get('Host') + '/#';
+	var urls = ['/signin', '/docs', '/donate'];
+
+	var response = "";
+	urls.forEach(function (url) {
+		response += prefix + url + '\n';
+	});
+
+	res.type('text/plain');
+	res.send(200, response);
 };
