@@ -1,3 +1,5 @@
+'use strict';
+
 function SignInCtrl(signInName, session, $scope, $location, $http) {
 
 	$scope.signup = {};

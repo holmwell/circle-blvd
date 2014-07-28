@@ -1,3 +1,5 @@
+'use strict';
+
 function DonateCtrl(session, $scope, $http, errors) {
 
 	$scope.donate5 = {

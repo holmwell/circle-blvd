@@ -1,3 +1,5 @@
+'use strict';
+
 function StoryCtrl(session, $scope, $timeout) {
 
 	$scope.isAndroid = function() {

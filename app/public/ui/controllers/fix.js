@@ -1,3 +1,5 @@
+'use strict';
+
 function FixCtrl(session, $scope, $http, $route, errors) {
 	var projectId = session.activeCircle;
 	var stories = [];

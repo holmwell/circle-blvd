@@ -1,3 +1,5 @@
+'use strict';
+
 function DocsCtrl(session, $scope) {
 
 	var me = "Me";

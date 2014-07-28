@@ -1,3 +1,5 @@
+'use strict';
+
 function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route) {
 
 	var circleId = session.activeCircle;

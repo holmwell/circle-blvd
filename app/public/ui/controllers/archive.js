@@ -1,3 +1,5 @@
+'use strict';
+
 function ArchivesCtrl(session, $scope, $http, $filter, errors) {
 	var projectId = session.activeCircle;
 	var selectedArchive = undefined;
