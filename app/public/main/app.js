@@ -31,17 +31,22 @@ angular.module('myApp', [
 		var homePage = {templateUrl: 'ui/views/home.html', controller: HomeCtrl};
 
 		$routeProvider.when('/', homePage);
+		$routeProvider.when('/signin', {templateUrl: 'ui/views/signin.html', controller: SignInCtrl});
+
 		$routeProvider.when('/stories/:storyId', homePage);
 		$routeProvider.when('/stories', homePage);
 		$routeProvider.when('/archives', {templateUrl: 'ui/views/archives.html', controller: ArchivesCtrl});
-		$routeProvider.when('/signin', {templateUrl: 'ui/views/signin.html', controller: SignInCtrl});
 		$routeProvider.when('/profile', {templateUrl: 'ui/views/profile.html', controller: ProfileCtrl});
+		$routeProvider.when('/admin', {templateUrl: 'ui/views/admin.html', controller: AdminCtrl});
+
+		$routeProvider.when('/about', {templateUrl: 'ui/views/about.html', controller: AboutCtrl});
 		$routeProvider.when('/docs', {templateUrl: 'ui/views/docs.html', controller: DocsCtrl});
 		$routeProvider.when('/donate', {templateUrl: 'ui/views/donate.html', controller: DonateCtrl});
-		$routeProvider.when('/admin', {templateUrl: 'ui/views/admin.html', controller: AdminCtrl});
+
 		$routeProvider.when('/mainframe', {templateUrl: 'ui/views/mainframe.html', controller: MainframeCtrl});
 		$routeProvider.when('/initialize', {templateUrl: 'ui/views/initialize.html', controller: InitializeCtrl});
 		$routeProvider.when('/fix', {templateUrl: 'ui/views/fix.html', controller: FixCtrl});
+
 		$routeProvider.otherwise({redirectTo: '/'});
 	}])
 	.factory('$exceptionHandler', ['$injector', function ($injector) {

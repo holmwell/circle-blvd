@@ -890,7 +890,7 @@ label.relax {
 }
 
 /* donate */
-.donations {
+.donations, .about {
   padding-bottom: 3.5em;
 }
 .donations .btn-wrapper {
