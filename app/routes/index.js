@@ -31,7 +31,7 @@ exports.index = function renderIndex(req, res, app) {
 
 exports.sitemap = function renderSitemap(req, res) {
 	var prefix = req.protocol + '://' + req.get('Host') + '/#';
-	var urls = ['/signin', '/about', '/docs', '/donate'];
+	var urls = ['/signin', '/about', '/docs', '/sponsor', '/donate'];
 
 	var response = "";
 	urls.forEach(function (url) {
