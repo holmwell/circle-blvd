@@ -22,6 +22,10 @@ module.exports = function () {
 		//   private: visible to administrators
 		//   secret: visible to the database and computer memory
 		var settings = [{
+			name: "domain-name",
+			value: null,
+			visibility: "public"
+		},{
 			name: "google-analytics",
 			value: null,
 			visibility: "private"

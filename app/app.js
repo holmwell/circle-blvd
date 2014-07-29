@@ -659,6 +659,24 @@ var appSettings = function (req, res, next) {
 	}
 };
 
+var canonicalDomain = function (domainName) {
+	var fn = function (req, res, next) {
+		if (req.host === domainName) {
+			return next();
+		}
+
+		var hostAndPort = req.get('Host');
+		var redirectToHost = domainName;
+		if (hostAndPort) {
+			redirectToHost = hostAndPort.replace(req.host, domainName);
+		}
+
+		var url = req.protocol + "://" + redirectToHost + req.originalUrl;
+		res.redirect(301, url);
+	};
+	return fn;
+};
+
 var getCookieSettings = function () {
 	// TODO: Check settings to guess if https is running.
 	// Or actually figure out if https is running, and if so
@@ -690,6 +708,11 @@ app.configure(function() {
 	app.use(express.methodOverride());
 
 	var initSettingsOk = function (settings) {
+		if (settings['domain-name']) {
+			var domainName = settings['domain-name'].value;
+			app.use(canonicalDomain(domainName));	
+		}
+		
 		var sessionSecret = settings['session-secret'].value;
 		var SessionStore = couchSessionStore(express.session);
 		var cookieSettings = getCookieSettings();
