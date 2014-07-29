@@ -1,5 +1,52 @@
 <div class="content">
 	<div class="col-sm-offset-2 col-sm-8 sponsor">
-		<h3>Be a sponsor of Circle Blvd.</h3>
+		<h3>Be a sponsor</h3>
+		
+		<p>Much has been done to complete the first draft of the site you are visiting. We are now ready for a small, but sizeable audience.</p> 
+
+		<p>To guarantee a future for Circle Blvd and <a href="http://secretproject.org">Secret Project</a>, our first financial goal is to reach $2,000 in revenues per month, or about 100 individuals contributing $20 per month.</p>
+
+		<div ng-show="!isSignedIn()">
+			<p>To sponsor Circle Blvd, please <a href="/#/signin">sign in</a>. To make a one-time donation without creating an account, please visit our <a href="/#/donate">donation</a> page.</p>
+		</div>
+
+		<div ng-show="isSignedIn()">
+			<p>Thank you for your support.</p>
+			<div class="row clear">
+				<div class="donations" ng-show="supportsPayments">
+					<div class="row plans">
+						<div ng-repeat="plan in plans">
+							<div class="col-sm-4 plan" 
+								ng-class="{active: (activePlan === plan)}" 
+								ng-click="setPlan(plan)">
+								<div ng-if="plan.name === 'Supporter'">
+									<span class="support-circle"></span>
+								</div>
+								<div ng-if="plan.name === 'Organizer'">
+									<span class="support-circle"></span>
+									<span class="support-circle"></span>
+									<span class="support-circle"></span>
+								</div>
+								<div ng-if="plan.name === 'Patron'">
+									<span class="support-circle"></span>
+									<span class="support-circle"></span>
+									<span class="support-circle"></span>
+									<span class="support-circle"></span>
+									<span class="support-circle"></span>
+								</div>
+								<div class="name">{{plan.name}}</div>
+								<div class="amount">{{plan.displayAmount}} per month</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-sm-3 checkout"><button class="btn btn-default" ng-click="openStripeCheckout($event)">Save sponsorship</button></div>
+
+					<p ng-show="activePlan.name" 
+					class="col-sm-4 subtle cancel"><a 
+					class="jsLink subtle" ng-click="cancelSubscription()">cancel sponsorship</a></p>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>

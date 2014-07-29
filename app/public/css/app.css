@@ -968,6 +968,9 @@ label.relax {
 .donations, .profile .circles, .profile .password {
   padding-top: 2.4em;
 }
+.sponsor .donations {
+  padding-top: 0;
+}
 .donations .plans {
   margin-left: 0em;
 }
