@@ -708,7 +708,7 @@ app.configure(function() {
 	app.use(express.methodOverride());
 
 	var initSettingsOk = function (settings) {
-		if (settings['domain-name']) {
+		if (settings['domain-name'] && settings['domain-name'].value) {
 			var domainName = settings['domain-name'].value;
 			app.use(canonicalDomain(domainName));	
 		}
