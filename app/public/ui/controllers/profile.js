@@ -228,7 +228,7 @@ function ProfileCtrl(session, $scope, $http, errors) {
 			stripeHandler.open({
 				name: 'Circle Blvd.',
 				description: activePlan.name +
-				 " subscription (" + 
+				 " (" + 
 				 	activePlan.displayAmount +
 				 	 " per month)",
 				amount: activePlan.stripeAmount,

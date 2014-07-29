@@ -51,11 +51,11 @@ var addStoriesForNewCircle = function (newCircle, adminAccount, callback) {
 	nextMeeting.isNextMeeting = true;
 
 	var subscribe = newStory();
-	subscribe.summary = "Subscribe, if you can";
+	subscribe.summary = "Become a sponsor, if you want";
 	subscribe.owner = adminAccount.name;
 	subscribe.description = "Circle Blvd. may be used for free, for a reasonable " +
 	"amount of time. Like Wikipedia, we rely on donations to keep the site online. You " +
-	"can subscribe from the profile page, and end your subscription at any time.";
+	"can sponsor the site from the profile page, and end your sponsorship at any time.";
 
 	var haveFun = newStory();
 	haveFun.summary = "Have fun :-)";
