@@ -659,22 +659,29 @@ var appSettings = function (req, res, next) {
 	}
 };
 
-var canonicalDomain = function (domainName) {
-	var fn = function (req, res, next) {
-		if (req.host === domainName) {
-			return next();
-		}
+var canonicalDomain = function (req, res, next) {
+	var settings = app.get('settings');
+	if (!settings) {
+		return next();
+	}
 
-		var hostAndPort = req.get('Host');
-		var redirectToHost = domainName;
-		if (hostAndPort) {
-			redirectToHost = hostAndPort.replace(req.host, domainName);
-		}
+	var domainName = undefined;
+	if (settings['domain-name'] && settings['domain-name'].value) {
+		domainName = settings['domain-name'].value.trim();
+	}
 
-		var url = req.protocol + "://" + redirectToHost + req.originalUrl;
-		res.redirect(301, url);
-	};
-	return fn;
+	if (!domainName || req.host === domainName) {
+		return next();
+	}
+
+	var hostAndPort = req.get('Host');
+	var redirectToHost = domainName;
+	if (hostAndPort) {
+		redirectToHost = hostAndPort.replace(req.host, domainName);
+	}
+
+	var url = req.protocol + "://" + redirectToHost + req.originalUrl;
+	res.redirect(301, url);
 };
 
 var getCookieSettings = function () {
@@ -700,6 +707,9 @@ app.configure(function() {
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'ejs');
 	app.use(forceHttps);
+	// TODO: canonicalDomain will not work for the first request
+	// after the settings are changed.
+	app.use(canonicalDomain);
 	app.use(express.compress());
 	app.use(express.static(path.join(__dirname, 'public')));
 	app.use(express.logger('dev'));
@@ -708,11 +718,6 @@ app.configure(function() {
 	app.use(express.methodOverride());
 
 	var initSettingsOk = function (settings) {
-		if (settings['domain-name'] && settings['domain-name'].value) {
-			var domainName = settings['domain-name'].value;
-			app.use(canonicalDomain(domainName));	
-		}
-		
 		var sessionSecret = settings['session-secret'].value;
 		var SessionStore = couchSessionStore(express.session);
 		var cookieSettings = getCookieSettings();
