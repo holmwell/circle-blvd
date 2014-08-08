@@ -5,6 +5,8 @@ var http    = require('http');
 var path    = require('path');
 var routes  = require('./routes');
 
+var compactModule = require('compact');
+
 var auth   = require('./lib/auth-local.js');
 var ensure = require('./lib/auth-ensure.js');
 var limits = require('./lib/limits.js');
@@ -711,7 +713,66 @@ app.configure(function() {
 	// after the settings are changed.
 	app.use(canonicalDomain);
 	app.use(express.compress());
+
+	// for minifying JavaScript
+	var compact = compactModule.createCompact({
+  		srcPath: __dirname + '/public/',
+  		destPath: __dirname + '/public/_js/',
+  		webPath: '/_js/',
+  		debug: false
+	});
+
+	compact.addNamespace('lib')
+		.addJs('lib/angular/angular.js')
+		.addJs('lib/angular/angular-route.js')
+		.addJs('lib/angular/angular-sanitize.js')
+		.addJs('lib/store/store.min.js')
+		.addJs('lib/yui/dd-dependencies.js')
+		.addJs('lib/yui/dd.js')
+		.addJs('lib/autosize/jquery.autosize.min.js')
+		.addJs('lib/typeahead/0.10.2.js');
+
+	compact.addNamespace('app')
+		.addJs('main/app.js');
+
+	compact.addNamespace('services')
+		.addJs('services/analytics.js')
+		.addJs('services/hacks.js')
+		.addJs('services/signInName.js')
+		.addJs('services/session.js')
+		.addJs('services/stories.js')
+		.addJs('services/errors.js')
+		.addJs('main/services.js');
+
+	compact.addNamespace('controllers')
+		.addJs('ui/controllers/topLevel.js')
+		.addJs('main/controllers.js')
+		.addJs('ui/controllers/story.js')
+		.addJs('ui/controllers/storyList.js')
+		.addJs('ui/controllers/home.js')
+		.addJs('ui/controllers/signin.js')
+		.addJs('ui/controllers/archive.js')
+		.addJs('ui/controllers/profile.js')
+		.addJs('ui/controllers/docs.js')
+		.addJs('ui/controllers/sponsor.js')
+		.addJs('ui/controllers/about.js')
+		.addJs('ui/controllers/donate.js')
+		.addJs('ui/controllers/admin.js')
+		.addJs('ui/controllers/mainframe.js')
+		.addJs('ui/controllers/fix.js')
+
+	compact.addNamespace('main')
+		.addJs('main/filters.js')
+		.addJs('main/directives.js')
+
 	app.use(express.static(path.join(__dirname, 'public')));
+	app.use(compact.middleware([
+		'lib', 
+		'app', 
+		'services', 
+		'controllers', 
+		'main'
+	]));
 	app.use(express.logger('dev'));
 	app.use(express.cookieParser());
 	app.use(express.bodyParser());
