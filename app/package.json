@@ -1,7 +1,7 @@
 {
   "name": "circle-blvd",
-  "version": "0.7.2",
-  "description": "Manage projects with small teams and volunteer organizations.",
+  "version": "0.7.3",
+  "description": "Team task management for part-time projects.",
   "repository": {
     "type": "git",
     "url": "https://github.com/secret-project/circle-blvd.git"
