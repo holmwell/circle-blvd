@@ -70,6 +70,16 @@ var data = function (fn) {
 	return middleware;
 };
 
+// caching middleware
+var cache = function (ms) {
+	var fn = function (req, res, next) {
+		res.setHeader("Cache-Control", "max-age=" + ms);
+		next();
+	};
+	return fn;
+};
+var sixMinutes = 5 * 60;
+
 var tryToCreateHttpsServer = function (callback) {
 	sslServer.create(app, callback);
 };
@@ -117,7 +127,7 @@ var defineRoutes = function () {
 
 
 	// Settings!
-	app.get("/data/settings", send(db.settings.get)); // public
+	app.get("/data/settings", cache(sixMinutes), send(db.settings.get)); // public
 
 	// TODO: This is not used. Assess.
 	app.get("/data/settings/private", 
