@@ -3,6 +3,7 @@
 function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route) {
 
 	var circleId = session.activeCircle;
+	$scope.profileName = session.user.name || 'Phil';
 
 	$scope.$on('storyListBroken', function () {
 		$scope.isBacklogBroken = true;

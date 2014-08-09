@@ -61,7 +61,7 @@
 
 			<div ng-show="isAdding['many']" class="debug row new-story after-meeting many alignWithStoryList">
 				<form>
-					<p>Enter one story per line. To add a milepost, start the line with -- (two hyphens).</p>
+					<p>Enter one story per line. To add a milepost, start the line with -- (two hyphens). To assign a story, end the line with @owner (e.g. @{{profileName}}).</p>
 					<textarea id="manyEntry" autosize class="form-control" ng-model="newMany.txt"/>
 					<button class="btn btn-default pull-right" ng-click="createMany(newMany)">Add many</button>
 				</form>
