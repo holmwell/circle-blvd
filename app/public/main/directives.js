@@ -73,6 +73,9 @@ directive('typeaheadOwners', function () {
 			// Uses: https://github.com/twitter/typeahead.js
 			var array = scope.owners; 
 			var sourceFunction = function (query, callback) {
+				if (!query || query === "") {
+					return callback(array);
+				}
 				// HACK: This is a quick hack to migrate
 				// from Bootstrap 2 to 3. Actual work should
 				// be done on this.
@@ -94,7 +97,7 @@ directive('typeaheadOwners', function () {
 			var options = {
 				hint: true,
 				highlight: true,
-				minLength: 1
+				minLength: 0
 			};
 			var dataset = {
 				source: sourceFunction,
@@ -107,7 +110,6 @@ directive('typeaheadOwners', function () {
 				isKeypressed: false,
 				openedVal: undefined
 			};
-
 
 			elem.keypress(function () {
 				hack.isKeypressed = true;
@@ -135,7 +137,7 @@ directive('typeaheadOwners', function () {
 			});
 
 			elem.on("typeahead:autocompleted", function (jQuery, suggestion, datasetName) {
-				elem.trigger('input');
+				elem.trigger('input');				
 			});
 		}
 	};
