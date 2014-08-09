@@ -48,10 +48,52 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 		$scope.$broadcast('insertNewStory', newStory, callback);
 	};
 
+	var parseStory = function (line) {
+		var story = {};
+
+		line = line.trim();
+		// Parse mileposts
+		if (line.indexOf('--') === 0) {
+			story.isDeadline = true;
+			// Remove all preceding hyphens,
+			// so mileposts denoted with '----' 
+			// are also possible.
+			while (line.indexOf('-') === 0) {
+				line = line.substring(1);
+			}
+			line = line.trim();
+		}
+
+		// Parse owners
+		var owners = $scope.owners;
+		var ownerFound = story.isDeadline || false;
+		var lowerCaseLine = line.toLowerCase();
+		owners.forEach(function (owner) {
+			if (ownerFound) {
+				return;
+			}
+			var lowerCaseOwner = owner.toLowerCase();
+			// owners start with the @ sign and
+			// are at the end of the line
+			var ownerIndex = lowerCaseLine.indexOf(lowerCaseOwner);
+			if (ownerIndex > 0 
+				&& line[ownerIndex-1] === '@'
+				&& line.length === ownerIndex + owner.length) {
+				ownerFound = true;
+				story.owner = owner;
+				line = line.substring(0, ownerIndex-1).trim();
+			}
+		});
+
+		story.summary = line;
+		return story;
+	};
+
 	var isCreatingStory = false;
-	$scope.create = function (newStory) {
-		if (!isCreatingStory && newStory) {
+	$scope.create = function (line) {
+		if (!isCreatingStory && line) {
 			isCreatingStory = true;
+			var newStory = parseStory(line);
 			insertNewStory(newStory, function () {
 				$scope.newStory = undefined;
 				isCreatingStory = false;
@@ -89,47 +131,6 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 			$scope.newMany = undefined;
 			isCreatingStory = false;
 			$timeout(makeStoriesDraggable, 0);
-		};
-
-		var parseStory = function (line) {
-			var story = {};
-
-			line = line.trim();
-			// Parse mileposts
-			if (line.indexOf('--') === 0) {
-				story.isDeadline = true;
-				// Remove all preceding hyphens,
-				// so mileposts denoted with '----' 
-				// are also possible.
-				while (line.indexOf('-') === 0) {
-					line = line.substring(1);
-				}
-				line = line.trim();
-			}
-
-			// Parse owners
-			var owners = $scope.owners;
-			var ownerFound = false;
-			var lowerCaseLine = line.toLowerCase();
-			owners.forEach(function (owner) {
-				if (ownerFound) {
-					return;
-				}
-				var lowerCaseOwner = owner.toLowerCase();
-				// owners start with the @ sign and
-				// are at the end of the line
-				var ownerIndex = lowerCaseLine.indexOf(lowerCaseOwner);
-				if (ownerIndex > 0 
-					&& line[ownerIndex-1] === '@'
-					&& line.length === ownerIndex + owner.length) {
-					ownerFound = true;
-					story.owner = owner;
-					line = line.substring(0, ownerIndex-1).trim();
-				}
-			});
-
-			story.summary = line;
-			return story;
 		};
 
 		var createStory = function (line) {
