@@ -297,6 +297,8 @@ var defineRoutes = function () {
 		
 		copy.projectId = story.projectId;
 		copy.summary = story.summary;
+		copy.description = story.description;
+		copy.owner = story.owner;
 		copy.isDeadline = story.isDeadline;
 		copy.isNextMeeting = story.isNextMeeting;
 

@@ -286,8 +286,8 @@ module.exports = function () {
 			});
 
 			updateUser(account, 
-				function (body) {
-					callback();
+				function (savedUser) {
+					callback(null, savedUser);
 				},
 				function (err) {
 					callback(err);

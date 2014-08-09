@@ -1,6 +1,6 @@
 'use strict';
 
-function AdminCtrl(session, $scope, $http, $route, errors) {
+function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 
 	var activeCircle = session.activeCircle;
 	var impliedGroup = undefined;
@@ -34,12 +34,29 @@ function AdminCtrl(session, $scope, $http, $route, errors) {
 		.error(errors.handle);
 	};
 
-	var addMemberSuccess = function() {
+	var addMemberSuccess = function (member) {
 		$scope.memberName = "";
 		$scope.memberEmail = "";
 		$scope.memberPassword = "";
-		
 		getLatestMemberData();
+		
+		var welcomeTxt = "Welcome to " + $scope.circleName + 
+			" on Circle Blvd.\n\n";
+
+		// Don't mention the actual email address here, for privacy.
+		welcomeTxt += "To sign in, please go to " + $window.location.origin + 
+			" and use your email address. For your initial password, please ask " +
+			session.user.name + ".";
+
+		var story = {
+			summary: "Sign in to Circle Blvd.",
+			description: welcomeTxt,
+			owner: member.name
+		};
+
+		stories.insertFirst(story, activeCircle, function (savedStory) {
+			// TODO: Mention this, perhaps?
+		});
 	};
 
 	var addMemberFailure = function() {
@@ -203,4 +220,4 @@ function AdminCtrl(session, $scope, $http, $route, errors) {
 
 	init();
 }
-AdminCtrl.$inject = ['session', '$scope', '$http', '$route', 'errors'];
+AdminCtrl.$inject = ['session', 'stories', '$scope', '$http', '$route', '$window', 'errors'];
