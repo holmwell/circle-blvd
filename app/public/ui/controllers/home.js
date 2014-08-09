@@ -71,6 +71,58 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 		}
 	};
 
+	$scope.createMany = function (newMany) {
+		var input = newMany.txt;
+		var lines = input.split('\n');
+
+		if (!lines || lines.length === 0 || isCreatingStory) {
+			return;
+		}
+
+		isCreatingStory = true;
+
+		var lineIndex = lines.length-1;
+		var lastLine = lines[lineIndex];
+
+		var done = function () {
+			$scope.newMany = undefined;
+			isCreatingStory = false;
+			$timeout(makeStoriesDraggable, 0);
+		};
+
+		var parseStory = function (line) {
+			var story = {};
+
+			line = line.trim();
+			if (line.indexOf('--') === 0) {
+				story.isDeadline = true;
+				line = line.substring(2).trim();
+			}
+
+			story.summary = line;
+			return story;
+		};
+
+		var createStory = function (line) {
+			if (!line) {
+				return done();
+			}
+
+			var story = parseStory(line);
+			insertNewStory(story, function () {
+				lineIndex--;
+				if (lineIndex >= 0) {
+					createStory(lines[lineIndex]);
+				}
+				else {
+					done();
+				}
+			});
+		};
+
+		createStory(lastLine);
+	};
+
 	var scrollToStorySpecifiedByUrl = function () {
 		var storyId = $routeParams.storyId;
 		if (!storyId) {
@@ -136,6 +188,11 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 				};
 				$timeout(makeStoriesDraggable, 0);
 				scrollToStorySpecifiedByUrl();
+
+				// UX: Hide story-entry panel at first.
+				// $timeout(function() {
+				// 	$scope.showEntry('many');
+				// }, 300);
 			})
 			.error(handleInitError);
 
@@ -153,8 +210,6 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 		// });
 
 		addKeyListener();
-		// UX: Hide story-entry panel at first.
-		// $scope.showEntry();
 	};
 
 	init();

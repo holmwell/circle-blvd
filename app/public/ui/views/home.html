@@ -29,6 +29,9 @@
 				<li ng-class="{ active: isAdding['deadline'] }">
 					<a class="jsLink" ng-click="showEntry('deadline')">Milepost</a>
 				</li>
+				<li ng-class="{ active: isAdding['many'] }">
+					<a class="jsLink" ng-click="showEntry('many')">Many</a>
+				</li>
 				<li class="pull-right">
 					<a ng-click="hideEntry()" class="jsLink subtle">Hide entry</a>
 				</li>
@@ -53,6 +56,14 @@
 							<button class="btn btn-default pull-right" ng-click="createDeadline(newDeadline)">Add milepost</button>
 						</span>
 					</div>
+				</form>
+			</div>
+
+			<div ng-show="isAdding['many']" class="debug row new-story after-meeting many alignWithStoryList">
+				<form>
+					<p>Enter one story per line. To add a milepost, start the line with -- (two hyphens).</p>
+					<textarea id="manyEntry" autosize class="form-control" ng-model="newMany.txt"/>
+					<button class="btn btn-default pull-right" ng-click="createMany(newMany)">Add many</button>
 				</form>
 			</div>
 		</div>
