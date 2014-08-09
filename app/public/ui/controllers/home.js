@@ -96,7 +96,13 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 			line = line.trim();
 			if (line.indexOf('--') === 0) {
 				story.isDeadline = true;
-				line = line.substring(2).trim();
+				// Remove all preceding hyphens,
+				// so mileposts denoted with '----' 
+				// are also possible.
+				while (line.indexOf('-') === 0) {
+					line = line.substring(1);
+				}
+				line = line.trim();
 			}
 
 			story.summary = line;
