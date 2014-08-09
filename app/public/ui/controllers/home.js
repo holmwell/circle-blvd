@@ -94,6 +94,7 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 			var story = {};
 
 			line = line.trim();
+			// Parse mileposts
 			if (line.indexOf('--') === 0) {
 				story.isDeadline = true;
 				// Remove all preceding hyphens,
@@ -104,6 +105,27 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 				}
 				line = line.trim();
 			}
+
+			// Parse owners
+			var owners = $scope.owners;
+			var ownerFound = false;
+			var lowerCaseLine = line.toLowerCase();
+			owners.forEach(function (owner) {
+				if (ownerFound) {
+					return;
+				}
+				var lowerCaseOwner = owner.toLowerCase();
+				// owners start with the @ sign and
+				// are at the end of the line
+				var ownerIndex = lowerCaseLine.indexOf(lowerCaseOwner);
+				if (ownerIndex > 0 
+					&& line[ownerIndex-1] === '@'
+					&& line.length === ownerIndex + owner.length) {
+					ownerFound = true;
+					story.owner = owner;
+					line = line.substring(0, ownerIndex-1).trim();
+				}
+			});
 
 			story.summary = line;
 			return story;
