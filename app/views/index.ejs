@@ -124,22 +124,14 @@
     </div>
      -->
 
-    <h2 class="debug hidden-xs col-sm-3 title"><a href="/">Circle&nbsp;Blvd.</a></h2>
+    <h2 class="debug hidden-xs title">
+      <a href="/">{{getActiveCircleName()}}</a>
+    </h2>
     <!-- <ul class="menu col-xs-2 col-md-4" ng-show="!isSignedIn()">
        <li><a href="#/signin">Sign in</a></li>
     </ul> -->
 
-    <ul class="menu visible-xs debug">
-      <li><a href="/">List</a></li>
-      <li><a href="#/archives">Archives</a></li>
-      <li><a href="#/profile">Profile</a></li>
-      <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
-      
-      <li><a class="jsLink" ng-click="signOut()">Sign out</a></li>
-    </ul> 
-
-    <!-- TODO: This duplicate menu is lame. -->
-    <ul class="menu hidden-xs col-sm-9 debug">
+    <ul class="menu debug">
       <li><a href="/">List</a></li>
       <li><a href="#/archives">Archives</a></li>
       <li><a href="#/profile">Profile</a></li>

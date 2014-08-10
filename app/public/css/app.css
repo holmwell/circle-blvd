@@ -82,12 +82,7 @@
 
 .header {
   margin-bottom: 2em;
-  padding: 1px;
-  padding-top: 0;
-  padding-left: 2ex;
-  padding-right: 2ex;
-
-/*  text-align: center;*/
+  padding-right: 1ex;
 
   /*background-color: #666;*/
   /*font-family: 'Headland One', serif;*/
@@ -95,22 +90,20 @@
 }
 .title {
   margin-bottom: 0;
+  text-align: center;
 }
 
 .menu {
-  padding-left: 2.50ex;
+  padding-left: 0;
   list-style: none;
 
   /*margin: auto;*/
-  margin-top: 1em;
-  margin-top: 2.75em;
+  margin-top: 1ex;
   margin-bottom: 1.2em;
 
   /*font-size: larger;
   width: 100%;*/
-}
-.menu.visible-xs {
-  margin-top: 1ex;
+
   text-align: center;
 }
 
