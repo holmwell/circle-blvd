@@ -366,6 +366,26 @@ var storiesDesignDoc = {
 designDocs.add(storiesDesignDoc);
 
 
+var listsDesignDoc = {
+    url: '_design/lists',
+    body: 
+    {
+        version: "1.0.0",
+        language: "javascript",
+        views: {
+            byCircleId: {
+                map: function (doc) {
+                    if (doc.type === "list") {
+                        emit(doc.circleId, doc);
+                    }
+                }
+            }
+        }
+    }
+};
+designDocs.add(listsDesignDoc);
+
+
 var archivesDesignDoc = {
 	url: '_design/archives',
 	body: 

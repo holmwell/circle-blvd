@@ -1,0 +1,35 @@
+<div class="content">
+
+<div class="entry-facade no-select" ng-hide="isAddingNew">
+    <div class="row entry-facade-container">
+        <div class="col-xs-12 col-sm-offset-2 col-sm-8 debug show-entry alignWithStoryList">
+        + <a ng-click="showEntry()" class="jsLink text-select">Add list</a>
+        </div>
+    </div>
+</div>
+
+<div class="entry" ng-show="isAddingNew">
+    <div class="row">
+        <div class="col-xs-12 col-sm-offset-2 col-sm-8 debug">
+            <ul class="entry-nav nav nav-pills row alignWithStoryList">
+                <li class="pull-right">
+                    <a ng-click="hideEntry()" class="jsLink subtle">Hide entry</a>
+                </li>
+            </ul>
+
+            <div class="debug row new-story after-meeting list alignWithStoryList">
+                <form>
+                    <input id="listName" class="form-control" ng-model="newList.name" placeholder="List name" />
+                    <textarea id="listDescription" autosize class="form-control" 
+                    ng-model="newList.description" placeholder="Description ..." />
+                    <button class="btn btn-default pull-right" ng-click="createList(newList)">Add list</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-repeat="list in lists">
+    {{list.name}}
+</div>
+</div>

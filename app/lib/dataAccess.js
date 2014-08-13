@@ -7,6 +7,7 @@ data.docs      = require('./data/docs.js');
 data.groups    = require('./data/groups.js');
 data.settings  = require('./data/settings.js');
 data.stories   = require('./data/stories.js');
+data.lists     = require('./data/lists.js');
 data.users     = require('./data/users.js');
 data.waitlist  = require('./data/waitlist.js');
 data.whenReady = couch.database.whenReady;

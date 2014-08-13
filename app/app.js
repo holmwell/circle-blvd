@@ -292,6 +292,21 @@ var defineRoutes = function () {
 		}));
 	});
 
+    // Checklists!
+    app.post("/data/:circleId/list", ensure.circle, function (req, res) {
+        var list = {
+            name: req.body.name,
+            description: req.body.description,
+            circleId: req.params.circleId
+        };
+        db.lists.add(list, handle(res));
+    });
+
+    app.get("/data/:circleId/lists", ensure.circle, function (req, res) {
+        var circleId = req.params.circleId;
+        db.lists.byCircleId(circleId, handle(res));
+    });
+
 	var copyStory = function (story) {
 		var copy = {};
 		
@@ -731,7 +746,7 @@ app.configure(function() {
   		srcPath: __dirname + '/public/',
   		destPath: __dirname + '/public/_js/',
   		webPath: '/_js/',
-  		debug: false
+  		debug: true
 	});
 
 	compact.addNamespace('lib')
@@ -764,6 +779,7 @@ app.configure(function() {
 		.addJs('ui/controllers/home.js')
 		.addJs('ui/controllers/signin.js')
 		.addJs('ui/controllers/archive.js')
+        .addJs('ui/controllers/lists.js')
 		.addJs('ui/controllers/profile.js')
 		.addJs('ui/controllers/docs.js')
 		.addJs('ui/controllers/sponsor.js')
