@@ -8,7 +8,7 @@ process.env.DATABASE_NAME = 'circle-blvd';
 var app = require('./app.js');
 
 var start = function () {
-	app.startServer();
+    app.startServer();
 };
 
 app.whenReady(start);
