@@ -234,14 +234,14 @@ var storiesDesignDoc = {
 	url: '_design/stories',
 	body: 
 	{
-		version: "1.0.14",
+		version: "1.1.1",
 		language: "javascript",
 		views: {
-			byProjectId: {
+			byListId: {
 				map: function(doc) {
 					if (doc.type === "story" && doc.projectId) {
-						doc.nextId = doc.nextId || "last-" + doc.projectId;
-						emit(doc.projectId, doc);
+						doc.nextId = doc.nextId || "last-" + (doc.listId || doc.projectId);
+						emit(doc.listId || doc.projectId, doc);
 					}
 				}
 			},
@@ -249,7 +249,7 @@ var storiesDesignDoc = {
 			byId: {
 				map: function (doc) {
 					if (doc.type === "story") {
-						doc.nextId = doc.nextId || "last-" + doc.projectId;
+						doc.nextId = doc.nextId || "last-" + (doc.listId || doc.projectId);
 						emit(doc._id, doc);
 					}
 				}
@@ -260,7 +260,7 @@ var storiesDesignDoc = {
 					if (doc.type === "story" && doc.projectId && doc._id) {
 						// composite key using project and story id.
 						var key = doc.projectId + "," + doc._id; 
-						doc.nextId = doc.nextId || "last-" + doc.projectId;
+						doc.nextId = doc.nextId || "last-" + (doc.listId || doc.projectId);
 						emit(key, doc);
 					}
 				}
@@ -269,7 +269,7 @@ var storiesDesignDoc = {
 			byNextId: {
 				map: function (doc) {
 					if (doc.type === "story") {
-						emit(doc.nextId || ("last-" + doc.projectId), doc);	
+						emit(doc.nextId || ("last-" + (doc.listId || doc.projectId)), doc);	
 					}
 				}
 			},
@@ -278,7 +278,7 @@ var storiesDesignDoc = {
 				map: function (doc) {
 					if (doc.type === "story" && doc.projectId) {
 						if (doc.isFirstStory) {
-							emit(doc.projectId, doc);
+							emit(doc.listId || doc.projectId, doc);
 						}
 					}
 				}
@@ -288,7 +288,7 @@ var storiesDesignDoc = {
 				map: function (doc) {
 					if (doc.type === "story" && doc.projectId) {
 						if (doc.isNextMeeting) {
-							emit(doc.projectId, doc);
+							emit(doc.listId || doc.projectId, doc);
 						}
 					}
 				}

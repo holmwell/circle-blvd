@@ -30,6 +30,22 @@
 </div>
 
 <div ng-repeat="list in lists">
-    {{list.name}}
+    <a class="jsLink" ng-click="showList(list)">{{list.name}}</a>
 </div>
+
+<div class="debug new-story row alignWithStoryList">
+    <form>
+        <div class="input-group">
+            <input id="storyEntry" type="text" class="form-control" ng-model="newStory" />
+            <span class="input-group-btn">
+                <button class="btn btn-default pull-right" ng-click="create(newStory)">Add story</button>
+            </span>
+        </div>
+    </form>
 </div>
+<sp-story-list 
+    data="listData" 
+    account-name="accountName"
+    owners="owners" 
+    enable-alt-mode="(isManualAltMode || isAltMode)"
+/>

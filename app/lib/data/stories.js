@@ -13,7 +13,7 @@ module.exports = function () {
 	};
 
 	var getLastId = function (story) {
-		return ("last-" + story.projectId);
+		return ("last-" + (story.listId || story.projectId));
 	}
 
 	var isLastStory = function (story) {
@@ -37,8 +37,8 @@ module.exports = function () {
 	};
 
 
-	var findStoriesByProjectId = function (projectId, callback) {
-
+	var findStoriesByListId = function (listId, callback) {
+		
 		var prepareStories = function (err, dbStories) {
 			if (err) {
 				return callback(err);
@@ -52,6 +52,7 @@ module.exports = function () {
 				var modelStory = {
 					id: story._id,
 					projectId: story.projectId,
+					listId: story.listId,
 					nextId: story.nextId || getLastId(story),
 					isFirstStory: story.isFirstStory,
 
@@ -81,7 +82,7 @@ module.exports = function () {
 			callback(err, stories);
 		};
 
-		couch.stories.findByProjectId(projectId, prepareStories);
+		couch.stories.findByListId(listId, prepareStories);
 	};
 
 	var findStoriesByNextId = function (nextId, callback) {
@@ -176,7 +177,7 @@ module.exports = function () {
 			else {
 				// This probably means the first story was not specified.
 				// Put it at the top of the backlog.
-				getFirstStory(story.projectId, function (err, firstStory) {
+				getFirstStory(story.listId || story.projectId, function (err, firstStory) {
 					if (err) {
 						return failure(err);
 					}
@@ -466,7 +467,8 @@ module.exports = function () {
 								});
 							}
 
-							getFirstStory(storyToMove.projectId, function (err, firstStory) {
+							getFirstStory(storyToMove.listId || storyToMove.projectId, 
+								function (err, firstStory) {
 								if (err) {
 									return (failure);
 								}
@@ -751,7 +753,8 @@ module.exports = function () {
 		markOwnerNotified: markStoryOwnerNotified,
 		move: moveStory,
 		remove: removeStory,
-		findByProjectId: findStoriesByProjectId,
+		find: findStoriesByListId,
+		findByListId: findStoriesByListId,
 		// TODO: Maybe don't return the raw database object
 		getFirstByProjectId: getFirstStory,
 		getNextMeetingByProjectId: getNextMeeting,

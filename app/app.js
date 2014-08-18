@@ -260,7 +260,7 @@ var defineRoutes = function () {
     // Story routes
     app.get("/data/:circleId/stories", ensure.circle, function (req, res) {
         var circleId = req.params.circleId;
-        db.stories.findByProjectId(circleId, handle(res));
+        db.stories.findByListId(circleId, handle(res));
     });
 
     // TODO: combine this with /stories to return one object with 
@@ -307,10 +307,22 @@ var defineRoutes = function () {
         db.lists.byCircleId(circleId, handle(res));
     });
 
+    app.get("/data/:circleId/:listId/stories", ensure.circle, function (req, res) {
+        var circleId = req.params.circleId;
+        var listId = req.params.listId;
+        db.stories.findByListId(listId, handle(res));
+    });
+
+    app.get("/data/:circleId/:listId/first-story", ensure.circle, function (req, res) {
+        var listId = req.params.listId;
+        db.stories.getFirstByProjectId(listId, handle(res));
+    });
+
     var copyStory = function (story) {
         var copy = {};
         
         copy.projectId = story.projectId;
+        copy.listId = story.listId;
         copy.summary = story.summary;
         copy.description = story.description;
         copy.owner = story.owner;

@@ -7,8 +7,8 @@ CircleBlvd.Services.stories = function ($http) {
 		return s[storyId];
 	};
 
-	var getLastStoryId = function (projectId) {
-		return "last-" + projectId;
+	var getLastStoryId = function (story) {
+		return "last-" + (story.listId || story.projectId);
 	};
 
 	var saveStory = function (story, callback) {
@@ -121,13 +121,20 @@ CircleBlvd.Services.stories = function ($http) {
 	};
 
 
-	var insertFirstStory = function (story, projectId, callback) {
+	var insertFirstStory = function (story, projectId, listId, callback) {
+		// optional param
+		if (typeof(listId) === 'function') {
+			callback = listId;
+			listId = undefined;
+		}
+
 		var hadFirstStoryPreviously = usefulStories.hasFirst();
 		if (hadFirstStoryPreviously) {
 			story.nextId = usefulStories.getFirst().id;	
 		}
 
 		story.projectId = projectId;
+		story.listId = listId;
 		story.type = "story";
 
 		addStory(story, function (newStory) {
@@ -219,7 +226,7 @@ CircleBlvd.Services.stories = function ($http) {
 					body.newNextId = newNextStory.id;
 				}
 				else {
-					body.newNextId = getLastStoryId(story.projectId);
+					body.newNextId = getLastStoryId(story);
 				}
 
 				if (isFacade) {

@@ -1,6 +1,8 @@
 function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors) {
 
 	var circleId = undefined;
+	var listId = undefined;
+
 	var selectedStory = undefined;
 	var storiesList = [];
 	var stories = CircleBlvd.Services.stories($http);
@@ -17,6 +19,12 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 		storiesList = [];
 
 		stories.init(serverStories);
+		// Empty list ... 
+		if (Object.keys(serverStories).length === 0) {
+			$scope.stories = storiesList;
+			return;
+		}
+
 		stories.setFirst(stories.get(firstStory.id));
 		stories.get(firstStory.id).isFirstAtLoad = true;
 
@@ -119,10 +127,12 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 	$scope.$watch('data', function (newVal) {
 		if (newVal) {
 			circleId = newVal.circleId;
+			listId = newVal.listId || undefined;
 			buildStoryList(newVal.firstStory, newVal.allStories);
 		}
 		else {
 			circleId = undefined;
+			listId = undefined;
 			$scope.stories = [];
 		}
 	});
@@ -154,7 +164,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 	});
 
 	$scope.$on('insertNewStory', function (e, newStory, callback) {
-		stories.insertFirst(newStory, circleId, function (serverStory) {
+		stories.insertFirst(newStory, circleId, listId, function (serverStory) {
 			// add the new story to the front of the backlog.
 			storiesList.unshift(serverStory);
 			if (callback) {
@@ -332,6 +342,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 			});
 		};
 
+		// TODO: Implications of listId
 		$http.get('/data/story/' + storyId)
 		.success(function (story) {
 			if (story.projectId !== circleId) {
@@ -363,7 +374,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 	var preMoveStoryAfter = undefined;
 
 	var getLastStoryId = function () {
-		return "last-" + circleId;
+		return "last-" + (listId || circleId);
 	};
 
 	var getStoryFacadeFromNode = function (node) {

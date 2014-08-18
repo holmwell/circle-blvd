@@ -65,7 +65,7 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 		}
 
 		// Parse owners
-		var owners = $scope.owners;
+		var owners = $scope.owners || [];
 		var ownerFound = story.isDeadline || false;
 		var lowerCaseLine = line.toLowerCase();
 		owners.forEach(function (owner) {

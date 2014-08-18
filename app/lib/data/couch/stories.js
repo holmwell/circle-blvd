@@ -79,11 +79,12 @@ module.exports = function () {
 		database.fetch(query, callback);
 	};
 
-	var findStoriesByProjectId = function (projectId, callback) {
+	// fn (listId, callback)
+	var findStoriesByListId = function (listId, callback) {
 		var options = {
-			key: projectId
+			key: listId
 		};
-		couch.view("stories/byProjectId", options, function (err, rows) {
+		couch.view("stories/byListId", options, function (err, rows) {
 			callback(err, rows);
 		});
 	};
@@ -411,7 +412,7 @@ module.exports = function () {
 		remove: removeStory,
 		findMany: findStoriesById,
 		findById: findStoryById,
-		findByProjectId: findStoriesByProjectId,
+		findByListId: findStoriesByListId,
 		findByNextId: findStoriesByNextId,
 		findFirst: findFirstByProjectId,
 		findNextMeeting: findNextMeetingByProjectId,
