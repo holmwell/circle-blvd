@@ -60,6 +60,10 @@ CircleBlvd.Services.stories = function ($http) {
 		s.first = undefined;
 
 		return {
+			init: function () {
+				s = {};
+				s.first = undefined;				
+			},
 			setFirst: function (story) {
 				if (s.first) {
 					s.first.isFirstStory = false;
@@ -215,6 +219,7 @@ CircleBlvd.Services.stories = function ($http) {
 
 			init: function (data) {
 				s = data;
+				usefulStories.init();
 			},
 			add: addStory,
 			insertFirst: insertFirstStory,
