@@ -3,6 +3,7 @@
 function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
 
     var circleId = session.activeCircle;
+    var selectedList = undefined;
 
     $scope.showEntry = function () {
         $scope.isAddingNew = true;
@@ -36,6 +37,8 @@ function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
                 // if ($scope.getAccountName) {
                 //     $scope.accountName = $scope.getAccountName();   
                 // }
+                selectedList = list;
+                $scope.listName = list.name;
 
                 $scope.listData = {
                     firstStory: firstStory,
@@ -43,6 +46,7 @@ function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
                     circleId: circleId,
                     listId: list._id
                 };
+                
                 $timeout(makeStoriesDraggable, 0);
             })
             .error(errors.log);
@@ -122,6 +126,9 @@ function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
         $http.get('/data/' + circleId + '/lists')
         .success(function (data) {
             $scope.lists = data;
+            if (!selectedList && data.length > 0) {
+                $scope.showList(data[0]);
+            }
         })
         .error(errors.log);
     }; 
