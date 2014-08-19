@@ -31,6 +31,12 @@ function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
         .success(function (allStories, status) {
             $http.get('/data/' + circleId + '/' + list._id + '/first-story')
             .success(function (firstStory) {
+                // The account name is not applicable to checklists
+                //
+                // if ($scope.getAccountName) {
+                //     $scope.accountName = $scope.getAccountName();   
+                // }
+
                 $scope.listData = {
                     firstStory: firstStory,
                     allStories: allStories,
@@ -112,7 +118,6 @@ function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
     };
 
 
-
     function updateView() {
         $http.get('/data/' + circleId + '/lists')
         .success(function (data) {
@@ -121,6 +126,15 @@ function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
         .error(errors.log);
     }; 
 
+    function init() {
+        $http.get("/data/" + circleId + "/members/names")
+        .success(function (names) {
+            $scope.owners = names;
+        })
+        .error(errors.log);        
+    }
+
     updateView();
+    init();
 }
 ListsCtrl.$inject = ['session', '$scope', '$http', '$filter', '$timeout', 'errors'];
