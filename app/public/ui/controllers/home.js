@@ -3,7 +3,10 @@
 function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route, errors) {
 
 	var circleId = session.activeCircle;
+
 	var selectedChecklist = undefined;
+	var checklistToAdd = undefined;
+
 	$scope.profileName = session.user.name || 'Phil';
 
 	$scope.$on('storyListBroken', function () {
@@ -49,12 +52,25 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route,
 		$scope.checklistDescription = list.description;
 		selectedChecklist = list;
 
-		// $http.get('/data/' + circleId + '/' + list._id + '/stories')
-		// .success(function (data) {
+		$http.get('/data/' + circleId + '/' + selectedChecklist._id + '/stories')
+		.success(function (checklistTable) {
+			$http.get('/data/' + circleId + '/' + selectedChecklist._id + '/first-story')
+			.success(function (firstStory) {
 
-		// 	$scope.selectedChecklist = data;
-		// });
-		//console.log(list);
+				checklistToAdd = [];
+				var currentStory = firstStory;
+
+				while (currentStory) {
+					checklistToAdd.push(currentStory); // <3 pass by reference	
+
+					var nextStoryId = currentStory.nextId;
+					currentStory = checklistTable[nextStoryId];
+				}
+
+				$scope.displayChecklist = checklistToAdd;
+
+			}).error(errors.log);
+		}).error(errors.log);
 	};
 
 	$scope.isSelectedChecklist = function (list) {
@@ -70,50 +86,33 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route,
 		if (!isCreatingStory && selectedChecklist) {
 			isCreatingStory = true;
 
-			$http.get('/data/' + circleId + '/' + selectedChecklist._id + '/stories')
-			.success(function (checklistTable) {
-				$http.get('/data/' + circleId + '/' + selectedChecklist._id + '/first-story')
-				.success(function (firstStory) {
+								
+			var storyIndex = checklistToAdd.length-1;
+			var lastStory = checklistToAdd[storyIndex];
 
-					var listToAdd = [];
-					var currentStory = firstStory;
+			var done = function () {
+				selectedChecklist = undefined;
+				isCreatingStory = false;
+				$timeout(makeStoriesDraggable, 0);
+			};
 
-					while (currentStory) {
-						listToAdd.push(currentStory); // <3 pass by reference	
+			var createStory = function (story) {
+				if (!story) {
+					return done();
+				}
 
-						var nextStoryId = currentStory.nextId;
-						currentStory = checklistTable[nextStoryId];
+				insertNewStory(story, function () {
+					storyIndex--;
+					if (storyIndex >= 0) {
+						createStory(listToAdd[storyIndex]);
 					}
-					
-					var storyIndex = listToAdd.length-1;
-					var lastStory = listToAdd[storyIndex];
+					else {
+						done();
+					}
+				});
+			};
 
-					var done = function () {
-						selectedChecklist = undefined;
-						isCreatingStory = false;
-						$timeout(makeStoriesDraggable, 0);
-					};
-
-					var createStory = function (story) {
-						if (!story) {
-							return done();
-						}
-
-						insertNewStory(story, function () {
-							storyIndex--;
-							if (storyIndex >= 0) {
-								createStory(listToAdd[storyIndex]);
-							}
-							else {
-								done();
-							}
-						});
-					};
-
-					createStory(lastStory);
-
-				}).error(errors.log);
-			}).error(errors.log);
+			createStory(lastStory);
 		}
 	};
 
