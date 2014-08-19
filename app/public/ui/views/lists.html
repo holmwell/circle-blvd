@@ -29,10 +29,13 @@
     </div>
 </div>
 
-
-    <div ng-repeat="list in lists">
-        <a class="jsLink" ng-click="showList(list)">{{list.name}}</a>
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-2 col-sm-8 debug">
+        <div ng-repeat="list in lists">
+            <a class="jsLink" ng-click="showList(list)">{{list.name}}</a>
+        </div>
     </div>
+</div>
 
 <div class="entry">
     <div class="row">
