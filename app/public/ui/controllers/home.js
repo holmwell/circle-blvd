@@ -104,7 +104,7 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route,
 				insertNewStory(story, function () {
 					storyIndex--;
 					if (storyIndex >= 0) {
-						createStory(listToAdd[storyIndex]);
+						createStory(checklistToAdd[storyIndex]);
 					}
 					else {
 						done();
