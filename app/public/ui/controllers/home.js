@@ -1,8 +1,9 @@
 'use strict';
 
-function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route) {
+function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route, errors) {
 
 	var circleId = session.activeCircle;
+	var selectedChecklist = undefined;
 	$scope.profileName = session.user.name || 'Phil';
 
 	$scope.$on('storyListBroken', function () {
@@ -43,6 +44,78 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 			}
 		}	
 	}();
+
+	$scope.selectChecklist = function (list) {
+		$scope.checklistDescription = list.description;
+		selectedChecklist = list;
+
+		// $http.get('/data/' + circleId + '/' + list._id + '/stories')
+		// .success(function (data) {
+
+		// 	$scope.selectedChecklist = data;
+		// });
+		//console.log(list);
+	};
+
+	$scope.isSelectedChecklist = function (list) {
+		if (!selectedChecklist) {
+			return false;
+		}
+
+		return list._id === selectedChecklist._id;
+	};
+
+	// TODO: Refactor, of course
+	$scope.addSelectedChecklist = function () {
+		if (!isCreatingStory && selectedChecklist) {
+			isCreatingStory = true;
+
+			$http.get('/data/' + circleId + '/' + selectedChecklist._id + '/stories')
+			.success(function (checklistTable) {
+				$http.get('/data/' + circleId + '/' + selectedChecklist._id + '/first-story')
+				.success(function (firstStory) {
+
+					var listToAdd = [];
+					var currentStory = firstStory;
+
+					while (currentStory) {
+						listToAdd.push(currentStory); // <3 pass by reference	
+
+						var nextStoryId = currentStory.nextId;
+						currentStory = checklistTable[nextStoryId];
+					}
+					
+					var storyIndex = listToAdd.length-1;
+					var lastStory = listToAdd[storyIndex];
+
+					var done = function () {
+						selectedChecklist = undefined;
+						isCreatingStory = false;
+						$timeout(makeStoriesDraggable, 0);
+					};
+
+					var createStory = function (story) {
+						if (!story) {
+							return done();
+						}
+
+						insertNewStory(story, function () {
+							storyIndex--;
+							if (storyIndex >= 0) {
+								createStory(listToAdd[storyIndex]);
+							}
+							else {
+								done();
+							}
+						});
+					};
+
+					createStory(lastStory);
+
+				}).error(errors.log);
+			}).error(errors.log);
+		}
+	};
 
 	var insertNewStory = function (newStory, callback) {
 		$scope.$broadcast('insertNewStory', newStory, callback);
@@ -232,6 +305,17 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 			})
 			.error(handleInitError);
 
+			$http.get('/data/' + circleId + '/lists')
+			.success(function (data) {
+				// Sort by name ...
+				data.sort(function compare (a, b) {
+					return a.name.localeCompare(b.name);
+				});
+
+				$scope.checklists = data;
+			})
+			.error(handleInitError);
+
 		}).error(handleInitError);
 
 		
@@ -245,4 +329,4 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route)
 	init();
 }
 HomeCtrl.$inject = ['session', 'hacks', 
-'$scope', '$timeout', '$http', '$routeParams', '$route'];
+'$scope', '$timeout', '$http', '$routeParams', '$route', 'errors'];

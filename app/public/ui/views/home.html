@@ -32,6 +32,9 @@
 				<li ng-class="{ active: isAdding['many'] }">
 					<a class="jsLink" ng-click="showEntry('many')">Many</a>
 				</li>
+				<li ng-class="{ active: isAdding['checklist'] }">
+					<a class="jsLink" ng-click="showEntry('checklist')">Checklist</a>
+				</li>
 				<li class="pull-right">
 					<a ng-click="hideEntry()" class="jsLink subtle">Hide entry</a>
 				</li>
@@ -56,6 +59,23 @@
 							<button class="btn btn-default pull-right" ng-click="createDeadline(newDeadline)">Add milepost</button>
 						</span>
 					</div>
+				</form>
+			</div>
+
+			<div ng-show="isAdding['checklist']" class="debug row new-story after-meeting many alignWithStoryList">
+				<form>
+					<div ng-repeat="checklist in checklists">
+
+						<a class="jsLink" ng-click="selectChecklist(checklist)"
+						ng-class="{
+							isSelectedChecklist: isSelectedChecklist(checklist)
+						}">{{checklist.name}}</a>
+					</div>
+					<div ng-repeat="story in selectedChecklist">
+						{{story.summary}}
+					</div>
+
+					<button class="btn btn-default pull-right" ng-click="addSelectedChecklist()">Add checklist</button>
 				</form>
 			</div>
 
