@@ -234,7 +234,7 @@ var storiesDesignDoc = {
 	url: '_design/stories',
 	body: 
 	{
-		version: "1.1.1",
+		version: "1.1.2",
 		language: "javascript",
 		views: {
 			byListId: {
@@ -298,6 +298,15 @@ var storiesDesignDoc = {
 				map: function (doc) {
 					if (doc.type === "story" && doc.projectId) {
 						emit(doc.projectId);
+					}
+				},
+				reduce : "_count"
+			},
+
+			countByListId: {
+				map: function (doc) {
+					if (doc.type === "story" && doc.projectId) {
+						emit(doc.listId || doc.projectId);
 					}
 				},
 				reduce : "_count"

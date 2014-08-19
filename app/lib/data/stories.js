@@ -160,7 +160,6 @@ module.exports = function () {
 
 
 	var getNextIdForInsert = function (story, proposedNextId, callback) {
-
 		var foundNextId = function (nextId) {
 			callback(null, nextId);
 		};
@@ -175,17 +174,29 @@ module.exports = function () {
 				foundNextId(getLastId(story));
 			}
 			else {
-				// This probably means the first story was not specified.
-				// Put it at the top of the backlog.
-				getFirstStory(story.listId || story.projectId, function (err, firstStory) {
+				countByListId(story.listId || story.projectId, function (err, count) {
 					if (err) {
 						return failure(err);
 					}
-					if (!firstStory) {
+
+					if (count === 0) {
+						// Ok, we're actually the first story created in this list.
 						return foundNextId(getLastId(story));
 					}
 
-					getNextIdForInsert(story, firstStory._id, callback);
+					// This means the first story was not specified,
+					// but there are other stories. Put it at the top 
+					// of the backlog.
+					getFirstStory(story.listId || story.projectId, function (err, firstStory) {
+						if (err) {
+							return failure(err);
+						}
+						if (!firstStory) {
+							return foundNextId(getLastId(story));
+						}
+
+						getNextIdForInsert(story, firstStory._id, callback);
+					});
 				});
 			}
 		}
@@ -741,6 +752,10 @@ module.exports = function () {
 
 	var countByCircleId = function (circleId, callback) {
 		couch.stories.countByCircleId(circleId, callback);
+	};
+
+	var countByListId = function (listId, callback) {
+		couch.stories.countByListId(listId, callback);
 	};
 
 	// Turn on processing queue.
