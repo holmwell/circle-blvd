@@ -46,7 +46,7 @@ function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
                     circleId: circleId,
                     listId: list._id
                 };
-                
+
                 $timeout(makeStoriesDraggable, 0);
             })
             .error(errors.log);
@@ -125,7 +125,14 @@ function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
     function updateView() {
         $http.get('/data/' + circleId + '/lists')
         .success(function (data) {
+            // Sort by name ...
+            data.sort(function compare (a, b) {
+                return a.name.localeCompare(b.name);
+            });
+
             $scope.lists = data;
+
+            // Show the first list by default
             if (!selectedList && data.length > 0) {
                 $scope.showList(data[0]);
             }
