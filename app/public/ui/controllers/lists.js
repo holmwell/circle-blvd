@@ -141,6 +141,8 @@ function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
     }; 
 
     function init() {
+        $scope.isChecklist = true;
+
         $http.get("/data/" + circleId + "/members/names")
         .success(function (names) {
             $scope.owners = names;

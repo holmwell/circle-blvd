@@ -48,7 +48,8 @@ directive('spStoryList', function () {
 			accountName: '=',
 			owners: '=',
 			enableAltMode: '=',
-			isFacade: '='
+			isFacade: '=',
+			isChecklist: '='
 		}
 	}
 }).

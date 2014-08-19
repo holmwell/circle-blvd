@@ -7,6 +7,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 	var storiesList = [];
 	var stories = CircleBlvd.Services.stories($http);
 	var isFacade = false;
+	var isChecklist = false;
 
 	// HACK: Until we can figure out how to stop this properly,
 	// reload the page when this happens.
@@ -22,6 +23,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 		// Empty list ... 
 		if (Object.keys(serverStories).length === 0) {
 			$scope.stories = storiesList;
+			return;
+		}
+
+		if (!firstStory) {
+			errors.log("The list contains stories but a first story was not specified");
 			return;
 		}
 
@@ -204,9 +210,16 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 	};
 
 	$scope.$on('storyArchived', function (e, story) {
+		// Checklists can't be archived for now.
+		if (isChecklist) {
+			return;
+		}
+
 		var storyToArchive = stories.get(story.id);
 		removeFromView(story, storyToArchive);
 		
+		// Facades give the impression that the story
+		// has gone into the archives.
 		if (isFacade) {
 			return;
 		}
@@ -711,6 +724,12 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 	$scope.$watch('isFacade', function (newVal) {
 		isFacade = newVal;
 		stories.setFacade(isFacade);
+	});
+
+	// TODO: Is this an ok way to configure the story list behavior?
+	// A cooler way would be with inheritance, perhaps.
+	$scope.$watch('isChecklist', function (newVal) {
+		isChecklist = newVal;
 	});
 
 	$scope.test = function () {
