@@ -125,6 +125,8 @@ function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
     function updateView() {
         $http.get('/data/' + circleId + '/lists')
         .success(function (data) {
+            $scope.isHidingEntry = (data.length === 0);
+
             // Sort by name ...
             data.sort(function compare (a, b) {
                 return a.name.localeCompare(b.name);
