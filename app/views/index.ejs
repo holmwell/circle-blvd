@@ -131,15 +131,17 @@
        <li><a href="#/signin">Sign in</a></li>
     </ul> -->
 
-    <ul class="menu debug">
-      <li><a href="/">List</a></li>
-      <li><a href="#/archives">Archives</a></li>
-      <li><a href="#/lists">Checklists</a></li>
-      <li><a href="#/profile">Profile</a></li>
-      <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
-      
-      <li><a class="jsLink" ng-click="signOut()">Sign out</a></li>
-    </ul> 
+    <div class="col-xs-12">
+      <ul class="menu debug">
+        <li><a href="/">List</a></li>
+        <li><a href="#/archives">Archives</a></li>
+        <li><a href="#/lists">Checklists</a></li>
+        <li><a href="#/profile">Profile</a></li>
+        <li class="hidden-xs" ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
+        
+        <li><a class="jsLink" ng-click="signOut()">Sign&nbsp;out</a></li>
+      </ul>
+    </div> 
   </div>
   <div class="view" ng-view></div>
 </div>
