@@ -3,7 +3,7 @@
 <div class="entry-facade no-select" ng-hide="isAddingNew">
     <div class="row entry-facade-container">
         <div class="col-xs-12 col-sm-offset-2 col-sm-8 debug show-entry alignWithStoryList">
-        + <a ng-click="showEntry()" class="jsLink text-select">Add list</a>
+        + <a ng-click="showEntry()" class="jsLink text-select">Add checklist</a>
         </div>
     </div>
 </div>
@@ -31,8 +31,13 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-offset-2 col-sm-8 debug">
-        <div ng-repeat="list in lists">
-            <a class="jsLink" ng-click="showList(list)">{{list.name}}</a>
+        <div ng-show="lists">
+            <p>Select a checklist to edit:</p>
+            <ul>
+                <li ng-repeat="list in lists">
+                    <a class="jsLink" ng-click="showList(list)">{{list.name}}</a>
+                </li>
+            </ul>
         </div>
     </div>
 </div>
