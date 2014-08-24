@@ -1,4 +1,5 @@
-<span ng-repeat="s in spans">
+<span ng-if="!hasLabels">{{story.summary}}</span>
+<span ng-if="hasLabels" ng-repeat="s in spans">
     <span ng-if="s.isLabel" class="story-label" 
         ng-click="selectLabel(s.text)">{{s.text}}</span>
     <span ng-if="!s.isLabel">{{s.text}}</span>

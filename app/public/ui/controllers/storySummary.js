@@ -7,6 +7,7 @@ function StorySummaryCtrl(session, $scope) {
     };
 
     var updateScope = function (summary) {
+        var hasLabels = false;
         var summary = $scope.story.summary;
         var words = summary.split(' ');
 
@@ -15,6 +16,7 @@ function StorySummaryCtrl(session, $scope) {
             var word = words[index];
             var span = {};
             if (word.indexOf('#') === 0) {
+                hasLabels = true;
                 span.isLabel = true;
                 span.text = word.slice(1);
             }
@@ -24,7 +26,8 @@ function StorySummaryCtrl(session, $scope) {
             spans.push(span);
         }
 
-        $scope.spans = spans;    
+        $scope.spans = spans;
+        $scope.hasLabels = hasLabels;
     };
 
     $scope.$watch('story.summary', function (val) {
