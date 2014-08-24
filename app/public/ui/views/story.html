@@ -133,7 +133,7 @@
 				<div class="col-sm-10 paddy">
 					<div class="text-select summary"
 					ng-class="{mine: isStoryMine(story)}">
-						<span ng-bind-html="story.summary | labelify"></span>
+						<sp-story-summary/>
 					</div>
 				</div>
 				<div class="col-sm-2 grippy">
@@ -168,7 +168,7 @@
 						ng-show="(isStoryNew(story) && isStoryMine(story))"></span>
 					</div>
 					<div class="text-select phone-summary col-xs-10">
-						<span ng-bind-html="story.summary | labelify"></span>
+						<sp-story-summary/>
 					</div>
 				</div>
 				

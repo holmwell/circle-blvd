@@ -25,12 +25,19 @@ directive('appendLinky', ['$filter', function ($filter) {
 		scope: { ngModel: '=ngModel' },
 		link: function (scope, element, attrs, controller) {
 			scope.$watch('ngModel', function (value) {
-			 	value = $filter('linky')(value);
-			 	element.html(element.html() + value);
+				value = $filter('linky')(value);
+				element.html(element.html() + value);
 			});
 		}
 	};
 }]).
+directive('spStorySummary', function () {
+	return {
+		restrict: 'E',
+		templateUrl: 'ui/views/storySummary.html',
+		controller: StorySummaryCtrl
+	};
+}).
 directive('spStory', function () {
 	return {
 		restrict: 'E',

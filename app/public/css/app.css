@@ -506,7 +506,9 @@ button:focus {
 .story-label {
   /*background-color: gold;*/
   color: red;
-  margin-right: 0.25ex;
+}
+.story-label:hover {
+  text-decoration: underline;
 }
 
 /* story details */

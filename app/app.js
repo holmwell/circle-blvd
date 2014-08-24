@@ -793,6 +793,7 @@ app.configure(function() {
         .addJs('main/controllers.js')
         .addJs('ui/controllers/story.js')
         .addJs('ui/controllers/storyList.js')
+        .addJs('ui/controllers/storySummary.js')
         .addJs('ui/controllers/home.js')
         .addJs('ui/controllers/signin.js')
         .addJs('ui/controllers/archive.js')
