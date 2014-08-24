@@ -7,6 +7,20 @@ var isString = function(obj) {
 }
 
 angular.module('myApp.filters', []).
+  filter('labelify', function () {
+    return function (summary) {
+        var newSummary = "";
+        var words = summary.split(' ');
+        words.forEach(function (word) {
+            if (word.indexOf('#') === 0) {
+                word = "<span class='story-label'>" + word.slice(1) + "</span>";
+            }
+            word += " ";
+            newSummary += word;
+        })
+        return newSummary;
+    }
+  }).
   filter('interpolate', ['version', function(version) {
     return function(text) {
       return String(text).replace(/\%VERSION\%/mg, version);
