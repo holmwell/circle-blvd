@@ -157,6 +157,15 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route,
 			}
 		});
 
+		// Parse labels
+		story.labels = [];
+		var words = line.split(' ');
+		words.forEach(function (word) {
+			if (word.indexOf('#') === 0) {
+				story.labels.push(word.slice(1));
+			}
+		});
+
 		story.summary = line;
 		return story;
 	};

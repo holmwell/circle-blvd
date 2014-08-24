@@ -503,6 +503,12 @@ button:focus {
   outline: 0 !important;
 }
 
+.story-label {
+  /*background-color: gold;*/
+  color: red;
+  margin-right: 0.25ex;
+}
+
 /* story details */
 .summary {
 

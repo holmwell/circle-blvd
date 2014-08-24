@@ -39,7 +39,7 @@
 						</div>
 						<div class="col-xs-12 col-sm-9 summary-input">
 							<input id="boxForStory{{story.id}}" class="form-control"
-						type="text" ng-model="story.summary"/></div>
+						type="text" ng-model="story.summaryView"/></div>
 						<div class="hidden-xs col-sm-3">
 							<div class="deselect"><a ng-click="deselect(story, $event)">Hide details</a></div>
 						</div>
@@ -132,7 +132,12 @@
 			<div class="row no-select hidden-xs" ng-show="!story.isSelected" id="story-{{$index}}">
 				<div class="col-sm-10 paddy">
 					<div class="text-select summary"
-					ng-class="{mine: isStoryMine(story)}">{{story.summary}}</div>
+					ng-class="{mine: isStoryMine(story)}">
+						<span>{{story.summary}}</span>
+						<span class="story-label" ng-repeat="label in story.labels track by $index">
+							{{label}}
+						</span>
+					</div>
 				</div>
 				<div class="col-sm-2 grippy">
 					<div class="pull-right grippy-viz">
@@ -167,6 +172,9 @@
 					</div>
 					<div class="text-select phone-summary col-xs-10">
 						<span>{{story.summary}}</span>
+						<span class="story-label" ng-repeat="label in story.labels track by $index">
+							{{label}}
+						</span>
 					</div>
 				</div>
 				

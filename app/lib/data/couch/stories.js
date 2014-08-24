@@ -144,9 +144,25 @@ module.exports = function () {
 		return s || "";
 	}
 
+	var nArray = function (array) {
+		var val = "";
+		if (array && array.forEach) {
+			array.forEach(function (el) {
+				if (!el) {
+					val += "[]"
+				}
+				else {
+					val += el.toString();	
+				}
+			});
+		}
+		return val;
+	};
+
 	var areStoriesEqual = function (a, b) {
 		// TODO: a 'for in' loop
 		// Also, do we even need this?
+
 		return n(a.id) === n(b.id)
 		&& n(a.type) === n(b.type)
 		&& n(a.nextId) === n(b.nextId)
@@ -159,6 +175,7 @@ module.exports = function () {
 		&& n(a.isDeadline) === n(b.isDeadline)
 		&& n(a.isNextMeeting) === n(b.isNextMeeting)
 		&& n(a.comments).length === n(b.comments).length
+		&& nArray(a.labels) === nArray(b.labels)
 		&& n(a.isOwnerNotified) === n(b.isOwnerNotified);
 	};
 

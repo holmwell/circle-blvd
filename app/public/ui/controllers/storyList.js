@@ -151,6 +151,14 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 	});
 
 	$scope.$on('storySelected', function (e, story) {
+		// View-model for the summary plus labels
+		story.summaryView = story.summary.trim();
+		if (story.labels) {
+			for (var index in story.labels) {
+				story.summaryView += ' #' + story.labels[index];
+			}
+		}
+
 		selectedStory = story;
 		// Bring the focus to the default input box, 
 		// which is likely the summary text.
@@ -258,6 +266,24 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 	$scope.$on('storySaved', function (e, story) {
 		var storyToSave = stories.get(story.id);
 		
+		// Parse labels out of summaryView
+		story.labels = [];
+		var words = story.summaryView.split(' ');
+
+		words.forEach(function (word) {
+			var view = story.summaryView;
+			word = word.trim();
+			if (word.indexOf('#') === 0) {
+				story.labels.push(word.slice(1));
+				var wordIndex = view.indexOf(word);
+				story.summaryView = 
+					view.substring(0, wordIndex) +
+					view.substring(wordIndex + word.length);
+			}
+		});
+
+		story.summary = story.summaryView.trim();
+
 		// TODO: We can probably just have this on the 
 		// server side, but it's nice to have clean
 		// traffic I guess.
@@ -265,6 +291,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 		storyToSave.owner = story.owner;
 		storyToSave.status = story.status;
 		storyToSave.description = story.description;
+		storyToSave.labels = story.labels;
 
 		storyToSave.newComment = story.newComment;
 		

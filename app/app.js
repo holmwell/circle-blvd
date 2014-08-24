@@ -323,9 +323,12 @@ var defineRoutes = function () {
         
         copy.projectId = story.projectId;
         copy.listId = story.listId;
+        
         copy.summary = story.summary;
         copy.description = story.description;
         copy.owner = story.owner;
+        copy.labels = story.labels;
+
         copy.isDeadline = story.isDeadline;
         copy.isNextMeeting = story.isNextMeeting;
 
@@ -367,6 +370,8 @@ var defineRoutes = function () {
             limits.users.story(circleId, guard(res, function () {
                 var story = copyStory(data);
                 story.createdBy = getCreatedBy(req);
+                console.log("STORY: ");
+                console.log(story);
                 addStory(story, res);
             }));
         });
