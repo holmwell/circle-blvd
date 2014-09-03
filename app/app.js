@@ -515,7 +515,7 @@ var defineRoutes = function () {
         var story = req.body;
         var sender = req.user;
         ensure.isCircle(story.projectId, req, res, function () {
-            notify.newStory(story, sender, handle(res));
+            notify.newStory(story, sender, req, handle(res));
         });
     });
 

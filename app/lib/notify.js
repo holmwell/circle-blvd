@@ -47,7 +47,7 @@ var getCommentNotificationMessage = function (comment, story, req) {
 	return message;
 };
 
-var newStory = function (story, sender, callback) {
+var newStory = function (story, sender, req, callback) {
 	if (story.isOwnerNotified) {
 		var err = new Error("Story owner has already been notified.");
 		err.status = 412;
