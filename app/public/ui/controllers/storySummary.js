@@ -2,8 +2,10 @@
 
 function StorySummaryCtrl(session, $scope) {
 
-    $scope.selectLabel = function (text) {
+    $scope.selectLabel = function (e, text) {
         $scope.$emit('labelSelected', text);
+        e.preventDefault();
+        e.stopPropagation();
     };
 
     var updateScope = function (summary) {

@@ -9,6 +9,9 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 	var isFacade = false;
 	var isChecklist = false;
 
+	var selectedLabels = [];
+	$scope.selectedLabels = selectedLabels;
+
 	// HACK: Until we can figure out how to stop this properly,
 	// reload the page when this happens.
 	var handleHierarchyRequestErr = function (e) {
@@ -389,6 +392,48 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 			errors.log(data, status);
 		});
 	});
+
+	// Tmp for development:
+	// selectedLabels.push("label");
+	$scope.$on('labelSelected', function (e, text) {
+		selectedLabels.push(text);
+	});
+
+	$scope.clearFilter = function () {
+		selectedLabels = [];
+		$scope.selectedLabels = selectedLabels;
+	};
+
+	$scope.shouldHideStory = function (story) {
+		var shouldHide = false;
+		// Alt mode / Inbox mode
+		if ($scope.enableAltMode && 
+		(!story.isMoving && story.isAfterNextMeeting && !story.isDeadline && !story.isNextMeeting)) {
+			shouldHide = true;
+		}
+
+		// Labels
+		if (selectedLabels.length > 0) {
+			shouldHide = true;
+
+			for (var storyLabelIndex in story.labels) {
+				if (!shouldHide) {
+					// Minor optimization
+					break;
+				}
+				for (var selectedLabelIndex in selectedLabels) {
+					var storyLabel = story.labels[storyLabelIndex];
+					var selectedLabel = selectedLabels[selectedLabelIndex];
+					if (storyLabel === selectedLabel) {
+						shouldHide = false;
+						break;
+					}
+				}
+			}
+		}
+
+		return shouldHide;
+	};
 
 	//-------------------------------------------------------
 	// Drag and drop

@@ -1,12 +1,22 @@
 <div id="backlog" class="debug clear">
+	<div ng-show="selectedLabels.length > 0" class="storyWrapper row">
+		<div class="col-sm-2"></div>
+		<div class="col-sm-8 col-xs-12 story filter">
+			<div class="paddy">
+				Showing only:
+				<ul>
+					<li ng-repeat="label in selectedLabels">{{label}}</li>
+				</ul>
+				<div class="clear-filter pull-right">
+					&gt; <a class="jsLink" ng-click="clearFilter()">show all</a> &lt;
+				</div>
+			</div>
+		</div>
+	</div>
 	<div class="storyWrapper row debug no-select" 
 		data-story-id="{{story.id}}"
 		ng-repeat="story in stories"
-		ng-hide="enableAltMode
-		&& (!story.isMoving 
-		&& story.isAfterNextMeeting
-		&& !story.isDeadline 
-		&& !story.isNextMeeting)">
+		ng-hide="shouldHideStory(story)">
 		<sp-story/>
 	</div>
 </div>

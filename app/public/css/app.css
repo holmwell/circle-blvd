@@ -492,6 +492,39 @@ h4, h5 {
   background-color: #777;
 }
 
+.filter {
+  background-color: #1E69B5;
+  color: white;
+  padding-left: 3ex;
+}
+.filter:hover {
+  background-color: #2272B8;
+  color: white;
+  cursor: default;
+}
+.filter a {
+  color: gold;
+}
+.filter ul {
+  padding-left: 0;
+  display: inline;
+}
+.filter li {
+  margin-right: 1ex;
+  display: inline;
+}
+.filter li:after {
+  margin-left: 1ex;
+  content: "+";
+}
+.filter li:last-child:after {
+  content: "";
+}
+.filter .clear-filter {
+  display: inline;
+  padding-right: 0.5ex;
+}
+
 
 input:focus, 
 textarea:focus, 
@@ -505,7 +538,7 @@ button:focus {
 
 .story-label {
   /*background-color: gold;*/
-  color: red;
+  color: #1E69B5;
 }
 .story-label:hover {
   text-decoration: underline;
