@@ -423,24 +423,22 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 
 		// Labels
 		if (selectedLabels.length > 0) {
-			shouldHide = true;
+			shouldHide = false;
 
-			for (var storyLabelIndex in story.labels) {
-				if (!shouldHide) {
-					// Minor optimization
-					break;
-				}
+			if (!story.labels || story.labels.length <= 0) {
+				shouldHide = true;
+			}
+			else {
 				for (var selectedLabelIndex in selectedLabels) {
-					var storyLabel = story.labels[storyLabelIndex];
 					var selectedLabel = selectedLabels[selectedLabelIndex];
-					if (storyLabel === selectedLabel) {
-						shouldHide = false;
+					if (story.labels.indexOf(selectedLabel) < 0) {
+						shouldHide = true;
 						break;
 					}
-				}
+				}	
 			}
 		}
-
+		
 		return shouldHide;
 	};
 
