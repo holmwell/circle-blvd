@@ -213,7 +213,9 @@ h4, h5 {
   padding-top: 1ex;
   padding-right: 1.5ex;
 }
-.storyWrapper {
+/* TODO: .storyWrapper should have no styles;
+ use only for drag-and-drop. */
+.storyWrapper, .filterWrapper {
   padding-left: 1ex;
 }
 .story, .archive {
@@ -510,11 +512,11 @@ h4, h5 {
   display: inline;
 }
 .filter li {
-  margin-right: 1ex;
+  margin-right: 0.5ex;
   display: inline;
 }
 .filter li:after {
-  margin-left: 1ex;
+  margin-left: 0.5ex;
   content: "+";
 }
 .filter li:last-child:after {
@@ -523,6 +525,13 @@ h4, h5 {
 .filter .clear-filter {
   display: inline;
   padding-right: 0.5ex;
+}
+.filter a.active-filter {
+  color: white;
+}
+.active-filter:hover {
+  cursor: pointer;
+  text-decoration: line-through;
 }
 
 

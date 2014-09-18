@@ -396,12 +396,21 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 	// Tmp for development:
 	// selectedLabels.push("label");
 	$scope.$on('labelSelected', function (e, text) {
-		selectedLabels.push(text);
+		if (selectedLabels.indexOf(text) < 0) {
+			selectedLabels.push(text);	
+		}
 	});
 
 	$scope.clearFilter = function () {
 		selectedLabels = [];
 		$scope.selectedLabels = selectedLabels;
+	};
+
+	$scope.deselectLabel = function (text) {
+		var labelIndex = selectedLabels.indexOf(text);
+		if (labelIndex >= 0) {
+			selectedLabels.splice(labelIndex, 1);	
+		}
 	};
 
 	$scope.shouldHideStory = function (story) {
