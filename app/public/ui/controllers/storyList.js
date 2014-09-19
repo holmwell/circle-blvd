@@ -1,4 +1,4 @@
-function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors) {
+function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, errors) {
 
 	var circleId = undefined;
 	var listId = undefined;
@@ -263,7 +263,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 		
 		// Parse labels out of story.summary
 		story.labels = [];
-		var words = story.summary.split(' ');
+		var words = story.summary.split(lib.consts.LabelRegex);
 
 		words.forEach(function (word) {
 			word = word.trim();
@@ -807,4 +807,4 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, hacks, errors
 		}
 	};
 }
-StoryListCtrl.$inject = ['$scope', '$timeout', '$http', '$location', '$route', 'hacks', 'errors'];
+StoryListCtrl.$inject = ['$scope', '$timeout', '$http', '$location', '$route', 'lib', 'hacks', 'errors'];

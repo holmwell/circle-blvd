@@ -1,6 +1,6 @@
 'use strict';
 
-function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route, errors) {
+function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $route, errors) {
 
 	var circleId = session.activeCircle;
 
@@ -159,7 +159,7 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route,
 
 		// Parse labels
 		story.labels = [];
-		var words = line.split(' ');
+		var words = line.split(lib.consts.LabelRegex);
 		words.forEach(function (word) {
 			if (word.indexOf('#') === 0) {
 				story.labels.push(word.slice(1));
@@ -336,5 +336,5 @@ function HomeCtrl(session, hacks, $scope, $timeout, $http, $routeParams, $route,
 
 	init();
 }
-HomeCtrl.$inject = ['session', 'hacks', 
+HomeCtrl.$inject = ['lib', 'session', 'hacks', 
 '$scope', '$timeout', '$http', '$routeParams', '$route', 'errors'];

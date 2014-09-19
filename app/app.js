@@ -781,6 +781,7 @@ app.configure(function() {
 
     compact.addNamespace('services')
         .addJs('services/analytics.js')
+        .addJs('services/lib.js')
         .addJs('services/hacks.js')
         .addJs('services/signInName.js')
         .addJs('services/session.js')

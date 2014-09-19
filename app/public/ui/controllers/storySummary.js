@@ -1,6 +1,6 @@
 'use strict';
 
-function StorySummaryCtrl(session, $scope) {
+function StorySummaryCtrl(lib, session, $scope) {
 
     $scope.selectLabel = function (e, text) {
         $scope.$emit('labelSelected', text);
@@ -17,10 +17,12 @@ function StorySummaryCtrl(session, $scope) {
         for (var index in words) {
             var word = words[index];
             var span = {};
+            
             if (word.indexOf('#') === 0) {
                 hasLabels = true;
                 span.isLabel = true;
                 span.text = word.slice(1);
+                span.label = word.replace(lib.consts.ReplaceLabelRegex, "");
             }
             else {
                 span.text = word;
@@ -38,4 +40,4 @@ function StorySummaryCtrl(session, $scope) {
 
     updateScope($scope.story.summary);
 }
-StorySummaryCtrl.$inject = ['session', '$scope'];
+StorySummaryCtrl.$inject = ['lib', 'session', '$scope'];
