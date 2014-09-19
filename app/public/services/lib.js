@@ -1,7 +1,7 @@
 CircleBlvd.Services.lib = function () {
 
-    var LabelRegex = /[:;,<> \\\{\[\(\?\.\`\'\"\*\)\]\}\/]/;
-    var ReplaceLabelRegex = /[#:;,<> \\\{\[\(\?\.\`\'\"\*\)\]\}\/]/g;
+    var LabelRegex = /[:;,<> \\\{\[\(\!\?\.\`\'\"\*\)\]\}\/]/;
+    var ReplaceLabelRegex = /[#:;,<> \\\{\[\(\!\?\.\`\'\"\*\)\]\}\/]/g;
 
     return {
         consts: {
