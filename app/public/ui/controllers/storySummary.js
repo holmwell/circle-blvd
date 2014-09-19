@@ -17,17 +17,31 @@ function StorySummaryCtrl(lib, session, $scope) {
         for (var index in words) {
             var word = words[index];
             var span = {};
+            var postSpan = undefined;
             
             if (word.indexOf('#') === 0) {
                 hasLabels = true;
                 span.isLabel = true;
-                span.text = word.slice(1);
                 span.label = word.replace(lib.consts.ReplaceLabelRegex, "");
+                span.text = word.slice(1);
+
+                // Separate the label from any punctuation that
+                // follows it.
+                var postWord = span.text.replace(span.label, "");
+                if (postWord.length > 0) {
+                    postSpan = {};
+                    postSpan.isPostLabel = true;
+                    postSpan.text = postWord;
+                    span.text = span.label;
+                }
             }
             else {
                 span.text = word;
             }
             spans.push(span);
+            if (postSpan) {
+                spans.push(postSpan);
+            }
         }
 
         $scope.spans = spans;
