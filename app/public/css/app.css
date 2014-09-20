@@ -1159,15 +1159,24 @@ label.relax {
 
 .invite .choice {
   padding-top: 2em;
-  padding-bottom: 2em;
+  padding-bottom: 1em;
   text-align: center;
 }
+
+.invite .choice-row {
+  border-bottom: solid 1px #ccc;
+}
+
 .invite .message {
   margin-top: 1em;
   padding: 1ex;
   padding-left: 1.5ex;
   background-color: #1E69B5;
   color: white;
+}
+
+.invite h3 {
+  margin-top: 1em;
 }
 
 
