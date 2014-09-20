@@ -1,11 +1,11 @@
-<div class="content">
-<h3>Administration!</h3>
+<div class="content admin">
 
+<h3>Administration!</h3>
 <p ng-show="!isSignedIn()">Please <a href="#/signin">sign in</a>.</p>
 
 <div ng-show="isSignedIn()" class="hidden-xs">
 <form>
-	<h4>Circle name</h4>
+	<h4 class="first">Circle name</h4>
 	<div class="row">
 		<div class="col-sm-5">
 			<input ng-model="circleName" class="form-control" type="text" placeholder="Circle name"/>
@@ -27,14 +27,31 @@
 			after 5 days.</p>
 
 			<div class="inviteUrlPanel" ng-show="inviteUrl">
-				<div>Invite link: {{inviteUrl}}</div>
+				<label>Invite link:</label>
+				<div>{{inviteUrl}}</div>
 				<div>&gt; <a href="{{inviteUrl}}">go there</a> &lt;</div>
 			</div>
 		</div>
 	</div>
 	<button class="btn btn-default"
-	ng-click="createInvite(1)">Create link</button>
+	ng-click="createInvite(1)">Create invite</button>
 </form>
+
+<h4>Member list</h4>
+<ul class="adminList">
+	<li ng-repeat="member in members" ng-class-odd="'odd'">
+		<div class="row">
+			<div class="name col-sm-3">{{member.name}}</div>
+			<div class="email col-sm-3">{{member.email}}</div>
+			<div class="roles col-sm-3">
+				<span ng-repeat="membership in member.memberships">
+					{{getGroupName(membership.group)}}
+				</span>
+			</div>
+			<div class="removeMember col-sm-2" ng-click="removeMember(member)" title="remove member"><i class="glyphicon glyphicon-trash"></i></div>
+		</div>
+	</li>
+</ul>
 
 <form>
 	<h4>Create accounts for people</h4>
@@ -42,7 +59,7 @@
 		<div class="col-sm-7">
 			<p>As a group admin, sometimes you might want 
 			to create an account for someone and add 
-			him or her to your circle all at once.</p>
+			him or her to your circle in one step.</p>
 
 			<p>If there is already an account associated
 			with the email address you specify, that 
@@ -76,20 +93,6 @@
 	</div>
 </form>
 
-<ul class="adminList">
-	<li ng-repeat="member in members" ng-class-odd="'odd'">
-		<div class="row">
-			<div class="name col-sm-3">{{member.name}}</div>
-			<div class="email col-sm-3">{{member.email}}</div>
-			<div class="roles col-sm-3">
-				<span ng-repeat="membership in member.memberships">
-					{{getGroupName(membership.group)}}
-				</span>
-			</div>
-			<div class="removeMember col-sm-2" ng-click="removeMember(member)" title="remove member"><i class="glyphicon glyphicon-trash"></i></div>
-		</div>
-	</li>
-</ul>
 
 <!-- <form id="groupForm">
 	<h4>Groups</h4>

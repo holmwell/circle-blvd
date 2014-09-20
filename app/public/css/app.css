@@ -1079,6 +1079,13 @@ label.relax {
 }
 
 /* admin */
+.admin h4 {
+  padding-top: 1.1em;
+}
+.admin h4.first {
+  padding-top: 0;
+}
+
 .adminList {
   list-style: none;
   margin-left: 0;
@@ -1106,6 +1113,9 @@ label.relax {
 .inviteUrlPanel {
   margin-top: 1em;
   margin-bottom: 1em;
+}
+.inviteUrlPanel label {
+  margin-bottom: 0;
 }
 
 #groupForm, #settingForm {
