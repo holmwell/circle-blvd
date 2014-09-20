@@ -236,7 +236,8 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout, analy
 					&& path !== '/sponsor'
 					&& path !== '/donate'
 					&& path !== '/about'
-					&& path !== '/invite') {
+					&& path !== '/invite'
+					&& path.indexOf('/invite') !== 0) {
 					$scope.signOut();
 				}
 			});

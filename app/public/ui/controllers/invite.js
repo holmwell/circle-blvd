@@ -30,20 +30,49 @@ function InviteCtrl(lib, session, $scope, $http, $location, $routeParams, errors
         $scope.createNew = true;
     };
 
-    var signIn = function (email, password) {
-        lib.signIn(email, password, function (err, user) {
-            if (err) {
-                errors.log(err);
-                // TODO: Show error
-                return;
-            }
+    $scope.isInviteAvailable = function () {
+        var now = Date.now();
 
-            session.activeCircle = invite.circleId;
-            session.user = user;
-            session.save();
+        if (!invite) {
+            return false;
+        }
 
-            $location.path('/');
-        });
+        if (invite.count <= 0) {
+            return false;
+        }
+
+        if (invite.expires <= now) {
+            return false;
+        }
+
+        return true;
+    };
+
+    $scope.isInviteAccepted = function () {
+        if (!invite) {
+            return false;
+        }
+
+        if (invite.count <= 0) {
+            return true;
+        }
+    };
+
+    var startSession = function (user) {
+        session.activeCircle = invite.circleId;
+        session.user = user;
+        session.save();
+
+        $location.path('/');
+    };
+
+    var handleInviteError = function (data, status) {
+        if (status === 403 || status === 404 || status === 400) {
+            $scope.message = "Sorry, the invite is no longer available.";
+        }
+        else {
+            errors.handle(data, status);
+        }
     };
 
     $scope.createAccount = function (signup) {
@@ -53,9 +82,17 @@ function InviteCtrl(lib, session, $scope, $http, $location, $routeParams, errors
 
         $http.post('/data/signup/invite', data)
         .success(function (data) {
-            signIn(signup.email, signup.password);
+            lib.signIn(signup.email, signup.password, function (err, user) {
+                if (err) {
+                    errors.log(err);
+                    $scope.message = "Sorry, our computers are broken. Please try " +
+                        "signing in later, and if that doesn't work please contact us.";
+                    return;
+                }
+                startSession(user);
+            });
         })
-        .error(errors.handle);
+        .error(handleInviteError);
     };
 
     $scope.useAccount = function (account) {
@@ -63,11 +100,19 @@ function InviteCtrl(lib, session, $scope, $http, $location, $routeParams, errors
         data.account = account;
         data.invite = invite;
 
-        $http.post('/data/invite/accept', data)
-        .success(function (data) {
-            signIn(account.email, account.password);    
-        })
-        .error(errors.handle);
+        lib.signIn(account.email, account.password, function (err, user) {
+            if (err) {
+                errors.log(err);
+                $scope.message = "Sorry, please try something else.";
+                return;
+            }
+
+            $http.post('/data/invite/accept', data)
+            .success(function (data) {
+                startSession(user);
+            })
+            .error(handleInviteError);
+        });
     };
 }
 InviteCtrl.$inject = ['lib', 'session', '$scope', '$http', '$location', '$routeParams', 'errors'];

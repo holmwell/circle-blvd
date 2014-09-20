@@ -1139,6 +1139,9 @@ label.relax {
 }
 
 /* invite */
+.invite.content {
+  padding-bottom: 3em;
+}
 .invite label {
   font-weight: normal;
 }
@@ -1147,6 +1150,13 @@ label.relax {
   padding-top: 2em;
   padding-bottom: 2em;
   text-align: center;
+}
+.invite .message {
+  margin-top: 1em;
+  padding: 1ex;
+  padding-left: 1.5ex;
+  background-color: #1E69B5;
+  color: white;
 }
 
 
