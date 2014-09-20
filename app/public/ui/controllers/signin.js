@@ -149,6 +149,12 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 	};
 
 	var init = function () {
+		// Redirect to home if we're already signed in.
+		if ($scope.isSignedIn()) {
+			$location.path('/');
+			return;
+		}
+
 		$scope.user = {};
 
 		var name = signInName.get();
@@ -157,6 +163,8 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 		}
 
 		$scope.rememberMe = true;
+
+
 	};
 
 
