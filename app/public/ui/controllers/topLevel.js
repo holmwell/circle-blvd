@@ -2,7 +2,13 @@
 
 function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout, analytics) {
 
+	$scope.isHeaderVisible = true;
 	$scope.keyboard = {};
+
+	// If children want to hide the top header.
+	$scope.hideHeader = function () {
+		$scope.isHeaderVisible = false;
+	};
 
 	$scope.keydown = function(e) {
 		if (e.target.type === "textarea" ||
@@ -193,6 +199,7 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout, analy
 
 	var init = function() {
 		$scope.$on('$routeChangeSuccess', function () {
+			$scope.isHeaderVisible = true;
 			var path = $location.path();
 			if (path === '/initialize') {
 				return;

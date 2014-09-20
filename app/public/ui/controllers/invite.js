@@ -2,6 +2,8 @@
 
 function InviteCtrl(lib, session, $scope, $http, $location, $routeParams, errors) {
 
+    $scope.hideHeader(); // defined in TopLevelCtrl
+
     $scope.useExisting = false;
     $scope.createNew = false;
 

@@ -1150,6 +1150,7 @@ label.relax {
 
 /* invite */
 .invite.content {
+  padding-top: 3em;
   padding-bottom: 3em;
 }
 .invite label {

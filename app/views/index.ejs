@@ -108,7 +108,7 @@
 
 
 <div class="container-fluid main debug">
-  <div class="header row debug ng-cloak" ng-if="isSignedIn()">
+  <div class="header row debug ng-cloak" ng-if="isSignedIn()" ng-hide="!isHeaderVisible">
     <!--
     <div class="navbar navbar-default" role="navigation" ng-cloak ng-show="isSignedIn()">
       <div class="container-fluid">
