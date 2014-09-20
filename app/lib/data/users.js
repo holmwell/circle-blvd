@@ -275,6 +275,21 @@ module.exports = function () {
 		// and the group names.
 		var addMembershipsToAccount = function (account) {
 			member.memberships.forEach(function (newMembership) {
+				// Only add memberships we don't have.
+				var skip = false;
+				
+				account.memberships.forEach(function (existing) {
+					if (existing.circle === newMembership.circle &&
+					  	existing.group === newMembership.group &&
+						existing.level === newMembership.level) {
+						skip = true;
+					}
+				});
+
+				if (skip) {
+					return;
+				}
+
 				// Basic data validation
 				if (newMembership.circle === circleId) {
 					var m = {};
