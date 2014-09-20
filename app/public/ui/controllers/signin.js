@@ -1,15 +1,14 @@
 'use strict';
 
-function SignInCtrl(signInName, session, $scope, $location, $http) {
+function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 
 	$scope.signup = {};
 	$scope.signup.once = false;
 
 	$scope.signIn = function() {
-		var success = function(data, status, headers, config) {
+		var success = function(user) {
 			$scope.message = "Success!";
 
-			var user = data;
 			if ($scope.rememberMe) {
 				signInName.set(user.email);	
 			}
@@ -40,7 +39,7 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 								}
 							}
 						})
-						.error(function (data, status) {
+						.error(function () {
 							$scope.message = "Sorry, the server failed to get your circle.";
 						})
 					};
@@ -69,7 +68,7 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 			getDefaultCircle(user, onCircleFound);
 		};
 
-		var failure = function(data, status, headers, config) {
+		var failure = function(data, status) {
 			$scope.message = "Sorry, please try something else."
 			if (status === 429) {
 				$scope.message = "Sorry, it seems someone is trying " + 
@@ -78,24 +77,13 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 			}
 		};
 
-		// TODO: This should probably be inside a resource, or whatever
-		// the things like $scope and $location are called in Angular.
-		// Refactor this when you're in the mood to learn, future-self.
-		var signIn = function (user, success, failure) {
-			var xsrf = $.param(user);
-			var request = {
-				method: 'POST',
-				url: '/auth/signin',
-				data: xsrf,
-				headers: {'Content-Type': 'application/x-www-form-urlencoded'}
-			};		
-
-			$http(request)
-			.success(success)
-			.error(failure);
-		};
-
-		signIn($scope.user, success, failure);
+		lib.signIn($scope.user, function (err, user) {
+			if (err) {
+				failure(err, err.status);
+				return;
+			}
+			success(user);
+		});
 	};
 
 
@@ -251,4 +239,4 @@ function SignInCtrl(signInName, session, $scope, $location, $http) {
 
 	init();	
 }
-SignInCtrl.$inject = ['signInName', 'session', '$scope', '$location', '$http'];
+SignInCtrl.$inject = ['signInName', 'session', 'lib', '$scope', '$location', '$http'];
