@@ -3,6 +3,7 @@ var couch = require('./data/couch/couch.js');
 var data = {};
 data.archives  = require('./data/archives.js');
 data.circles   = require('./data/circles.js');
+data.invites   = require('./data/invites.js');
 data.docs      = require('./data/docs.js');
 data.groups    = require('./data/groups.js');
 data.settings  = require('./data/settings.js');

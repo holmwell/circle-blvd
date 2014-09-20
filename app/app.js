@@ -215,6 +215,16 @@ var defineRoutes = function () {
         }));
     });
 
+    // Invites!
+    app.get("/data/:circleId/invite/:count", ensure.circle, function (req, res) {
+        var invite = {
+            circleId: req.params.circleId,
+            count: req.params.count || 1
+        };
+
+        db.invites.create(invite, handle(res));
+    });
+
     // Groups!
     app.get("/data/:circleId/groups", ensure.circle, function (req, res) {
         var circleId = req.params.circleId;
