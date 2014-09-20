@@ -48,6 +48,33 @@ var get = function (docId, callback) {
     });
 };
 
+var findByCircleId = function (circleId, callback) {
+    var params = {
+        key: circleId
+    };
+    couch.view("invites/byCircleId", params, function (err, docs) {
+        if (err) {
+            callback(err);
+            return;
+        }
+
+        // Filter by valid invites, for now.
+        var now = Date.now();
+        var invites = [];
+        docs.forEach(function (doc) {
+            if (doc.count === 0) {
+                return true;
+            }
+            if (doc.expires < now) {
+                return true;
+            }
+            invites.push(doc);
+        });
+
+        callback(null, invites);
+    });
+};
+
 var accept = function (invite, callback) {
     if (!invite) {
         var err = new Error("No invite provided");
@@ -92,3 +119,4 @@ var accept = function (invite, callback) {
 exports.create = create;
 exports.get = get;
 exports.accept = accept;
+exports.findByCircleId = findByCircleId;

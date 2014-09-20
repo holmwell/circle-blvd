@@ -39,6 +39,11 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 		.error(errors.handle);
 	};
 
+	var getInviteUrl = function (invite) {
+		return getBaseUrl() + '/#/invite/' + invite._id;
+	};
+	$scope.getInviteUrl = getInviteUrl;
+
 	var isCreatingInvite = false;
 	$scope.createInvite = function (count) {
 		if (isCreatingInvite) {
@@ -48,8 +53,9 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 
 		$http.get('/data/' + activeCircle + '/invite/' + count)
 		.success(function (data) {
-			$scope.inviteUrl = getBaseUrl() + '/#/invite/' + data._id;
+			$scope.inviteUrl = getInviteUrl(data);
 			isCreatingInvite = false;
+			getLatestInviteData();
 		})
 		.error(function (data, status) {
 			isCreatingInvite = false;
@@ -136,9 +142,7 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 		.success(function() {
 			getLatestMemberData();
 		})
-		.error(function (data, status) {
-			errors.handle(data, status);
-		});
+		.error(errors.handle);
 	};
 
 	var getMembersSuccess = function(data, status, headers, config) {
@@ -164,6 +168,32 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 		.error(getMembersFailure);
 	};
 
+
+	var getInvitesSuccess = function(data) {
+		if (!data || data.length === 0) {
+			// do nothing. 
+		}
+		else {
+			// Sort by expiration, newest on top
+			data.sort(function (a, b) {
+				if (a.expires < b.expires) {
+					return 1;
+				}
+				if (a.expires > b.expires) {
+					return -1;
+				}
+				return 0;
+			});
+			$scope.invites = data;
+		}
+	};
+
+
+	var getLatestInviteData = function () {
+		$http.get('/data/' + activeCircle + '/invites')
+		.success(getInvitesSuccess)
+		.error(errors.log);
+	};
 
 	var groupNames = {};
 	$scope.getGroupName = function (groupId) {
@@ -239,6 +269,7 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 		getCircleData();
 		getLatestMemberData();
 		getLatestGroupData();
+		getLatestInviteData();
 	}
 
 	init();

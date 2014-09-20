@@ -100,6 +100,11 @@ var defineRoutes = function () {
 
 
     // User routes (circle actions. requires admin access)
+    app.get("/data/:circleId/invites", ensure.circleAdmin, function (req, res) {
+        var circleId = req.params.circleId;
+        db.invites.findByCircleId(circleId, handle(res));
+    });
+
     app.get("/data/:circleId/members", ensure.circleAdmin, function (req, res) {
         var circleId = req.params.circleId;
         db.users.findByCircleId(circleId, handle(res));

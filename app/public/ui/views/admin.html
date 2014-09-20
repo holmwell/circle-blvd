@@ -37,6 +37,18 @@
 	ng-click="createInvite(1)">Create invite</button>
 </form>
 
+<div ng-show="invites">
+	<h4>Open invitations</h4>
+	<ul class="adminList">
+		<li ng-repeat="invite in invites" ng-class-odd="'odd'">
+			<div class="row">
+				<div class="col-xs-8">{{getInviteUrl(invite)}}</div>
+				<div class="col-xs-2"><a href="{{getInviteUrl(invite)}}">view</a></div>
+			</div>
+		</li>
+	</ul>
+</div>
+
 <h4>Member list</h4>
 <ul class="adminList">
 	<li ng-repeat="member in members" ng-class-odd="'odd'">
