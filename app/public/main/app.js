@@ -40,6 +40,9 @@ angular.module('myApp', [
         $routeProvider.when('/profile', {templateUrl: 'ui/views/profile.html', controller: ProfileCtrl});
         $routeProvider.when('/admin', {templateUrl: 'ui/views/admin.html', controller: AdminCtrl});
 
+        $routeProvider.when('/invite/:inviteId', {templateUrl: 'ui/views/invite.html', controller: InviteCtrl});
+        $routeProvider.when('/invite', {templateUrl: 'ui/views/invite.html', controller: InviteCtrl});
+
         $routeProvider.when('/about', {templateUrl: 'ui/views/about.html', controller: AboutCtrl});
         $routeProvider.when('/sponsor', {templateUrl: 'ui/views/sponsor.html', controller: SponsorCtrl});
         $routeProvider.when('/docs', {templateUrl: 'ui/views/docs.html', controller: DocsCtrl});

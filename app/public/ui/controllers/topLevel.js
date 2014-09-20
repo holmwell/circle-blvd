@@ -234,7 +234,8 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout, analy
 					&& path !== '/docs'
 					&& path !== '/sponsor'
 					&& path !== '/donate'
-					&& path !== '/about') {
+					&& path !== '/about'
+					&& path !== '/invite') {
 					$scope.signOut();
 				}
 			});

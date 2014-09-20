@@ -1138,6 +1138,17 @@ label.relax {
   margin-top: 1.4em;
 }
 
+/* invite */
+.invite label {
+  font-weight: normal;
+}
+
+.invite .choice {
+  padding-top: 2em;
+  padding-bottom: 2em;
+  text-align: center;
+}
+
 
 /* Typeahead */
 /* From: https://github.com/bassjobsen */

@@ -75,6 +75,24 @@ module.exports = function () {
 		couch.groups.findByProjectId(projectId, prepareGroups);
 	};
 
+	var findImpliedByCircleId = function (circleId, callback) {
+		findGroupsByProjectId(circleId, function (err, groups) {
+			if (err) {
+				callback(err);
+				return;
+			}
+
+			var impliedGroup = undefined;
+			groups.forEach(function (group) {
+				if (group.name === "_implied") {
+					impliedGroup = group;
+				}
+			});
+
+			callback(null, impliedGroup);
+		});
+	};
+
 	var findGroupsByUser = function(user, callback) {
 		couch.groups.findByUser(user, callback);
 	};
@@ -84,6 +102,7 @@ module.exports = function () {
 		remove: removeGroup,
 		findById: findGroupById,
 		findByProjectId: findGroupsByProjectId,
+		findImpliedByCircleId: findImpliedByCircleId,
 		findByUser: findGroupsByUser
 	};
 }();

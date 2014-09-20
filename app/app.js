@@ -225,6 +225,11 @@ var defineRoutes = function () {
         db.invites.create(invite, handle(res));
     });
 
+    app.get("/data/invite/:inviteId", function (req, res) {
+        var inviteId = req.params.inviteId;
+        db.invites.get(inviteId, handle(res));
+    });
+
     // Groups!
     app.get("/data/:circleId/groups", ensure.circle, function (req, res) {
         var circleId = req.params.circleId;
@@ -580,21 +585,13 @@ var defineRoutes = function () {
         payment.unsubscribe(user, handle(res));
     });
 
-    var createAccount = function (proposedAccount, circle, callback) {
-        var userAccountCreated = function (newAccount) {
-            db.circles.create(circle.name, newAccount.email, callback);
+    var createUser = function (proposedAccount, callback) {
+        var addSuccess = function (newAccount) {
+            callback(null, newAccount);
         };
 
-        var addUser = function () {
-            var isReadOnly = false;
-            db.users.add(
-                proposedAccount.name,
-                proposedAccount.email, 
-                proposedAccount.password,
-                [], // no memberships at first
-                isReadOnly,
-                userAccountCreated, 
-                callback);
+        var addError = function (err) {
+            callback(err);
         };
 
         db.users.findByEmail(proposedAccount.email, function (err, accountExists) {
@@ -607,9 +604,71 @@ var defineRoutes = function () {
                 return callback(error);
             }
 
-            addUser();
+            var isReadOnly = false;
+            db.users.add(
+                proposedAccount.name,
+                proposedAccount.email, 
+                proposedAccount.password,
+                [], // no memberships at first
+                isReadOnly,
+                addSuccess, 
+                addError);
         });
     };
+
+    var createAccount = function (proposedAccount, circle, callback) {
+        var userAccountCreated = function (newAccount) {
+            db.circles.create(circle.name, newAccount.email, callback);
+        };
+
+        createUser(proposedAccount, function (err, newAccount) {
+            if (err) {
+                callback(err);
+                return;
+            }
+            userAccountCreated(newAccount);
+        });
+    };
+
+    app.post("/data/signup/invite", function (req, res) {
+        var data = req.body;
+        var proposedAccount = data.account;
+        var invite = data.invite;
+
+        var invitationAccepted = function (dbInvite, group) {
+            createUser(proposedAccount, guard(res, function (account) {
+                // Add circle membership to account
+                var newMembership = {
+                    circle: dbInvite.circleId,
+                    group: group.id,
+                    level: "member"
+                };
+                account.memberships.push(newMembership);
+                db.users.addMembership(account, dbInvite.circleId, handle(res));
+                // Done.
+            }));
+        };
+
+        db.groups.findImpliedByCircleId(invite.circleId, guard(res, function (group) {
+            if (!group) {
+                res.send(400, "Could not find implied group for invite.");
+                return;
+            }
+            db.invites.get(invite._id, guard(res, function (dbInvite) {
+                if (!dbInvite) {
+                    res.send(404);
+                    return;
+                }
+                if (dbInvite.count <= 0) {
+                    res.send(403);
+                    return;
+                }
+                db.invites.accept(dbInvite, guard(res, function () {
+                    invitationAccepted(dbInvite, group);
+                }));
+            }));    
+        }));
+    });
 
     app.post("/data/signup/now", limits.circle, function (req, res) {
         var data = req.body;
@@ -810,6 +869,7 @@ app.configure(function() {
         .addJs('ui/controllers/archive.js')
         .addJs('ui/controllers/lists.js')
         .addJs('ui/controllers/profile.js')
+        .addJs('ui/controllers/invite.js')
         .addJs('ui/controllers/docs.js')
         .addJs('ui/controllers/sponsor.js')
         .addJs('ui/controllers/about.js')

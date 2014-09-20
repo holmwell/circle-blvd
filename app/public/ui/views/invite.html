@@ -1,0 +1,61 @@
+<div class="invite content">
+    <div class="col-sm-2"></div>
+        <div class="col-sm-8 col-xs-12">
+            <h3>Invitation to join {{invite.circleName}}</h3>
+            <p>You've been invited to join {{invite.circleName}}
+            on Circle Blvd.</p>
+
+            <p>Would you like to join using an existing Circle Blvd.
+            account, or would you like to create a new account?</p>
+
+            <div class="row">
+                <div class="col-xs-6 choice" ng-click="showUseExisting()">
+                    <a class="jsLink">Use existing account</a>
+                </div>
+                <div class="col-xs-6 choice" ng-click="showCreateNew()">
+                    <a class="jsLink">Create new account</a>
+                </div>
+            </div>
+
+            <div ng-show="useExisting">
+                <h3>Use existing account</h3>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <input class="form-control" type="text" 
+                        ng-model="account.email" placeholder="Email"/>
+                        <input class="form-control" type="password" 
+                        ng-model="account.password" placeholder="Password"/>
+                        <button class="btn btn-default" 
+                        ng-click="useAccount(account)">Join circle</button>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div ng-show="createNew">
+                <h3>Create new account</h3>
+
+                <label for="signupEmail">How will you be signing in?</label>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <input id="signupEmail" type="text" class="form-control"
+                        ng-model="signup.email" placeholder="Email address" />
+                        <input type="password" class="form-control"
+                        ng-model="signup.password" placeholder="Password"/>
+                    </div>
+                </div>
+                
+                <label for="signupName">What's your name?</label>
+                <div class="row">
+                    <div class="col-sm-8">
+                        <input id="signupName" type="text" class="form-control"
+                        ng-model="signup.name"
+                        placeholder="First name, full name, or nickname" />
+                        <button class="btn btn-default" 
+                        ng-click="createAccount(signup)">Join circle</button> 
+                    </div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
