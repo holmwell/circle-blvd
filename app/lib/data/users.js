@@ -37,6 +37,16 @@ module.exports = function () {
 				return callback(err);
 			}
 			var ignoreCase = function (a, b) {
+				if (!a && !b) {
+					return 0;
+				}
+				if (!a) {
+					return -1;
+				}
+				if (!b) {
+					return 1;
+				}
+
 				a = a.toLowerCase();
 				b = b.toLowerCase();
 				if (a < b) {
