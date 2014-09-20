@@ -5,7 +5,65 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 	$scope.signup = {};
 	$scope.signup.once = false;
 
+	var goHome = function (user, session, callback) {
+		var defaultGroup = undefined;
+
+		var onCircleFound = function (circle) {
+			var defaultCircle = "1";
+			session.activeCircle = circle || defaultCircle;
+			session.user = user;
+			session.save();
+
+			if (session.lastLocationPath) {
+				$location.path(session.lastLocationPath);
+				callback();
+			}
+			else {
+				$location.path("/");
+				callback();
+			}
+		};
+
+		if (user.memberships && user.memberships.length > 0) {
+			var membershipIndex = 0;
+
+			// Find the first group we're a part of that has a
+			// circle associated with it, and that's our default circle.
+			var tryToFindGroupStartingAtIndex = function (index) {
+				defaultGroup = user.memberships[index].group;
+
+				$http.get('/data/group/' + defaultGroup)
+				.success(function (group) {
+					if (group.projectId) {
+						onCircleFound(group.projectId);
+					}
+					else {
+						index++;
+						if (index < user.memberships.length) {
+							tryToFindGroupStartingAtIndex(index);
+						}
+						else {
+							// There are no circles!
+							onCircleFound(null);
+						}
+					}
+				})
+				.error(function () {
+					var err = new Error("Sorry, the server failed to get your circle.");
+					callback(err);
+				});
+			};
+
+			tryToFindGroupStartingAtIndex(0);
+		}
+		else {
+			callback(null);
+		}
+	};
+
+
 	$scope.signIn = function() {
+
 		var success = function(user) {
 			$scope.message = "Success!";
 
@@ -13,7 +71,7 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 				signInName.set(user.email);	
 			}
 
-			lib.goHome(user, session, function (err) {
+			goHome(user, session, function (err) {
 				if (err) {
 					$scope.message = err.message;
 					return;
@@ -177,8 +235,8 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 		"id": "5",
 		"nextId": "last-intro",
 		"owner": "Phil",
-	  	"summary": "Created in Corvallis, Oregon",
-	  	"description": ":-)",
+		"summary": "Created in Corvallis, Oregon",
+		"description": ":-)",
 		"status": "active",
 		"createdBy": {
 		  "name": "Phil",
