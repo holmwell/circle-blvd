@@ -21,41 +21,44 @@
 
                 <div ng-show="useExisting">
                     <h3>Use existing account</h3>
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <input class="form-control" type="text" 
-                            ng-model="account.email" placeholder="Email"/>
-                            <input class="form-control" type="password" 
-                            ng-model="account.password" placeholder="Password"/>
-                            <button class="btn btn-default" 
-                            ng-click="useAccount(account)">Join circle</button>
+                    <form>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <input class="form-control" type="text" 
+                                ng-model="account.email" placeholder="Email"/>
+                                <input class="form-control" type="password" 
+                                ng-model="account.password" placeholder="Password"/>
+                                <button class="btn btn-default" type="submit" 
+                                ng-click="useAccount(account)">Join circle</button>
+                            </div>
                         </div>
-                    </div>                
+                    </form>                
                 </div>
 
                 <div ng-show="createNew">
                     <h3>Create new account</h3>
-
-                    <label for="signupEmail">How will you be signing in?</label>
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <input id="signupEmail" type="text" class="form-control"
-                            ng-model="signup.email" placeholder="Email address" />
-                            <input type="password" class="form-control"
-                            ng-model="signup.password" placeholder="Password"/>
+                    <form>
+                        <label for="signupEmail">How will you be signing in?</label>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <input id="signupEmail" type="text" class="form-control"
+                                ng-model="signup.email" placeholder="Email address" />
+                                <input type="password" class="form-control"
+                                ng-model="signup.password" placeholder="Password"/>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <label for="signupName">What's your name?</label>
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <input id="signupName" type="text" class="form-control"
-                            ng-model="signup.name"
-                            placeholder="First name, full name, or nickname" />
-                            <button class="btn btn-default" 
-                            ng-click="createAccount(signup)">Join circle</button> 
-                        </div>                    
-                    </div>
+                        
+                        <label for="signupName">What's your name?</label>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <input id="signupName" type="text" class="form-control"
+                                ng-model="signup.name"
+                                placeholder="First name, full name, or nickname" />
+                                <button class="btn btn-default" type="submit" 
+                                ng-click="createAccount(signup)">Join circle</button> 
+                            </div>                    
+                        </div>
+                    </form>
                 </div>
 
                 <div ng-show="message" class="message">{{message}}</div>
