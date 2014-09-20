@@ -1164,7 +1164,7 @@ label.relax {
 }
 
 .invite .choice-row {
-  border-bottom: solid 1px #ccc;
+  border-bottom: solid 1px #ddd;
 }
 
 .invite .message {
@@ -1173,6 +1173,14 @@ label.relax {
   padding-left: 1.5ex;
   background-color: #1E69B5;
   color: white;
+}
+
+.invite .support-circle {
+  margin-top: -0.85ex;
+}
+
+.invite .glyphicon {
+  color: #555;
 }
 
 .invite h3 {
