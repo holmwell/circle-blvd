@@ -1,6 +1,6 @@
 'use strict';
 
-function InviteCtrl(lib, session, $scope, $http, $routeParams, errors) {
+function InviteCtrl(lib, session, $scope, $http, $location, $routeParams, errors) {
 
     $scope.useExisting = false;
     $scope.createNew = false;
@@ -37,12 +37,12 @@ function InviteCtrl(lib, session, $scope, $http, $routeParams, errors) {
                 // TODO: Show error
                 return;
             }
-            lib.goHome(user, session, function (err) {
-                if (err) {
-                    errors.log(err);
-                    // TODO: Show error
-                }
-            });
+
+            session.activeCircle = invite.circleId;
+            session.user = user;
+            session.save();
+
+            $location.path('/');
         });
     };
 
@@ -70,4 +70,4 @@ function InviteCtrl(lib, session, $scope, $http, $routeParams, errors) {
         .error(errors.handle);
     };
 }
-InviteCtrl.$inject = ['lib', 'session', '$scope', '$http', '$routeParams', 'errors'];
+InviteCtrl.$inject = ['lib', 'session', '$scope', '$http', '$location', '$routeParams', 'errors'];
