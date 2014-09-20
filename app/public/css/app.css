@@ -1103,6 +1103,11 @@ label.relax {
   cursor: pointer;
 }
 
+.inviteUrlPanel {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
 #groupForm, #settingForm {
   margin-top: 2em;
 }

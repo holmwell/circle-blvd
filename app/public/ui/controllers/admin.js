@@ -6,6 +6,11 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 	var impliedGroup = undefined;
 	$scope.messages = {};
 
+	var getBaseUrl = function () {
+		var location = $window.location;
+		return location.protocol + '//' + location.host;
+	};
+
 	var getCircleData = function () {
 		$http.get('/data/circle/' + activeCircle)
 		.success(getCircleSuccess)
@@ -34,6 +39,24 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 		.error(errors.handle);
 	};
 
+	var isCreatingInvite = false;
+	$scope.createInvite = function (count) {
+		if (isCreatingInvite) {
+			return;
+		}
+		isCreatingInvite = true;
+
+		$http.get('/data/' + activeCircle + '/invite/' + count)
+		.success(function (data) {
+			$scope.inviteUrl = getBaseUrl() + '/#/invite/' + data._id;
+			isCreatingInvite = false;
+		})
+		.error(function (data, status) {
+			isCreatingInvite = false;
+			errors.handle(data, status);
+		});
+	};
+
 	var addMemberSuccess = function (member) {
 		$scope.memberName = "";
 		$scope.memberEmail = "";
@@ -44,7 +67,7 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 			" on Circle Blvd.\n\n";
 
 		// Don't mention the actual email address here, for privacy.
-		welcomeTxt += "To sign in, please go to " + $window.location.origin + 
+		welcomeTxt += "To sign in, please go to " + getBaseUrl() + 
 			" and use your email address. For your initial password, please ask " +
 			session.user.name + ".";
 
