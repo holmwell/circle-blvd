@@ -87,6 +87,32 @@ var passwordsDesignDoc = {
 };
 designDocs.add(passwordsDesignDoc);
 
+var invitesDesignDoc = {
+	url: '_design/invites',
+	body: 
+	{
+		version: "1.0.0",
+		language: "javascript",
+		views: {
+			byCircleId: {
+				map: function (doc) {
+					if (doc.type === "invite") {
+						emit(doc.circleId, doc);
+					}
+				}
+			},
+			byExpires: {
+				map: function (doc) {
+					if (doc.type === "invite") {
+						emit(doc.expires, doc);
+					}
+				}
+			}
+		}
+	}
+};
+designDocs.add(invitesDesignDoc);
+
 
 var settingsDesignDoc = {
 	url: '_design/settings',
