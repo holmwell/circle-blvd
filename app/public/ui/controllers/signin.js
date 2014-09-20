@@ -30,7 +30,10 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 			}
 		};
 
-		lib.signIn($scope.user, function (err, user) {
+		var email = $scope.user.email;
+		var password = $scope.user.password;
+
+		lib.signIn(email, password, function (err, user) {
 			if (err) {
 				failure(err, err.status);
 				return;

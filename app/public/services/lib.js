@@ -2,7 +2,11 @@ CircleBlvd.Services.lib = function ($http, $location) {
     var LabelRegex = /[:;,<> \\\{\[\(\!\?\.\`\'\"\*\)\]\}\/]/;
     var ReplaceLabelRegex = /[#:;,<> \\\{\[\(\!\?\.\`\'\"\*\)\]\}\/]/g;
 
-    var signIn = function (user, callback) {
+    var signIn = function (email, password, callback) {
+        var user = {
+            email: email,
+            password: password
+        };
         var xsrf = $.param(user);
         var request = {
             method: 'POST',
@@ -22,7 +26,7 @@ CircleBlvd.Services.lib = function ($http, $location) {
         });
     };
 
-    // TODO: Rename?
+    // TODO: Rename? (startSession?)
     var goHome = function (user, session, callback) {
         var defaultGroup = undefined;
 

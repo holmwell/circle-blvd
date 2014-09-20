@@ -197,7 +197,8 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout, analy
 			if (path === '/initialize') {
 				return;
 			}
-			if (path !== '/signin') {
+			// Don't save /signin or /invite paths
+			if (path !== '/signin' && path.indexOf('/invite') !== 0) {
 				session.lastLocationPath = $location.path();	
 			}
 

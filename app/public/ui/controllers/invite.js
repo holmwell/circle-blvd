@@ -1,6 +1,6 @@
 'use strict';
 
-function InviteCtrl($scope, $http, $routeParams, errors) {
+function InviteCtrl(lib, session, $scope, $http, $routeParams, errors) {
 
     $scope.useExisting = false;
     $scope.createNew = false;
@@ -17,7 +17,7 @@ function InviteCtrl($scope, $http, $routeParams, errors) {
         $scope.invite = invite;
     })
     .error(function (data, status) {
-
+        errors.log(data);
     });
 
     $scope.showUseExisting = function () {
@@ -30,6 +30,22 @@ function InviteCtrl($scope, $http, $routeParams, errors) {
         $scope.createNew = true;
     };
 
+    var signIn = function (email, password) {
+        lib.signIn(email, password, function (err, user) {
+            if (err) {
+                errors.log(err);
+                // TODO: Show error
+                return;
+            }
+            lib.goHome(user, session, function (err) {
+                if (err) {
+                    errors.log(err);
+                    // TODO: Show error
+                }
+            });
+        });
+    };
+
     $scope.createAccount = function (signup) {
         var data = {};
         data.account = signup;
@@ -37,14 +53,14 @@ function InviteCtrl($scope, $http, $routeParams, errors) {
 
         $http.post('/data/signup/invite', data)
         .success(function (data) {
-            console.log("Success");
-            // TODO: Sign in.    
+            signIn(signup.email, signup.password);
         })
         .error(errors.handle);
     };
 
     $scope.useAccount = function (account) {
-
+        // TODO: Join circle
+        signIn(account.email, account.password);
     };
 }
-InviteCtrl.$inject = ['$scope', '$http', '$routeParams', 'errors'];
+InviteCtrl.$inject = ['lib', 'session', '$scope', '$http', '$routeParams', 'errors'];
