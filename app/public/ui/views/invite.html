@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-sm-2"></div>
         <div class="col-sm-8 col-xs-12">
-            <div ng-cloak ng-show="isInviteAvailable()">
+            <div ng-hide="!isInviteAvailable()">
                 <h3>Invitation to join {{invite.circleName}}</h3>
                 <p>You've been invited to join {{invite.circleName}}
                 on Circle Blvd.</p>
@@ -65,7 +65,7 @@
                 <h3>Invite accepted</h3>
             </div>
 
-            <div ng-cloak ng-show="!isInviteAvailable() && !isInviteAccepted()">
+            <div ng-cloak ng-hide="isLoading() || isInviteAvailable() || isInviteAccepted()">
                 <h3>Invite not available</h3>
                 <p>The invitation at this address is no more. It has ceased to be.</p>
             </div>

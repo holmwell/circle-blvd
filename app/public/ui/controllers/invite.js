@@ -5,6 +5,7 @@ function InviteCtrl(lib, session, $scope, $http, $location, $routeParams, errors
     $scope.useExisting = false;
     $scope.createNew = false;
 
+    var isLoading = true;
     var inviteId = $routeParams.inviteId;
     var invite = undefined;
     if (!inviteId) {
@@ -15,9 +16,11 @@ function InviteCtrl(lib, session, $scope, $http, $location, $routeParams, errors
     .success(function (data, status) {
         invite = data;
         $scope.invite = invite;
+        isLoading = false;
     })
     .error(function (data, status) {
         errors.log(data);
+        isLoading = false;
     });
 
     $scope.showUseExisting = function () {
@@ -28,6 +31,10 @@ function InviteCtrl(lib, session, $scope, $http, $location, $routeParams, errors
     $scope.showCreateNew = function () {
         $scope.useExisting = false;
         $scope.createNew = true;
+    };
+
+    $scope.isLoading = function () {
+        return isLoading;
     };
 
     $scope.isInviteAvailable = function () {
