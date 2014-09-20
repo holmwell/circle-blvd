@@ -1,9 +1,11 @@
 var couch = require('./couch/couch.js');
+var uuid = require('node-uuid');
 
 var create = function (doc, callback) {
     var oneDay = 1000 * 60 * 60 * 24;
     var fiveDays = oneDay * 5;
 
+    var inviteId = uuid.v4();
     var invite = {
         circleId: doc.circleId,
         count: doc.count,
@@ -18,7 +20,7 @@ var create = function (doc, callback) {
         }
 
         invite.circleName = circle.name;
-        couch.db.insert(invite, function (err, successDoc) {
+        couch.db.insert(invite, inviteId, function (err, successDoc) {
             if (err) {
                 callback(err);
                 return;
