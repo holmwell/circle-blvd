@@ -12,60 +12,13 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 			if ($scope.rememberMe) {
 				signInName.set(user.email);	
 			}
-			
-			var getDefaultCircle = function (user, callback) {
-				var defaultGroup = undefined;
-				if (user.memberships && user.memberships.length > 0) {
-					var membershipIndex = 0;
 
-					// Find the first group we're a part of that has a
-					// circle associated with it, and that's our default circle.
-					var tryToFindGroupStartingAtIndex = function (index) {
-						defaultGroup = user.memberships[index].group;
-
-						$http.get('/data/group/' + defaultGroup)
-						.success(function (group) {
-							if (group.projectId) {
-								callback(group.projectId);
-							}
-							else {
-								index++;
-								if (index < user.memberships.length) {
-									tryToFindGroupStartingAtIndex(index);
-								}
-								else {
-									// There are no circles!
-									callback(null);
-								}
-							}
-						})
-						.error(function () {
-							$scope.message = "Sorry, the server failed to get your circle.";
-						})
-					};
-
-					tryToFindGroupStartingAtIndex(0);
+			lib.goHome(user, session, function (err) {
+				if (err) {
+					$scope.message = err.message;
+					return;
 				}
-				else {
-					callback(null);
-				}
-			};
-
-			var onCircleFound = function (circle) {
-				var defaultCircle = "1";
-				session.activeCircle = circle || defaultCircle;
-				session.user = user;
-				session.save();
-
-				if (session.lastLocationPath) {
-					$location.path(session.lastLocationPath);
-				}
-				else {
-					$location.path("/");	
-				}
-			};
-
-			getDefaultCircle(user, onCircleFound);
+			});
 		};
 
 		var failure = function(data, status) {
@@ -151,8 +104,6 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 		}
 
 		$scope.rememberMe = true;
-
-
 	};
 
 
