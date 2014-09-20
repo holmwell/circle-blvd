@@ -59,8 +59,15 @@ function InviteCtrl(lib, session, $scope, $http, $routeParams, errors) {
     };
 
     $scope.useAccount = function (account) {
-        // TODO: Join circle
-        signIn(account.email, account.password);
+        var data = {};
+        data.account = account;
+        data.invite = invite;
+
+        $http.post('/data/invite/accept', data)
+        .success(function (data) {
+            signIn(account.email, account.password);    
+        })
+        .error(errors.handle);
     };
 }
 InviteCtrl.$inject = ['lib', 'session', '$scope', '$http', '$routeParams', 'errors'];

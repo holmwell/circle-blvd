@@ -630,25 +630,7 @@ var defineRoutes = function () {
         });
     };
 
-    app.post("/data/signup/invite", function (req, res) {
-        var data = req.body;
-        var proposedAccount = data.account;
-        var invite = data.invite;
-
-        var invitationAccepted = function (dbInvite, group) {
-            createUser(proposedAccount, guard(res, function (account) {
-                // Add circle membership to account
-                var newMembership = {
-                    circle: dbInvite.circleId,
-                    group: group.id,
-                    level: "member"
-                };
-                account.memberships.push(newMembership);
-                db.users.addMembership(account, dbInvite.circleId, handle(res));
-                // Done.
-            }));
-        };
-
+    var acceptInvitation = function (res, invite, callback) {
         db.groups.findImpliedByCircleId(invite.circleId, guard(res, function (group) {
             if (!group) {
                 res.send(400, "Could not find implied group for invite.");
@@ -664,11 +646,49 @@ var defineRoutes = function () {
                     return;
                 }
                 db.invites.accept(dbInvite, guard(res, function () {
-                    invitationAccepted(dbInvite, group);
+                    callback(dbInvite, group);
                 }));
             }));    
         }));
+    };
+
+    var addGroupToAccount = function (account, group, circleId, callback) {
+        var newMembership = {
+            circle: circleId,
+            group: group.id,
+            level: "member"
+        };
+        account.memberships.push(newMembership);
+        db.users.addMembership(account, circleId, callback);
+    };
+
+    app.post("/data/signup/invite", function (req, res) {
+        var data = req.body;
+        var proposedAccount = data.account;
+        var invite = data.invite;
+
+        var inviteAccepted = function (dbInvite, group) {
+            createUser(proposedAccount, guard(res, function (account) {
+                addGroupToAccount(account, group, dbInvite.circleId, handle(res));
+            }));
+        };
+
+        acceptInvitation(res, invite, inviteAccepted);
     });
+
+    app.post("/data/invite/accept", function (req, res) {
+        var data = req.body;
+        var account = data.account;
+        var invite = data.invite;
+        account.memberships = [];
+
+        var inviteAccepted = function(dbInvite, group) {
+            addGroupToAccount(account, group, dbInvite.circleId, handle(res));
+        };
+
+        acceptInvitation(res, invite, inviteAccepted);
+    });
+
 
     app.post("/data/signup/now", limits.circle, function (req, res) {
         var data = req.body;
