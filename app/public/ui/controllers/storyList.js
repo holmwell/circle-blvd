@@ -186,19 +186,34 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		e.stopPropagation();
 		e.preventDefault();
 
-		var movedStory = stories.get(story.id);
+		var storyToMove = stories.get(story.id);
 		var previousTopStory = stories.getFirst();
 
-		if (movedStory.id === previousTopStory.id) {
+		if (storyToMove.id === previousTopStory.id) {
 			// Do nothing.
 			return;
 		}
 
-		stories.setFirst(movedStory);
-		movedStory.nextId = previousTopStory.id;	
+		// Update data model
+		// TODO: Refactor, to share the same code used below
+		var preMove = {
+			storyBefore: stories.getPrevious(story, storyToMove),
+			storyAfter: stories.get(storyToMove.nextId)
+		};
+		// We need to update 'nextId' of the following:
+		// 1. The story before the moved story, before it was moved.		
+		if (preMove.storyBefore) {
+			preMove.storyBefore.nextId = preMove.storyAfter ? preMove.storyAfter.id : getLastStoryId();
+		}
+		stories.setFirst(storyToMove);
+		storyToMove.nextId = previousTopStory.id;
 
+		// Update view model
+		updateViewModelStoryOrder();
+
+		// Update server
 		$timeout(function() {
-			stories.move(movedStory, previousTopStory, function (err, response) {
+			stories.move(storyToMove, previousTopStory, function (err, response) {
 				if (err) {
 					// We failed. Probably because of a data integrity issue
 					// on the server that we need to wait out. 
@@ -206,8 +221,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 					return;
 				}
 				else {
-					console.log("MOVE TO TOP");
-					$scope.$emit('storyMoved', movedStory);
+					$scope.$emit('storyMoved', storyToMove);
 				}
 			});
 		}, 0);
@@ -473,6 +487,60 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		return shouldHide;
 	};
 
+	function updateViewModelStoryOrder() {
+		// The YUI drag-and-drop stuff manipulates the DOM, 
+		// but doesn't touch our view-model, so we need to 
+		// update our stories array to reflect the new order
+		//  of things.
+		var applyNextMeeting = function (stories) {
+			var isAfterNextMeeting = false;
+			for (var key in stories) {
+				if (isAfterNextMeeting) {
+					stories[key].isAfterNextMeeting = true;
+				}
+				else if (stories[key].isNextMeeting) {				
+					isAfterNextMeeting = true;
+				}
+				else {
+					stories[key].isAfterNextMeeting = false;
+				}
+			}
+			return stories;
+		};
+
+		var storiesInNewOrder = [];
+
+		if (stories.isListBroken()) {
+			$scope.$emit('storyListBroken');
+			return;
+		}
+
+		var firstStory = stories.getFirst();
+		var currentStory = firstStory;
+		
+		while (currentStory) {
+			storiesInNewOrder.push(currentStory);
+			currentStory = stories.get(currentStory.nextId);
+		}
+
+		if (storiesInNewOrder.length === storiesList.length) {
+			// Update isAfterNextMeeting for all stories
+			storiesInNewOrder = applyNextMeeting(storiesInNewOrder);
+
+			// Update our view with the proper story order
+			//
+			// TODO: We really only need to update the range of
+			// stories affected, not all of them, but that can 
+			// be a performance optimization later.
+			for (var key in storiesInNewOrder) {
+				storiesList[key] = stories.get(storiesInNewOrder[key].id);
+			}
+		}
+		else {
+			errors.handle("Something unknown happened with the move. Need to refresh page.", "client");
+		}
+	};
+
 	//-------------------------------------------------------
 	// Drag and drop
 	//-------------------------------------------------------
@@ -566,60 +634,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			movedStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();	
 		}();
 		
-
-		var updateViewModelStoryOrder = function () {
-			// The YUI drag-and-drop stuff manipulates the DOM, 
-			// but doesn't touch our view-model, so we need to 
-			// update our stories array to reflect the new order
-			//  of things.
-			var applyNextMeeting = function (stories) {
-				var isAfterNextMeeting = false;
-				for (var key in stories) {
-					if (isAfterNextMeeting) {
-						stories[key].isAfterNextMeeting = true;
-					}
-					else if (stories[key].isNextMeeting) {				
-						isAfterNextMeeting = true;
-					}
-					else {
-						stories[key].isAfterNextMeeting = false;
-					}
-				}
-				return stories;
-			};
-
-			var storiesInNewOrder = [];
-
-			if (stories.isListBroken()) {
-				$scope.$emit('storyListBroken');
-				return;
-			}
-
-			var firstStory = stories.getFirst();
-			var currentStory = firstStory;
-			
-			while (currentStory) {
-				storiesInNewOrder.push(currentStory);
-				currentStory = stories.get(currentStory.nextId);
-			}
-
-			if (storiesInNewOrder.length === storiesList.length) {
-				// Update isAfterNextMeeting for all stories
-				storiesInNewOrder = applyNextMeeting(storiesInNewOrder);
-
-				// Update our view with the proper story order
-				//
-				// TODO: We really only need to update the range of
-				// stories affected, not all of them, but that can 
-				// be a performance optimization later.
-				for (var key in storiesInNewOrder) {
-					storiesList[key] = stories.get(storiesInNewOrder[key].id);
-				}
-			}
-			else {
-				errors.handle("Something unknown happened with the move. Need to refresh page.", "client");
-			}
-		}(); // closure
+		updateViewModelStoryOrder();
 
 		// Without this $timeout, there is a slight delay
 		// in facade mode.
