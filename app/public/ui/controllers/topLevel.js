@@ -10,6 +10,15 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout, analy
 		$scope.isHeaderVisible = false;
 	};
 
+	var mindset = "detailed";
+	$scope.setMindset = function (m) {
+		mindset = m;
+	};
+	$scope.isMindset = function (m) {
+		return mindset === m;
+	};
+
+
 	$scope.keydown = function(e) {
 		if (e.target.type === "textarea" ||
 			e.target.type === "text") {

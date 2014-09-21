@@ -87,6 +87,8 @@
   /*background-color: #666;*/
   /*font-family: 'Headland One', serif;*/
   /*font-size: larger;*/
+
+  position: relative;
 }
 .title {
   margin-bottom: 0;
@@ -130,6 +132,38 @@
 .menu a:hover {
   color: #fafa00;
 }*/
+
+.mindset-container {
+  position: absolute;
+  top: 1ex;
+  right: 3ex;
+  width: 75px;
+  height: 75px;
+  border: dashed 1px #ddd;
+
+  color: #eee;
+  font-size: 16pt;
+  text-align: right;
+  padding: 0.75ex;
+  z-index: 1000;
+}
+.mindset-container .right {
+  padding-left: 0.5ex;
+}
+.mindset-container:hover {
+  color: #ccc;
+}
+.mindset-container .glyphicon {
+  cursor: pointer;
+}
+.selected-mindset {
+  color: #999;
+}
+.mindset-container .invisible {
+  cursor: default;
+  opacity: 0;
+}
+
 
 .jsLink {
   cursor: pointer;
