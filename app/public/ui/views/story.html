@@ -153,7 +153,8 @@
 				<div ng-if="isMindset('bump')" class="col-sm-2 bumpy"
 					ng-click="moveToTop($event, story)">
 					<div class="pull-right bumpy-viz">
-						<div class="glyphicon glyphicon-chevron-up">&nbsp;</div>
+						<div ng-hide="story.isFirstStory" 
+						class="glyphicon glyphicon-chevron-up">&nbsp;</div>
 					</div>
 				</div>
 			</div>
