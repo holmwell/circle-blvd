@@ -221,6 +221,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 					return;
 				}
 				else {
+					pulse(storyToMove);
 					$scope.$emit('storyMoved', storyToMove);
 				}
 			});
