@@ -183,9 +183,34 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	});
 
 	$scope.$on('storyMovedToTop', function (e, story) {
-		console.log("MOVE TO TOP");
 		e.stopPropagation();
 		e.preventDefault();
+
+		var movedStory = stories.get(story.id);
+		var previousTopStory = stories.getFirst();
+
+		if (movedStory.id === previousTopStory.id) {
+			// Do nothing.
+			return;
+		}
+
+		stories.setFirst(movedStory);
+		movedStory.nextId = previousTopStory.id;	
+
+		$timeout(function() {
+			stories.move(movedStory, previousTopStory, function (err, response) {
+				if (err) {
+					// We failed. Probably because of a data integrity issue
+					// on the server that we need to wait out. 
+					errors.handle(err.data, err.status);
+					return;
+				}
+				else {
+					console.log("MOVE TO TOP");
+					$scope.$emit('storyMoved', movedStory);
+				}
+			});
+		}, 0);
 	});
 
 	var removeFromView = function (viewStory, serverStory) {
