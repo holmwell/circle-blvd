@@ -211,6 +211,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		// Update view model
 		updateViewModelStoryOrder();
 
+		// ...
+		$timeout(function () {
+			pulse(storyToMove);
+		}, 100);
+
 		// Update server
 		$timeout(function() {
 			stories.move(storyToMove, previousTopStory, function (err, response) {
@@ -220,8 +225,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 					errors.handle(err.data, err.status);
 					return;
 				}
-				else {
-					pulse(storyToMove);
+				else {					
 					$scope.$emit('storyMoved', storyToMove);
 				}
 			});
