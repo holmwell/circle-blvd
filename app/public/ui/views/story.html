@@ -136,7 +136,8 @@
 						<sp-story-summary/>
 					</div>
 				</div>
-				<div ng-if="isMindset('detailed')" class="col-sm-2 grippy">
+				<div ng-if="isMindset('detailed') || !story.isAfterNextMeeting" 
+					class="col-sm-2 grippy">
 					<div class="pull-right grippy-viz">
 						<span class="grippy-bar top"></span>
 						<span class="grippy-bar"></span>
@@ -150,7 +151,8 @@
 					</div>
 				</div>
 
-				<div ng-if="isMindset('bump')" class="col-sm-2 bumpy"
+				<div ng-if="isMindset('bump') && story.isAfterNextMeeting" 
+					class="col-sm-2 bumpy"
 					ng-click="moveToTop($event, story)">
 					<div class="pull-right bumpy-viz">
 						<div ng-hide="story.isFirstStory" 
@@ -180,7 +182,7 @@
 					</div>
 				</div>
 				
-				<div class="col-xs-1 grippy" ng-if="isMindset('detailed')" ng-hide="isAndroid">
+				<div class="col-xs-1 grippy" ng-hide="isAndroid">
 					<div class="pull-right grippy-viz">
 						<span class="grippy-bar top"></span>
 						<span class="grippy-bar"></span>
