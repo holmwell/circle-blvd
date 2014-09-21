@@ -136,7 +136,7 @@
 						<sp-story-summary/>
 					</div>
 				</div>
-				<div class="col-sm-2 grippy">
+				<div ng-if="isMindset('detailed')" class="col-sm-2 grippy">
 					<div class="pull-right grippy-viz">
 						<span class="grippy-bar top"></span>
 						<span class="grippy-bar"></span>
@@ -147,6 +147,13 @@
 						</div>
 						<span class="grippy-bar top"></span>
 						<span class="grippy-bar"></span>
+					</div>
+				</div>
+
+				<div ng-if="isMindset('bump')" class="col-sm-2 bumpy"
+					ng-click="moveToTop($event, story)">
+					<div class="pull-right bumpy-viz">
+						<div class="glyphicon glyphicon-chevron-up">&nbsp;</div>
 					</div>
 				</div>
 			</div>
@@ -172,7 +179,7 @@
 					</div>
 				</div>
 				
-				<div class="col-xs-1 grippy" ng-hide="isAndroid">
+				<div class="col-xs-1 grippy" ng-if="isMindset('detailed')" ng-hide="isAndroid">
 					<div class="pull-right grippy-viz">
 						<span class="grippy-bar top"></span>
 						<span class="grippy-bar"></span>
@@ -185,6 +192,12 @@
 						<span class="grippy-bar"></span>
 					</div>
 				</div> 
+
+				<!-- <div class="col-xs-1 debug on" ng-if="isMindset('bump')">
+					<div class="pull-right bumpy-viz">
+						<div class="glyphicon glyphicon-chevron-up">&nbsp;</div>
+					</div>
+				</div> -->
 			</div>
 		</div>
 

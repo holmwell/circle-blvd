@@ -27,13 +27,28 @@ CircleBlvd.Services.lib = function ($http) {
         });
     };
 
+    var mindset = function () {
+        var mindset = 'detailed';
+        return {
+            get: function () {
+                return mindset;
+            },
+            set: function (m) {
+                mindset = m;
+            },
+            is: function (m) {
+                return m === mindset;
+            }
+        }
+    }();
 
     return {
         signIn: signIn,
         consts: {
             ReplaceLabelRegex: ReplaceLabelRegex,
             LabelRegex: LabelRegex
-        }
+        },
+        mindset: mindset
     };
 };
 CircleBlvd.Services.lib.$inject = ['$http'];

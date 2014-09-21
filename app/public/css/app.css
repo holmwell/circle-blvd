@@ -285,16 +285,20 @@ h4, h5 {
 }
 
 
-.grippy {
+.grippy, .bumpy {
   margin-left: -2ex;
   padding-right: 0;
   cursor: move;
   margin-top: 1px;
 }
+.bumpy {
+  height: 30px;
+  cursor: pointer;
+}
 .phone-row .paddy {
   padding-left: 0;
 }
-.phone-row .grippy {
+.phone-row .grippy, .phone-row .bumpy {
   margin-left: 0;
 }
 .grippy .glyphicon {
@@ -323,6 +327,13 @@ h4, h5 {
 .next-meeting .grippy .glyphicon {
   color: #111;
 }
+
+.bumpy-viz {
+  margin-top: 0.5ex;
+  margin-right: -1.25ex;
+  opacity: 0.6;
+}
+
 .grippy-viz {
   background-color: #d0d0d0;
 }

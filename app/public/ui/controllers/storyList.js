@@ -182,6 +182,12 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		});
 	});
 
+	$scope.$on('storyMovedToTop', function (e, story) {
+		console.log("MOVE TO TOP");
+		e.stopPropagation();
+		e.preventDefault();
+	});
+
 	var removeFromView = function (viewStory, serverStory) {
 
 		var nextStory = stories.get(serverStory.nextId);

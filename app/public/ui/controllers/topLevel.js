@@ -1,6 +1,6 @@
 'use strict';
 
-function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout, analytics) {
+function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, analytics) {
 
 	$scope.isHeaderVisible = true;
 	$scope.keyboard = {};
@@ -10,14 +10,13 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout, analy
 		$scope.isHeaderVisible = false;
 	};
 
-	var mindset = "detailed";
 	$scope.setMindset = function (m) {
-		mindset = m;
-	};
-	$scope.isMindset = function (m) {
-		return mindset === m;
+		lib.mindset.set(m);
 	};
 
+	$scope.isMindset = function (m) {
+		return lib.mindset.is(m);
+	};
 
 	$scope.keydown = function(e) {
 		if (e.target.type === "textarea" ||
@@ -197,6 +196,10 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout, analy
 			analytics.trackEvent('story', 'moved');
 		});
 
+		$scope.$on('storyMovedToTop', function () {
+			analytics.trackEvent('story', 'movedToTop');
+		});
+
 		$scope.$on('storySaved', function () {
 			analytics.trackEvent('story', 'saved');
 		});
@@ -272,4 +275,4 @@ function TopLevelCtrl(session, $scope, $http, $location, $route, $timeout, analy
 
 	init();
 }
-TopLevelCtrl.$inject = ['session', '$scope', '$http', '$location', '$route', '$timeout', 'analytics'];
+TopLevelCtrl.$inject = ['session', 'lib', '$scope', '$http', '$location', '$route', '$timeout', 'analytics'];

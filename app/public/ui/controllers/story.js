@@ -1,6 +1,6 @@
 'use strict';
 
-function StoryCtrl(session, $scope, $timeout) {
+function StoryCtrl(session, lib, $scope, $timeout) {
 
 	$scope.isAndroid = function() {
         return /Android/i.test(navigator.userAgent);
@@ -97,6 +97,16 @@ function StoryCtrl(session, $scope, $timeout) {
 		}
 	};
 
+	$scope.isMindset = function (m) {
+		return lib.mindset.is(m);
+	};
+
+	$scope.moveToTop = function (e, story) {
+		$scope.$emit('storyMovedToTop', story);
+		e.stopPropagation();
+		e.preventDefault();
+	};
+
 	var isDragging = false;
 	$scope.$on('spIsDragging', function (e, val) {
 		isDragging = val;
@@ -177,4 +187,4 @@ function StoryCtrl(session, $scope, $timeout) {
 		return false;
 	};
 }
-StoryCtrl.$inject = ['session', '$scope', '$timeout'];
+StoryCtrl.$inject = ['session', 'lib', '$scope', '$timeout'];
