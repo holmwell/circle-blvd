@@ -28,6 +28,12 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 		if (e.keyCode === 16) {
 			$scope.keyboard.isShiftDown = true;
 		}
+		if (e.keyCode === 49) { // "1"
+			lib.mindset.set('detailed');
+		}
+		if (e.keyCode === 50) { // "2"
+			lib.mindset.set('bump');
+		}
 	};
 
 	$scope.keyup = function (e) {
