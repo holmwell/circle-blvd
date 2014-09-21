@@ -1,35 +1,48 @@
 var couch = require('./couch/couch.js');
 var uuid = require('node-uuid');
+var errors = require('../errors');
 
 var create = function (doc, callback) {
-    var oneDay = 1000 * 60 * 60 * 24;
-    var fiveDays = oneDay * 5;
-
-    var inviteId = uuid.v4();
-    var invite = {
-        circleId: doc.circleId,
-        count: doc.count,
-        expires: Date.now() + fiveDays, 
-        type: "invite"
-    };
-
-    couch.docs.get(doc.circleId, function (err, circle) {
+    // If we keep making invites, maintain our
+    // database to delete the expired ones.
+    performMaintenance(function (err) {
         if (err) {
-            callback(err);
-            return;
+            errors.log(err);
+            // continue ...
         }
+        createInvite();
+    });
 
-        invite.circleName = circle.name;
-        couch.db.insert(invite, inviteId, function (err, successDoc) {
+    function createInvite() {
+        var oneDay = 1000 * 60 * 60 * 24;
+        var fiveDays = oneDay * 5;
+
+        var inviteId = uuid.v4();
+        var invite = {
+            circleId: doc.circleId,
+            count: doc.count,
+            expires: Date.now() + fiveDays, 
+            type: "invite"
+        };
+
+        couch.docs.get(doc.circleId, function (err, circle) {
             if (err) {
                 callback(err);
                 return;
             }
-            invite._id = successDoc.id;
-            invite._rev = successDoc.rev;
-            callback(null, invite);
-        });
-    });
+
+            invite.circleName = circle.name;
+            couch.db.insert(invite, inviteId, function (err, successDoc) {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+                invite._id = successDoc.id;
+                invite._rev = successDoc.rev;
+                callback(null, invite);
+            });
+        });    
+    }
 };
 
 var get = function (docId, callback) {
@@ -114,6 +127,79 @@ var accept = function (invite, callback) {
             callback();
         });
     });
+};
+
+
+var lastMainenanceDate = undefined;
+var actuallyPerformMaintenance = function (callback) {
+    lastMainenanceDate = new Date();
+
+    var deleteExpiredInvites = function () {
+        var earliestDate = 0;
+        var endkey = Date.now();
+
+        var options = {
+            startkey: earliestDate,
+            endkey: endkey
+        };
+
+        couch.db.view("invites", "byExpires", options, function (err, body) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            var bulkDoc = {};
+            var options = {};
+            bulkDoc.docs = [];
+
+            body.rows.forEach (function (doc) {
+                var deleteDoc = {
+                    _id: doc.id,
+                    _rev: doc.value._rev,
+                    _deleted: true
+                };
+                bulkDoc.docs.push(deleteDoc);
+            });
+
+            couch.db.bulk(bulkDoc, options, callback);
+        });
+    };
+
+    var performAllMaintenance = function () {
+        deleteExpiredInvites();
+        // TODO: We should do this somewhere, in general.
+        // couch.db.compact();
+    };
+
+    process.nextTick(performAllMaintenance);
+};
+
+// Dates are equal if they share the same day of the year.
+// We don't care about units smaller than days.
+var areDatesEqual = function (date1, date2) {
+    if (date1.getYear() !== date2.getYear()
+    || date1.getMonth() !== date2.getMonth()
+    || date1.getDay() !== date2.getDay()) {
+        return false;
+    }
+
+    return true;
+};
+
+function performMaintenance(callback) {
+    // actually perform maintenance if it hasn't
+    // been done today, otherwise no.
+    if (!lastMainenanceDate) {
+        return actuallyPerformMaintenance(callback);
+    }
+    if (areDatesEqual(new Date(), lastMainenanceDate)) {
+        // do nothing
+        callback();
+        return;
+    }
+
+    actuallyPerformMaintenance(callback);
 };
 
 exports.create = create;
