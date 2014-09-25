@@ -12,6 +12,7 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 
 	$scope.setMindset = function (m) {
 		lib.mindset.set(m);
+		$scope.$broadcast('mindsetChanged', lib.mindset.get());
 	};
 
 	$scope.isMindset = function (m) {
@@ -29,10 +30,13 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 			$scope.keyboard.isShiftDown = true;
 		}
 		if (e.keyCode === 49) { // "1"
-			lib.mindset.set('detailed');
+			$scope.setMindset('detailed');
 		}
 		if (e.keyCode === 50) { // "2"
-			lib.mindset.set('bump');
+			$scope.setMindset('bump');
+		}
+		if (e.keyCode === 51) { // "3"
+			$scope.setMindset('roadmap');
 		}
 	};
 

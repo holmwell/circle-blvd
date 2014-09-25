@@ -45,6 +45,13 @@ directive('spStory', function () {
 		controller: StoryCtrl
 	};
 }).
+directive('spRoadmapMilepost', function () {
+	return {
+		restrict: 'E',
+		templateUrl: 'ui/views/roadmapMilepost.html',
+		controller: RoadmapMilepostCtrl
+	};
+}).
 directive('spStoryList', function () {
 	return {
 		restrict: 'E',

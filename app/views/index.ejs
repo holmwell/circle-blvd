@@ -118,7 +118,10 @@
       <span ng-click="setMindset('detailed')" 
         ng-class="{ 'selected-mindset': isMindset('detailed') }"
         class="glyphicon glyphicon-move"></span>
-      <span class="glyphicon glyphicon-align-justify invisible right"></span>
+
+      <span ng-click="setMindset('roadmap')"
+        ng-class="{ 'selected-mindset': isMindset('roadmap') }" 
+        class="glyphicon glyphicon-road right"></span>
     </div>
     <!--
     <div class="navbar navbar-default" role="navigation" ng-cloak ng-show="isSignedIn()">

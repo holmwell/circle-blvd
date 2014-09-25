@@ -443,6 +443,15 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		});
 	});
 
+	// TODO: It would be nice if we didn't have to 
+	// wait a magic amount of time, and could react
+	// to some event.
+	$scope.$on('mindsetChanged', function (e, mindset) {
+		$timeout(function () {
+			makeStoriesDraggable();
+		}, 500);
+	});
+
 	// Tmp for development:
 	// selectedLabels.push("label");
 	$scope.$on('labelSelected', function (e, text) {
@@ -490,6 +499,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		}
 		
 		return shouldHide;
+	};
+
+	$scope.isMindset = function (m) {
+		return lib.mindset.is(m);
 	};
 
 	function updateViewModelStoryOrder() {

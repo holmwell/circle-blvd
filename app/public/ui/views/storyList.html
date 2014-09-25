@@ -1,24 +1,44 @@
-<div id="backlog" class="debug clear">
-	<div ng-show="selectedLabels.length > 0" class="filterWrapper row">
-		<div class="col-sm-2"></div>
-		<div class="col-sm-8 col-xs-12 story filter">
-			<div class="paddy">
-				Showing only:
-				<ul>
-					<li ng-repeat="label in selectedLabels">
-						<a class="active-filter" ng-click="deselectLabel(label)">{{label}}</a>
-					</li>
-				</ul>
-				<div class="clear-filter pull-right">
-					&gt; <a class="jsLink" ng-click="clearFilter()">show all</a> &lt;
+<div id="storyList">
+	<div id="backlog" class="debug clear"
+		ng-class="{
+			'col-sm-7': isMindset('roadmap')
+		}">
+		<div ng-show="selectedLabels.length > 0" class="filterWrapper row">
+			<div class="col-sm-2" ng-hide="isMindset('roadmap')"></div>
+			<div class="col-xs-12 story filter"
+				ng-class="{
+					'col-sm-8': !isMindset('roadmap'),
+					'col-sm-12': isMindset('roadmap')
+				}">
+				<div class="paddy">
+					Showing only:
+					<ul>
+						<li ng-repeat="label in selectedLabels">
+							<a class="active-filter" ng-click="deselectLabel(label)">{{label}}</a>
+						</li>
+					</ul>
+					<div class="clear-filter pull-right">
+						&gt; <a class="jsLink" ng-click="clearFilter()">show all</a> &lt;
+					</div>
 				</div>
 			</div>
 		</div>
+		<div class="storyWrapper row debug no-select" 
+			data-story-id="{{story.id}}"
+			ng-repeat="story in stories"
+			ng-hide="shouldHideStory(story)">
+			<sp-story/>
+		</div>
 	</div>
-	<div class="storyWrapper row debug no-select" 
-		data-story-id="{{story.id}}"
-		ng-repeat="story in stories"
-		ng-hide="shouldHideStory(story)">
-		<sp-story/>
+
+	<div id="mileposts-wrapper" ng-if="isMindset('roadmap')">
+		<div id="mileposts">
+			<div class="storyWrapper row debug no-select" 
+				data-story-id="{{story.id}}"
+				ng-repeat="story in stories"
+				ng-hide="!(story.isDeadline || story.isNextMeeting)">
+				<sp-roadmap-milepost/>
+			</div>
+		</div>
 	</div>
 </div>

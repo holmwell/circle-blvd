@@ -1,4 +1,4 @@
-<div class="hidden-xs col-sm-2 debug">
+<div class="hidden-xs col-sm-2 debug" ng-hide="isMindset('roadmap')">
 	<div class="backlog-mine col-xs-9 debug"
 		ng-class="{done: isStoryDone(story)}">
 		<div ng-show="isStoryMine(story)" ng-click="bumpStatus(story)">
@@ -21,7 +21,9 @@
 	</div>
 </div>
 
-<div class="story col-xs-12 col-sm-8 debug no-select" ng-class="{ 
+<div class="story col-xs-12 debug no-select" ng-class="{ 
+		'col-sm-12': isMindset('roadmap'),
+		'col-sm-8': !isMindset('roadmap'),
 		selected: story.isSelected, 
 		'not-selected': !story.isSelected,
 		first: story.isFirstStory,
@@ -136,7 +138,7 @@
 				<sp-story-summary/>
 			</div>
 		</div>
-		<div ng-if="isMindset('detailed') || !story.isAfterNextMeeting" 
+		<div ng-if="!isMindset('bump') || !story.isAfterNextMeeting" 
 			class="col-sm-2 grippy">
 			<div class="pull-right grippy-viz">
 				<span class="grippy-bar top"></span>
@@ -205,6 +207,7 @@
 </div>
 
 <div class="backlog-owner hidden-xs col-sm-2 debug no-select" 
+	ng-hide="isMindset('roadmap')"
 	ng-class="{'after': story.isAfterNextMeeting}"
 	ng-click="select(story)">
 	<span class="text-select">{{story.owner}}</span><span ng-show="isStoryNew(story)">?</span>

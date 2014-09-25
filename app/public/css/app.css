@@ -243,6 +243,26 @@ h4, h5 {
 
 
 /* home */
+#storyList {
+  position: relative;
+}
+
+#storyList #mileposts-wrapper {
+  position: absolute;
+  top: 1ex;
+  right: 0;
+  width: 320px;
+}
+
+#storyList #mileposts {
+  position: fixed;
+  width: 300px;
+  /*top: 100px;
+  *//*right: 10%;*/
+  
+
+}
+
 #backlog {
   padding-top: 1ex;
   padding-right: 1.5ex;
@@ -260,6 +280,9 @@ h4, h5 {
   margin-bottom: 0.5em;
   min-width: 200px;
   cursor: pointer;
+}
+#mileposts .story {
+  cursor: default;
 }
 .selected {
   cursor: default;
