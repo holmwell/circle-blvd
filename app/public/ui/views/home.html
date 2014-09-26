@@ -9,11 +9,17 @@
 
 <div class="entry-facade no-select" ng-hide="isAddingNew || isBacklogBroken">
 	<div class="row entry-facade-container">
-		<div class="col-xs-12 col-sm-offset-2 col-sm-8 debug show-entry alignWithStoryList">
+		<div class="col-xs-12 debug show-entry alignWithStoryList"
+			ng-class="{
+				'col-sm-7': isMindset('roadmap'),
+				'col-sm-offset-2': !isMindset('roadmap'),
+				'col-sm-8': !isMindset('roadmap')
+			}">
 		+ <a ng-click="showEntry()" class="jsLink text-select">Add story</a>
 		</div>
 
-		<div class="hidden-xs col-sm-2 col-lg-2 alt-mode" 
+		<div class="hidden-xs col-sm-2 col-lg-2 alt-mode"
+			ng-hide="isMindset('roadmap')" 
 			ng-class="{alt: isManualAltMode || isAltMode}"
 			ng-click="toggleAltMode()" title="inbox mode"><i class="glyphicon glyphicon-align-justify"></i></div>
 	</div>
@@ -21,7 +27,13 @@
 
 <div class="entry" ng-show="isAddingNew">
 	<div class="row">
-		<div class="col-xs-12 col-sm-offset-2 col-sm-8 debug">
+		<div class="col-xs-12 debug"
+			ng-class="{
+				roadmapOffset: isMindset('roadmap'),
+				'col-sm-7': isMindset('roadmap'),
+				'col-sm-offset-2': !isMindset('roadmap'),
+				'col-sm-8': !isMindset('roadmap')
+			}">
 			<ul class="entry-nav nav nav-pills row alignWithStoryList">
 				<li ng-class="{ active: isAdding['story'] }">
 					<a class="jsLink" ng-click="showEntry('story')">Story</a>
@@ -96,6 +108,7 @@
 		</div>
 
 		<div class="hidden-xs col-sm-2 col-lg-2 alt-mode" 
+		ng-hide="isMindset('roadmap')"
 		ng-class="{alt: isManualAltMode || isAltMode}"
 		ng-click="toggleAltMode()" title="inbox mode"><i class="glyphicon glyphicon-align-justify"></i></div>
 	</div>

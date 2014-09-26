@@ -431,6 +431,11 @@ h4, h5 {
   padding-left: 1ex;
   padding-right: 1.5ex;
 }
+.entry .roadmapOffset {
+  margin-left: 2ex;
+  padding-right: 3.5ex;
+}
+
 .entry-nav {
 
 }
