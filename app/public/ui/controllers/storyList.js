@@ -621,6 +621,29 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		if (preMove.storyBefore === postMove.storyBefore
 		|| preMove.storyAfter === postMove.storyAfter) {
 			// We didn't actually move. Do nothing.
+			if ($scope.isMindset('roadmap')) {
+				// HACK: I can't figure out how to deal with this situation
+				// right now, and I think rebinding the page is better
+				// than leaving an artifact
+				var hackCircleId = circleId;
+				var hackListId = listId;
+				var hackFirstStory = stories.getFirst();
+				var hackAllStories = stories.all();
+
+				$scope.data = null;
+				$scope.$apply();
+				$scope.data = {
+					circleId: hackCircleId,
+					listId: hackListId,
+					firstStory: hackFirstStory,
+					allStories: hackAllStories
+				};
+				$scope.$apply(function () {
+					$timeout(function () {
+						makeStoriesDraggable();
+					}, 500);	
+				});
+			}
 			return;
 		}
 
@@ -763,7 +786,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				// HACK: We're probably doing something wrong, but
 				// in the mean time let's try this.
 				try {
-					e.drop.get('node').get('parentNode').insertBefore(drag, drop);	
+					e.drop.get('node').get('parentNode').insertBefore(drag, drop);
 				}
 				catch (e) {
 					handleHierarchyRequestErr(e);
@@ -780,7 +803,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			// ... well, not sure this part of the demo applies to our use case.
 			if (drop.get('tagName').toLowerCase() !== 'div') {
 				if (!drop.contains(drag)) {
-					drop.appendChild(drag);			        
+					drop.appendChild(drag);
 				}
 			}
 		});
