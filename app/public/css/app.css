@@ -282,7 +282,7 @@ h4, h5 {
   cursor: pointer;
 }
 #mileposts .story {
-  cursor: default;
+  cursor: pointer;
 }
 .selected {
   cursor: default;

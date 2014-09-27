@@ -99,6 +99,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
   			}, 500);
   		}, 25);	
 	};
+	$scope.pulse = pulse;
 
 	var scrollToAndPulse = function (story) {
 		var qStory = $("[data-story-id='" + story.id + "']");

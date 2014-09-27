@@ -2,7 +2,7 @@
         deadline: story.isDeadline,
         'next-meeting': story.isNextMeeting,
         'after-meeting': story.isAfterNextMeeting
-    }">
+    }" ng-click="scrollToMilepost(story)">
     
     <div class="row no-select hidden-xs" id="story-{{$index}}">
         <div class="col-sm-12 paddy">
