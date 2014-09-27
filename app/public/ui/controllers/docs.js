@@ -1,11 +1,12 @@
 'use strict';
 
-function DocsCtrl(session, $scope) {
+function DocsCtrl(session, lib, $scope) {
 
 	var me = "Me";
 
 	$scope.whoami = me;	
 	$scope.isFacade = true;
+	$scope.isMindset = lib.mindset.is;
 
 	var firstStory = {
 		"_id": "1",
@@ -159,4 +160,4 @@ function DocsCtrl(session, $scope) {
 		allStories: stories2
 	};
 }
-DocsCtrl.$inject = ['session', '$scope'];
+DocsCtrl.$inject = ['session', 'lib', '$scope'];

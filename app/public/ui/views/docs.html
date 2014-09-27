@@ -1,5 +1,10 @@
 <div class="content">
-	<div class="col-sm-offset-2 col-sm-8 docs">
+	<div class="docs"
+		ng-class="{ 
+			'col-sm-offset-2': !isMindset('roadmap'),
+			'col-sm-8': !isMindset('roadmap'),
+			'col-sm-7': isMindset('roadmap')
+		}">
 		<h3 ng-show="!isSignedIn()">Documentation</h3>
 		<p>Hi! This is a story list. The main idea is that stories closer to the top want to be completed before the ones closer to the bottom.</p>
 		<p>Play around with it. Maybe start by moving the 'Next meeting' around.</p>
