@@ -157,6 +157,7 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 			return;
 		}
 
+		lib.mindset.set('detailed');
 		$scope.user = {};
 
 		var name = signInName.get();

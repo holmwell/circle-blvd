@@ -21,7 +21,9 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 
 	$scope.keydown = function(e) {
 		if (e.target.type === "textarea" ||
-			e.target.type === "text") {
+			e.target.type === "text" ||
+			e.target.type === "email" ||
+			e.target.type === "password") {
 			// Ignore things while we're actually typing.
 			return;
 		}
