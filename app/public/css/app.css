@@ -622,6 +622,15 @@ button:focus {
   /*background-color: gold;*/
   color: #1E69B5;
 }
+.deadline .story-label {
+  color: #996D09;
+}
+.deadline.after-meeting .story-label {
+  color: #EAAB23;
+}
+.next-meeting .story-label {
+  color: goldenrod;
+}
 .story-label:hover {
   text-decoration: underline;
 }
