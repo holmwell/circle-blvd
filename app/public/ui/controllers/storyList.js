@@ -427,7 +427,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			if (story.projectId !== circleId) {
 				// switch the active circle
 				var circleFacade = {
-					id: story.projectId
+					_id: story.projectId
 				};
 
 				$scope.$emit('setActiveCircle', circleFacade, false, function () {
