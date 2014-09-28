@@ -141,7 +141,7 @@ test['GET /data/:circleId/groups is 200'] = function (test) {
 };
 
 // Add member
-test['POST /data/:circleId/member is 204'] = function (test) {
+test['POST /data/:circleId/member is 200'] = function (test) {
 	// TODO: This API is lame and needs to be redone.
 	var memberships = [];
 	memberships.push({
@@ -159,7 +159,7 @@ test['POST /data/:circleId/member is 204'] = function (test) {
 		memberships: memberships,
 		isReadOnly: false
 	})
-	.expect(204)
+	.expect(200)
 	.end(finish(test));
 };
 
