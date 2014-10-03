@@ -6,7 +6,52 @@ function DocsCtrl(session, lib, $scope) {
 
 	$scope.whoami = me;	
 	$scope.isFacade = true;
+	lib.mindset.set('detailed');
 	$scope.isMindset = lib.mindset.is;
+	$scope.hideHeader();
+
+
+	var startList = [];
+	startList.push("Find road atlas for Pacific Northwest");
+	startList.push("Sign up for dance lessons");
+	startList.push("Ask friends for music suggestions");
+	startList.push({
+		isNextMeeting: true,
+		summary: "That's all for today"
+	});
+	
+	var demoTable = {};
+
+	for (var i=0; i < startList.length; i++) {
+		var story = startList[i];
+		// Convert strings into objects with a summary,
+		// otherwise keep as is.
+		if (typeof story === 'string') {
+			story = {
+				summary: story
+			};
+		}
+		
+		// First story
+		if (i === 0) {
+			story.isFirstStory = true;
+		}
+
+		var id = i.toString();
+		story._id = id;
+		story.id = id;
+
+		var nextId = (i + 1).toString();
+		// Last story		
+		if (i === startList.length - 1) {
+			nextId = "last-demo";
+		}
+		story.nextId = nextId
+
+		story.createdBy = "Demo";
+		demoTable[story.id] = story;
+	}
+
 
 	var firstStory = {
 		"_id": "1",
@@ -336,5 +381,10 @@ function DocsCtrl(session, lib, $scope) {
 		firstStory: firstStory,
 		allStories: stories2
 	};
+
+	$scope.demo = {
+		firstStory: demoTable[0],
+		allStories: demoTable
+	}
 }
 DocsCtrl.$inject = ['session', 'lib', '$scope'];

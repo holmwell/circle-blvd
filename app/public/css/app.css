@@ -1223,12 +1223,35 @@ label.relax {
 }
 
 /* documentation */
+.doc-page {
+  padding-bottom: 2.6em;
+}
 .docs {
   padding: 0;
 }
 .docs h3 {
   margin-top: 1.4em;
 }
+.docs .choice-menu {
+  padding-top: 1.3em;
+  padding-bottom: 2.6em;
+}
+.docs .circle-menu {
+  text-align: center;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  background: transparent;
+  border: 8px solid #bbb;
+  margin: auto;
+}
+.active .circle-menu {
+  border-color: #444;
+}
+.docs .circle-menu .text {
+  padding-top: 1.55em;
+}
+
 
 /* invite */
 .invite.content {

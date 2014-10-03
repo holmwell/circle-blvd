@@ -1,18 +1,68 @@
-<div class="content">
-	<div class="docs"
-		ng-class="{ 
+<div class="content doc-page clearfix">
+	<div class="docs col-sm-offset-2 col-sm-8">
+		<!-- ng-class="{ 
 			'col-sm-offset-2': !isMindset('roadmap'),
 			'col-sm-8': !isMindset('roadmap'),
 			'col-sm-7': isMindset('roadmap')
-		}">
-		<h3 ng-show="!isSignedIn()">Documentation</h3>
-		<p>Hi! This is a story list. The main idea is that stories closer to the top want to be completed before the ones closer to the bottom.</p>
-		<p>Play around with it. Maybe start by moving the 'Next meeting' around.</p>
+		}"> -->
+		<h2>Documentation</h2>
+		<p>Welcome to Circle Blvd, a task management site for your part-time projects.</p>
+
+		<div class="row choice-menu">
+			<div class="col-xs-4 choice active">
+				<div class="circle-menu">
+					<div class="text">Start</div>
+				</div>
+			</div>
+
+			<div class="col-xs-4 choice">
+				<div class="circle-menu">
+					<div class="text">Work</div>
+				</div>
+			</div>
+
+			<div class="col-xs-4 choice">
+				<div class="circle-menu">
+					<div class="text">Plan</div>
+				</div>
+			</div>
+		</div>
+
+		<p>Circle Blvd is all about managing your task list, so that's
+		where we'll start. Behold!</p>
 	</div>
 
 	<sp-story-list 
-		data="lesson2" 
+		data="demo" 
 		account-name="whoami"
 		owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
 		is-facade="isFacade"></sp-story-list>
+
+	<div class="docs col-sm-offset-2 col-sm-8">
+		<h3>Moving tasks</h3>
+		<p>Move tasks up and down by dragging the 
+		<i class="glyphicon glyphicon-move"></i> icon, 
+		on the right side. All the tasks
+		can be moved &ndash; we just use that square 
+		placeholder to make the list easier on the eyes.
+
+
+		<h3>Using the black task for focus</h3>
+		<p>Move the black task to a different spot. Go on. We'll wait.</p>
+		<p>...</p>
+		<p>Ok? How you use the black task will change over time,
+		and that's ok. It's just one tool to help you get 
+		things done.</p>
+
+		<p>For personal projects, we like to use it for what we're
+		actively thinking about. For group projects, we like to move it
+		below the tasks we want to accomplish before the next meeting.</p> 
+
+		<p>But that's just us. You can rename it.</p>
+
+		<h3>You're ready</h3>
+		<p>That's it, the basics of Circle Blvd!</p>
+
+		<p>You can <a href="/#/signin">make a new account</a> on the sign-in page, or <a href="/#/profile">start a new circle</a> on the profile page. Use the admin page to invite people to your circles. Have fun!</p>
+	</div>
 </div>
