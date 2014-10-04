@@ -680,7 +680,7 @@ button:focus {
 }
 .status .btn.question .txt {
   position: relative;
-  left: -0.5ex;
+  left: -0.1ex;
 }
 #backlog .status .sad.active {
   background-color: #a00;
