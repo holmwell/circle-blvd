@@ -894,6 +894,10 @@ button:focus {
   margin-left: 0.35ex;
 }
 
+.done-circle {
+  fill: transparent;
+}
+
 .done-status, .active-status {
   display: inline-block;
 
@@ -902,16 +906,17 @@ button:focus {
   height: 26px;
   margin-top: -0.75ex;
   
-  vertical-align: text-top;
-  
-  background-image: url("../img/glyphs/icon-circle.png");
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-
+  vertical-align: text-top;  
   opacity: 0.6;
 }
+.phone-row .done-status {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-image: url("../img/glyphs/icon-circle.png");
+}
+
 .done-status:hover {
-  background-image: url("../img/glyphs/icon-ok.png");
+  background-image: url("../img/glyphs/icon-check.svg");
   cursor: pointer;
   opacity: 0.5;
 }
@@ -921,6 +926,10 @@ button:focus {
 }
 .active-status {
   margin-top: -1.25ex;
+}
+.phone-row .active-status {
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
   background-image: url("../img/glyphs/icon-half-circle.png");
 }
 
