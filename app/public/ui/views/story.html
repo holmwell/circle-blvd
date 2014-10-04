@@ -75,11 +75,12 @@
 
 			<div class="status" ng-hide="story.isNextMeeting || story.isDeadline">Task progress?
 				<div class="row">
-					<div class="col-xs-4 col-sm-2 debug">
+					<div class="col-xs-4 col-sm-3 debug">
 						<a ng-class="{ active: isStorySad(story) }"
 						ng-click="setStoryStatus(story, 'sad')"
 						class="btn btn-default sad form-control">
-						<span>:-(</span></a>
+						<i class="btn-icon-status glyphicon glyphicon-stop"></i>
+						<span>Help?</span></a>
 					</div>
 					<div class="col-xs-4 col-sm-1 wider debug">
 						<a ng-class="{ active: isStoryNew(story) }"
@@ -87,7 +88,7 @@
 						class="btn btn-default question neutral form-control">
 						<span class="txt">?</span></a>
 					</div>
-					<div class="col-xs-4 col-sm-3 wider">
+					<div class="col-xs-4 col-sm-2 wider">
 						<a ng-class="{ active: isStoryAssigned(story) }"
 						ng-click="setStoryStatus(story, 'assigned')"
 						class="btn btn-default neutral form-control">Will do</a>

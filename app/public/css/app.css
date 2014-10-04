@@ -921,6 +921,11 @@ button:focus {
   vertical-align: text-top;  
   opacity: 0.6;
 }
+.sad .btn-icon-status {
+  font-size: 11px;
+  margin-top: 0.1ex;
+  margin-left: -3ex;
+}
 .in-progress .btn-icon-status {
   margin-top: -0.40ex;
   margin-left: -3ex;
