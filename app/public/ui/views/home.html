@@ -15,7 +15,7 @@
 				'col-sm-offset-2': !isMindset('roadmap'),
 				'col-sm-8': !isMindset('roadmap')
 			}">
-		+ <a ng-click="showEntry()" class="jsLink text-select">Add story</a>
+		+ <a ng-click="showEntry()" class="jsLink text-select">Add task</a>
 		</div>
 
 		<div class="hidden-xs col-sm-2 col-lg-2 alt-mode"
@@ -36,7 +36,7 @@
 			}">
 			<ul class="entry-nav nav nav-pills row alignWithStoryList">
 				<li ng-class="{ active: isAdding['story'] }">
-					<a class="jsLink" ng-click="showEntry('story')">Story</a>
+					<a class="jsLink" ng-click="showEntry('story')">Task</a>
 				</li>
 				<li ng-class="{ active: isAdding['deadline'] }">
 					<a class="jsLink" ng-click="showEntry('deadline')">Milepost</a>
@@ -57,7 +57,7 @@
 					<div class="input-group">
 						<input id="storyEntry" type="text" class="form-control" ng-model="newStory" />
 						<span class="input-group-btn">
-							<button class="btn btn-default pull-right" ng-click="create(newStory)">Add story</button>
+							<button class="btn btn-default pull-right" ng-click="create(newStory)">Add task</button>
 						</span>
 					</div>
 				</form>
@@ -76,7 +76,7 @@
 
 			<div ng-show="isAdding['checklist']" class="debug row new-story after-meeting many alignWithStoryList">
 				<form>
-					<p>Select a checklist to add to your story list:</p>
+					<p>Select a checklist to add to your task list:</p>
 					<ul>
 						<li ng-repeat="checklist in checklists">
 							<a class="jsLink" ng-click="selectChecklist(checklist)"
@@ -100,7 +100,7 @@
 
 			<div ng-show="isAdding['many']" class="debug row new-story after-meeting many alignWithStoryList">
 				<form>
-					<p>Enter one story per line. To add a milepost, start the line with -- (two hyphens). To assign a story, end the line with @owner (e.g. @{{profileName}}).</p>
+					<p>Enter one task per line. To add a milepost, start the line with -- (two hyphens). To assign a task, end the line with @owner (e.g. @{{profileName}}).</p>
 					<textarea id="manyEntry" autosize class="form-control" ng-model="newMany.txt"/>
 					<button class="btn btn-default pull-right" ng-click="createMany(newMany)">Add many</button>
 				</form>
