@@ -896,7 +896,7 @@ app.configure(function() {
         .addJs('ui/controllers/lists.js')
         .addJs('ui/controllers/profile.js')
         .addJs('ui/controllers/invite.js')
-        .addJs('ui/controllers/docs.js')
+        .addJs('ui/controllers/tour.js')
         .addJs('ui/controllers/sponsor.js')
         .addJs('ui/controllers/about.js')
         .addJs('ui/controllers/donate.js')

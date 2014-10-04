@@ -45,7 +45,12 @@ angular.module('myApp', [
 
         $routeProvider.when('/about', {templateUrl: 'ui/views/about.html', controller: AboutCtrl});
         $routeProvider.when('/sponsor', {templateUrl: 'ui/views/sponsor.html', controller: SponsorCtrl});
-        $routeProvider.when('/docs', {templateUrl: 'ui/views/docs.html', controller: DocsCtrl});
+
+        $routeProvider.when('/docs', {templateUrl: 'ui/views/tour.html', controller: TourCtrl});
+        $routeProvider.when('/tour', {templateUrl: 'ui/views/tour.html', controller: TourCtrl});
+        $routeProvider.when('/tour/work', {templateUrl: 'ui/views/tour-work.html', controller: TourCtrl});
+        $routeProvider.when('/tour/plan', {templateUrl: 'ui/views/tour-plan.html', controller: TourCtrl});
+
         $routeProvider.when('/donate', {templateUrl: 'ui/views/donate.html', controller: DonateCtrl});
 
         $routeProvider.when('/mainframe', {templateUrl: 'ui/views/mainframe.html', controller: MainframeCtrl});

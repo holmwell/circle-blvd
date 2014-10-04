@@ -1,0 +1,43 @@
+<div class="content doc-page clearfix">
+    <div class="clearfix">
+        <div class="docs col-sm-offset-2 col-sm-8">
+            <!-- ng-class="{ 
+                'col-sm-offset-2': !isMindset('roadmap'),
+                'col-sm-8': !isMindset('roadmap'),
+                'col-sm-7': isMindset('roadmap')
+            }"> -->
+            <h2>Tour: Plan</h2>
+            
+            <div class="row choice-menu">
+                <div class="col-xs-4 choice">
+                    <a href="/#/tour"><div class="circle-menu">
+                        <div class="text">Start</div>
+                    </div></a>
+                </div>
+
+                <div class="col-xs-4 choice">
+                    <a href="/#/tour/work"><div class="circle-menu">
+                        <div class="text">Work</div>
+                    </div></a>
+                </div>
+
+                <div class="col-xs-4 choice active">
+                    <div class="circle-menu">
+                        <div class="text">Plan</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <sp-story-list 
+        data="demo" 
+        account-name="whoami"
+        owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
+        is-facade="isFacade"></sp-story-list>
+
+    <div class="docs col-sm-offset-2 col-sm-8">
+        <h3>Work in progress ...</h3>
+        
+    </div>
+</div>

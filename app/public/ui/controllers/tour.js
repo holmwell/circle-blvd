@@ -1,6 +1,6 @@
 'use strict';
 
-function DocsCtrl(session, lib, $scope) {
+function TourCtrl(session, lib, $scope) {
 
 	var me = "Me";
 
@@ -387,4 +387,4 @@ function DocsCtrl(session, lib, $scope) {
 		allStories: demoTable
 	}
 }
-DocsCtrl.$inject = ['session', 'lib', '$scope'];
+TourCtrl.$inject = ['session', 'lib', '$scope'];

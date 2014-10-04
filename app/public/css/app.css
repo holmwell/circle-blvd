@@ -1236,7 +1236,10 @@ label.relax {
   padding-top: 1.3em;
   padding-bottom: 2.6em;
 }
+.docs .choice {
+}
 .docs .circle-menu {
+  cursor: pointer;
   text-align: center;
   border-radius: 50%;
   width: 80px;
