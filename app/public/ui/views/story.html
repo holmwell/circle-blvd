@@ -73,7 +73,7 @@
 				</div>
 			</div>
 
-			<div class="status" ng-hide="story.isNextMeeting || story.isDeadline">Making progress?
+			<div class="status" ng-hide="story.isNextMeeting || story.isDeadline">Task progress?
 				<div class="row">
 					<div class="col-xs-4 col-sm-2 debug">
 						<a ng-class="{ active: isStorySad(story) }"
@@ -90,24 +90,28 @@
 					<div class="col-xs-4 col-sm-3 wider">
 						<a ng-class="{ active: isStoryAssigned(story) }"
 						ng-click="setStoryStatus(story, 'assigned')"
-						class="btn btn-default neutral form-control">:-)</a>
+						class="btn btn-default neutral form-control">Will do</a>
 					</div>
 					<div class="hidden-xs col-sm-3 wider">
 						<a ng-class="{ active: isStoryActive(story) }"
 						ng-click="setStoryStatus(story, 'active')"
 						class="btn btn-default in-progress form-control">
-						<span>:-) :-)</span>
+						<i class="btn-icon-status" ng-include="'/img/glyphs/icon-half-circle.svg'"></i>
+						<span>On it</span>
 					</a>
 					</div>
 					<div class="col-xs-6 visible-xs">
 						<a ng-class="{ active: isStoryActive(story) }"
 						ng-click="setStoryStatus(story, 'active')"
-						class="btn btn-default in-progress form-control">:-) :-)</a>
+						class="btn btn-default in-progress form-control">
+						<i class="btn-icon-status" ng-include="'/img/glyphs/icon-half-circle.svg'"></i>
+						<span>On it</span></a>
 					</div>
 					<div class="col-xs-6 col-sm-3 wider">
 						<a ng-class="{ active: isStoryDone(story) }"
 						ng-click="setStoryStatus(story, 'done')"
 						class="btn btn-default done form-control">
+						<i class="btn-icon-status" ng-include="'/img/glyphs/icon-circle.svg'"></i>
 						<span>Done!</span>
 						</a>
 					</div>

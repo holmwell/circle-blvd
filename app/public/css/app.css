@@ -894,7 +894,8 @@ button:focus {
   margin-left: 0.35ex;
 }
 
-.done-circle {
+.icon-status {
+  stroke: black;
   fill: transparent;
 }
 
@@ -909,6 +910,27 @@ button:focus {
   vertical-align: text-top;  
   opacity: 0.6;
 }
+.btn-icon-status {
+  display: inline-block;
+  border: solid 1px transparent;
+  width: 20px;
+  height: 20px;
+  margin-top: -0.25ex;
+  margin-left: -2ex;
+  
+  vertical-align: text-top;  
+  opacity: 0.6;
+}
+.in-progress .btn-icon-status {
+  margin-top: -0.40ex;
+  margin-left: -3ex;
+}
+
+.active .btn-icon-status .icon-status {
+  stroke: white;
+}
+
+
 .phone-row .done-status {
   background-size: 100% 100%;
   background-repeat: no-repeat;
