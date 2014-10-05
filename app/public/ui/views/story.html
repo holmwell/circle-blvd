@@ -12,11 +12,12 @@
 		<i class="done-status" 
 			ng-show="story.isDeadline && !story.isAfterNextMeeting" 
 			ng-click="archive(story)" 
-			title="archive deadline"></i>
+			title="archive milepost"
+			ng-include="'/img/glyphs/icon-circle.svg'"></i>
 		<i class="done-status" 
 			ng-show="isStoryDone(story)" 
 			ng-click="archive(story)" 
-			title="archive story" 
+			title="archive task" 
 			ng-include="'/img/glyphs/icon-circle.svg'"></i>
 		<i class="active-status" 
 			ng-show="isStoryActive(story)"
