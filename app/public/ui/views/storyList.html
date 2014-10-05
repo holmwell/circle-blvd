@@ -32,8 +32,8 @@
 		</div>
 	</div>
 
-	<div id="mileposts-wrapper" ng-if="isMindset('roadmap')">
-		<div id="mileposts">
+	<div id="mileposts-wrapper" class="debug" ng-if="isMindset('roadmap')">
+		<div id="mileposts" class="debug">
 			<div class="storyWrapper row debug no-select" 
 				data-story-id="{{story.id}}"
 				ng-repeat="story in stories"

@@ -251,12 +251,12 @@ h4, h5 {
   position: absolute;
   top: 1ex;
   right: 0;
-  width: 320px;
+  width: 290px;
 }
 
 #storyList #mileposts {
   position: fixed;
-  width: 300px;
+  width: 270px;
   /*top: 100px;
   *//*right: 10%;*/
   
