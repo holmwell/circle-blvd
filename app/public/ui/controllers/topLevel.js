@@ -269,6 +269,8 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 
 				if (path !== '/signin' 
 					&& path !== '/docs'
+					&& path !== '/tour'
+					&& path.indexOf('/tour') !== 0
 					&& path !== '/sponsor'
 					&& path !== '/donate'
 					&& path !== '/about'
