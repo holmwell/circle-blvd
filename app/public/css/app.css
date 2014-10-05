@@ -1293,6 +1293,18 @@ label.relax {
 .docs .circle-menu .text {
   padding-top: 1.55em;
 }
+.docs p.after-list {
+  padding-top: 1em;
+}
+.docs .plan-choice.active a {
+  color: #444;
+}
+.docs .plan-menu {
+  text-align: center;
+}
+.docs .plan-menu .glyphicon {
+  font-size: 36pt;
+}
 
 
 /* invite */

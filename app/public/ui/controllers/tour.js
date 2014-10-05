@@ -7,9 +7,76 @@ function TourCtrl(session, lib, $scope) {
 	$scope.whoami = me;	
 	$scope.isFacade = true;
 	lib.mindset.set('detailed');
-	$scope.isMindset = lib.mindset.is;
 	$scope.hideHeader();
 
+	var sectionToShow;
+	
+	$scope.show = function (section) {
+		sectionToShow = section;
+
+		switch (section) {
+			case 'bump':
+			case 'roadmap':
+				$scope.setMindset(section);
+				break;
+			default:
+				break;
+		}
+	};
+
+	$scope.isShowing = function (section) {
+		return sectionToShow === section;
+	}
+
+	var getTaskListFromArray = function (list) {
+		var table = {};
+
+		// Make unique IDs so we can have multiple lists
+		// on the same page. (So, that isn't really true,
+		// but this code is here and it's fine.)
+		var ids = [];
+		for (var i=0; i < list.length; i++) {
+			ids.push("random-" + (Math.floor(Math.random() * 1000000)).toString());
+		}
+
+		for (var i=0; i < list.length; i++) {
+			var story = list[i];
+			// Convert strings into objects with a summary,
+			// otherwise keep as is.
+			if (typeof story === 'string') {
+				story = {
+					summary: story
+				};
+			}
+			
+			// First story
+			if (i === 0) {
+				story.isFirstStory = true;
+			}
+
+			var id = ids[i];
+			story._id = id;
+			story.id = id;
+
+			var nextId = ids[i + 1];
+			// Last story		
+			if (i === list.length - 1) {
+				nextId = "last-demo";
+			}
+			story.nextId = nextId
+
+			story.createdBy = {
+				name: "Demo"
+			};
+			table[story.id] = story;
+		}
+
+		var data = {
+			first: table[ids[0]],
+			list: table
+		}
+		return data;
+	};
 
 	var startList = [];
 	startList.push("Find road atlas for Pacific Northwest");
@@ -20,39 +87,49 @@ function TourCtrl(session, lib, $scope) {
 		summary: "That's all for today"
 	});
 	
-	var demoTable = {};
+	var startData = getTaskListFromArray(startList);
 
-	for (var i=0; i < startList.length; i++) {
-		var story = startList[i];
-		// Convert strings into objects with a summary,
-		// otherwise keep as is.
-		if (typeof story === 'string') {
-			story = {
-				summary: story
-			};
-		}
-		
-		// First story
-		if (i === 0) {
-			story.isFirstStory = true;
-		}
 
-		var id = i.toString();
-		story._id = id;
-		story.id = id;
+	var bumpList = [];
+	bumpList.push({
+		isNextMeeting: true,
+		summary: "Next meeting"
+	});
+	bumpList.push("Write thank-you cards");
+	bumpList.push("Review reading list");
+	bumpList.push("Visit friends in Corvallis");
 
-		var nextId = (i + 1).toString();
-		// Last story		
-		if (i === startList.length - 1) {
-			nextId = "last-demo";
-		}
-		story.nextId = nextId
+	var bumpData = getTaskListFromArray(bumpList);
 
-		story.createdBy = {
-			name: "Demo"
-		};
-		demoTable[story.id] = story;
-	}
+
+	var tagList = [];
+	tagList.push("Home: Clean the kitchen");
+	tagList.push("Home: Take out the trash");
+	tagList.push({
+		summary: "#Grocery: Milk",
+		labels: ["Grocery"]
+	});
+	tagList.push({
+		summary: "#Grocery: Eggs",
+		labels: ["Grocery"]
+	});
+	
+	var tagData = getTaskListFromArray(tagList);
+
+	var roadmapList = [];
+	roadmapList.push("One");
+	roadmapList.push("Two");
+	roadmapList.push("Three");
+	roadmapList.push({
+		summary: "Next draft",
+		isNextMeeting: true
+	});
+	roadmapList.push({
+		summary: "A milepost",
+		isDeadline: true
+	});
+
+	var roadmapData = getTaskListFromArray(roadmapList);
 
 
 	var firstStory = {
@@ -385,9 +462,24 @@ function TourCtrl(session, lib, $scope) {
 	};
 
 	$scope.demo = {
-		firstStory: demoTable[0],
-		allStories: demoTable
-	}
+		firstStory: startData.first,
+		allStories: startData.list
+	};
+
+	$scope.tags = {
+		firstStory: tagData.first,
+		allStories: tagData.list
+	};
+
+	$scope.bump = {
+		firstStory: bumpData.first,
+		allStories: bumpData.list
+	};
+
+	$scope.roadmap = {
+		firstStory: roadmapData.first,
+		allStories: roadmapData.list
+	};
 
 	var detailStory = {};
 	detailStory.isSelected = true;
@@ -402,5 +494,8 @@ function TourCtrl(session, lib, $scope) {
 
 	$scope.storyDetails = [];
 	$scope.storyDetails.push(detailStory);
+
+	// Show the tags section on the plan page.
+	$scope.show('tags');
 }
 TourCtrl.$inject = ['session', 'lib', '$scope'];

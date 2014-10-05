@@ -98,6 +98,9 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 	};
 
 	$scope.isMindset = function (m) {
+		if ($scope.mindset) {
+			return $scope.mindset === m;
+		}
 		return lib.mindset.is(m);
 	};
 

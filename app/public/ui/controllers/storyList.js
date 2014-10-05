@@ -503,6 +503,9 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	};
 
 	$scope.isMindset = function (m) {
+		if ($scope.mindset) {
+			return $scope.mindset === m;
+		}
 		return lib.mindset.is(m);
 	};
 
