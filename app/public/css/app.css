@@ -930,6 +930,9 @@ button:focus {
   margin-top: -0.40ex;
   margin-left: -3ex;
 }
+.inline.btn-icon-status {
+  margin-left: 0;
+}
 
 .active .btn-icon-status .icon-status {
   stroke: white;

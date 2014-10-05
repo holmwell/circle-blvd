@@ -1,12 +1,8 @@
 <div class="content doc-page clearfix">
     <div class="clearfix">
         <div class="docs col-sm-offset-2 col-sm-8">
-            <!-- ng-class="{ 
-                'col-sm-offset-2': !isMindset('roadmap'),
-                'col-sm-8': !isMindset('roadmap'),
-                'col-sm-7': isMindset('roadmap')
-            }"> -->
             <h2>Tour: Work</h2>
+            <p>Circle Blvd was created to help small groups work together.</p>
             
             <div class="row choice-menu">
                 <div class="col-xs-4 choice">
@@ -27,17 +23,50 @@
                     </div></a>
                 </div>
             </div>
+
+            <p>When working with teams, you'll quickly want to edit the details of a task, which looks a bit like this when you click on it:</p>
         </div>
     </div>
 
-    <sp-story-list 
-        data="demo" 
-        account-name="whoami"
-        owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
-        is-facade="isFacade"></sp-story-list>
+    <div id="backlog"> <!-- make the #backlog CSS happy -->
+        <div ng-repeat="story in storyDetails" class="clearfix">
+            <sp-story/>
+        </div>
+    </div>
+    
+    <div class="docs row">
+        <div class="col-sm-offset-2 col-sm-8">
+            <h3>Archive completed tasks</h3>
+            <p>When a task is done, and you want it off the list, using 
+            the <i class="btn-icon-status inline" ng-include="'/img/glyphs/icon-circle.svg'"></i> icon (next to the task summary) will move it into the archives. Once a task is in the archives, it cannot be changed.</p>
 
-    <div class="docs col-sm-offset-2 col-sm-8">
-        <h3>Work in progress ...</h3>
-        
+
+            <h3>Comment on tasks</h3>
+            <p>Commenting on a task will email all the people involved: The person 
+            who created the task, the task owner, and the people who have previously
+            commented on this particular task.</p>
+
+            <p>Quick, back-and-forth converations aren't really a focus of Circle
+            Blvd, since there are so many other websites or apps (or texting) for that sort of thing these days. A search for "group chat" on your favorite search engine will show a few options that might compliment
+            your use of Circle Blvd.</p>
+
+            <p>We suggest using comments to ask the task creator clarifying questions, or to post decisions that have been made about a task.</p>
+
+
+            <h3>Notify task owners</h3>
+
+            <p>You may have noticed the question mark next to the task owner's name. At Circle Blvd, just because you typed someone's name into a box, that doesn't mean a task is going to be done by that person.</p>
+
+            <p>If you want, use the <i class="glyphicon glyphicon-envelope"></i> 
+            icon to send a short "please look at this" email to the potential owner. 
+            This icon was created, as a courtesy, for those times when someone asks you to remind him or her to do something.</p> 
+
+            <p>We suggest using this icon while you're having a conversation with the teammate. People can decide what email address they want to use to receive these notifications.</p>
+
+
+            <h3>Invite people to join</h3>
+            <p>Add members to your group by using the admin page
+            to send them links to join your circle.</p>
+        </div>
     </div>
 </div>

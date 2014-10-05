@@ -48,7 +48,9 @@ function TourCtrl(session, lib, $scope) {
 		}
 		story.nextId = nextId
 
-		story.createdBy = "Demo";
+		story.createdBy = {
+			name: "Demo"
+		};
 		demoTable[story.id] = story;
 	}
 
@@ -386,5 +388,19 @@ function TourCtrl(session, lib, $scope) {
 		firstStory: demoTable[0],
 		allStories: demoTable
 	}
+
+	var detailStory = {};
+	detailStory.isSelected = true;
+	detailStory.summary = "A one-line summary of the task";
+	detailStory.owner = "Task owner"
+	detailStory.createdBy = {
+		name: "Demo"
+	};
+	detailStory.description = 
+		"1. Put whatever you want here.\n" +
+		"2. Change the task status with the buttons below.";
+
+	$scope.storyDetails = [];
+	$scope.storyDetails.push(detailStory);
 }
 TourCtrl.$inject = ['session', 'lib', '$scope'];
