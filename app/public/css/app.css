@@ -135,11 +135,11 @@
 
 .mindset-container {
   position: absolute;
-  top: 1ex;
+  top: 1.25ex;
   right: 3ex;
   width: 75px;
-  height: 75px;
-  border: dashed 1px #ddd;
+  height: 110px;
+  /*border-right: dashed 1px #ddd;*/
 
   color: #eee;
   font-size: 16pt;
