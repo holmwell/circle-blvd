@@ -866,12 +866,7 @@ button:focus {
   vertical-align: top;
   line-height: 24px;
 }
-.bump-status {
-  margin-top: 0;
-  padding-top: 0;
-  font-size: 1.9ex;
-  line-height: 24px;
-}
+
 .backlog-mine:hover {
   cursor: pointer;
 }
@@ -879,11 +874,11 @@ button:focus {
   cursor: default;
 }
 .backlog-mine:active .bump-status {
-  margin-top: 0.1ex;
+  margin-top: -0.25ex;
   margin-right: -0.1ex;
 }
 .backlog-mine.done:active .bump-status {
-  margin-top: 0;
+  margin-top: -0.35ex;
 }
 .sad-status, .new-status {
   margin-top: 1px;
@@ -899,7 +894,7 @@ button:focus {
   fill: transparent;
 }
 
-.done-status, .active-status {
+.done-status, .active-status, .bump-status {
   display: inline-block;
 
   border: solid 1px transparent;
@@ -910,6 +905,12 @@ button:focus {
   vertical-align: text-top;  
   opacity: 0.6;
 }
+.bump-status {
+  padding-top: 0;
+  margin-top: -0.35ex;  
+  background-image: url("../img/glyphs/icon-btn-circle.svg");
+}
+
 .btn-icon-status {
   display: inline-block;
   border: solid 1px transparent;

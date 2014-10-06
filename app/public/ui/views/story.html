@@ -2,8 +2,7 @@
 	<div class="backlog-mine col-xs-9 debug"
 		ng-class="{done: isStoryDone(story)}">
 		<div ng-show="isStoryMine(story)" ng-click="bumpStatus(story)">
-			<i class="bump-status debug glyphicon glyphicon-record" 
-			ng-hide="isStoryDone(story)"></i>
+			<i class="bump-status debug" ng-hide="isStoryDone(story)"></i>
 			<i class="arrow glyphicon glyphicon-arrow-right debug"
 			ng-show="isStoryDone(story)"></i>
 		</div>
