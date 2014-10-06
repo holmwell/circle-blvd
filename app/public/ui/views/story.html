@@ -1,10 +1,10 @@
 <div class="hidden-xs col-sm-2 debug" ng-hide="isMindset('roadmap')">
 	<div class="backlog-mine col-xs-9 debug"
 		ng-class="{done: isStoryDone(story)}">
-		<div ng-show="isStoryMine(story)" ng-click="bumpStatus(story)">
+		<div ng-show="isStoryMine(story) || (isMindset('mine') && !story.isDeadline)" ng-click="bumpStatus(story)">
 			<i class="bump-status debug" ng-hide="isStoryDone(story)"></i>
 			<i class="arrow glyphicon glyphicon-arrow-right debug"
-			ng-show="isStoryDone(story)"></i>
+			ng-show="isStoryDone(story) && isStoryMine(story)"></i>
 		</div>
 	</div>
 	<div class="backlog-status col-xs-3 debug no-select">
@@ -24,7 +24,7 @@
 		<i class="sad-status glyphicon glyphicon-stop" 
 		ng-show="isStorySad(story)"></i>
 		<i class="new-status glyphicon glyphicon-gift"
-		ng-show="(isStoryNew(story) && isStoryMine(story))"></i>
+		ng-show="(isStoryNew(story) && (isStoryMine(story) || isMindset('mine')))"></i>
 	</div>
 </div>
 

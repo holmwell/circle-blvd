@@ -40,6 +40,9 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 		if (e.keyCode === 51) { // "3"
 			$scope.setMindset('roadmap');
 		}
+		if (e.keyCode === 52) { // "4"
+			$scope.setMindset('mine');
+		}
 	};
 
 	$scope.keyup = function (e) {
