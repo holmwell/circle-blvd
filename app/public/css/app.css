@@ -472,7 +472,7 @@ h4, h5 {
   padding: 0.5ex;
   text-align: right;
   padding-bottom: 0;
-  padding-right: 1.5ex;
+  padding-right: 0;
 }
 .alignWithStoryList, .story, .archive {
   max-width: 550px;

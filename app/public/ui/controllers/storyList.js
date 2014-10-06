@@ -475,12 +475,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 	$scope.shouldHideStory = function (story) {
 		var shouldHide = false;
-		// Alt mode / Inbox mode
-		if ($scope.enableAltMode && 
-		(!story.isMoving && story.isAfterNextMeeting && !story.isDeadline && !story.isNextMeeting)) {
-			shouldHide = true;
-		}
-
 		// Labels
 		if (selectedLabels.length > 0) {
 			shouldHide = false;

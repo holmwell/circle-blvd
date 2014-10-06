@@ -17,11 +17,6 @@
 			}">
 		+ <a ng-click="showEntry()" class="jsLink text-select">Add task</a>
 		</div>
-
-		<div class="hidden-xs col-sm-2 col-lg-2 alt-mode"
-			ng-hide="isMindset('roadmap')" 
-			ng-class="{alt: isManualAltMode || isAltMode}"
-			ng-click="toggleAltMode()" title="inbox mode"><i class="glyphicon glyphicon-align-justify"></i></div>
 	</div>
 </div>
 
@@ -106,11 +101,6 @@
 				</form>
 			</div>
 		</div>
-
-		<div class="hidden-xs col-sm-2 col-lg-2 alt-mode" 
-		ng-hide="isMindset('roadmap')"
-		ng-class="{alt: isManualAltMode || isAltMode}"
-		ng-click="toggleAltMode()" title="inbox mode"><i class="glyphicon glyphicon-align-justify"></i></div>
 	</div>
 </div>
 <sp-story-list 

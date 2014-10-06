@@ -36,16 +36,7 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 
 		$scope.hideEntry = function () {
 			$scope.isAddingNew = undefined;
-		};
-
-		$scope.toggleAltMode = function () {
-			if ($scope.isManualAltMode) {
-				$scope.isManualAltMode = false;
-			}
-			else {
-				$scope.isManualAltMode = true;
-			}
-		}	
+		};	
 	}();
 
 	$scope.selectChecklist = function (list) {
