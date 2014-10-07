@@ -553,6 +553,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			}
 		}
 		else {
+			console.log("NEW:     " + storiesInNewOrder.length);
+			console.log("CURRENT: " + storiesList.length);
 			errors.handle("Something unknown happened with the move. Need to refresh page.", "client");
 		}
 	};
@@ -569,16 +571,16 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		return "last-" + (listId || circleId);
 	};
 
-	var getStoryFacadeFromNode = function (node) {
+	var getStoryFacadeFromElement = function (el) {
 		return {
-			id: node.getAttribute(idAttr)
+			id: el.attr(idAttr)
 		};
 	};
 
-	var getStoryBefore = function (node) {
-		var previousNode = node.previous();
-		if (previousNode !== null && previousNode.getAttribute(idAttr)) { 
-			return getStoryFacadeFromNode(node.previous());
+	var getStoryBefore = function (el) {
+		var previousElement = el.prev();
+		if (previousElement !== null && previousElement.attr(idAttr)) { 
+			return getStoryFacadeFromElement(el.prev());
 		}
 		else {
 			return {
@@ -587,10 +589,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		}
 	};
 
-	var getStoryAfter = function (node) {
-		var nextNode = node.next();
-		if (nextNode !== null && nextNode.getAttribute(idAttr)) {
-			return getStoryFacadeFromNode(node.next());
+	var getStoryAfter = function (el) {
+		var nextElement = $(el).next();
+		if (nextElement !== null && nextElement.attr(idAttr)) {
+			return getStoryFacadeFromElement(el.next());
 		}
 		else {
 			return {
@@ -599,10 +601,41 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		}
 	};
 
-	var storyNodeMoved = function (node) {
-		var story = getStoryFacadeFromNode(node);
-		var storyBefore = getStoryBefore(node);
-		var storyAfter = getStoryAfter(node);
+
+	var startMove = function (ui) {
+		// It's useful to know the state of things before the move.
+		var preMoveStoryElement = ui.item;
+		preMoveStoryBefore = getStoryBefore(preMoveStoryElement);
+		// TODO: This does NOT work. However, we work around it below.
+		// preMoveStoryAfter = getStoryAfter(ui.item);
+
+		var storyId = getStoryFacadeFromElement(preMoveStoryElement).id;		    	
+		var story = stories.get(storyId);
+		story.isMoving = true;
+
+		// getStoryAfter(), above, doesn't seem to work 
+		// how we want at this point in time.
+		var nextStory = stories.get(story.nextId);
+		if (nextStory) {
+			preMoveStoryAfter = { id: story.nextId };
+		}
+		else {
+			preMoveStoryAfter = { id: getLastStoryId() };
+		}
+		
+		// TODO: Do we have to do these with the new jQuery sortable?
+		//Set some styles here
+		// drag.get('node').addClass('placeholder-story'); // applied to the storyWrapper
+
+		// drag.get('dragNode').addClass('dragging-row'); // applied to the storyWrapper
+		// drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
+		// drag.get('dragNode').one('.story').addClass('dragging-story');
+	};
+
+	var storyNodeMoved = function (ui) {
+		var story = getStoryFacadeFromElement(ui.item);
+		var storyBefore = getStoryBefore(ui.item);
+		var storyAfter = getStoryAfter(ui.item);
 
 		var movedStory = stories.get(story.id);
 
@@ -693,21 +726,23 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	};
 
 	var attachToDragEvents = function (Y) {
+		// No longer needed with .grippy
+		//
 		// If a story is selected, (the details panel is open),
 		// then don't allow drag events to happen.
-		Y.DD.DDM.before('drag:mouseDown', function (e) {
-			var drag = e.target;
-			var preMoveStoryNode = drag.get('node');
-			if (preMoveStoryNode) {
-				var storyId = getStoryFacadeFromNode(preMoveStoryNode).id;		    	
-				var story = stories.get(storyId);
+		// Y.DD.DDM.before('drag:mouseDown', function (e) {
+		// 	var drag = e.target;
+		// 	var preMoveStoryNode = drag.get('node');
+		// 	if (preMoveStoryNode) {
+		// 		var storyId = getStoryFacadeFromNode(preMoveStoryNode).id;		    	
+		// 		var story = stories.get(storyId);
 
-				if (story.isSelected) {
-					e.stopPropagation();
-					e.preventDefault();
-				}
-			}
-		});
+		// 		if (story.isSelected) {
+		// 			e.stopPropagation();
+		// 			e.preventDefault();
+		// 		}
+		// 	}
+		// });
 
 		// Show a semi-transparent version of the story selected.
 		Y.DD.DDM.on('drag:start', function(e) {
@@ -752,60 +787,81 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		});
 
 
+		// jQuery UI takes care of this.
+		//
 		// Store stuff while we're dragging
-		var lastY = 0;
-		Y.DD.DDM.on('drag:drag', function(e) {
-			//Get the last y point
-			var y = e.target.lastXY[1];
-			//is it greater than the lastY var?
-			if (y < lastY) {
-				//We are going up
-				goingUp = true;
-			} else {
-				//We are going down.
-				goingUp = false;
-			}
-			//Cache for next check
-			lastY = y;
-		});
+		// var lastY = 0;
+		// Y.DD.DDM.on('drag:drag', function(e) {
+		// 	//Get the last y point
+		// 	var y = e.target.lastXY[1];
+		// 	//is it greater than the lastY var?
+		// 	if (y < lastY) {
+		// 		//We are going up
+		// 		goingUp = true;
+		// 	} else {
+		// 		//We are going down.
+		// 		goingUp = false;
+		// 	}
+		// 	//Cache for next check
+		// 	lastY = y;
+		// });
 
-		Y.DD.DDM.on('drop:over', function(e) {
-			//Get a reference to our drag and drop nodes
-			var drag = e.drag.get('node'),
-				drop = e.drop.get('node');
+		// jQuery UI takes care of this.
+		//
+		// Y.DD.DDM.on('drop:over', function(e) {
+		// 	//Get a reference to our drag and drop nodes
+		// 	var drag = e.drag.get('node'),
+		// 		drop = e.drop.get('node');
 			
-			//Are we dropping on a div node?
-			if (drop.get('tagName').toLowerCase() === 'div') {
-				//Are we not going up?
-				if (!goingUp) {
-					drop = drop.next();
-				}
+		// 	//Are we dropping on a div node?
+		// 	if (drop.get('tagName').toLowerCase() === 'div') {
+		// 		//Are we not going up?
+		// 		if (!goingUp) {
+		// 			drop = drop.next();
+		// 		}
 				
-				// HACK: We're probably doing something wrong, but
-				// in the mean time let's try this.
-				try {
-					e.drop.get('node').get('parentNode').insertBefore(drag, drop);
-				}
-				catch (e) {
-					handleHierarchyRequestErr(e);
-				}
-				e.drop.sizeShim();
-			}
-		});
+		// 		// HACK: We're probably doing something wrong, but
+		// 		// in the mean time let's try this.
+		// 		try {
+		// 			e.drop.get('node').get('parentNode').insertBefore(drag, drop);
+		// 		}
+		// 		catch (e) {
+		// 			handleHierarchyRequestErr(e);
+		// 		}
+		// 		e.drop.sizeShim();
+		// 	}
+		// });
 
-		Y.DD.DDM.on('drag:drophit', function(e) {
-			var drop = e.drop.get('node'),
-				drag = e.drag.get('node');
+		// jQuery UI takes care of this.
+		//
+		// Y.DD.DDM.on('drag:drophit', function(e) {
+		// 	var drop = e.drop.get('node'),
+		// 		drag = e.drag.get('node');
 
-			//if we are not on an div, we must have been dropped on ...
-			// ... well, not sure this part of the demo applies to our use case.
-			if (drop.get('tagName').toLowerCase() !== 'div') {
-				if (!drop.contains(drag)) {
-					drop.appendChild(drag);
-				}
-			}
-		});
+		// 	//if we are not on an div, we must have been dropped on ...
+		// 	// ... well, not sure this part of the demo applies to our use case.
+		// 	if (drop.get('tagName').toLowerCase() !== 'div') {
+		// 		if (!drop.contains(drag)) {
+		// 			drop.appendChild(drag);
+		// 		}
+		// 	}
+		// });
 	}
+
+	var newDraggable = function () {
+		$('#sortableList').sortable({
+			handle: ".grippy",
+			placeholder: "dragging-row",
+			forcePlaceholderSize: true,
+			opacity: 0.75,
+			start: function (event, ui) {
+				startMove(ui);
+			},
+			update: function (event, ui) {
+				storyNodeMoved(ui);
+			}
+		});
+	};
 
 	var makeStoriesDraggableCore = function(Y) {
 		if (!Y) {
@@ -847,22 +903,25 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	});
 
 	var makeStoriesDraggable = function () {
-		makeStoriesDraggableCore(thisY);
+		newDraggable();
+		// makeStoriesDraggableCore(thisY);
 	};
 
 	var activateDragAndDrop = function () {
 		// Even though we're waiting for viewContentLoaded, 
 		// I guess we need to yield to whatever else is happening.
 		$timeout(function () {
+			newDraggable();
+
 			// Reference: http://yuilibrary.com/yui/docs/dd/list-drag.html
-			var gesturesIfTouch = Modernizr.touch ? 'dd-gestures' : 'dd-drop';
-			YUI({}).use('dd-proxy', 'dd-drop', gesturesIfTouch, function (Y) {
-				// keep a local instance of Y around for adding draggable
-				// objects in the future.
-				thisY = Y;
-				makeStoriesDraggableCore(thisY);
-				attachToDragEvents(thisY);
-			});
+			// var gesturesIfTouch = Modernizr.touch ? 'dd-gestures' : 'dd-drop';
+			// YUI({}).use('dd-proxy', 'dd-drop', gesturesIfTouch, function (Y) {
+			// 	// keep a local instance of Y around for adding draggable
+			// 	// objects in the future.
+			// 	thisY = Y;
+			// 	makeStoriesDraggableCore(thisY);
+			// 	attachToDragEvents(thisY);
+			// });
 		}, 0);
 	};
 

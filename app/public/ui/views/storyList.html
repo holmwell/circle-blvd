@@ -23,12 +23,14 @@
 				</div>
 			</div>
 		</div>
-		<div class="storyWrapper row debug no-select" 
-			data-left-story-id="{{story.id}}"
-			data-story-id="{{story.id}}"
-			ng-repeat="story in stories"
-			ng-hide="shouldHideStory(story)">
-			<sp-story/>
+		<div id="sortableList">
+			<div class="storyWrapper row debug no-select" 
+				data-left-story-id="{{story.id}}"
+				data-story-id="{{story.id}}"
+				ng-repeat="story in stories"
+				ng-hide="shouldHideStory(story)">
+				<sp-story/>
+			</div>
 		</div>
 	</div>
 

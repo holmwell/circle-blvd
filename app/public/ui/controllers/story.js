@@ -3,7 +3,8 @@
 function StoryCtrl(session, lib, $scope, $timeout) {
 
 	$scope.isAndroid = function() {
-        return /Android/i.test(navigator.userAgent);
+        // return /Android/i.test(navigator.userAgent);
+        return false;
     }(); // closure
 
 	var isStory = function (story) {
