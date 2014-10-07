@@ -117,7 +117,7 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 	});
 
 	$scope.select = function (story) {
-		if (isDragging) {
+		if (isDragging || story.isBeingDragged) {
 			// Do nothing. We're dragging. See the note
 			// in 'drag:end' as to why.
 			return;

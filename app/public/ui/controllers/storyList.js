@@ -611,7 +611,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 		var storyId = getStoryFacadeFromElement(preMoveStoryElement).id;		    	
 		var story = stories.get(storyId);
-		story.isMoving = true;
+		story.isMoving = true; // TODO: Remove this.
+		story.isBeingDragged = true;
 
 		// getStoryAfter(), above, doesn't seem to work 
 		// how we want at this point in time.
@@ -721,6 +722,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				else {
 					$scope.$emit('storyMoved', movedStory);
 				}
+				movedStory.isBeingDragged = false;
 			});
 		}, 0);
 	};
