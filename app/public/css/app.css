@@ -377,10 +377,9 @@ h4, h5 {
 }
 
 .dragging-row {
-  border: none !important;
   opacity: 0.75;
 }
-.dragging-row .story {
+.dragging .story {
   -webkit-box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
   box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
 }

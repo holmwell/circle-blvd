@@ -895,10 +895,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			forcePlaceholderSize: true,
 			opacity: 0.75,
 			tolerance: "pointer",
+			scrollSensitivity: 50,
 			deactivate: function (event, ui) {
+				ui.item.removeClass('dragging');
 				storyNodeMoved(ui);
 			},
 			start: function (event, ui) {
+				ui.item.addClass('dragging');
 				startMove(ui);
 			}
 		});
