@@ -897,11 +897,12 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			tolerance: "pointer",
 			scrollSensitivity: 25,
 			deactivate: function (event, ui) {
-				ui.item.removeClass('dragging');
+				// ui.item.removeClass('dragging');
 				storyNodeMoved(ui);
 			},
 			start: function (event, ui) {
-				ui.item.addClass('dragging');
+				// The drop shadow slows down the phones a bit
+				// ui.item.addClass('dragging');
 				startMove(ui);
 			}
 		});
