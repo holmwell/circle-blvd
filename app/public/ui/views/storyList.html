@@ -38,8 +38,7 @@
 		<div id="mileposts" class="debug">
 			<div class="storyWrapper row debug no-select" 
 				data-story-id="{{story.id}}"
-				ng-repeat="story in stories"
-				ng-hide="!(story.isDeadline || story.isNextMeeting)">
+				ng-repeat="story in mileposts">
 				<sp-roadmap-milepost/>
 			</div>
 		</div>

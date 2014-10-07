@@ -19,6 +19,24 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		$route.reload();
 	};
 
+	var buildMilepostList = function (list) {
+		var milepostList = [];
+		list.forEach(function (story) {
+			if (story.isDeadline || story.isNextMeeting) {
+				milepostList.push({
+					id: story.id,
+					summary: story.summary,
+					isDeadline: story.isDeadline,
+					isNextMeeting: story.isNextMeeting,
+					isAfterNextMeeting: story.isAfterNextMeeting,
+					isInRoadmap: true
+				});
+			}
+		});
+
+		$scope.mileposts = milepostList;
+	};
+
 	var buildStoryList = function (firstStory, serverStories) {
 		storiesList = [];
 
@@ -139,11 +157,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			circleId = newVal.circleId;
 			listId = newVal.listId || undefined;
 			buildStoryList(newVal.firstStory, newVal.allStories);
+			buildMilepostList(storiesList);
 		}
 		else {
 			circleId = undefined;
 			listId = undefined;
 			$scope.stories = [];
+			$scope.mileposts = [];
 		}
 	});
 
@@ -551,6 +571,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			for (var key in storiesInNewOrder) {
 				storiesList[key] = stories.get(storiesInNewOrder[key].id);
 			}
+
+			buildMilepostList(storiesList);
 		}
 		else {
 			console.log("NEW:     " + storiesInNewOrder.length);
@@ -645,9 +667,25 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			storyAfter: stories.get(preMoveStoryAfter.id)
 		};
 
+		// HACK: So, get the 'storyAfter' from the
+		// model, and not the DOM. This is so that
+		// we work in roadmap mode.
+		//
+		// There might be some unintended consequences
+		// from this, so be aware.
+		var getStoryAfterFromModel = function () {
+			var prev = stories.get(storyBefore.id);
+			if (!prev) {
+				return stories.getFirst();
+			}
+			return stories.get(prev.nextId);
+		};
+
 		var postMove = {
 			storyBefore: stories.get(storyBefore.id),
-			storyAfter: stories.get(storyAfter.id)
+			// See HACK note, above.
+			// storyAfter: stories.get(storyAfter.id)
+			storyAfter: getStoryAfterFromModel()
 		};
 
 		if (preMove.storyBefore === postMove.storyBefore
@@ -856,13 +894,24 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			placeholder: "dragging-row",
 			forcePlaceholderSize: true,
 			opacity: 0.75,
+			tolerance: "pointer",
+			deactivate: function (event, ui) {
+				storyNodeMoved(ui);
+			},
 			start: function (event, ui) {
 				startMove(ui);
-			},
-			update: function (event, ui) {
-				storyNodeMoved(ui);
 			}
 		});
+
+		var mileposts = $('#mileposts');
+		if (mileposts.length) {
+			mileposts.sortable({
+				// This is only a drop target. Tasks
+				// cannot be moved.
+				cancel: ".storyWrapper",
+			});
+			$("#sortableList").sortable("option", "connectWith", "#mileposts");	
+		}
 	};
 
 	var makeStoriesDraggableCore = function(Y) {
@@ -905,15 +954,15 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	});
 
 	var makeStoriesDraggable = function () {
-		newDraggable();
 		// makeStoriesDraggableCore(thisY);
+		newDraggable();
 	};
 
 	var activateDragAndDrop = function () {
 		// Even though we're waiting for viewContentLoaded, 
 		// I guess we need to yield to whatever else is happening.
 		$timeout(function () {
-			newDraggable();
+			makeStoriesDraggable();
 
 			// Reference: http://yuilibrary.com/yui/docs/dd/list-drag.html
 			// var gesturesIfTouch = Modernizr.touch ? 'dd-gestures' : 'dd-drop';
