@@ -691,6 +691,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		if (preMove.storyBefore === postMove.storyBefore
 		|| preMove.storyAfter === postMove.storyAfter) {
 			// We didn't actually move. Do nothing.
+			movedStory.isBeingDragged = false;
+
 			if ($scope.isMindset('roadmap')) {
 				// HACK: I can't figure out how to deal with this situation
 				// right now, and I think rebinding the page is better
@@ -714,6 +716,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 					}, 500);	
 				});
 			}
+
 			return;
 		}
 
