@@ -135,13 +135,13 @@
 
 .mindset-container {
   position: absolute;
-  top: 1.25ex;
-  right: 3ex;
+  top: 0;
+  right: 2ex;
   width: 75px;
   height: 110px;
   /*border-right: dashed 1px #ddd;*/
 
-  color: #eee;
+  color: #f3f3f3;
   font-size: 16pt;
   text-align: right;
   padding: 0.75ex;
@@ -151,17 +151,23 @@
   padding-left: 0.5ex;
 }
 .mindset-container:hover {
-  color: #ccc;
+
 }
-.mindset-container .glyphicon {
+.mindset-container .glyphicon:hover {
+  color: #bbb;
   cursor: pointer;
 }
 .selected-mindset {
-  color: #999;
+  color: #d3d3d3;
 }
 .mindset-container .invisible {
   cursor: default;
   opacity: 0;
+}
+
+.mindset-element {
+  position: fixed;
+  width: 55px;
 }
 
 
