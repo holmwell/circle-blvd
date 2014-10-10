@@ -3,6 +3,25 @@
 		ng-class="{
 			'col-sm-7': isMindset('roadmap')
 		}">
+		<div ng-show="!isMindset('detailed')" class="hidden-xs filterWrapper row">
+			<div class="col-sm-2" ng-hide="isMindset('roadmap')"></div>
+			<div class="col-xs-12 story mindset-help"
+				ng-class="{
+					'col-sm-8': !isMindset('roadmap'),
+					'col-sm-12': isMindset('roadmap')
+				}">
+				<div class="paddy">
+					<div ng-show="isMindset('bump')">
+						Use <i class="glyphicon glyphicon-chevron-up"></i> to send tasks 
+						to the top of the list.</div>
+					<div ng-show="isMindset('mine')">Use 
+						<i class="bump-status inline"></i> to quickly
+						change a task's status.</div>
+					<div ng-show="isMindset('roadmap')">Use the 
+						<i class="glyphicon glyphicon-move"></i> icon to move tasks from the left column to the right.</div>
+				</div>
+			</div>
+		</div>
 		<div ng-show="selectedLabels.length > 0" class="filterWrapper row">
 			<div class="col-sm-2" ng-hide="isMindset('roadmap')"></div>
 			<div class="col-xs-12 story filter"

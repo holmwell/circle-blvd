@@ -19,6 +19,10 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 		return lib.mindset.is(m);
 	};
 
+	$scope.setMindsetLabel = function (text) {
+		$scope.mindsetLabel = text;
+	};
+
 	$scope.keydown = function(e) {
 		if (e.target.type === "textarea" ||
 			e.target.type === "text" ||

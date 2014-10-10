@@ -169,7 +169,14 @@
   position: fixed;
   width: 55px;
 }
-
+.mindset-element .label {
+  color: #999;
+  float: right;
+  font-weight: normal;
+  padding-right: 0;
+  font-size: 11pt;
+  opacity: 0.6;
+}
 
 .jsLink {
   cursor: pointer;
@@ -572,6 +579,18 @@ h4, h5 {
   background-color: #777;
 }
 
+.mindset-help {
+  cursor: default;
+  color: #999;
+  background-color: white;
+  border: dashed 1px #ccc;
+  opacity: 0.6;
+  padding-left: 2.1ex;
+}
+.mindset-help:hover {
+  background-color: white;
+}
+
 .filter {
   background-color: #1E69B5;
   color: white;
@@ -914,6 +933,14 @@ button:focus {
   padding-top: 0;
   margin-top: -0.35ex;  
   background-image: url("../img/glyphs/icon-btn-circle.svg");
+}
+.bump-status.inline {
+  vertical-align: top;
+  padding: 0;
+  margin: 0;
+  height: 20px;
+  width: 20px;
+  background-repeat: no-repeat;
 }
 
 .btn-icon-status {

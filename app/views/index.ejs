@@ -116,20 +116,29 @@
         <span class="glyphicon invisible"></span>
 
         <span ng-click="setMindset('bump')" 
+          ng-mouseenter="setMindsetLabel('What\'s Next')"
+          ng-mouseleave="setMindsetLabel('')"
           ng-class="{ 'selected-mindset': isMindset('bump') }"
           class="glyphicon glyphicon-chevron-up right"></span>
               
         <span ng-click="setMindset('detailed')" 
           ng-class="{ 'selected-mindset': isMindset('detailed') }"
+          ng-mouseenter="setMindsetLabel('')"
           class="glyphicon glyphicon-move"></span>
 
         <span ng-click="setMindset('mine')" 
           ng-class="{ 'selected-mindset': isMindset('mine') }"
+          ng-mouseenter="setMindsetLabel('Status Update')"
+          ng-mouseleave="setMindsetLabel('')"
           class="glyphicon glyphicon-record right"></span>
 
         <span ng-click="setMindset('roadmap')"
           ng-class="{ 'selected-mindset': isMindset('roadmap') }" 
+          ng-mouseenter="setMindsetLabel('Roadmap')"
+          ng-mouseleave="setMindsetLabel('')"
           class="glyphicon glyphicon-road right"></span>
+
+        <div class="label">{{mindsetLabel}}</div>
       </div>
     </div>
     <!--
