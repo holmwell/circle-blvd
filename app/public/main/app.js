@@ -50,6 +50,7 @@ angular.module('myApp', [
         $routeProvider.when('/tour', {templateUrl: 'ui/views/tour.html', controller: TourCtrl});
         $routeProvider.when('/tour/work', {templateUrl: 'ui/views/tour-work.html', controller: TourCtrl});
         $routeProvider.when('/tour/plan', {templateUrl: 'ui/views/tour-plan.html', controller: TourCtrl});
+        $routeProvider.when('/tour/plan/:section', {templateUrl: 'ui/views/tour-plan.html', controller: TourCtrl});
 
         $routeProvider.when('/donate', {templateUrl: 'ui/views/donate.html', controller: DonateCtrl});
 

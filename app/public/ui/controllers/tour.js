@@ -1,6 +1,6 @@
 'use strict';
 
-function TourCtrl(lib, $scope) {
+function TourCtrl(lib, $scope, $location, $routeParams) {
 	var me = "Me";
 
 	$scope.whoami = me;	
@@ -8,17 +8,16 @@ function TourCtrl(lib, $scope) {
 	lib.mindset.set('detailed');
 	$scope.hideHeader();
 
-	var sectionToShow;
+	var sectionToShow = $routeParams.section || 'tags';
 	
 	$scope.show = function (section) {
-		sectionToShow = section;
-
 		switch (section) {
 			case 'bump':
 			case 'roadmap':
-				$scope.setMindset(section);
+				$location.path('/tour/plan/' + section);
 				break;
 			default:
+				$location.path('/tour/plan');
 				break;
 		}
 	};
@@ -167,6 +166,8 @@ function TourCtrl(lib, $scope) {
 	$scope.storyDetails.push(detailStory);
 
 	// Show the tags section on the plan page.
-	$scope.show('tags');
+	if ($location.path().indexOf('/plan') > 0) {
+		$scope.show(sectionToShow);
+	}
 }
-TourCtrl.$inject = ['lib', '$scope'];
+TourCtrl.$inject = ['lib', '$scope', '$location', '$routeParams'];
