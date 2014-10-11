@@ -9,9 +9,18 @@ function TourCtrl(lib, $scope, $location, $routeParams) {
 	$scope.hideHeader();
 
 	var sectionToShow = $routeParams.section || 'tags';
+	var workSectionToShow = $routeParams.section || 'details';
 	
 	$scope.show = function (section) {
 		switch (section) {
+			case 'details':
+				$location.path('/tour/work');
+				break;
+			case 'mileposts':
+			case 'checklists':
+				$location.path('/tour/work/' + section);
+				break;
+
 			case 'bump':
 			case 'roadmap':
 				$location.path('/tour/plan/' + section);
@@ -23,7 +32,7 @@ function TourCtrl(lib, $scope, $location, $routeParams) {
 	};
 
 	$scope.isShowing = function (section) {
-		return sectionToShow === section;
+		return sectionToShow === section || workSectionToShow === section;
 	}
 
 	var getTaskListFromArray = function (list) {
@@ -130,25 +139,38 @@ function TourCtrl(lib, $scope, $location, $routeParams) {
 	var roadmapData = getTaskListFromArray(roadmapList);
 
 
-	$scope.demo = {
-		firstStory: startData.first,
-		allStories: startData.list
+	var milepostsData = getTaskListFromArray([
+		{
+			summary: "Our special event",
+			isDeadline: true
+		},
+		{
+			summary: "Next meeting",
+			isNextMeeting: true
+		},
+		"Reserve the venue",
+		"Find what we're looking for",
+		{
+			summary: "Someday / Maybe",
+			isDeadline: true
+		}
+	]);
+
+	var getViewModel = function (data) {
+		return {
+			firstStory: data.first,
+			allStories: data.list
+		}
 	};
 
-	$scope.tags = {
-		firstStory: tagData.first,
-		allStories: tagData.list
-	};
+	$scope.demo = getViewModel(startData);
 
-	$scope.bump = {
-		firstStory: bumpData.first,
-		allStories: bumpData.list
-	};
+	$scope.mileposts = getViewModel(milepostsData);
 
-	$scope.roadmap = {
-		firstStory: roadmapData.first,
-		allStories: roadmapData.list
-	};
+	$scope.tags = getViewModel(tagData);
+	$scope.bump = getViewModel(bumpData);
+	$scope.roadmap = getViewModel(roadmapData);
+
 
 
 	var detailStory = {};
@@ -168,6 +190,11 @@ function TourCtrl(lib, $scope, $location, $routeParams) {
 	// Show the tags section on the plan page.
 	if ($location.path().indexOf('/plan') > 0) {
 		$scope.show(sectionToShow);
+	}
+
+	// Show the details section on the work page.
+	if ($location.path().indexOf('/work') > 0) {
+		$scope.show(workSectionToShow);
 	}
 }
 TourCtrl.$inject = ['lib', '$scope', '$location', '$routeParams'];
