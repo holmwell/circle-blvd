@@ -18,6 +18,7 @@ function TourCtrl(lib, $scope, $location, $routeParams) {
 				break;
 			case 'mileposts':
 			case 'checklists':
+			case 'status':
 				$location.path('/tour/work/' + section);
 				break;
 
@@ -156,6 +157,15 @@ function TourCtrl(lib, $scope, $location, $routeParams) {
 		}
 	]);
 
+	var statusData = getTaskListFromArray([
+		{
+			summary: "My favorite thing to do",
+			owner: me,
+			status: "assigned"
+		},
+		"Check out the planning section"
+	]);
+
 	var getViewModel = function (data) {
 		return {
 			firstStory: data.first,
@@ -166,6 +176,7 @@ function TourCtrl(lib, $scope, $location, $routeParams) {
 	$scope.demo = getViewModel(startData);
 
 	$scope.mileposts = getViewModel(milepostsData);
+	$scope.status = getViewModel(statusData);
 
 	$scope.tags = getViewModel(tagData);
 	$scope.bump = getViewModel(bumpData);

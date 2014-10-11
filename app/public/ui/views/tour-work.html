@@ -27,24 +27,31 @@
             <p>Go ahead, focus on your projects. We're here to help.</p>
 
             <div class="row choice-menu">
-                <div class="col-xs-4 choice plan-choice" ng-class="{active: isShowing('details')}">
+                <div class="col-xs-3 choice plan-choice" ng-class="{active: isShowing('details')}">
                     <a class="jsLink" ng-click="show('details')"><div class="plan-menu">
                         <i class="glyphicon glyphicon-file"></i>
                         <div class="text">Tasks</div>
                     </div></a>
                 </div>
 
-                <div class="col-xs-4 choice plan-choice" ng-class="{active: isShowing('mileposts')}">
+                <div class="col-xs-3 choice plan-choice" ng-class="{active: isShowing('mileposts')}">
                     <a class="jsLink" ng-click="show('mileposts')"><div class="plan-menu">
                         <i class="glyphicon glyphicon-tasks"></i>
                         <div class="text">Mileposts</div>
                     </div></a>
                 </div>
 
-                <div class="col-xs-4 choice plan-choice" ng-class="{active: isShowing('checklists')}">
+                <div class="col-xs-3 choice plan-choice" ng-class="{active: isShowing('checklists')}">
                     <a class="jsLink" ng-click="show('checklists')"><div class="plan-menu">
                         <i class="glyphicon glyphicon-repeat"></i>
                         <div class="text">Checklists</div>
+                    </div></a>
+                </div>
+
+                <div class="col-xs-3 choice plan-choice" ng-class="{active: isShowing('status')}">
+                    <a class="jsLink" ng-click="show('status')"><div class="plan-menu">
+                        <i class="glyphicon glyphicon-record"></i>
+                        <div class="text">Update status</div>
                     </div></a>
                 </div>
             </div>
@@ -93,6 +100,27 @@
             </div>
         </div>
     </div>
+
+    <div ng-cloak ng-if="isShowing('status')">
+        <div class="clearfix">
+            <div class="docs col-sm-offset-2 col-sm-8">
+                <p>Tasks that are owned by you have <i class="bump-status inline"></i> in front of them. Use it to advance the status of a task. In-progress tasks are marked with <i class="btn-icon-status inline" ng-include="'/img/glyphs/icon-half-circle.svg'"></i> and done tasks with
+                <i class="btn-icon-status inline" ng-include="'/img/glyphs/icon-circle.svg'"></i>.</p>
+            </div>
+
+            <sp-story-list 
+            data="status" 
+            mindset="'detailed'"
+            account-name="whoami"
+            owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
+            is-facade="isFacade"></sp-story-list>
+
+            <div class="docs col-sm-offset-2 col-sm-8">
+                <p class="after-list"></p>
+            </div>
+        </div>
+    </div>
+
 
     <div ng-if="isShowing('details')">
         <div class="clearfix">
