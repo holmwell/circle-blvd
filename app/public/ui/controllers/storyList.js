@@ -484,9 +484,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 					var mileposts = $('.deadline');
 					if (colors.mileposts.foreground) {
 						mileposts.css('color', colors.mileposts.foreground);
+						mileposts.addClass('has-custom-color');
 					}
 					if (colors.mileposts.background) {
-						mileposts.css('backgroundColor', colors.mileposts.background);		
+						mileposts.css('backgroundColor', colors.mileposts.background);
+						mileposts.addClass('has-custom-color');
 					}
 				}
 			}

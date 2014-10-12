@@ -661,6 +661,15 @@ button:focus {
   text-decoration: underline;
 }
 
+.has-custom-color .story-label {
+  color: inherit !important; 
+}
+.has-custom-color .story-label:before {
+  content: "#";
+}
+
+
+
 /* story details */
 .summary {
 
