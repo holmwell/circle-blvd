@@ -13,8 +13,8 @@ data.users     = require('./data/users.js');
 data.waitlist  = require('./data/waitlist.js');
 data.whenReady = couch.database.whenReady;
 
-var addStoriesForNewCircle = function (newCircle, adminAccount, callback) {
-	
+var addStoriesForFirstCircle = function (newCircle, adminAccount, callback) {
+
 	var newStory = function () {
 		var story = {};
 		story.projectId = newCircle._id;
@@ -22,58 +22,27 @@ var addStoriesForNewCircle = function (newCircle, adminAccount, callback) {
 	};
 
 	var welcome = newStory();
-	welcome.summary = "Welcome to Circle Blvd.";
+	welcome.summary = "Welcome! Please open me first";
 	welcome.status = "active";
 	welcome.isFirstStory = true;
-	welcome.description = "Hi! This is a story list. The main idea is that " +
-	"stories closer to the top want to be completed before the ones closer " + 
+	welcome.description = "Hi! This is your task list. The main idea is that " +
+	"tasks closer to the top want to be completed before the ones closer " + 
 	"to the bottom.\n\nPlay around with it. Maybe start by moving the 'Next " + 
-	"meeting' around.";
+	"meeting' around, or add a few tasks.\n\nAdd more people to this circle from " +
+	"the admin page, and you can make more circles from your profile page.";
 
-	var addStories = newStory();
-	addStories.summary = "To get started, add a few stories";
-	addStories.owner = adminAccount.name;
-	addStories.description = "Please see the 'Add story' link, at the top " +
-	"of the story list, to get started.";
-
-	var addTeamMembers = newStory();
-	addTeamMembers.summary = "When you're ready, add some team members";
-	addTeamMembers.status = "assigned";
-	addTeamMembers.description = "You can do this from the Admin page.";
-
-	var seeDocs = newStory();
-	seeDocs.summary = "Check out the documentation for more details";
-
-	var readyMilepost = newStory();
-	readyMilepost.isDeadline = true;
-	readyMilepost.summary = "Start using the site";
+	var seeTour = newStory();
+	seeTour.summary = "Check out the tour to see what this thing can do";
+	seeTour.description = "That's it! Thanks for joining Circle Blvd."
 
 	var nextMeeting = newStory();
 	nextMeeting.summary = "Next meeting";
 	nextMeeting.isNextMeeting = true;
 
-	var subscribe = newStory();
-	subscribe.summary = "Become a sponsor, if you want";
-	subscribe.owner = adminAccount.name;
-	subscribe.description = "Circle Blvd. may be used for free, for a reasonable " +
-	"amount of time. Like Wikipedia, we rely on donations to keep the site online. You " +
-	"can sponsor the site from the profile page, and end your sponsorship at any time.";
-
-	var haveFun = newStory();
-	haveFun.summary = "Have fun :-)";
-	haveFun.status = "assigned";
-	haveFun.description = "Please enjoy using our site. To send us a note, you can find " + 
-	"us on Twitter at @circleblvd. Thank you!";
-
 	var stories = [
 		welcome,
-		addStories,
-		addTeamMembers,
-		seeDocs,
-		readyMilepost,
 		nextMeeting,
-		subscribe,
-		haveFun
+		seeTour
 	];
 	stories.reverse();
 
@@ -100,7 +69,20 @@ var addStoriesForNewCircle = function (newCircle, adminAccount, callback) {
 	addStory(stories[currentIndex]);
 };
 
-data.circles.create = function (circleName, adminEmailAddress, callback) {
+var addStoriesForNewCircle = function (newCircle, adminAccount, callback) {
+	var newStory = function () {
+		return newStoryInCircle(newCircle);
+	};
+
+	var nextMeeting = {};
+	nextMeeting.projectId = newCircle._id;
+	nextMeeting.summary = "Next meeting";
+	nextMeeting.isNextMeeting = true;
+
+	db.stories.add(nextMeeting, callback);	
+};
+
+var createCircle = function (circleName, adminEmailAddress, createStories, callback) {
 	var circle = {
 		name: circleName
 	};
@@ -132,7 +114,7 @@ data.circles.create = function (circleName, adminEmailAddress, callback) {
 				isPermanent: true
 			};
 
-			addStoriesForNewCircle(newCircle, adminAccount, function (err, body) {
+			createStories(newCircle, adminAccount, function (err, body) {
 				if (err) {
 					return callback(err);
 				}
@@ -188,6 +170,15 @@ data.circles.create = function (circleName, adminEmailAddress, callback) {
 		})
 	});
 };
+
+data.circles.create = function (circleName, adminEmailAddress, callback) {
+	createCircle(circleName, adminEmailAddress, addStoriesForNewCircle, callback);
+};
+
+data.circles.createFirst = function (circleName, adminEmailAddress, callback) {
+	createCircle(circleName, adminEmailAddress, addStoriesForFirstCircle, callback);
+};
+
 
 var db = function() {
 	return data;

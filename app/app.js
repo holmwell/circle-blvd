@@ -636,7 +636,7 @@ var defineRoutes = function () {
 
     var createAccount = function (proposedAccount, circle, callback) {
         var userAccountCreated = function (newAccount) {
-            db.circles.create(circle.name, newAccount.email, callback);
+            db.circles.createFirst(circle.name, newAccount.email, callback);
         };
 
         createUser(proposedAccount, function (err, newAccount) {
