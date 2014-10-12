@@ -1117,6 +1117,11 @@ label.relax {
   color: goldenrod;
 }
 
+/* checklists */
+.checklists p {
+  margin-top: 1em;
+}
+
 /* donate */
 .donations, .about, .sponsor {
   padding-bottom: 3.5em;
