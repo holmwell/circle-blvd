@@ -74,7 +74,7 @@
 	<li ng-repeat="member in members" ng-class-odd="'odd'">
 		<div class="row">
 			<div class="name col-sm-3">{{member.name}}</div>
-			<div class="email col-sm-3">{{member.email}}</div>
+			<div class="email col-sm-3">{{member.notifications.email || member.email}}</div>
 			<div class="roles col-sm-3">
 				<span ng-repeat="membership in member.memberships">
 					{{getGroupName(membership.group)}}
