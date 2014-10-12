@@ -19,6 +19,26 @@
 </form>
 
 <form>
+	<h4>Milepost colors</h4>
+	<div class="row">
+		<div class="col-sm-5">
+			<input ng-model="milepostBackground" class="form-control" type="text" placeholder="Background"/>
+		</div>
+		<div class="col-sm-4 subtle">(e.g. gold or #990000)</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-5">
+			<input ng-model="milepostForeground" class="form-control" type="text" placeholder="Foreground"/>
+		</div>
+		<div class="col-sm-2">
+			<button class="btn btn-default" 
+			ng-click="saveMilepostColors(milepostBackground, milepostForeground)">Save</button>
+			<span>&nbsp;{{messages.milepostColors}}</span>
+		</div>
+	</div>
+</form>
+
+<form>
 	<h4>Invite people</h4>
 	<div class="row">
 		<div class="col-sm-8 col-md-7">

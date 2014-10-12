@@ -18,6 +18,10 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 
 		function getCircleSuccess(data, status) {
 			$scope.circleName = data.name;
+			if (data.colors) {
+				$scope.milepostBackground = data.colors.mileposts.background;
+				$scope.milepostForeground = data.colors.mileposts.foreground;
+			}
 		}
 
 		function getCircleFailure(data, status) {
@@ -35,6 +39,18 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 			// TODO: Emit an event and catch it at TopLevelCtrl,
 			// instead of a full page refresh.
 			$route.reload();
+		})
+		.error(errors.handle);
+	};
+
+	$scope.saveMilepostColors = function (background, foreground) {
+		var data = {
+			background: background,
+			foreground: foreground
+		};
+		$http.put('/data/circle/' + activeCircle + '/colors/mileposts', data)
+		.success(function () {
+			$scope.messages.milepostColors = "Ok!";
 		})
 		.error(errors.handle);
 	};

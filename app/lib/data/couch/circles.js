@@ -45,6 +45,7 @@ module.exports = function () {
 	var updateCircle = function (circle, callback) {
 		var copyCircle = function (source, dest) {
 			dest.name = source.name;
+			dest.colors = source.colors;
 		};
 
 		database.get(circle._id, function (err, circleToUpdate) {

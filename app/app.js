@@ -220,6 +220,19 @@ var defineRoutes = function () {
         }));
     });
 
+    app.put("/data/circle/:circleId/colors/mileposts", ensure.circleAdmin, function (req, res) {
+        var data = req.body;
+        var circleId = req.params.circleId;
+        db.circles.get(circleId, guard(res, function (circle) {
+            circle.colors = circle.colors || {};
+            circle.colors.mileposts = {
+                foreground: data.foreground || "",
+                background: data.background || ""
+            };
+            db.circles.update(circle, handle(res));
+        }));
+    });
+
     // Invites!
     app.get("/data/:circleId/invite/:count", ensure.circle, function (req, res) {
         var invite = {

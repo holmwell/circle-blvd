@@ -111,6 +111,17 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 		return path === val || (path.indexOf(val) === 0);
 	};
 
+	var getActiveCircle = function () {
+		var activeCircle = undefined;
+		angular.forEach(session.circleList, function (circle) {
+			if (circle.id === session.activeCircle) {
+				activeCircle = circle;
+			}
+		});
+		return activeCircle;
+	};
+	$scope.getActiveCircle = getActiveCircle;
+
 	$scope.$on('setActiveCircle', function (e, circle, refreshPage, callback) {
 		$scope.setActiveCircle(circle, refreshPage);
 		if (!refreshPage && callback) {
@@ -123,15 +134,16 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 			return;
 		}
 
-		var activeCircle = undefined;
-		angular.forEach(session.circleList, function (circle) {
-			if (circle.id === session.activeCircle) {
-				activeCircle = circle;
-			}
-		});
-
+		var activeCircle = getActiveCircle();
 		if (activeCircle) {
 			return activeCircle.name;
+		}
+	};
+
+	$scope.getActiveCircleColors = function () {
+		var activeCircle = getActiveCircle();
+		if (activeCircle) {
+			return activeCircle.colors;
 		}
 	};
 
@@ -259,7 +271,8 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 							circleList[memberships[key].circle] = {
 								_id: memberships[key].circle, 
 								id: memberships[key].circle,
-								name: memberships[key].circleName
+								name: memberships[key].circleName,
+								colors: memberships[key].circleColors
 							};
 						}
 					}

@@ -1,5 +1,4 @@
 function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, errors) {
-
 	var circleId = undefined;
 	var listId = undefined;
 
@@ -154,12 +153,14 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 	$scope.$watch('data', function (newVal) {
 		if (newVal) {
+			circle = newVal.circle;
 			circleId = newVal.circleId;
 			listId = newVal.listId || undefined;
 			buildStoryList(newVal.firstStory, newVal.allStories);
 			buildMilepostList(storiesList);
 		}
 		else {
+			circle = undefined;
 			circleId = undefined;
 			listId = undefined;
 			$scope.stories = [];
@@ -472,6 +473,25 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			makeStoriesDraggable();
 		}, 500);
 	});
+
+	var updateUI = function () {
+		// HACK: So, yeah, we'll let future self
+		// worry about how to do this well ...
+		$(function () {
+			if (circle) {
+				var colors = circle.colors;
+				if (colors && colors.mileposts) {				
+					var mileposts = $('.deadline');
+					if (colors.mileposts.foreground) {
+						mileposts.css('color', colors.mileposts.foreground);
+					}
+					if (colors.mileposts.background) {
+						mileposts.css('backgroundColor', colors.mileposts.background);		
+					}
+				}
+			}
+		});
+	};
 
 	// Tmp for development:
 	// selectedLabels.push("label");
@@ -963,6 +983,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	var makeStoriesDraggable = function () {
 		// makeStoriesDraggableCore(thisY);
 		newDraggable();
+		updateUI();
 	};
 
 	var activateDragAndDrop = function () {

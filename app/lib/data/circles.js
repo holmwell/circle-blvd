@@ -7,6 +7,7 @@ module.exports = function () {
 		var newCircle = {
 			name: circle.name,
 			createdBy: circle.createdBy,
+			colors: {},
 			isAnonymous: true
 		};
 

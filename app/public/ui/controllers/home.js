@@ -286,7 +286,8 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 				$scope.data = {
 					firstStory: firstStory,
 					allStories: serverStories,
-					circleId: circleId
+					circleId: circleId,
+					circle: $scope.getActiveCircle()
 				};
 				$timeout(makeStoriesDraggable, 0);
 				scrollToStorySpecifiedByUrl();

@@ -33,6 +33,8 @@ var getUserWithFriendlyGroups = function (user, callback) {
 					var circle = circles[circleKey];
 					if (circle && membership.circle === circle._id) {
 						user.memberships[membershipKey].circleName = circles[circleKey].name;
+						// TODO: ... really?
+						user.memberships[membershipKey].circleColors = circles[circleKey].colors;
 					}
 				}
 			};
