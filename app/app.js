@@ -122,6 +122,18 @@ var defineRoutes = function () {
         db.users.addMembership(member, circleId, handle(res));
     });
 
+    app.put("/data/:circleId/member/groups", ensure.circleAdmin, function (req, res) {
+        var circleId = req.params.circleId;
+        var member = req.body;
+        if (!member.groups) {
+            res.send(400);
+            return;
+        }
+
+        var groups = member.groups;
+        db.users.updateGroups(member, circleId, groups, handle(res));
+    });
+
     app.get("/data/:circleId/members/names", ensure.circle, function (req, res) {
         var circleId = req.params.circleId;
         db.users.findNamesByCircleId(circleId, handle(res));

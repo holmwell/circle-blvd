@@ -137,7 +137,7 @@ module.exports = function () {
 
 	var updateUser = function(user, success, failure) {
 		if (!isValidUser(user)) {
-			return failure();
+			return failure("User is not valid");
 		}
 
 		user = normalizeUser(user);
@@ -290,7 +290,7 @@ module.exports = function () {
 				
 				account.memberships.forEach(function (existing) {
 					if (existing.circle === newMembership.circle &&
-					  	existing.group === newMembership.group &&
+						existing.group === newMembership.group &&
 						existing.level === newMembership.level) {
 						skip = true;
 					}
@@ -378,6 +378,47 @@ module.exports = function () {
 		});
 	};
 
+	var updateUserGroups = function (member, circleId, groups, callback) {
+		findUserById(member.id, function (err, user) {
+			if (err) {
+				return callback(err);
+			}
+
+			// 1. Remove current circle groups
+			var newMemberships = [];
+			user.memberships.forEach(function (membership) {
+				if (membership.circle === circleId) {
+					// do nothing
+				}
+				else {
+					newMemberships.push(membership);
+				}
+			});
+
+			// 2. Add ...
+			for (var key in groups) {
+				var isInGroup = groups[key];
+				if (isInGroup) {
+					var groupMembership = {
+						circle: circleId,
+						group: key,
+						level: 'member'
+					};
+					newMemberships.push(groupMembership);	
+				}
+			}
+
+			user.memberships = newMemberships;
+			updateUser(user, function () {
+				// success ...
+				callback();
+			}, function (err) {
+				// failure ...
+				callback(err);
+			});
+		});
+	};
+
 	return { 
 		add: addUser,
 		remove: removeUser,
@@ -394,6 +435,7 @@ module.exports = function () {
 		updateEmail: updateUserEmail,
 		updatePassword: updateUserPassword,
 		validatePassword: validateUserPassword,
+		updateGroups: updateUserGroups,
 		recordSigninFailure: recordSigninFailure,
 		recordSigninSuccess: recordSigninSuccess,
 		getAll: function(callback) {

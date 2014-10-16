@@ -80,11 +80,25 @@
 					{{getGroupName(membership.group)}}
 				</span>
 			</div>
-			<div class="removeMember col-sm-2" ng-click="removeMember(member)" title="remove member"><i class="glyphicon glyphicon-trash"></i></div>
+			<div class="col-sm-2">
+				<a class="jsLink" ng-click="showDetails(member)">Edit details</a>
+			</div>
+			<div class="removeMember col-sm-1" ng-click="removeMember(member)" title="remove member"><i class="glyphicon glyphicon-trash"></i></div>
+		</div>
+		<div class="row" ng-cloak ng-show="isShowing(member)">
+			<div class="col-xs-12">
+				<div><strong>Groups</strong></div>
+				<div ng-repeat="group in groups">
+					<div class="checkbox" ng-hide="isGroupImplied(group)">
+						<label><input type="checkbox" ng-model="member.groups[group.id]"> {{group.name}}</label>
+					</div>
+				</div>
+				<button class="btn btn-default" ng-click="saveGroups(member)">Save {{member.name}}'s groups</button>
+			</div>
 		</div>
 	</li>
 </ul>
-
+			
 <form>
 	<h4>Create accounts for people</h4>
 	<div class="row">

@@ -4,6 +4,7 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 
 	var activeCircle = session.activeCircle;
 	var impliedGroup = undefined;
+	var successes = {};
 	$scope.messages = {};
 
 	var getBaseUrl = function () {
@@ -161,6 +162,62 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 		.error(errors.handle);
 	};
 
+	var selectedMember = undefined;
+
+	$scope.saveGroups = function (member) {
+		var data = member;
+		$http.put('/data/' + activeCircle + '/member/groups', data)
+		.success(function () {
+			getLatestMemberData();
+			selectedMember = undefined;
+		})
+		.error(errors.handle);
+	};
+
+	$scope.showDetails = function (member) {
+		selectedMember = member;
+	};
+
+	$scope.isShowing = function (member) {
+		if (!selectedMember) {
+			return false;
+		}
+
+		return member._id === selectedMember._id;
+	};
+
+	var isInGroup = function (member, groupName) {
+		for (var key in member.memberships) {
+			var membership = member.memberships[key];
+			var group = groupNames[membership.group];
+			if (group && group.name === groupName) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	var processMemberGroups = function () {
+		if (!successes.members || !successes.groups) {
+			return;
+		}
+
+		var members = $scope.members;
+		var groups = $scope.groups;
+
+		for (var key in members) {
+			var member = members[key];
+			member.groups = {};
+			for (var groupKey in groups) {
+				var group = groups[groupKey];
+				if (isInGroup(member, group.name)) {
+					member.groups[group.id] = true;
+				}
+			}
+		}
+	};
+
+
 	var getMembersSuccess = function(data, status, headers, config) {
 		if (data === {}) {
 			// do nothing. 
@@ -168,6 +225,8 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 		else {
 			$scope.members = data;
 		}
+		successes.members = true;
+		processMemberGroups();
 	};
 
 	var getMembersFailure = function(data, status, headers, config) { 
@@ -177,6 +236,7 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 			// "The server was restarted. Please sign in again."
 		}
 	};
+
 
 	var getLatestMemberData = function() {
 		$http.get('/data/' + activeCircle + '/members')
@@ -239,6 +299,8 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 				}
 			}
 		}
+		successes.groups = true;
+		processMemberGroups();
 	};
 
 	var getLatestGroupData = function() {
