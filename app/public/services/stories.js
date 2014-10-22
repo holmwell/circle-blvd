@@ -7,6 +7,22 @@ CircleBlvd.Services.stories = function ($http) {
 		return s[storyId];
 	};
 
+	// fn(story) returns true
+	var findStory = function (fn) {
+		if (!fn) {
+			return;
+		}
+
+		for (var storyId in s) {
+			var story = s[storyId];
+			if (fn(story)) {
+				return story;
+			}
+		}
+		
+		return;
+	};
+
 	var getLastStoryId = function (story) {
 		return "last-" + (story.listId || story.projectId);
 	};
@@ -251,6 +267,7 @@ CircleBlvd.Services.stories = function ($http) {
 					});
 				});
 			},
+			find: findStory,
 			save: saveStory,
 			saveComment: saveStoryComment,
 			get: getStory, 

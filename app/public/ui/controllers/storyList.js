@@ -89,6 +89,12 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		// $scope.select(stories.getFirst());
 	};
 
+	var findNextMeeting = function () {
+		return stories.find(function (story) {
+			return story.isNextMeeting;
+		});
+	};
+
 	var pulse = function (story) {
 		var pulseClass = "pulse";
 		if ((story.isDeadline && story.isAfterNextMeeting) 
@@ -158,6 +164,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			listId = newVal.listId || undefined;
 			buildStoryList(newVal.firstStory, newVal.allStories);
 			buildMilepostList(storiesList);
+			$scope.nextMeeting = findNextMeeting();
 		}
 		else {
 			circle = undefined;
@@ -209,10 +216,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		e.preventDefault();
 
 		var storyToMove = stories.get(story.id);
-		var previousTopStory = stories.getFirst();
+		var nextMeeting = findNextMeeting();
 
-		if (storyToMove.id === previousTopStory.id) {
-			// Do nothing.
+		if (storyToMove.id === nextMeeting.id) {
+			// Not possible, but whatever. Do nothing.
 			return;
 		}
 
@@ -222,13 +229,28 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			storyBefore: stories.getPrevious(story, storyToMove),
 			storyAfter: stories.get(storyToMove.nextId)
 		};
+
+		var postMove = {
+			storyBefore: stories.getPrevious(nextMeeting, nextMeeting),
+			storyAfter: nextMeeting
+		};
+
 		// We need to update 'nextId' of the following:
 		// 1. The story before the moved story, before it was moved.		
 		if (preMove.storyBefore) {
 			preMove.storyBefore.nextId = preMove.storyAfter ? preMove.storyAfter.id : getLastStoryId();
 		}
-		stories.setFirst(storyToMove);
-		storyToMove.nextId = previousTopStory.id;
+
+		// 2. ...
+		if (postMove.storyBefore) {
+			postMove.storyBefore.nextId = storyToMove.id;
+		}
+		else {
+			stories.setFirst(storyToMove);	
+		}
+		
+		// 3. ...
+		storyToMove.nextId = nextMeeting.id;
 
 		// Update view model
 		updateViewModelStoryOrder();
@@ -240,7 +262,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 		// Update server
 		$timeout(function() {
-			stories.move(storyToMove, previousTopStory, function (err, response) {
+			stories.move(storyToMove, nextMeeting, function (err, response) {
 				if (err) {
 					// We failed. Probably because of a data integrity issue
 					// on the server that we need to wait out. 
