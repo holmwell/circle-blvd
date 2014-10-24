@@ -44,18 +44,17 @@ angular.module('myApp', [
         $routeProvider.when('/invite', {templateUrl: 'ui/views/invite.html', controller: InviteCtrl});
 
         $routeProvider.when('/about', {templateUrl: 'ui/views/about.html', controller: AboutCtrl});
+        $routeProvider.when('/contact', {templateUrl: 'ui/views/contact.html', controller: ContactCtrl});
+        $routeProvider.when('/privacy', {templateUrl: 'ui/views/privacy.html', controller: PrivacyCtrl});
         $routeProvider.when('/sponsor', {templateUrl: 'ui/views/sponsor.html', controller: SponsorCtrl});
+        $routeProvider.when('/donate', {templateUrl: 'ui/views/donate.html', controller: DonateCtrl});
 
         $routeProvider.when('/docs', {templateUrl: 'ui/views/tour.html', controller: TourCtrl});
         $routeProvider.when('/tour', {templateUrl: 'ui/views/tour.html', controller: TourCtrl});
-        
         $routeProvider.when('/tour/work', {templateUrl: 'ui/views/tour-work.html', controller: TourCtrl});
         $routeProvider.when('/tour/work/:section', {templateUrl: 'ui/views/tour-work.html', controller: TourCtrl});
-
         $routeProvider.when('/tour/plan', {templateUrl: 'ui/views/tour-plan.html', controller: TourCtrl});
         $routeProvider.when('/tour/plan/:section', {templateUrl: 'ui/views/tour-plan.html', controller: TourCtrl});
-
-        $routeProvider.when('/donate', {templateUrl: 'ui/views/donate.html', controller: DonateCtrl});
 
         $routeProvider.when('/mainframe', {templateUrl: 'ui/views/mainframe.html', controller: MainframeCtrl});
         $routeProvider.when('/initialize', {templateUrl: 'ui/views/initialize.html', controller: InitializeCtrl});

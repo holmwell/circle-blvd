@@ -287,6 +287,7 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 					$scope.signOut();	
 				}
 
+				// TODO: This is not cool.
 				if (path !== '/signin' 
 					&& path !== '/docs'
 					&& path !== '/tour'
@@ -294,6 +295,8 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 					&& path !== '/sponsor'
 					&& path !== '/donate'
 					&& path !== '/about'
+					&& path !== '/contact'
+					&& path !== '/privacy'
 					&& path !== '/invite'
 					&& path.indexOf('/invite') !== 0) {
 					$scope.signOut();
