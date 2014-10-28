@@ -28,6 +28,13 @@
 			<input type="text" ng-model="smtp.service" placeholder="smtp service" class="form-control"/>
 		</div>
 
+		<h3 class="col-xs-12">Contact email setup (optional)</h3>
+		<p class="col-xs-12">Where should the contact form send emails? This can be done later.</p>
+		<div class="col-sm-5">
+			<input type="email" ng-model="contact.to" placeholder="to address" class="form-control"/>
+			<input type="email" ng-model="contact.form" placeholder="from address" class="form-control"/>
+		</div>
+
 		<h3 class="col-xs-12">Payment setup (optional)</h3>
 		<p class="col-xs-12">To receive payments from members, specify a <a href="https://stripe.com/">Stripe</a> public and secret key. This can be done later.</p>
 		<div class="col-sm-5">

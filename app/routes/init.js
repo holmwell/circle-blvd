@@ -10,6 +10,7 @@ exports.init = function (req, res, app) {
 	var admin  = data.admin;
 	var ssl    = data.ssl;
 	var smtp   = data.smtp;
+	var contact = data.contact;
 	var stripe = data.stripe;
 
 	var defaultCircleId = "1";
@@ -75,6 +76,28 @@ exports.init = function (req, res, app) {
 				tasks.push(function (callback) {
 					settings.set(smtpSettings, callback);
 				});
+			}
+
+			if (contact) {
+				var contactSettings = [];
+
+				if (contact.to) {
+					var contactTo = defaultSettings['contact-to-address'];
+					contactTo.value = contact.to;
+					contactSettings.push(contactTo);	
+				}
+
+				if (contact.from) {
+					var contactFrom = defaultSettings['contact-from-address'];
+					contactFrom.value = contact.from;
+					contactSettings.push(contactFrom);
+				}
+
+				if (contactSettings.length > 0) {
+					tasks.push(function (callback) {
+						settings.set(contactSettings, callback);
+					});
+				}
 			}
 
 			if (stripe && stripe.public && stripe.secret) {

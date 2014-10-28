@@ -1,7 +1,14 @@
 <div class="content">
 	<div class="col-sm-offset-2 col-sm-8 contact">
 		<h2>Contact</h2>
-		<p>Thank you for contacting us at Circle Blvd.</p>
+		<p>Thank you for contacting us at Circle Blvd. This form will send us an email,
+        and we'll get back to you as soon as possible.</p>
+
+        <input class="form-control" type="text" ng-model="subject" placeholder="Email subject"/>
+        <textarea class="form-control" ng-model="text" rows="9"/>
+
+        <button class="btn btn-default" ng-click="sendEmail()">Send</button>
+        <span class="message">&nbsp; {{emailStatus}}</span>
 	</div>
 </div>
 

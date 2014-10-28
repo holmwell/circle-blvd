@@ -73,6 +73,7 @@ function InitializeCtrl($scope, $location, $http) {
 		data.admin  = $scope.user;
 		data.ssl    = $scope.ssl;
 		data.smtp   = $scope.smtp;
+		data.contact = $scope.contact;
 		data.stripe = $scope.stripe;
 
 		$http.put('/data/initialize', data)

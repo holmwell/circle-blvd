@@ -295,7 +295,6 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 					&& path !== '/sponsor'
 					&& path !== '/donate'
 					&& path !== '/about'
-					&& path !== '/contact'
 					&& path !== '/privacy'
 					&& path !== '/invite'
 					&& path.indexOf('/invite') !== 0) {

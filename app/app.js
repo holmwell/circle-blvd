@@ -17,6 +17,7 @@ var notify = require('./lib/notify.js');
 var sslServer = require('./lib/https-server.js');
 var payment   = require('./lib/payment.js')();
 var settings  = require('./lib/settings.js');
+var contact   = require('./lib/contact-emailer.js');
 
 var usersRoutes = require('./routes/users');
 var userRoutes  = require('./routes/user');
@@ -90,6 +91,18 @@ var defineRoutes = function () {
 
     // Search engine things
     app.get('/sitemap.txt', routes.sitemap);
+
+    app.post("/data/contact", ensure.auth, function (req, res) {
+        var envelope = req.body;
+        var user = req.user;
+        if (user.notifications && user.notifications.email) {
+            envelope.from = user.notifications.email;
+        }
+        else {
+            envelope.from = email;
+        }
+        contact.sendEmail(envelope, handle(res)); 
+    });
 
     // User routes (account actions. requires login access)
     app.get("/data/user", ensure.auth, userRoutes.user);

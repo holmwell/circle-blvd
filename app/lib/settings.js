@@ -42,6 +42,14 @@ module.exports = function () {
 			value: uuid.v4(),
 			visibility: "secret"
 		},{
+			name: "contact-from-address",
+			value: null,
+			visibility: "private"
+		},{
+			name: "contact-to-address",
+			value: null,
+			visibility: "private"
+		},{
 			name: "smtp-login",
 			value: null,
 			visibility: "private"

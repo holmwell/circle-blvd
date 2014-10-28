@@ -1355,6 +1355,10 @@ label.relax {
   font-size: 36pt;
 }
 
+/* contact */
+.contact {
+  padding-bottom: 3ex;
+}
 
 /* invite */
 .invite.content {

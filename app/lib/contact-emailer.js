@@ -1,0 +1,86 @@
+//------------------------------------------------------------
+// contact-emailer.js
+//
+// ... you know, for emailing.
+
+var nodemailer = require('nodemailer');
+var settings = require('./data/settings');
+
+var transporter; 
+var addresses;
+
+var sendEmail = function (envelope, callback) {
+    
+    var initMailer = function (callback) { 
+        settings.getAll(function (err, settings) {
+            if (err) {
+                return callback(err);
+            }
+
+            var canProceed = (settings['smtp-service'] &&
+                settings['smtp-login'] &&
+                settings['smtp-password'] &&
+                settings['contact-from-address'] &&
+                settings['contact-to-address']);
+
+            if (!canProceed) {
+                var msg = "Server does not have email configured.";
+                var err = new Error(msg);
+                return callback(err);
+            }
+
+            var service = settings['smtp-service'].value;
+            var login = settings['smtp-login'].value;
+            var password = settings['smtp-password'].value;
+
+            transporter = nodemailer.createTransport("SMTP", {
+                service: service,
+                auth: {
+                    user: login,
+                    pass: password
+                }
+            });
+
+            addresses = {};
+            addresses.from = settings['contact-from-address'].value;
+            addresses.to = settings['contact-to-address'].value;
+
+            callback();
+        });
+    }
+
+    var send = function () {
+        var fromName = "Circle Blvd Contact Form"
+
+        var message = envelope.text;
+        var replyTo = envelope.from || "";
+        var subject = envelope.subject || "(no subject)";
+
+        var from = fromName + " <" + addresses.from + ">";
+        var to   = addresses.to;
+
+        var mail = {
+            text:    message, 
+            from:    from, 
+            replyTo: replyTo,
+            to:      to,
+            subject: subject
+        };
+
+        transporter.sendMail(mail, callback);
+    };
+
+    if (transporter && addresses) {
+        send();
+    }
+    else {
+        initMailer(function (err) {
+            if (err) {
+                return callback(err);
+            }
+            send();
+        });
+    }
+};
+
+exports.sendEmail = sendEmail;
