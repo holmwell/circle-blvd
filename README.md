@@ -4,7 +4,7 @@ For groups of people to get on the same page, Circle Blvd is for managing tasks,
 
 This software is free, and it runs on Mac, Linux, and Windows. You can install it on your own computer, using instructions below as a guide, or you can create an account on [https://circleblvd.org](https://circleblvd.org), which is also free, supported by donations of happy members.
 
-Documentation is at [https://circleblvd.org/#/docs](https://circleblvd.org/#/docs). Have fun! 
+A self-guided tour is at [https://circleblvd.org/#/tour](https://circleblvd.org/#/tour). Have fun! 
 
 
 running on AWS
@@ -19,7 +19,7 @@ running for fun
 If you can run CouchDB on your system, you can run Circle Blvd. 
 
 ### Prerequisites
-1. Node >= 0.8
+1. Node >= 0.10
 2. CouchDB >= 1.0
 
 ### Installation
@@ -40,7 +40,7 @@ might like to know:
 
 ### Testing
 
-        npm test
+    npm test
 
 Uses `nodeunit` for now.
 
@@ -48,7 +48,9 @@ Uses `nodeunit` for now.
 There is an assume-it-all-works deployment outline here: [https://gist.github.com/exclsr/ab5b674d6d15b335d60f][2]
 
 ### License
-BSD, 2-clause. See the LICENSE.txt file for details.
+BSD, 2-clause. See the LICENSE.txt file for details. 
+
+The privacy policy is under a [Creative Commons Sharealike](https://creativecommons.org/licenses/by-sa/2.5/) license.
 
 [1]: https://gist.github.com/exclsr/6cd72c7815e0ea1ab74e "Running"
 [2]: https://gist.github.com/exclsr/ab5b674d6d15b335d60f "Deploy"
