@@ -78,6 +78,14 @@ directive('autosize', ['$timeout', function ($timeout) {
 				// gets fired before things are ready to be
 				// resized.
 				elem.autosize();
+
+				// Trigger a resize when the model value is
+				// changed to "" or something equivalent.
+				scope.$watch(attr.ngModel, function (newVal) {
+					if (!newVal) {
+						elem.trigger('autosize.resize');
+					}
+				});
 			});
 		}
 	};
