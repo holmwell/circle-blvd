@@ -903,8 +903,6 @@ app.configure(function() {
         .addJs('lib/angular/angular-route.js')
         .addJs('lib/angular/angular-sanitize.js')
         .addJs('lib/store/store.min.js')
-        .addJs('lib/yui/dd-dependencies.js')
-        .addJs('lib/yui/dd.js')
         .addJs('lib/autosize/jquery.autosize.min.js')
         .addJs('lib/typeahead/0.10.2.js');
 
