@@ -884,10 +884,15 @@ app.configure(function() {
     app.set('ssl-port', process.env.SSL_PORT || 4000);
     app.set('views', __dirname + '/views');
     app.set('view engine', 'ejs');
-    app.use(forceHttps);
     // TODO: canonicalDomain will not work for the first request
     // after the settings are changed.
+    //
+    // Canonical domain needs to be before https, otherwise 
+    // a browser will try to use the canonical https certificate
+    // to connect to the non-canonical domain
     app.use(canonicalDomain);
+    app.use(forceHttps);
+    
     app.use(express.compress());
 
     // for minifying JavaScript
