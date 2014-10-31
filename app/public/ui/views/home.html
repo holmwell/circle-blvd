@@ -8,14 +8,14 @@
 </div>
 
 <div class="entry-facade no-select" ng-hide="isAddingNew || isBacklogBroken">
-	<div class="row entry-facade-container">
+	<div class="clearfix entry-facade-container">
 		<div class="col-xs-12 debug show-entry alignWithStoryList"
 			ng-class="{
 				'col-sm-7': isMindset('roadmap'),
 				'col-sm-offset-2': !isMindset('roadmap'),
 				'col-sm-8': !isMindset('roadmap')
-			}">
-		+ <a ng-click="showEntry()" class="jsLink text-select">Add task</a>
+			}">			
+				+ <a ng-click="showEntry()" class="jsLink text-select">Add task</a>
 		</div>
 	</div>
 </div>

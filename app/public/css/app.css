@@ -481,6 +481,7 @@ h4, h5 {
 .entry-facade-container {
   padding: 0;
   margin-bottom: 1ex;
+  margin-right: 0.5ex;
 }
 .show-entry {
   padding: 0.5ex;
