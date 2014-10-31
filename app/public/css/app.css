@@ -1063,12 +1063,19 @@ label.relax {
   padding-right: 2ex;
 }
 
+.signin .tour {
+  background-color: #ddd;
+  width: 100%;
+  float: left;
+  margin-top: 3.5em;
+  padding-bottom: 2.5em;
+}
+
 .signin .free {
   background-color: gold;
   width: 100%;
   float: left;
 
-  margin-top: 3.5em;
   padding-bottom: 2.5em;
 }
 .signin .free a {

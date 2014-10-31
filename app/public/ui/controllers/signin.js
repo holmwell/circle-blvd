@@ -179,7 +179,7 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 		"id": "1",
 		"nextId": "2",
 		"isFirstStory": true,
-		"summary": "Circle Blvd is for groups of 3-10 people",
+		"summary": "Best for groups of 3 to 10 people",
 		"description": "Hi! This is the first story in this story-list " +
 		"demonstration. Please stomp around and see what this thing can " +
 		"do.",
@@ -190,7 +190,7 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 		},
 		"comments": [
 		  {
-			"text": "A bigger demo is at http://circleblvd.org/#/docs. :-)",
+			"text": "A bigger demo is at http://circleblvd.org/#/tour. :-)",
 			"createdBy": {
 			  "name": "Phil",
 			},
@@ -205,10 +205,8 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 		"id": "2",
 		"nextId": "3",
 		"owner": me,
-		"summary": "Manage tasks, keep track of progress, and know what's up",
-		"description": "These things are called 'stories' because, well, we " +
-		"don't know why. However, 'tasks' sounds a bit boring, don't you " +
-		"think?",
+		"summary": "Manage tasks, track progress, plan ahead",
+		"description": "It's true!",
 		"status": "",
 		"createdBy": {
 		  "name": "Phil",
@@ -217,7 +215,7 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 	  "3": {
 		"id": "3",
 		"nextId": "4",
-		"summary": "Made for volunteer organizations",
+		"summary": "Made for volunteer organizations, clubs and meetups",
 		"status": "",
 		"description": "Mileposts can be useful if things need to be " + 
 		"done before or after a specific event.",
@@ -226,10 +224,11 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 	  "4": {
 		"id": "4",
 		"nextId": "5",
-		"summary": "Plan, focus, and relax",
+		"summary": "#Free to try out",
 		"description": "What needs to be done before your next meeting? " +
-		"Move this special story to bring your team's focus to the top of " + 
-		"your story list.",
+		"Move this special task to bring your team's focus to the top of " + 
+		"your list.",
+		labels: ['Free'],
 		"isNextMeeting": true,
 	  },
 	  "5": {
