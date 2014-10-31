@@ -184,6 +184,25 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 		}
 	};
 
+	$scope.isOwnerInCircle = function (owner) {
+		if (!owner) {
+			return false;
+		}
+
+		owner = owner.trim();
+		// TODO: If this becomes a performance issue, 
+		// which could be possible with many stories
+		// and many owners, maybe make a table of owners.
+		var owners = $scope.owners || [];
+		for (var index in owners) {
+			if (owners[index] === owner) {
+				return true;
+			}
+		}
+
+		return false;
+	};
+
 	$scope.isNotificationEnabled = function () {
 		if (session.settings && session.settings['smtp-enabled'].value) {
 			return true;
