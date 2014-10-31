@@ -859,7 +859,7 @@ var canonicalDomain = function (req, res, next) {
     }
 
     var url = req.protocol + "://" + redirectToHost + req.originalUrl;
-    res.redirect(301, url);
+    res.redirect(307, url);
 };
 
 var getCookieSettings = function () {
