@@ -283,23 +283,34 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 				session.save();
 			})
 			.error(function (data, status, headers, config) {
-				if ($scope.isSignedIn()) {
-					$scope.signOut();	
+				if (status === 401) {
+					// TODO: This is not cool.
+					if (path === '/signin' 
+						|| path === '/docs'
+						|| path === '/tour'
+						|| path.indexOf('/tour') === 0
+						|| path === '/sponsor'
+						|| path === '/donate'
+						|| path === '/about'
+						|| path === '/privacy'
+						|| path === '/invite'
+						|| path.indexOf('/invite') === 0) {
+						// We're fine. 
+					}
+					else {
+						// We need to be signed in to access
+						// whatever page we're at, but we're
+						// not, so redirect to the signin page.
+						$scope.signOut();
+					}
 				}
-
-				// TODO: This is not cool.
-				if (path !== '/signin' 
-					&& path !== '/docs'
-					&& path !== '/tour'
-					&& path.indexOf('/tour') !== 0
-					&& path !== '/sponsor'
-					&& path !== '/donate'
-					&& path !== '/about'
-					&& path !== '/privacy'
-					&& path !== '/invite'
-					&& path.indexOf('/invite') !== 0) {
-					$scope.signOut();
-				}
+				else {
+					// Either the server timed out or something bad.
+					// Either way, we don't know who is signed in.
+					// However, if we get here, there will likely
+					// be a bunch of other errors in the system, so
+					// let them be handled elsewhere.
+				}				
 			});
 		});	
 
