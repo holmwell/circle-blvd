@@ -737,6 +737,11 @@ module.exports = function () {
 				return failure(err);
 			}
 
+			// If the owner changes, she has not been notified.
+			if (storyToSave.owner !== story.owner) {
+				storyToSave.isOwnerNotified = false;
+			}
+
 			storyToSave.summary = story.summary;
 			storyToSave.owner = story.owner;
 			storyToSave.status = story.status || "";

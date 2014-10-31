@@ -380,6 +380,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		stories.set(story.id, storyToSave, function (savedStory) {
 			story.newComment = undefined;
 			story.comments = savedStory.comments;
+			story.isOwnerNotified = savedStory.isOwnerNotified;
 		});
 	});
 
