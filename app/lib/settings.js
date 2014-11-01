@@ -38,6 +38,10 @@ module.exports = function () {
 			value: 1000,
 			visibility: "private"
 		},{
+			name: "limit-archives-per-circle",
+			value: 10000,
+			visibility: "private"
+		},{
 			name: "limit-total-members",
 			value: 5000,
 			visibility: "private"

@@ -545,19 +545,21 @@ var defineRoutes = function () {
     app.put("/data/story/archive", ensure.auth, function (req, res) {
         var story = req.body;
         ensure.isCircle(story.projectId, req, res, function () {
-            var stories = [];
-            stories.push(story);
+            limits.archives(story.projectId, guard(res, function () {
+                var stories = [];
+                stories.push(story);
 
-            db.archives.addStories(stories, 
-            function (body) {
-                // TODO: If this breaks then we have a data
-                // integrity issue, because we have an archive
-                // of a story that has not been deleted.
-                removeStory(story, res);
-            }, 
-            function (err) {
-                errors.handle(err, res);
-            });
+                db.archives.addStories(stories, 
+                function (body) {
+                    // TODO: If this breaks then we have a data
+                    // integrity issue, because we have an archive
+                    // of a story that has not been deleted.
+                    removeStory(story, res);
+                }, 
+                function (err) {
+                    errors.handle(err, res);
+                });
+            }));
         });
     });
 
