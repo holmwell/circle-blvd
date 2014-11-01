@@ -705,7 +705,7 @@ var defineRoutes = function () {
         db.users.addMembership(account, circleId, callback);
     };
 
-    app.post("/data/signup/invite", function (req, res) {
+    app.post("/data/signup/invite", limits.users.total, function (req, res) {
         var data = req.body;
         var proposedAccount = data.account;
         var invite = data.invite;
@@ -733,7 +733,7 @@ var defineRoutes = function () {
     });
 
 
-    app.post("/data/signup/now", limits.circle, function (req, res) {
+    app.post("/data/signup/now", limits.circle, limits.users.total, function (req, res) {
         var data = req.body;
         var proposedAccount = {
             name: data.name,

@@ -33,6 +33,33 @@ module.exports = function () {
 		}
 	};
 
+	var checkMemberLimit = function (req, res, next) {
+		checkLimit(next);
+
+		function checkLimit (callback) {
+			db.settings.getAll(guard(res, function (settings) {
+				checkSettings(settings, callback);
+			}));
+		}
+
+		function checkSettings(settings, callback) {
+			if (!settings['limit-total-members']) {
+				// No limit!
+				return callback(); 
+			}
+
+			var limit = settings['limit-total-members'].value;
+			db.users.count(guard(res, function (count) {
+				if (count >= limit) {
+					res.send(403, "Sorry, our computers have reached their member creation limit," +
+						" and nobody can join the site at this time.");
+					return;
+				}
+				return callback();
+			}));
+		}
+	};
+
 	var checkUserCircleLimit = function (req, res, next) {
 		db.circles.countByUser(req.user, guard(res, function (count) {
 			// TODO: Put this hard-coded value into the settings.
@@ -103,6 +130,7 @@ module.exports = function () {
 	return {
 		circle: checkCircleLimit, // TODO: Move into 'server' obj
 		users: {
+			total: checkMemberLimit,
 			circle: checkUserCircleLimit, 
 			story: checkUserStoryLimit  // TODO: Move into 'circle' obj
 		}

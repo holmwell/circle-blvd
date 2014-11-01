@@ -38,6 +38,10 @@ module.exports = function () {
 			value: 1000,
 			visibility: "private"
 		},{
+			name: "limit-total-members",
+			value: 5000,
+			visibility: "private"
+		},{
 			name: 'session-secret',
 			value: uuid.v4(),
 			visibility: "secret"
