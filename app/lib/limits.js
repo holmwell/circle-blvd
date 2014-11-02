@@ -183,9 +183,67 @@ module.exports = function () {
 		}
 	};
 
+
+	// TODO: Combine with the code above
+	var checkListLimit = function (circleId, next) {
+		
+		checkListLimit(next);
+
+		function getCircle (callback) {
+			db.docs.get(circleId, function (err, circle) {
+				if (err) {
+					return callback(err);
+				}
+
+				if (circle.type !== "circle") {
+					return callback("Sorry, the circleId specified is not a circle.");
+				}
+
+				callback(null, circle);
+			});
+		}
+
+		function checkListLimit (callback) {
+			async.parallel([db.settings.getAll, getCircle], function (err, results) {
+				if (err) {
+					return callback(err);
+				}
+				var settings = results[0];
+				var circle = results[1];
+				checkSettings(settings, circle, callback);
+			});
+		}
+
+		function checkSettings(settings, circle, callback) {
+			if (!settings['limit-lists-per-circle'] || !circle.isAnonymous) {
+				// No limit!
+				return callback(); 
+			}
+
+			var limit = settings['limit-lists-per-circle'].value;
+			db.archives.countByCircleId(circleId, function (err, count) {
+				if (err) {
+					return callback(err);
+				}
+				if (count >= limit) {
+					// TODO: Add validation-specific instructions, after 
+					// we have an account validation mechanism.
+					var message = "Sorry, this circle has reached its list-creation limit," +
+						" and no more can be made at the moment.";
+
+					var error = new Error(message);
+					error.status = 403;
+					return callback(error);
+				}
+				return callback();
+			});
+		}
+	};
+
 	return {
 		circle: checkCircleLimit, // TODO: Move into 'server' obj
 		archives: checkArchiveLimit,
+		lists: checkListLimit,
 		users: {
 			total: checkMemberLimit,
 			circle: checkUserCircleLimit, 

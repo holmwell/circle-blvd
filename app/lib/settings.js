@@ -42,6 +42,10 @@ module.exports = function () {
 			value: 10000,
 			visibility: "private"
 		},{
+			name: "limit-lists-per-circle",
+			value: 150,
+			visibility: "private"
+		},{
 			name: "limit-total-members",
 			value: 5000,
 			visibility: "private"

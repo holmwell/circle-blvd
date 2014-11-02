@@ -357,7 +357,10 @@ var defineRoutes = function () {
             description: req.body.description,
             circleId: req.params.circleId
         };
-        db.lists.add(list, handle(res));
+
+        limits.lists(list.circleId, guard(res, function () {
+            db.lists.add(list, handle(res));    
+        }));
     });
 
     app.get("/data/:circleId/lists", ensure.circle, function (req, res) {
