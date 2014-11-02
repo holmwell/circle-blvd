@@ -1,8 +1,9 @@
-CircleBlvd.Services.errors = function ($rootScope, $http) {
+CircleBlvd.Services.errors = function ($rootScope, $http, analytics) {
 
 	var logError = function (data, status) {
 		console.log(data);
 		console.log(status);
+		analytics.trackError(status);
 	};
 
 	var handleError = function (data, status) {
@@ -19,4 +20,4 @@ CircleBlvd.Services.errors = function ($rootScope, $http) {
 		log: logError
 	};
 };
-CircleBlvd.Services.errors.$inject = ['$rootScope', '$http'];
+CircleBlvd.Services.errors.$inject = ['$rootScope', '$http', 'analytics'];

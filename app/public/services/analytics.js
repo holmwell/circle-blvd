@@ -15,9 +15,16 @@ CircleBlvd.Services.analytics = function ($window, $location) {
 		}
 	};
 
+	var trackError = function (status) {
+		if ($window.ga) {
+			$window.ga('send', 'event', 'error', status);
+		}
+	};
+
 	return {
 		trackPage: trackPage,
-		trackEvent: trackEvent
+		trackEvent: trackEvent,
+		trackError: trackError
 	};
 };
 CircleBlvd.Services.analytics.$inject = ['$window', '$location'];
