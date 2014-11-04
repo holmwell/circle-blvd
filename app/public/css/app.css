@@ -137,7 +137,7 @@
   position: absolute;
   top: 0;
   right: 2ex;
-  width: 75px;
+  width: 70px;
   height: 110px;
   /*border-right: dashed 1px #ddd;*/
 
@@ -167,8 +167,16 @@
 
 .mindset-element {
   position: fixed;
-  width: 55px;
+  padding-right: 3px;
+  width: 60px;
+  z-index: 10;
 }
+.mindset-element-detailed {
+  padding-top: 30px;
+  width: 30px;
+  z-index: 100;
+}
+
 .mindset-element .label {
   color: #999;
   float: right;

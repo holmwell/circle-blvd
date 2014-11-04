@@ -113,34 +113,34 @@
 
 <div class="container-fluid main debug">
   <div class="header clearfix debug ng-cloak" ng-if="isSignedIn()" ng-hide="!isHeaderVisible">
-    <div class="mindset-container hidden-xs">
-      <div class="mindset-element">
-        <span class="glyphicon invisible"></span>
+    <div class="mindset-container hidden-xs debug">
+      <div class="mindset-element mindset-element-detailed debug">
+        <span ng-click="setMindset('detailed')" 
+          ng-class="{ 'selected-mindset': isMindset('detailed') }"
+          ng-mouseenter="setMindsetLabel('')"
+          class="glyphicon glyphicon-move debug"></span>
+      </div>
 
+      <div class="mindset-element debug">
         <span ng-click="setMindset('bump')" 
           ng-mouseenter="setMindsetLabel('What\'s Next')"
           ng-mouseleave="setMindsetLabel('')"
           ng-class="{ 'selected-mindset': isMindset('bump') }"
-          class="glyphicon glyphicon-chevron-up right"></span>
+          class="glyphicon glyphicon-chevron-up right debug"></span>
               
-        <span ng-click="setMindset('detailed')" 
-          ng-class="{ 'selected-mindset': isMindset('detailed') }"
-          ng-mouseenter="setMindsetLabel('')"
-          class="glyphicon glyphicon-move"></span>
-
         <span ng-click="setMindset('mine')" 
           ng-class="{ 'selected-mindset': isMindset('mine') }"
           ng-mouseenter="setMindsetLabel('Status Update')"
           ng-mouseleave="setMindsetLabel('')"
-          class="glyphicon glyphicon-record right"></span>
+          class="glyphicon glyphicon-record right debug"></span>
 
         <span ng-click="setMindset('roadmap')"
           ng-class="{ 'selected-mindset': isMindset('roadmap') }" 
           ng-mouseenter="setMindsetLabel('Roadmap')"
           ng-mouseleave="setMindsetLabel('')"
-          class="glyphicon glyphicon-road right"></span>
+          class="glyphicon glyphicon-road right debug"></span>
 
-        <div class="label">{{mindsetLabel}}</div>
+        <div class="label debug">{{mindsetLabel}}</div>
       </div>
     </div>
     <!--
