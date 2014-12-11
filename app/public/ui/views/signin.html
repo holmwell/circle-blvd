@@ -4,6 +4,7 @@
 		<div class="col-sm-offset-2 col-sm-8">
 			<form>
 				<h4>Welcome.</h4>
+				<p>Sign in here, or create an account at the bottom of this page.</p>
 				<div><input type="text" ng-model="user.email" placeholder="Email address" class="form-control"/></div>
 				<div><input type="password" ng-model="user.password" placeholder="Password" class="form-control"/></div>
 				<div class="actionRow">
@@ -44,29 +45,29 @@
 	<div class="tour">
 		<div class="col-sm-offset-2 col-sm-8 clear signin-section">
 			<h4>Take a tour.</h4>
-			<p>Look closer. Play around. 
-			<span class="glyphicon glyphicon-play"></span> 
-			<a href="/#/tour">Take an interactive tour</a>.</p>
+			<p><span class="glyphicon glyphicon-play"></span> 
+			<a href="/#/tour">Take an interactive tour</a>, where we go beyond
+			the 90-second introductory video, above, and outline the main components of Circle Blvd.</p>
 		</div>
 	</div>
 
 	<div class="free">
 		<div class="col-sm-offset-2 col-sm-8 clear signin-section">
-			<h4>Do what you want, pay what you want.</h4>
+			<h4>Try for free.</h4>
 			<p>Add as many members to your group as you need. 
-			Circle Blvd is free, for as long as you see fit. If you enjoy using 
-			the site, you can <a href="/#/sponsor">sponsor development</a> 
-			to encourage improvements and help open the site to more people.</p>
+			Circle Blvd is free to try.</p>
 
-			<p>As the site is free, we only have room for a few groups at this time.</p> 
+			<p>If your group enjoys using 
+			the site, you can <a href="/#/sponsor">sponsor development</a> 
+			to encourage improvements and help share the site with more people.</p>
 		</div>
 	</div>
 
-	<div class="signup">
+	<div class="signup" id="create-account">
 		<form>
 			<div class="col-sm-offset-2 col-sm-8 clear signin-section">
 				<h4>Start today.</h4>
-				<p>To get started, we just need a name for your team, a signin address,
+				<p>To get started, we need a name for your team, a sign-in address,
 					and a name that people in your group will recognize you by.</p>
 				<label for="signupCircleName" class="sr-only">What's the name of your circle?</label>
 				<div><input id="signupCircleName" type="text" ng-model="signup.circle" placeholder="Circle or group name" class="form-control"/></div>
