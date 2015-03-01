@@ -1,8 +1,26 @@
 circle blvd.
 ===============
-For groups of people to get on the same page, Circle Blvd is for managing tasks, keeping track of progress, and knowing who is doing what in your group projects. The suggested group size is 3-10 people, but there is no practical limit to the number of accounts.
+Circle Blvd 1.0 is a task management tool, made for teams of 3-12 people. 
 
-This software is free, and it runs on Mac, Linux, and Windows. You can install it on your own computer, using instructions below as a guide, or you can create an account on [https://circleblvd.org](https://circleblvd.org), which is also free, supported by donations of happy members.
+Circle Blvd supports:
+ * Multiple projects
+ * Unlimited user accounts 
+ * Task lists, assignments, status updates, comments
+ * Drag-and-drop prioritization
+ * One-line task entry, multiple-line entry
+ * Email notifications
+ * Reusable checklists
+ * Roadmap planning
+ * Archiving
+ * Admin management
+ * Sponsorship payments from members
+ * HTTPS
+
+This software is free, and it runs on Mac, Linux, and Windows. You can install it on your own computer, using instructions below as a guide, or you can create an account on [https://circleblvd.org](https://circleblvd.org), which is also free, supported by donations.
+
+Circle Blvd is accessible on desktop computers, tablets, and phones (tested on Android and iOS devices).
+
+Circle Blvd is perhaps best for clubs and boards of directors. It was initially created for the Corvallis Swing Dance Society, a volunteer organization that hosts 3-4 events each month, with a weekly board meeting.
 
 A self-guided tour is at [https://circleblvd.org/#/tour](https://circleblvd.org/#/tour). Have fun! 
 
