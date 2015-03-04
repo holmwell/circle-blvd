@@ -23,10 +23,11 @@ sudo ln -s /usr/bin/nodejs /usr/local/bin/node
 cd 
 mkdir repos && cd repos
 git clone https://github.com/secret-project/circle-blvd
-cd circle-blvd/app/
+cd circle-blvd/server/
 sudo npm install --production
 
 # put the app in the deploy folder
 cd 
-mkdir -p apps/circle-blvd
-cp -R repos/circle-blvd/app/* apps/circle-blvd
+mkdir -p apps/circle-blvd/web/public
+cp -R repos/circle-blvd/server/* apps/circle-blvd/server
+cp -R repos/circle-blvd/web/public/* apps/circle-blvd/web/public
