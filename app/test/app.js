@@ -330,15 +330,14 @@ test['Adding second story to member circle'] = function (test) {
 	});
 };
 
-// Add a third story
-test['Adding third story to member circle'] = function (test) {
+var addStoryToTop = function (summary, user, session, test, callback) {
 	var story = {
-		summary: "A third story",
-		projectId: memberSession.circle._id,
-		nextId: memberSession.firstStory.id
+		summary: summary,
+		projectId: session.circle._id,
+		nextId: session.firstStory.id
 	};
 
-	member
+	user
 	.post('/data/story/')
 	.send(story)
 	.expect(200)
@@ -346,9 +345,20 @@ test['Adding third story to member circle'] = function (test) {
 		test.ifError(err);
 		memberSession.story = res.body;
 		memberSession.firstStory = memberSession.story;
-		memberSession.storyToEdit = memberSession.story;
-		console.log(memberSession.firstStory);
 		test.equal(memberSession.story.summary, story.summary);
+		if (callback) {
+			callback(res.body);
+		}
+		else {
+			test.done();
+		}
+	});
+}
+
+// Add a third story
+test['Adding third story to member circle'] = function (test) {
+	addStoryToTop("A third story", member, memberSession, test, function (story) {
+		memberSession.storyToEdit = story;
 		test.done();
 	});
 };
@@ -391,24 +401,7 @@ test["Remove story is 204"] = function (test) {
 
 // Add a fourth story
 test['Adding fourth story to member circle'] = function (test) {
-	var story = {
-		summary: "A fourth story",
-		projectId: memberSession.circle._id,
-		nextId: memberSession.firstStory.id
-	};
-
-	member
-	.post('/data/story/')
-	.send(story)
-	.expect(200)
-	.end(function (err, res) {
-		test.ifError(err);
-		memberSession.story = res.body;
-		memberSession.firstStory = memberSession.story;
-		console.log(memberSession.firstStory);
-		test.equal(memberSession.story.summary, story.summary);
-		test.done();
-	});
+	addStoryToTop("A fourth story", member, memberSession, test);
 };
 
 // Archive story
