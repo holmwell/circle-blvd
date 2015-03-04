@@ -129,6 +129,21 @@ test['GET /data/circles'] = function (test) {
 	});
 };
 
+test['Initial circle contains stories'] = function (test) {
+	admin
+	.get('/data/' + adminSession.circle._id + '/stories')
+	.expect(200)
+	.expect(function (res) {
+		var stories = res.body;
+		var storyCount = 0;
+		for (var key in stories) {
+			storyCount++;
+		}
+		test.ok(storyCount > 0, "contains initial stories");
+	})
+	.end(finish(test));
+};
+
 test['GET /data/:circleId/groups is 200'] = function (test) {
 	admin
 	.get('/data/' + adminSession.circle._id + '/groups')
@@ -222,6 +237,7 @@ test['GET /data/:circleId/stories is 200'] = function (test) {
 		var containsNewStory = false;
 		for (var key in stories) {
 			if (memberSession.story._id === stories[key].id) {
+				console.log(stories[key].summary);
 				containsNewStory = true;
 			}
 		}
@@ -262,6 +278,7 @@ test['New circle has some stories in it'] = function (test) {
 	.end(finish(test));
 };
 
+
 test['New circle has a first story'] = function (test) {
 	member.get('/data/' + memberSession.circle._id + '/first-story')
 	.expect(200)
@@ -290,6 +307,52 @@ var checkFirstStory = function (oldFirstStory, test) {
 	}
 	return fn;
 }
+
+// Add a story
+test['Adding second story to member circle'] = function (test) {
+	var story = {
+		summary: "A second story",
+		projectId: memberSession.circle._id,
+		nextId: memberSession.firstStory.id
+	};
+
+	member
+	.post('/data/story/')
+	.send(story)
+	.expect(200)
+	.end(function (err, res) {
+		test.ifError(err);
+		memberSession.story = res.body;
+		memberSession.firstStory = memberSession.story;
+		console.log(memberSession.firstStory);
+		test.equal(memberSession.story.summary, story.summary);
+		test.done();
+	});
+};
+
+// Add a third story
+test['Adding third story to member circle'] = function (test) {
+	var story = {
+		summary: "A third story",
+		projectId: memberSession.circle._id,
+		nextId: memberSession.firstStory.id
+	};
+
+	member
+	.post('/data/story/')
+	.send(story)
+	.expect(200)
+	.end(function (err, res) {
+		test.ifError(err);
+		memberSession.story = res.body;
+		memberSession.firstStory = memberSession.story;
+		memberSession.storyToEdit = memberSession.story;
+		console.log(memberSession.firstStory);
+		test.equal(memberSession.story.summary, story.summary);
+		test.done();
+	});
+};
+
 
 // Move story
 test["Move story is 200"] = function (test) {
@@ -324,6 +387,28 @@ test["Remove story is 204"] = function (test) {
 	.send(memberSession.firstStory)
 	.expect(204)
 	.end(checkFirstStory(memberSession.firstStory, test));
+};
+
+// Add a fourth story
+test['Adding fourth story to member circle'] = function (test) {
+	var story = {
+		summary: "A fourth story",
+		projectId: memberSession.circle._id,
+		nextId: memberSession.firstStory.id
+	};
+
+	member
+	.post('/data/story/')
+	.send(story)
+	.expect(200)
+	.end(function (err, res) {
+		test.ifError(err);
+		memberSession.story = res.body;
+		memberSession.firstStory = memberSession.story;
+		console.log(memberSession.firstStory);
+		test.equal(memberSession.story.summary, story.summary);
+		test.done();
+	});
 };
 
 // Archive story
@@ -363,9 +448,9 @@ test['Archives can be counted'] = function (test) {
 	.end(finish(test));
 };
 
-// Update story
+// // Update story
 test["Update story is 200"] = function (test) {
-	var story = memberSession.firstStory;
+	var story = memberSession.storyToEdit;
 	story.summary += " summary!";
 	story.description += " description!";
 	story.owner += " owner!";
@@ -393,17 +478,17 @@ test["Update story is 200"] = function (test) {
 				}
 			}
 			test.ok(commentFound, "comment found");
-			memberSession.firstStory = saved;
+			memberSession.storyToEdit = saved;
 		})
 		.end(finish(test));
 	}
 };
 
-// Add comment
+// // Add comment
 test["Save comment is 200"] = function (test) {
 	var data = {
 		circleId: memberSession.circle._id,
-		storyId: memberSession.firstStory.id,
+		storyId: memberSession.storyToEdit.id,
 		comment: "comment for testing"
 	};
 
@@ -426,15 +511,14 @@ test["Save comment is 200"] = function (test) {
 				}
 			}
 			test.ok(commentFound, "comment found");
-			memberSession.firstStory = saved;
+			memberSession.storyToEdit = saved;
 		})
 		.end(finish(test));
 	}
 };
 
 // Archives, again
-var ignore = {};
-ignore['Archives can be paged'] = function (test) {
+test['Archives can be paged'] = function (test) {
 	var storiesToArchive = undefined;
 	var allArchives = undefined;
 	var archivesUrl = "/data/" + memberSession.circle._id + "/archives";
