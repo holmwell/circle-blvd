@@ -8,11 +8,16 @@ mkdir -p $WORK_DIR
 GIT_WORK_TREE=${WORK_DIR} git checkout -f
  
 # Get dependencies
-cd ${WORK_DIR}/app
+cd ${WORK_DIR}/server
 npm install --production
  
 # Move into production, precariously
 rm -r ${DEPLOY_DIR}/*
 # Move dotfiles, too
 shopt -s dotglob nullglob
-mv ${WORK_DIR}/app/* ${DEPLOY_DIR}
+
+mkdir -p ${DEPLOY_DIR}/web/public
+mkdir -p ${DEPLOY_DIR}/server
+
+mv ${WORK_DIR}/server/* ${DEPLOY_DIR}/server
+mv ${WORK_DIR}/web/public/* ${DEPLOY_DIR}/web/public
