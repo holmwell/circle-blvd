@@ -1,0 +1,17 @@
+These are instructions for setting up Circle Blvd on an Amazon EC2 instance running Ubuntu, or really any Ubuntu server you are happy with. 
+
+It assumes the default user account is 'ubuntu' (created by the AMI).
+
+Directions:
+
+0. Create an EC2 instance using Amazon Web Services
+--> AMI: Ubuntu Server 14 (free tier)
+--> Security group: Add HTTP, HTTPS, and SSH rules
+--> ssh into it with your key pair
+1. Copy circle-blvd.conf to /etc/init/circle-blvd.conf
+2. Copy setup.sh to ~/setup.sh
+3. sh ./setup.sh
+4. Agree to some things.
+5. sudo start circle-blvd
+
+5. That's it!

@@ -1,0 +1,18 @@
+#!/bin/bash
+ 
+DEPLOY_DIR=/home/ubuntu/apps/circle-blvd
+WORK_DIR=/home/ubuntu/working/circle-blvd
+mkdir -p $WORK_DIR
+ 
+# Throw away local changes
+GIT_WORK_TREE=${WORK_DIR} git checkout -f
+ 
+# Get dependencies
+cd ${WORK_DIR}/app
+npm install --production
+ 
+# Move into production, precariously
+rm -r ${DEPLOY_DIR}/*
+# Move dotfiles, too
+shopt -s dotglob nullglob
+mv ${WORK_DIR}/app/* ${DEPLOY_DIR}

@@ -1,0 +1,7 @@
+Contents:
+
+./amazon-ec2: 
+    Instructions for installing Circle Blvd on an Ubuntu EC2 instance.
+    
+./git-hook: 
+    Instructions for setting up a git-push deploy mechanism on your Ubuntu server.
