@@ -428,7 +428,8 @@ test["Save comment is 200"] = function (test) {
 };
 
 // Archives, again
-test['Archives can be paged'] = function (test) {
+var ignore = {};
+ignore['Archives can be paged'] = function (test) {
 	var storiesToArchive = undefined;
 	var allArchives = undefined;
 	var archivesUrl = "/data/" + memberSession.circle._id + "/archives";
