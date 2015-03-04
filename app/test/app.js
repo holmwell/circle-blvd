@@ -47,10 +47,15 @@ test['database setup'] = function (test) {
 };
 
 // Initialize
-test['GET / is 302'] = function (test) {
+test['GET / is 200 or 302'] = function (test) {
 	request(unit)
 	.get('/')
-	.expect(302)
+	.expect(function (res) {
+		if (res.status === 200 || res.status === 302) {
+			return;
+		}
+		return "Unexpected status code";
+	})
 	.end(finish(test));
 };
 
