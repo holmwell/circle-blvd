@@ -44,7 +44,7 @@ If you can run Apache CouchDB on your system, you can run Circle Blvd.
 2. Do the standard command prompt things:
 
         git clone https://github.com/secret-project/circle-blvd.git
-        cd circle-blvd/app/
+        cd circle-blvd/server/
         npm install --production
         node server.js
   
