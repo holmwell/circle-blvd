@@ -900,11 +900,14 @@ app.configure(function() {
     
     app.use(express.compress());
 
+    var staticPath = path.join(__dirname, '../web/public');
+    var minJsPath = '/_js/';
+
     // for minifying JavaScript
     var compact = compactModule.createCompact({
-        srcPath: __dirname + '/public/',
-        destPath: __dirname + '/public/_js/',
-        webPath: '/_js/',
+        srcPath: staticPath,
+        destPath: path.join(staticPath, minJsPath),
+        webPath: minJsPath,
         debug: false
     });
 
@@ -956,7 +959,7 @@ app.configure(function() {
         .addJs('main/filters.js')
         .addJs('main/directives.js')
 
-    app.use(express.static(path.join(__dirname, 'public')));
+    app.use(express.static(staticPath));
     app.use(compact.middleware([
         'lib', 
         'app', 

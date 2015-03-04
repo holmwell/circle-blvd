@@ -24,4 +24,4 @@ results
 node_modules
 npm-debug.log
 
-app/public/_js
+web/public/_js
