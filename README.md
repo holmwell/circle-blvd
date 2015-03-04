@@ -34,11 +34,11 @@ as a daemon, please find a quickstart here:
 
 running for fun
 ----------------
-If you can run CouchDB on your system, you can run Circle Blvd. 
+If you can run Apache CouchDB on your system, you can run Circle Blvd. 
 
 ### Prerequisites
 1. Node >= 0.10
-2. CouchDB >= 1.0
+2. CouchDB >= 1.3
 
 ### Installation
 1. Install and start CouchDB
