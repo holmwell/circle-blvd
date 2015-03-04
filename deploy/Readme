@@ -5,3 +5,5 @@ Contents:
     
 ./git-hook: 
     Instructions for setting up a git-push deploy mechanism on your Ubuntu server.
+
+For backing up the database, check out the backup-couchdb-to-s3 module.
