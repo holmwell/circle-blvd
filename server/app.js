@@ -46,9 +46,9 @@ var guard = errors.guard;
 var handle = function (res) {
     var fn = guard(res, function (data) {
         if (!data) {
-            return res.send(204); // no content
+            return res.status(204).send(); // no content
         }
-        res.send(200, data);
+        res.status(200).send(data);
     }); 
     return fn;
 };
@@ -148,7 +148,7 @@ var defineRoutes = function () {
         var circleId = req.params.circleId;
         var member = req.body;
         if (!member.groups) {
-            res.send(400);
+            res.status(400).send();
             return;
         }
 
@@ -192,7 +192,7 @@ var defineRoutes = function () {
             }
 
             invalidateSettingsCache();
-            res.send(200);
+            res.status(200).send();
         };
 
         db.settings.update(data, guard(res, onSettingsUpdate));;
@@ -216,7 +216,7 @@ var defineRoutes = function () {
 
         if (!circleName) {
             var message = "A 'name' property is required, for naming the circle.";
-            return res.send(400, message);
+            return res.status(400).send(message);
         }
 
         db.circles.create(circleName, user.email, handle(res));
@@ -229,7 +229,7 @@ var defineRoutes = function () {
         if (!admin.email) {
             var message = "An email address for an administrative user " +
                 "is required when making a circle.";
-            return res.send(400, message);
+            return res.status(400).send(message);
         }
 
         db.circles.create(circle.name, admin.email, handle(res));
@@ -315,7 +315,7 @@ var defineRoutes = function () {
 
     //  db.groups.remove(group, 
     //      function () {
-    //          res.send(200);
+    //          res.status(200).send();
     //      },
     //      function (err) {
     //          errors.handle(err, res);
@@ -355,7 +355,7 @@ var defineRoutes = function () {
     app.get("/data/:circleId/archives/count", ensure.circle, function (req, res) {
         var circleId = req.params.circleId;
         db.archives.countByCircleId(circleId, guard(res, function (count) {
-            res.send(200, count.toString());
+            res.status(200).send(count.toString());
         }));
     });
 
@@ -468,7 +468,7 @@ var defineRoutes = function () {
                     };
                     notify.newComment(params, req); 
                 }
-                res.send(200, savedStory);
+                res.status(200).send(savedStory);
             },
             function (err) {
                 errors.handle(err, res);
@@ -493,13 +493,13 @@ var defineRoutes = function () {
         // circleId, storyId, comment
         var data = req.body;
         if (!data.circleId || !data.storyId || !data.comment) {
-            return res.send(400, "Missing circleId, storyId or comment.");
+            return res.status(400).send("Missing circleId, storyId or comment.");
         }
 
         ensure.isCircle(data.circleId, req, res, function () {
             db.docs.get(data.storyId, guard(res, function (story) {
                 if (story.projectId !== data.circleId) {
-                    return res.send(400);
+                    return res.status(400).send();
                 }
 
                 story.newComment = getComment(data.comment, req);
@@ -511,17 +511,17 @@ var defineRoutes = function () {
     app.get("/data/story/:storyId", ensure.auth, function (req, res) {
         var storyId = req.params.storyId;
         if (!storyId) {
-            return res.send(400, "Story id required.");
+            return res.status(400).send("Story id required.");
         }
 
         db.docs.get(storyId, guard(res, function (story) {
             if (!story || story.type !== "story") {
-                return res.send(400, "Story not found");
+                return res.status(400).send("Story not found");
             }
 
             var circleId = story.projectId;
             ensure.isCircle(circleId, req, res, function () {
-                res.send(200, story);
+                res.status(200).send(story);
             });
         }));
     });
@@ -533,7 +533,7 @@ var defineRoutes = function () {
         ensure.isCircle(story.projectId, req, res, function () {
             story.nextId = newNextId;
             db.stories.fix(story, function (response) {
-                res.send(200, response);
+                res.status(200).send(response);
             },
             function (err) {
                 errors.handle(err, res);
@@ -636,7 +636,7 @@ var defineRoutes = function () {
     app.put('/payment/subscribe/cancel', ensure.auth, function (req, res) {
         var user = req.user;
         if (!user.subscription) {
-            return res.send(204);
+            return res.status(204).send();
         }
 
         payment.unsubscribe(user, handle(res));
@@ -690,16 +690,16 @@ var defineRoutes = function () {
     var acceptInvitation = function (res, invite, callback) {
         db.groups.findImpliedByCircleId(invite.circleId, guard(res, function (group) {
             if (!group) {
-                res.send(400, "Could not find implied group for invite.");
+                res.status(400).send("Could not find implied group for invite.");
                 return;
             }
             db.invites.get(invite._id, guard(res, function (dbInvite) {
                 if (!dbInvite) {
-                    res.send(404);
+                    res.status(404).send();
                     return;
                 }
                 if (dbInvite.count <= 0) {
-                    res.send(403);
+                    res.status(403).send();
                     return;
                 }
                 db.invites.accept(dbInvite, guard(res, function () {
@@ -978,6 +978,7 @@ var configureApp = function() {
     ]));
     app.use(logger('dev'));
     app.use(cookieParser()); // TODO: Signed cookies?
+    app.use(bodyParser.urlencoded({ extended: false }));
     app.use(bodyParser.json());
     app.use(methodOverride()); // TODO: What do we use this for?
 
