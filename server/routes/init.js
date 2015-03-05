@@ -127,7 +127,7 @@ exports.init = function (req, res, app) {
 	};
 
 	var handleOptionalError = function (err) {
-		res.send(500, {
+		res.status(500).send({
 			code: 2,
 			error: err
 		});
@@ -141,11 +141,11 @@ exports.init = function (req, res, app) {
 	};
 
 	var onSuccess = function() {
-		res.send(200);
+		res.sendStatus(200);
 	};
 
 	var onError = function (err) {
-		res.send(500, {
+		res.status(500).send({
 			code: 1,
 			error: err
 		});

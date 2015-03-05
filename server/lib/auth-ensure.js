@@ -7,13 +7,13 @@ var ensureAuthenticated = function (req, res, next) {
 	if (req.isAuthenticated()) {
 		return next();
 	}
-	res.send(401, "Please authenticate with the server and try again.");
+	res.status(401).send("Please authenticate with the server and try again.");
 };
 
 
 var ensureIsCircle = function (circleId, req, res, next) {
 	var nope = function () {
-		res.send(403, "User is not in the " + circleId + " circle.")
+		res.status(403).send("User is not in the " + circleId + " circle.")
 	}
 
 	if (req.user.memberships) {
@@ -31,7 +31,7 @@ var ensureIsCircle = function (circleId, req, res, next) {
 var ensureCircleAccess = function (req, res, next) {
 	var circleId = req.params.circleId;
 	if (!circleId) {
-		return res.send(400, "Circle ID is required.");
+		return res.status(400).send("Circle ID is required.");
 	}
 
 	ensureAuthenticated(req, res, function () {
@@ -42,7 +42,7 @@ var ensureCircleAccess = function (req, res, next) {
 
 var ensureIsCircleAdmin = function (circleId, req, res, next) {
 	var nope = function () {
-		res.send(403, "User is not in the " + circleId + " circle.")
+		res.status(403).send("User is not in the " + circleId + " circle.")
 	}
 
 	if (req.user.memberships) {
@@ -61,7 +61,7 @@ var ensureIsCircleAdmin = function (circleId, req, res, next) {
 var ensureAdminCircleAccess = function (req, res, next) {
 	var circleId = req.params.circleId;
 	if (!circleId) {
-		return res.send(400, "Circle ID is required.");
+		return res.status(400).send("Circle ID is required.");
 	}
 
 	ensureAuthenticated(req, res, function () {
@@ -72,7 +72,7 @@ var ensureAdminCircleAccess = function (req, res, next) {
 
 var ensureIsGroup = function (groupName, req, res, next) {
 	var nope = function () {
-		res.send(403, "User is not in the " + groupName + " group.")
+		res.status(403).send("User is not in the " + groupName + " group.")
 	}
 
 	if (req.user.memberships) {

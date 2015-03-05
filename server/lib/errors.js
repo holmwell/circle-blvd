@@ -10,7 +10,7 @@ module.exports = function () {
 		var message = err.message || "Internal server error";
 		var status = err.status || 500;
 		logError(err);
-		res.send(status, message);
+		res.status(status).send(message);
 	};
 
 	// Useful for guarding callbacks. For example,

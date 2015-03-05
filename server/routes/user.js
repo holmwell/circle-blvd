@@ -13,12 +13,12 @@ var basicChecks = function (req, res, next) {
 
 	if (req.user.id !== data.id) {
 		var message = "It doesn't appear that you own the account you are trying to modify.";
-		return res.send(412, message);
+		return res.status(412).send(message);
 	}
 
 	if (req.user.isReadOnly) {
 		var message = "Sorry, the details of this account cannot be changed.";
-		return res.send(403, message);
+		return res.status(403).send(message);
 	}
 
 	next();
@@ -26,12 +26,12 @@ var basicChecks = function (req, res, next) {
 
 exports.updateName = function (req, res) {
 	var onSuccess = function () {
-		res.send(200);
+		res.sendStatus(200);
 	};
 
 	var onError = function (err) {
 		console.log(err);
-		res.send(500, err);
+		res.status(500).send(err);
 	};
 
 	basicChecks(req, res, function () {
@@ -43,11 +43,11 @@ exports.updateName = function (req, res) {
 
 exports.updateEmail = function (req, res) {
 	var onSuccess = function () {
-		res.send(200);
+		res.sendStatus(200);
 	};
 
 	var onError = function (err) {
-		res.send(500, err);
+		res.status(500).send(err);
 	};
 	
 	basicChecks(req, res, function () {
@@ -59,12 +59,12 @@ exports.updateEmail = function (req, res) {
 
 exports.updateNotificationEmail = function (req, res) {
 	var onSuccess = function () {
-		res.send(200);
+		res.sendStatus(200);
 	};
 
 	var onError = function (err) {
 		console.log(err);
-		res.send(500, "Sorry, the website is broken right now.");
+		res.status(500).send("Sorry, the website is broken right now.");
 	};
 	
 	basicChecks(req, res, function () {
@@ -84,19 +84,19 @@ exports.updatePassword = function (req, res) {
 
 	if (req.user.isReadOnly) {
 		var message = "Sorry, the details of this account cannot be changed.";
-		return res.send(403, message);
+		return res.status(403).send(message);
 	}
 
 	if (!data.password) {
-		return res.send(400, "Missing password field.");
+		return res.status(400).send("Missing password field.");
 	}
 
 	var onSuccess = function () {
-		res.send(200);
+		res.sendStatus(200);
 	};
 
 	var onError = function (err) {
-		res.send(500, err);
+		res.status(500).send(err);
 	};
 
 	db.users.updatePassword(req.user, data.password, onSuccess, onError);

@@ -25,7 +25,7 @@ var createServer = function(middleware) {
 	}
 
 	app.use(function (req, res) {
-		res.send(200);
+		res.sendStatus(200);
 	});
 	return app;
 };

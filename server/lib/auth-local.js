@@ -18,7 +18,7 @@ var authenticateLocal = function(req, res, next) {
 			if (err) {
 				errors.log(err);
 			}
-			res.send(200, publicUser);
+			res.status(200).send(publicUser);
 		});
 	};
 
@@ -35,11 +35,11 @@ var authenticateLocal = function(req, res, next) {
 				if (err) {
 					errors.log(err);
 				}
-				res.send(code, message);
+				res.status(code).send(message);
 			});
 		}
 		else {
-			res.send(code, message);			
+			res.status(code).send(message);			
 		}
 	};
 
@@ -49,7 +49,7 @@ var authenticateLocal = function(req, res, next) {
 
 var signout = function (req, res) {
 	req.logout();
-	res.send(204); // no content
+	res.sendStatus(204); // no content
 };
 
 var attach = function (app) {
