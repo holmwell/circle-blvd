@@ -5,7 +5,16 @@ var http    = require('http');
 var path    = require('path');
 var routes  = require('./routes');
 
-var compactModule = require('compact');
+// express middleware
+var compression    = require('compression');
+var serveStatic    = require('serve-static');
+var logger         = require('morgan');
+var cookieParser   = require('cookie-parser');
+var bodyParser     = require('body-parser');
+var methodOverride = require('method-override');
+var expressSession = require('express-session');
+
+var compactModule = require('compact-exclsr');
 
 var auth   = require('./lib/auth-local.js');
 var ensure = require('./lib/auth-ensure.js');
@@ -884,7 +893,7 @@ var getCookieSettings = function () {
 };
 
 // configure Express
-app.configure(function() {
+var configureApp = function() {
     app.set('port', process.env.PORT || 3000);
     app.set('ssl-port', process.env.SSL_PORT || 4000);
     app.set('views', __dirname + '/views');
@@ -898,7 +907,7 @@ app.configure(function() {
     app.use(canonicalDomain);
     app.use(forceHttps);
     
-    app.use(express.compress());
+    app.use(compression());
 
     var staticPath = path.join(__dirname, '../web/public');
     var minJsPath = '/_js/';
@@ -959,7 +968,7 @@ app.configure(function() {
         .addJs('main/filters.js')
         .addJs('main/directives.js')
 
-    app.use(express.static(staticPath));
+    app.use(serveStatic(staticPath));
     app.use(compact.middleware([
         'lib', 
         'app', 
@@ -967,16 +976,16 @@ app.configure(function() {
         'controllers', 
         'main'
     ]));
-    app.use(express.logger('dev'));
-    app.use(express.cookieParser());
-    app.use(express.bodyParser());
-    app.use(express.methodOverride());
+    app.use(logger('dev'));
+    app.use(cookieParser()); // TODO: Signed cookies?
+    app.use(bodyParser.json());
+    app.use(methodOverride()); // TODO: What do we use this for?
 
     var initSettingsOk = function (settings) {
         var sessionSecret = settings['session-secret'].value;
-        var SessionStore = couchSessionStore(express.session);
+        var SessionStore = couchSessionStore(expressSession);
         var cookieSettings = getCookieSettings();
-        app.use(express.session({ 
+        app.use(expressSession({ 
             store: new SessionStore(),
             secret: sessionSecret,
             cookie: cookieSettings
@@ -994,7 +1003,7 @@ app.configure(function() {
         app.use(appSettings);
         
         // Routes
-        app.use(app.router);
+        defineRoutes();
         // Catch errors
         app.use(function (err, req, res, next) {
             if (err) {
@@ -1002,7 +1011,6 @@ app.configure(function() {
             }
             // TODO: Should not get here.
         });
-        defineRoutes();
         ready();
     };
 
@@ -1014,7 +1022,7 @@ app.configure(function() {
             initSettingsOk(settings);
         }
     });
-});
+}(); // closure
 
 function ready() {
     isReady = true;
