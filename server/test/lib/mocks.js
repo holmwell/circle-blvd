@@ -1,7 +1,7 @@
 // mocks.js
 var express = require('express');
 
-var createServer = function(middleware) {
+var createServer = function() {
 	var app = express();
 
 	// Assume we have a user
@@ -30,6 +30,20 @@ var createServer = function(middleware) {
 	return app;
 };
 
+var createEmpty = function() {
+	var app = express();
+
+	// Assume we have a user
+	var user = function (req, res, next) {
+		req.user = {};
+		req.user.memberships = [];
+		next();
+	};
+	app.use(user);
+	return app;
+};
+
+
 var errors = function () {
 	var doNothing = function () {
 		// nothing!
@@ -45,6 +59,7 @@ var errors = function () {
 
 module.exports = function () {
 	return {
+		empty: createEmpty,
 		server: createServer,
 		errors: errors
 	}
