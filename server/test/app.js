@@ -294,6 +294,10 @@ test['New circle has a first story'] = function (test) {
 var checkFirstStory = function (oldFirstStory, test) {
 	var fn = function (err) {
 		test.ifError(err);
+		if (err) {
+			test.done();
+			return;
+		}
 
 		member.get('/data/' + memberSession.circle._id + '/first-story')
 		.expect(200)
@@ -413,6 +417,10 @@ test["Archive story is 204"] = function (test) {
 
 	function checkArchive(err) {
 		test.ifError(err);
+		if (err) {
+			test.done();
+			return;
+		}
 
 		member.get('/data/' + memberSession.circle._id + '/archives')
 		.expect(200)
@@ -456,6 +464,10 @@ test["Update story is 200"] = function (test) {
 
 	function checkStory(err) {
 		test.ifError(err);
+		if (err) {
+			test.done();
+			return;
+		}
 
 		member.get('/data/story/' + story.id)
 		.expect(200)
@@ -492,6 +504,10 @@ test["Save comment is 200"] = function (test) {
 
 	function checkStory(err) {
 		test.ifError(err);
+		if (err) {
+			test.done();
+			return;
+		}
 
 		member.get('/data/story/' + data.storyId)
 		.expect(200)
@@ -525,6 +541,10 @@ test['Archives can be paged'] = function (test) {
 
 	function archiveStories(err) {
 		test.ifError(err);
+		if (err) {
+			test.done();
+			return;
+		}
 		
 		var archiveStory = function (story) {
 			var fn = function (callback) {
@@ -562,6 +582,10 @@ test['Archives can be paged'] = function (test) {
 
 	function checkLimitedArchives(err) { 
 		test.ifError(err);
+		if (err) {
+			test.done();
+			return;
+		}
 		member.get(archivesUrl)
 		.query({ limit: '2' })
 		.expect(200)
@@ -771,6 +795,11 @@ test['Save settings is 200'] = function (test) {
 
 	function saveSetting (err) {
 		test.ifError(err);
+		if (err) {
+			test.done();
+			return;
+		}
+
 		var settingToSave = undefined;
 		for (var key in settings) {
 			if (settings[key].name === data.name) {
@@ -788,6 +817,10 @@ test['Save settings is 200'] = function (test) {
 
 	function checkSetting(err) {
 		test.ifError(err);
+		if (err) {
+			test.done();
+			return;
+		}
 		admin.get('/data/settings/authorized')
 		.expect(200)
 		.expect(function (res) {
