@@ -96,6 +96,7 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 	$scope.setActiveCircle = function (circle, refreshPage) {
 		session.activeCircle = circle._id;
 		session.save();
+		$scope.$broadcast("circleChanged", circle._id);
 		if (refreshPage) {
 			$location.path("/");
 			$route.reload();

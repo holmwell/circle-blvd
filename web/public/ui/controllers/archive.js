@@ -1,7 +1,7 @@
 'use strict';
 
 function ArchivesCtrl(session, $scope, $http, $filter, errors) {
-	var projectId = session.activeCircle;
+	var projectId = undefined;
 	var selectedArchive = undefined;
 	var perPageLimit = 251;
 	var totalArchivesCount = 0;
@@ -94,7 +94,12 @@ function ArchivesCtrl(session, $scope, $http, $filter, errors) {
 		return false;
 	};
 
-	var init = function () {
+	$scope.$on("circleChanged", function () {
+		init();
+	});
+
+	function init() {
+		projectId = session.activeCircle;
 		var archivesUrl = getArchivesUrl(projectId, perPageLimit); 
 
 		$http.get(archivesUrl)

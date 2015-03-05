@@ -28,9 +28,13 @@ var payment   = require('./lib/payment.js')();
 var settings  = require('./lib/settings.js');
 var contact   = require('./lib/contact-emailer.js');
 
+// Routes
 var usersRoutes = require('./routes/users');
 var userRoutes  = require('./routes/user');
 var initRoutes  = require('./routes/init');
+
+// Express 4.x routes
+var archives = require('./routes/archives');
 
 var couchSessionStore = require('./lib/couch-session-store.js');
 
@@ -95,6 +99,8 @@ var tryToCreateHttpsServer = function (callback) {
 };
 
 var defineRoutes = function () {
+    app.use('/archives', archives.router(app));
+
     app.post('/auth/signin', auth.signin);
     app.get('/auth/signout', auth.signout);
 
@@ -896,8 +902,12 @@ var getCookieSettings = function () {
 var configureApp = function() {
     app.set('port', process.env.PORT || 3000);
     app.set('ssl-port', process.env.SSL_PORT || 4000);
+    
     app.set('views', __dirname + '/views');
-    app.set('view engine', 'ejs');
+    app.set('view engine', 'jade');
+
+    app.engine('ejs', require('ejs').__express);
+    
     // TODO: canonicalDomain will not work for the first request
     // after the settings are changed.
     //

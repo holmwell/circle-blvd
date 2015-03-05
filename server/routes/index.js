@@ -26,7 +26,7 @@ exports.index = function renderIndex(req, res, app) {
 		version: version,
 		analyticsId: analyticsId
 	};
-	res.render('index', params);
+	res.render('index.ejs', params);
 };
 
 exports.sitemap = function renderSitemap(req, res) {
