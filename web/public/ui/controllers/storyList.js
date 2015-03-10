@@ -189,6 +189,53 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		highlightedStories.push(story);
 	});
 
+	$scope.$on('keyDownArrow', function (e) {
+		if (highlightedStories.length === 0) {
+			return;
+		}
+
+		// Move the highlighted story down one
+		var story = highlightedStories.pop();
+		var nextStory = stories.get(story.nextId);
+
+		if (nextStory) {
+			story.isHighlighted = false;
+			nextStory.isHighlighted = true;
+			highlightedStories.push(nextStory);
+		}
+		else {
+			// Revert if we're at the bottom
+			highlightedStories.push(story);
+		}
+
+		e.preventDefault();
+	});
+
+	$scope.$on('keyUpArrow', function (e) {
+		if (highlightedStories.length === 0) {
+			return;
+		}
+
+		// Move the highlighted story up one
+		var story = highlightedStories.pop();
+		var previousStory = stories.getPrevious(story, stories.get(story.id));
+
+		if (previousStory) {
+			story.isHighlighted = false;
+			previousStory.isHighlighted = true;
+			highlightedStories.push(previousStory);
+		}
+		else {
+			// Revert if we're at the top
+			highlightedStories.push(story);
+		}
+
+		e.preventDefault();
+	});
+
+
+
+
 	$scope.$on('beforeStorySelected', function (e) {
 		// Deselect the story that was selected previously
 		if (selectedStory) {

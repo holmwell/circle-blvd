@@ -47,6 +47,13 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 		if (e.keyCode === 52) { // "4"
 			$scope.setMindset('mine');
 		}
+
+		if (e.keyCode === 38) { // up arrow
+			$scope.$broadcast('keyUpArrow', e);
+		}
+		if (e.keyCode === 40) { // down arrow
+			$scope.$broadcast('keyDownArrow', e);
+		}
 	};
 
 	$scope.keyup = function (e) {
