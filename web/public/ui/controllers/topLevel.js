@@ -24,6 +24,10 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 	};
 
 	$scope.keydown = function(e) {
+		if (e.keyCode === 27) { // esc
+			$scope.$broadcast('keyEscape', e);
+		}
+
 		if (e.target.type === "textarea" ||
 			e.target.type === "text" ||
 			e.target.type === "email" ||
@@ -48,11 +52,15 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 			$scope.setMindset('mine');
 		}
 
+		// Keys for interacting with the highlighted story
 		if (e.keyCode === 38) { // up arrow
 			$scope.$broadcast('keyUpArrow', e);
 		}
 		if (e.keyCode === 40) { // down arrow
 			$scope.$broadcast('keyDownArrow', e);
+		}
+		if (e.keyCode === 13) { // enter key
+			$scope.$broadcast('keyEnter', e);
 		}
 	};
 

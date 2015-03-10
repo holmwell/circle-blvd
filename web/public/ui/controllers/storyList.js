@@ -177,12 +177,16 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		}
 	});
 
-	$scope.$on('beforeStoryHighlighted', function (e) {
-		// Only allow one story to be highlighted for now.
+	var unhighlightAllStories = function () {
 		while (highlightedStories.length > 0) {
 			var story = highlightedStories.pop();
 			story.isHighlighted = false;
 		}
+	}
+
+	$scope.$on('beforeStoryHighlighted', function (e) {
+		// Only allow one story to be highlighted for now.
+		unhighlightAllStories();
 	});
 
 	$scope.$on('storyHighlighted', function (e, story) {
@@ -190,7 +194,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	});
 
 	$scope.$on('keyDownArrow', function (e) {
-		if (highlightedStories.length === 0) {
+		if (selectedStory || highlightedStories.length === 0) {
 			return;
 		}
 
@@ -212,7 +216,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	});
 
 	$scope.$on('keyUpArrow', function (e) {
-		if (highlightedStories.length === 0) {
+		if (selectedStory || highlightedStories.length === 0) {
 			return;
 		}
 
@@ -233,7 +237,30 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		e.preventDefault();
 	});
 
+	$scope.$on('keyEnter', function (e) {
+		if (highlightedStories.length === 0) {
+			return 0;
+		}
+		// Open / select the highlighted story
+		var story = highlightedStories[0];
 
+		$scope.$emit('beforeStorySelected', story);
+		story.isSelected = true;
+		$scope.$emit("storySelected", story);
+	});
+
+	$scope.$on('keyEscape', function (e) {
+		if (selectedStory) {
+			// Close / deselect the story
+			// TODO: Revert changes to the story, which needs
+			// to happen when 'hide details' is clicked, too.
+			selectedStory.isSelected = false;
+			$scope.$emit('storyDeselected', selectedStory);			
+		}
+		else {
+			unhighlightAllStories();
+		}
+	});
 
 
 	$scope.$on('beforeStorySelected', function (e) {

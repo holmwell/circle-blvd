@@ -130,29 +130,18 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 			// TODO: Should this 'isHighlighted' change be here?
 			// This might be better suited for a list operation?
 			// Or is this even what we want to happen?
-			story.isHighlighted = false;
+			// story.isHighlighted = false;
 			$scope.$emit('storySelected', story);
 		}	
 	};
 
 	$scope.highlight = function (story) {
+		// FYI: Stories will be highlighted when they are
+		// selected (opened). This is the desired behavior for now.
 		if (!story.isSelected) {
-			// When Angular handles a double-click, it handles 
-			// a click event just before it. So, when someone
-			// double-clicks a story to open it, the story is 
-			// also highlighted for a few milliseconds.
-			//
-			// In order to prevent this false highlight from
-			// occuring, we wait a small amount of time before
-			// applying the highlight, and confirm that the
-			// story is not being opened.
-			$timeout(function () {
-				if (!story.isSelected) {
-					$scope.$emit('beforeStoryHighlighted');
-					story.isHighlighted = true;
-					$scope.$emit('storyHighlighted', story);
-				}
-			}, 25);
+			$scope.$emit('beforeStoryHighlighted');
+			story.isHighlighted = true;
+			$scope.$emit('storyHighlighted', story);
 		}
 	}
 
