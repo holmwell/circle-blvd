@@ -642,6 +642,14 @@ h4, h5 {
   text-decoration: line-through;
 }
 
+.story {
+  border: solid 2px transparent;
+}
+
+.story.highlighted {
+  border: solid 2px #3994d0;
+}
+
 
 input:focus, 
 textarea:focus, 

@@ -38,9 +38,10 @@
 		'first-at-load': story.isFirstAtLoad,
 		deadline: story.isDeadline,
 		'next-meeting': story.isNextMeeting,
-		'after-meeting': story.isAfterNextMeeting
+		'after-meeting': story.isAfterNextMeeting,
+		highlighted: story.isHighlighted
 	}"
-	ng-click="select(story)">
+	ng-dblclick="select(story)" ng-click="highlight(story)">
 	<div ng-if="story.isSelected" class="text-select">
 		<form>
 			<div class="summary row">
@@ -233,7 +234,7 @@
 <div class="backlog-owner hidden-xs col-sm-2 debug no-select" 
 	ng-hide="isMindset('roadmap')"
 	ng-class="{'after': story.isAfterNextMeeting}"
-	ng-click="select(story)">
+	ng-dblclick="select(story)" ng-click="highlight(story)">
 	<span class="text-select">{{story.owner}}</span><span ng-show="isStoryNew(story)">?</span>
 	<div 
 		class="notify" 

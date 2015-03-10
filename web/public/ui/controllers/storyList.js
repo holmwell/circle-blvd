@@ -11,6 +11,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	var selectedLabels = [];
 	$scope.selectedLabels = selectedLabels;
 
+	var highlightedStories = [];
+
 	// HACK: Until we can figure out how to stop this properly,
 	// reload the page when this happens.
 	var handleHierarchyRequestErr = function (e) {
@@ -173,6 +175,18 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			$scope.stories = [];
 			$scope.mileposts = [];
 		}
+	});
+
+	$scope.$on('beforeStoryHighlighted', function (e) {
+		// Only allow one story to be highlighted for now.
+		while (highlightedStories.length > 0) {
+			var story = highlightedStories.pop();
+			story.isHighlighted = false;
+		}
+	});
+
+	$scope.$on('storyHighlighted', function (e, story) {
+		highlightedStories.push(story);
 	});
 
 	$scope.$on('beforeStorySelected', function (e) {
