@@ -204,8 +204,12 @@
 				<span class="new-status glyphicon glyphicon-gift"
 				ng-show="(isStoryNew(story) && isStoryMine(story))"></span>
 			</div>
-			<div class="text-select phone-summary col-xs-10">
+			<div class="text-select phone-summary col-xs-8">
 				<sp-story-summary/>
+			</div>
+			<div class="text-select col-xs-2 details-link" ng-show="story.isHighlighted">
+				<a class="subtle jsLink" ng-click="select(story)">
+					<span class="glyphicon glyphicon-arrow-right"></span>details</a>
 			</div>
 		</div>
 		

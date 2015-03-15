@@ -649,7 +649,16 @@ h4, h5 {
 .story.highlighted {
   border: solid 2px #3994d0;
 }
-
+.story .details-link .subtle {
+  color: #999;
+}
+.details-link {
+  text-align: right;
+  padding: 0;
+}
+.details-link .glyphicon {
+  padding-right: 0.5ex;
+}
 
 input:focus, 
 textarea:focus, 
