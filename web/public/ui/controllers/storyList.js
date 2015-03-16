@@ -202,7 +202,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	});
 
 	var isShiftDown = function () {
-		return $scope.keyboard && $scope.keyboard.isShiftDown;
+		var is = $scope.keyboard && 
+			$scope.keyboard.isShiftDown && 
+			!$scope.isClipboardActive;
+
+		return is;
 	};
 
 	// TODO: Refactor this junk
@@ -377,10 +381,24 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		}
 
 		highlightedStories.forEach(function (story) {
+			// TODO: Put in order? Maybe.
 			story.isInClipboard = true;
 			$scope.isClipboardActive = true;
 			clipboardStories.push(story);
 		});
+
+		// Only highlight the most recently highlighted story
+		var highlightedStory;
+		if (isHighlightingUp) { 
+			highlightedStory = highlightedStories[highlightedStories.length-1];
+		}
+		else {
+			highlightedStory = highlightedStories[0];
+		}
+
+		unhighlightAllStories();
+		highlightedStory.isHighlighted = true;
+		highlightedStories.push(highlightedStory);
 
 		event.preventDefault();
 	});
