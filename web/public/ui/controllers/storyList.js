@@ -168,6 +168,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			buildStoryList(newVal.firstStory, newVal.allStories);
 			buildMilepostList(storiesList);
 			$scope.nextMeeting = findNextMeeting();
+			// TODO: Might be cool to remember the highlighted
+			// stories across pages
+			if (highlightedStories.length === 0) {
+				var firstStory = stories.getFirst();
+				firstStory.isHighlighted = true;
+				highlightedStories.push(firstStory);
+			}
 		}
 		else {
 			circle = undefined;
@@ -232,7 +239,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 		// Move the highlighted story up one visible story
 		var story = highlightedStories.pop();
-		
+
 		var previousStory = stories.getPrevious(story, stories.get(story.id));
 		while (previousStory && $scope.shouldHideStory(previousStory)) {
 			previousStory = stories.getPrevious(previousStory, previousStory);
