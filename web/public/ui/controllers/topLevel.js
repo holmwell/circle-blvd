@@ -53,14 +53,14 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 		}
 
 		// Keys for interacting with the highlighted story
+		if (e.keyCode === 13) { // enter key
+			$scope.$broadcast('keyEnter', e);
+		}
 		if (e.keyCode === 38) { // up arrow
 			$scope.$broadcast('keyUpArrow', e);
 		}
 		if (e.keyCode === 40) { // down arrow
 			$scope.$broadcast('keyDownArrow', e);
-		}
-		if (e.keyCode === 13) { // enter key
-			$scope.$broadcast('keyEnter', e);
 		}
 	};
 

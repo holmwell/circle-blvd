@@ -193,7 +193,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		highlightedStories.push(story);
 	});
 
-	$scope.$on('keyDownArrow', function (e) {
+	$scope.$on('keyDownArrow', function (e, event) {
 		if (selectedStory || highlightedStories.length === 0) {
 			return;
 		}
@@ -206,16 +206,21 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			story.isHighlighted = false;
 			nextStory.isHighlighted = true;
 			highlightedStories.push(nextStory);
+
+			// Stop the window from the scrolling, and then scroll
+			// to the highlighted story
+			event.preventDefault();
+			var preventOpening = true;
+			var delay = 0;
+			scrollToStory(story.id, preventOpening, delay);
 		}
 		else {
 			// Revert if we're at the bottom
 			highlightedStories.push(story);
 		}
-
-		e.preventDefault();
 	});
 
-	$scope.$on('keyUpArrow', function (e) {
+	$scope.$on('keyUpArrow', function (e, event) {
 		if (selectedStory || highlightedStories.length === 0) {
 			return;
 		}
@@ -228,13 +233,19 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			story.isHighlighted = false;
 			previousStory.isHighlighted = true;
 			highlightedStories.push(previousStory);
+
+			// Stop the window from scrolling, and then scroll
+			// to the highlighted story
+			event.preventDefault();
+			var preventOpening = true;
+			var delay = 0;
+			var isMovingUp = true;
+			scrollToStory(story.id, preventOpening, delay, isMovingUp);
 		}
 		else {
 			// Revert if we're at the top
 			highlightedStories.push(story);
 		}
-
-		e.preventDefault();
 	});
 
 	$scope.$on('keyEnter', function (e) {
@@ -516,6 +527,51 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		}		
 	});
 
+
+	function scrollToStory (storyId, keepClosed, delay, isMovingUp) {
+		if (typeof delay === 'undefined') {
+			delay = 250;
+		}
+
+		storiesList.forEach(function (story, index) {
+			if (story.id === storyId) {
+				var scrollNow = function () {
+					var elementId = "#story-" + index;
+					var topMargin = 75;
+					if (isMovingUp) {
+						topMargin *= 2;
+					}
+					if (delay > 0) {
+						// Use jQuery to smooth-scroll to where we
+						// want to be.
+						$('html, body').animate({
+							scrollTop: $(elementId).offset().top - topMargin
+						}, delay);
+					}
+					else {
+						$('html, body').scrollTop($(elementId).offset().top - topMargin);
+					}
+	
+					if (!keepClosed) {
+						story.isSelected = true;
+						selectedStory = story;
+					}
+				};
+
+				// HACK: Wait for the ng-repeat element to
+				// populate itself. 250 milliseconds should
+				// be long enough for our needs.
+				$timeout(scrollNow, delay);
+
+				// If we ever want to do things the Angular way, 
+				// it's closer to this:
+				// 	$anchorScroll();
+				// 	$location.hash("story-" + index);
+			}
+		});
+	};
+
+
 	$scope.$on('scrollToStory', function (e, storyId) {
 		// Special stories
 		if (storyId === "next-meeting") {
@@ -525,33 +581,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				}
 			});
 		}
-
-		var scrollToStory = function () {
-			storiesList.forEach(function (story, index) {
-				if (story.id === storyId) {
-					// HACK: Wait for the ng-repeat element to
-					// populate itself. 250 milliseconds should
-					// be long enough for our needs.
-					$timeout(function () {
-						var elementId = "#story-" + index;
-						var topMargin = 75;
-						// Use jQuery to smooth-scroll to where we
-						// want to be.
-						$('html, body').animate({
-							scrollTop: $(elementId).offset().top - topMargin
-						}, 250);
-
-						story.isSelected = true;
-						selectedStory = story;
-					}, 250);
-
-					// If we ever want to do things the Angular way, 
-					// it's closer to this:
-					// 	$anchorScroll();
-					// 	$location.hash("story-" + index);
-				}
-			});
-		};
 
 		// TODO: Implications of listId
 		$http.get('/data/story/' + storyId)
@@ -568,7 +597,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				});				
 			}
 			else {
-				scrollToStory();
+				scrollToStory(storyId);
 			}
 		})
 		.error(function (data, status) {
