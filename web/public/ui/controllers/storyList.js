@@ -276,7 +276,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 
 	$scope.$on('keyCut', function (e, event) {
-		if (highlightedStories.length === 0) {
+		if (clipboardStories.length > 0 || highlightedStories.length === 0) {
 			return;
 		}
 
@@ -290,12 +290,24 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	});
 
 	$scope.$on('keyPaste', function (e, event) {
-		if (clipboardStories.length === 0) {
+		if (highlightedStories.length === 0 || clipboardStories.length === 0) {
 			return;
 		}
 
+		var nextStory = highlightedStories.pop();
+		nextStory.isHighlighted = false;
+
 		clipboardStories.forEach(function (story) {
 			story.isInClipboard = false;
+			moveStory(story, 
+				stories.get(story.id), 
+				stories.get(nextStory.id));
+
+			// TODO: Push whatever the new story from
+			// moveStory is, maybe, or find it in the
+			// UI and push that?
+			highlightedStories.push(story);
+			story.isHighlighted = true;
 		});
 		clipboardStories = [];
 		$scope.isClipboardActive = false;
@@ -341,29 +353,29 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		});
 	});
 
-	$scope.$on('storyMovedToTop', function (e, story) {
-		e.stopPropagation();
-		e.preventDefault();
-
-		var storyToMove = stories.get(story.id);
-		var nextMeeting = findNextMeeting();
-
-		if (storyToMove.id === nextMeeting.id) {
-			// Not possible, but whatever. Do nothing.
+	function moveStory (uiStory, storyToMove, nextStory) {
+		if (storyToMove.id === nextStory.id || storyToMove.nextId === nextStory.id) {
+			// Do nothing.
 			return;
 		}
 
 		// Update data model
 		// TODO: Refactor, to share the same code used below
 		var preMove = {
-			storyBefore: stories.getPrevious(story, storyToMove),
+			storyBefore: stories.getPrevious(uiStory, storyToMove),
 			storyAfter: stories.get(storyToMove.nextId)
 		};
 
 		var postMove = {
-			storyBefore: stories.getPrevious(nextMeeting, nextMeeting),
-			storyAfter: nextMeeting
+			storyBefore: stories.getPrevious(nextStory, nextStory),
+			storyAfter: nextStory
 		};
+
+		// If the moved story was the first story, the preMove.storyAfter
+		// is now the first story (if it exists).
+		if (stories.getFirst().id === storyToMove.id && preMove.storyAfter) {
+			stories.setFirst(preMove.storyAfter);
+		}
 
 		// We need to update 'nextId' of the following:
 		// 1. The story before the moved story, before it was moved.		
@@ -380,7 +392,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		}
 		
 		// 3. ...
-		storyToMove.nextId = nextMeeting.id;
+		storyToMove.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();
 
 		// Update view model
 		updateViewModelStoryOrder();
@@ -392,7 +404,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 		// Update server
 		$timeout(function() {
-			stories.move(storyToMove, nextMeeting, function (err, response) {
+			stories.move(storyToMove, nextStory, function (err, response) {
 				if (err) {
 					// We failed. Probably because of a data integrity issue
 					// on the server that we need to wait out. 
@@ -404,6 +416,16 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				}
 			});
 		}, 0);
+	}
+
+	$scope.$on('storyMovedToTop', function (e, story) {
+		e.stopPropagation();
+		e.preventDefault();
+
+		var storyToMove = stories.get(story.id);
+		var nextMeeting = findNextMeeting();
+
+		moveStory(story, storyToMove, nextMeeting);
 	});
 
 	var removeFromView = function (viewStory, serverStory) {
@@ -773,6 +795,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			errors.handle("Something unknown happened with the move. Need to refresh page.", "client");
 		}
 	};
+
 
 	//-------------------------------------------------------
 	// Drag and drop
