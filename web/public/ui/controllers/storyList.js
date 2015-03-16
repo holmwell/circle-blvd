@@ -269,9 +269,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			selectedStory.isSelected = false;
 			$scope.$emit('storyDeselected', selectedStory);			
 		}
-		else {
+		else if (!$scope.isClipboardActive) {
 			unhighlightAllStories();
 		}
+		// TODO: Un-cut the things.
 	});
 
 
@@ -592,7 +593,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 					var elementId = "#story-" + index;
 					var topMargin = 75;
 					if (isMovingUp) {
-						topMargin *= 2;
+						topMargin *= 2.5;
 					}
 					if (delay > 0) {
 						// Use jQuery to smooth-scroll to where we

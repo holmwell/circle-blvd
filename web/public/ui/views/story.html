@@ -50,7 +50,7 @@
 		deadline: story.isDeadline,
 		'next-meeting': story.isNextMeeting,
 		'after-meeting': story.isAfterNextMeeting,
-		highlighted: story.isHighlighted,
+		highlighted: story.isHighlighted && !isClipboardActive,
 		inClipboard: story.isInClipboard
 	}"
 	ng-dblclick="select(story)" ng-click="highlight(story)">

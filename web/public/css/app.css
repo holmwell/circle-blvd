@@ -665,6 +665,13 @@ h4, h5 {
   opacity: 0.3;
 }
 
+.paste-destination, .paste-destination:hover {
+  border: dashed goldenrod 1px;
+  background-color: white;
+  color: #333;
+}
+
+
 input:focus, 
 textarea:focus, 
 select:focus {
