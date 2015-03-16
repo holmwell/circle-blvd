@@ -199,9 +199,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			return;
 		}
 
-		// Move the highlighted story down one
+		// Move the highlighted story down one visible story
 		var story = highlightedStories.pop();
+
 		var nextStory = stories.get(story.nextId);
+		while (nextStory && $scope.shouldHideStory(nextStory)) {
+			nextStory = stories.get(nextStory.nextId);
+		}
 
 		if (nextStory) {
 			story.isHighlighted = false;
@@ -226,9 +230,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			return;
 		}
 
-		// Move the highlighted story up one
+		// Move the highlighted story up one visible story
 		var story = highlightedStories.pop();
+		
 		var previousStory = stories.getPrevious(story, stories.get(story.id));
+		while (previousStory && $scope.shouldHideStory(previousStory)) {
+			previousStory = stories.getPrevious(previousStory, previousStory);
+		}
 
 		if (previousStory) {
 			story.isHighlighted = false;
