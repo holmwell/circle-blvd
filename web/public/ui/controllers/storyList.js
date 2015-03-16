@@ -201,21 +201,59 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		highlightedStories.push(story);
 	});
 
+	var isShiftDown = function () {
+		return $scope.keyboard && $scope.keyboard.isShiftDown;
+	};
+
+	// TODO: Refactor this junk
+	var isHighlightingUp = false;
+
 	$scope.$on('keyDownArrow', function (e, event) {
 		if (selectedStory || highlightedStories.length === 0) {
 			return;
 		}
 
-		// Move the highlighted story down one visible story
-		var story = highlightedStories.pop();
+		if (highlightedStories.length === 1) {
+			isHighlightingUp = false;
+		}
+	
+		// If the shift key is pressed, add to the selection, 
+		// otherwise ... 
+		var recentStory;
+		if (isShiftDown()) {
+			if (!isHighlightingUp) {
+				// highlighting down ...
+				recentStory = highlightedStories[highlightedStories.length-1];
+			}
+			else {
+				// highlighting up ...
+				recentStory = highlightedStories.pop();
+				recentStory.isHighlighted = false;
 
-		var nextStory = stories.get(story.nextId);
+				// Stop the window from the scrolling, and then scroll
+				// to the highlighted story
+				event.preventDefault();
+				var preventOpening = true;
+				var delay = 0;
+				scrollToStory(recentStory.id, preventOpening, delay);
+				return;
+			}
+		}
+		else {
+			// Shift is not down.
+			// Move the highlighted story down one visible story
+			recentStory = highlightedStories.pop();
+			recentStory.isHighlighted = false;
+			unhighlightAllStories();
+		}
+
+		var nextStory = stories.get(recentStory.nextId);
+		//TODO: highlight blocks + labels
 		while (nextStory && $scope.shouldHideStory(nextStory)) {
 			nextStory = stories.get(nextStory.nextId);
 		}
 
 		if (nextStory) {
-			story.isHighlighted = false;
 			nextStory.isHighlighted = true;
 			highlightedStories.push(nextStory);
 
@@ -224,43 +262,85 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			event.preventDefault();
 			var preventOpening = true;
 			var delay = 0;
-			scrollToStory(story.id, preventOpening, delay);
+			scrollToStory(recentStory.id, preventOpening, delay);
+		}
+		else if (isShiftDown()) {
+			// Do nothing. We're at the bottom and shift is down.
 		}
 		else {
 			// Revert if we're at the bottom
-			highlightedStories.push(story);
+			recentStory.isHighlighted = true;
+			highlightedStories.push(recentStory);
 		}
 	});
+
 
 	$scope.$on('keyUpArrow', function (e, event) {
 		if (selectedStory || highlightedStories.length === 0) {
 			return;
 		}
 
-		// Move the highlighted story up one visible story
-		var story = highlightedStories.pop();
-
-		var previousStory = stories.getPrevious(story, stories.get(story.id));
-		while (previousStory && $scope.shouldHideStory(previousStory)) {
-			previousStory = stories.getPrevious(previousStory, previousStory);
+		if (highlightedStories.length === 1) {
+			isHighlightingUp = true;
 		}
 
-		if (previousStory) {
-			story.isHighlighted = false;
-			previousStory.isHighlighted = true;
-			highlightedStories.push(previousStory);
+		var recentStory;
+		if (isShiftDown()) {
+			if (isHighlightingUp) {
+				recentStory = highlightedStories[highlightedStories.length-1];
 
-			// Stop the window from scrolling, and then scroll
-			// to the highlighted story
+				var previousStory = 
+					stories.getPrevious(recentStory, stories.get(recentStory.id));
+				//TODO: highlight blocks + labels
+				while (previousStory && $scope.shouldHideStory(previousStory)) {
+					previousStory = 
+						stories.getPrevious(previousStory, stories.get(previousStory.id));
+				}
+
+				if (previousStory) {
+					previousStory.isHighlighted = true;
+					highlightedStories.push(previousStory);
+				}
+			}
+			else {
+				recentStory = highlightedStories.pop();
+				recentStory.isHighlighted = false;
+			}
+
 			event.preventDefault();
 			var preventOpening = true;
 			var delay = 0;
 			var isMovingUp = true;
-			scrollToStory(story.id, preventOpening, delay, isMovingUp);
+			scrollToStory(recentStory.id, preventOpening, delay, isMovingUp);
 		}
 		else {
-			// Revert if we're at the top
-			highlightedStories.push(story);
+			// Move the highlighted story up one visible story
+			var story = highlightedStories.pop();
+			story.isHighlighted = false;
+			unhighlightAllStories();
+
+			var previousStory = stories.getPrevious(story, stories.get(story.id));
+			while (previousStory && $scope.shouldHideStory(previousStory)) {
+				previousStory = stories.getPrevious(previousStory, previousStory);
+			}
+
+			if (previousStory) {
+				previousStory.isHighlighted = true;
+				highlightedStories.push(previousStory);
+
+				// Stop the window from scrolling, and then scroll
+				// to the highlighted story
+				event.preventDefault();
+				var preventOpening = true;
+				var delay = 0;
+				var isMovingUp = true;
+				scrollToStory(story.id, preventOpening, delay, isMovingUp);
+			}
+			else {
+				// Revert if we're at the top
+				story.isHighlighted = true;
+				highlightedStories.push(story);
+			}
 		}
 	});
 

@@ -64,7 +64,8 @@ directive('spStoryList', function () {
 			enableAltMode: '=',
 			mindset: '=',
 			isFacade: '=',
-			isChecklist: '='
+			isChecklist: '=',
+			keyboard: '='
 		}
 	}
 }).
