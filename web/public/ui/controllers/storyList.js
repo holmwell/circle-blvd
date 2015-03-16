@@ -12,6 +12,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	$scope.selectedLabels = selectedLabels;
 
 	var highlightedStories = [];
+	var clipboardStories = [];
 
 	// HACK: Until we can figure out how to stop this properly,
 	// reload the page when this happens.
@@ -272,6 +273,36 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			unhighlightAllStories();
 		}
 	});
+
+
+	$scope.$on('keyCut', function (e, event) {
+		if (highlightedStories.length === 0) {
+			return;
+		}
+
+		highlightedStories.forEach(function (story) {
+			story.isInClipboard = true;
+			$scope.isClipboardActive = true;
+			clipboardStories.push(story);
+		});
+
+		event.preventDefault();
+	});
+
+	$scope.$on('keyPaste', function (e, event) {
+		if (clipboardStories.length === 0) {
+			return;
+		}
+
+		clipboardStories.forEach(function (story) {
+			story.isInClipboard = false;
+		});
+		clipboardStories = [];
+		$scope.isClipboardActive = false;
+
+		event.preventDefault();
+	});
+
 
 
 	$scope.$on('beforeStorySelected', function (e) {

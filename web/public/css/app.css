@@ -602,7 +602,7 @@ h4, h5 {
   background-color: white;
 }
 
-.filter {
+.filter, .paste-destination, .paste-destination:hover {
   background-color: #1E69B5;
   color: white;
   padding-left: 3ex;
@@ -649,6 +649,7 @@ h4, h5 {
 .story.highlighted {
   border: solid 2px #3994d0;
 }
+
 .story .details-link .subtle {
   color: #999;
 }
@@ -658,6 +659,10 @@ h4, h5 {
 }
 .details-link .glyphicon {
   padding-right: 0.5ex;
+}
+
+.story.inClipboard {
+  opacity: 0.3;
 }
 
 input:focus, 

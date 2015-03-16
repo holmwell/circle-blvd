@@ -39,6 +39,13 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 		if (e.keyCode === 16) {
 			$scope.keyboard.isShiftDown = true;
 		}
+		if (e.keyCode === 224 || 
+			e.keyCode === 17 || 
+			e.keyCode === 91 || 
+			e.keyCode === 93) {
+			$scope.keyboard.isCommandDown = true;
+		}
+
 		if (e.keyCode === 49) { // "1"
 			$scope.setMindset('detailed');
 		}
@@ -62,11 +69,27 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 		if (e.keyCode === 40) { // down arrow
 			$scope.$broadcast('keyDownArrow', e);
 		}
+
+		if (e.keyCode === 88 && $scope.keyboard.isCommandDown) {
+			// Cmd-X
+			$scope.$broadcast('keyCut', e);
+		}
+		if (e.keyCode === 86 && $scope.keyboard.isCommandDown) {
+			// Cmd-V
+			$scope.$broadcast('keyPaste', e);
+		}
 	};
 
 	$scope.keyup = function (e) {
 		if (e.keyCode === 16) {
 			$scope.keyboard.isShiftDown = false;
+		}
+
+		if (e.keyCode === 224 || 
+			e.keyCode === 17 || 
+			e.keyCode === 91 || 
+			e.keyCode === 93) {
+			$scope.keyboard.isCommandDown = false;
 		}
 	};
 

@@ -1,4 +1,14 @@
-<div class="hidden-xs col-sm-2 debug" ng-hide="isMindset('roadmap')">
+<div ng-if="story.isHighlighted && isClipboardActive">
+	<div class="story col-sm-offset-2 col-xs-12 debug paste-destination" ng-class="{
+			'col-sm-8': !isMindset('roadmap'),
+			'col-sm-12': isMindset('roadmap')
+		}">
+		<div class="paddy">(clipboard tasks will be moved here)</div>
+	</div>
+</div>
+
+
+<div class="hidden-xs col-sm-2 debug clear" ng-hide="isMindset('roadmap')">
 	<div class="backlog-mine col-xs-9 debug"
 		ng-class="{done: isStoryDone(story)}">
 		<div ng-show="isStoryMine(story) || (isMindset('mine') && !story.isDeadline && !story.isNextMeeting)" 
@@ -29,6 +39,7 @@
 	</div>
 </div>
 
+
 <div class="story col-xs-12 debug no-select" ng-class="{ 
 		'col-sm-12': isMindset('roadmap'),
 		'col-sm-8': !isMindset('roadmap'),
@@ -39,7 +50,8 @@
 		deadline: story.isDeadline,
 		'next-meeting': story.isNextMeeting,
 		'after-meeting': story.isAfterNextMeeting,
-		highlighted: story.isHighlighted
+		highlighted: story.isHighlighted,
+		inClipboard: story.isInClipboard
 	}"
 	ng-dblclick="select(story)" ng-click="highlight(story)">
 	<div ng-if="story.isSelected" class="text-select">
