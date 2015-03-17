@@ -486,11 +486,30 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		});
 	});
 
+	var isStoryBetween = function (story, start, end) {	
+		if (end.id === story.id) {
+			return true;
+		}
+
+		// TODO: Assumes a valid block, otherwise it is 
+		// infinite loop time
+		var current = start;
+		while (current.id !== end.id) {
+			if (current.id === story.id) {
+				return true;
+			}
+			current = stories.get(current.nextId)
+		}
+
+		return false;
+	};
+
 	function moveStoryBlock (uiStartStory, startStory, endStory, nextStory) {
 		var storyToMove = startStory;
 
-		// TODO: Need to test the range
-		if (storyToMove.id === nextStory.id || storyToMove.nextId === nextStory.id) {
+		if (storyToMove.id === nextStory.id 
+			|| storyToMove.nextId === nextStory.id
+			|| isStoryBetween(nextStory, startStory, endStory)) {
 			// Do nothing.
 			return;
 		}

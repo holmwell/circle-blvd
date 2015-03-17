@@ -629,8 +629,17 @@ module.exports = function () {
 						story: startStory
 					});
 				}
+
+				if (current.id === newNextId) {
+					return callback({
+						message: "The 'next' story is in the middle of the block",
+						story: startStory
+					});
+				}
+
 				current = storyMap[current.nextId];
 			}
+
 
 			// If we get here, we can move the story block efficiently
 			// without breaking the list integrity.
