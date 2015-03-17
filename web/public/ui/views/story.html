@@ -54,7 +54,7 @@
 		inClipboard: story.isInClipboard
 	}"
 	ng-dblclick="select(story)" ng-click="highlight(story)">
-	<div ng-if="story.isSelected" class="text-select">
+	<div ng-if="story.isSelected">
 		<form>
 			<div class="summary row">
 				<div class="visible-xs col-xs-12">
@@ -164,7 +164,7 @@
 
 	<div class="row no-select hidden-xs" ng-show="!story.isSelected" id="story-{{$index}}">
 		<div class="col-sm-10 paddy">
-			<div class="text-select summary"
+			<div class="summary"
 			ng-class="{mine: isStoryMine(story)}">
 				<sp-story-summary/>
 			</div>
@@ -216,10 +216,10 @@
 				<span class="new-status glyphicon glyphicon-gift"
 				ng-show="(isStoryNew(story) && isStoryMine(story))"></span>
 			</div>
-			<div class="text-select phone-summary col-xs-8">
+			<div class="phone-summary col-xs-8">
 				<sp-story-summary/>
 			</div>
-			<div class="text-select col-xs-2 details-link" ng-show="story.isHighlighted">
+			<div class="col-xs-2 details-link" ng-show="story.isHighlighted">
 				<a class="subtle jsLink" ng-click="select(story)">
 					<span class="glyphicon glyphicon-arrow-right"></span>details</a>
 			</div>
@@ -251,7 +251,7 @@
 	ng-hide="isMindset('roadmap')"
 	ng-class="{'after': story.isAfterNextMeeting}"
 	ng-dblclick="select(story)" ng-click="highlight(story)">
-	<span class="text-select">{{story.owner}}</span><span ng-show="isStoryNew(story)">?</span>
+	<span>{{story.owner}}</span><span ng-show="isStoryNew(story)">?</span>
 	<div 
 		class="notify" 
 		ng-if="isNotificationEnabled()"
