@@ -271,6 +271,10 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 			analytics.trackEvent('story', 'moved');
 		});
 
+		$scope.$on('storyBlockMoved', function () {
+			analytics.trackEvent('story', 'block moved');
+		});
+
 		$scope.$on('storyMovedToTop', function () {
 			analytics.trackEvent('story', 'movedToTop');
 		});

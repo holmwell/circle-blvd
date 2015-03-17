@@ -556,6 +556,20 @@ var defineRoutes = function () {
         });
     });
 
+    app.put("/data/story/move-block", ensure.auth, function (req, res) {
+        var body = req.body;
+
+        var startStory = body.startStory;
+        var endStory = body.endStory;
+        var newNextId = body.newNextId;
+
+        ensure.isCircle(startStory.projectId, req, res, function () {
+            ensure.isCircle(endStory.projectId, req, res, function () {
+                db.stories.moveBlock(startStory, endStory, newNextId, handle(res));
+            });
+        });
+    });
+
     var removeStory = function (story, res) {
         db.stories.remove(story, handle(res));
     };

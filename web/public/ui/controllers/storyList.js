@@ -411,15 +411,34 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		var nextStory = highlightedStories.pop();
 		nextStory.isHighlighted = false;
 
+		var clipboardMap = {};
+		clipboardStories.forEach(function (story) {
+			clipboardMap[story.id] = story;
+		});
+
+		var start;
+		var end;
+		// If the first clipboard element's next story
+		// is also in the clipboard, that means the stories
+		// are arranged from top to bottom.
+		//
+		// If not, they're bottom to top
+		if (clipboardMap[clipboardStories[0].nextId]) {
+			start = clipboardStories[0];
+			end = clipboardStories[clipboardStories.length-1];
+		}
+		else {
+			end = clipboardStories[0];
+			start = clipboardStories[clipboardStories.length-1];
+		}
+
+		moveStoryBlock(start,
+			stories.get(start.id), 
+			stories.get(end.id),
+			stories.get(nextStory.id));
+
 		clipboardStories.forEach(function (story) {
 			story.isInClipboard = false;
-			moveStory(story, 
-				stories.get(story.id), 
-				stories.get(nextStory.id));
-
-			// TODO: Push whatever the new story from
-			// moveStory is, maybe, or find it in the
-			// UI and push that?
 			highlightedStories.push(story);
 			story.isHighlighted = true;
 		});
@@ -467,7 +486,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		});
 	});
 
-	function moveStory (uiStory, storyToMove, nextStory) {
+	function moveStoryBlock (uiStartStory, startStory, endStory, nextStory) {
+		var storyToMove = startStory;
+
+		// TODO: Need to test the range
 		if (storyToMove.id === nextStory.id || storyToMove.nextId === nextStory.id) {
 			// Do nothing.
 			return;
@@ -476,8 +498,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		// Update data model
 		// TODO: Refactor, to share the same code used below
 		var preMove = {
-			storyBefore: stories.getPrevious(uiStory, storyToMove),
-			storyAfter: stories.get(storyToMove.nextId)
+			storyBefore: stories.getPrevious(uiStartStory, startStory),
+			storyAfter: stories.get(endStory.nextId)
 		};
 
 		var postMove = {
@@ -487,7 +509,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 		// If the moved story was the first story, the preMove.storyAfter
 		// is now the first story (if it exists).
-		if (stories.getFirst().id === storyToMove.id && preMove.storyAfter) {
+		if (stories.getFirst().id === startStory.id && preMove.storyAfter) {
 			stories.setFirst(preMove.storyAfter);
 		}
 
@@ -499,37 +521,46 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 		// 2. ...
 		if (postMove.storyBefore) {
-			postMove.storyBefore.nextId = storyToMove.id;
+			postMove.storyBefore.nextId = startStory.id;
 		}
 		else {
-			stories.setFirst(storyToMove);	
+			stories.setFirst(startStory);	
 		}
 		
 		// 3. ...
-		storyToMove.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();
+		endStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();
 
 		// Update view model
 		updateViewModelStoryOrder();
 
 		// ...
 		$timeout(function () {
-			pulse(storyToMove);
+			pulse(startStory);
 		}, 100);
 
 		// Update server
 		$timeout(function() {
-			stories.move(storyToMove, nextStory, function (err, response) {
+			stories.moveBlock(startStory, endStory, nextStory, function (err, response) {
 				if (err) {
 					// We failed. Probably because of a data integrity issue
 					// on the server that we need to wait out. 
 					errors.handle(err.data, err.status);
 					return;
 				}
-				else {					
-					$scope.$emit('storyMoved', storyToMove);
+				else {
+					if (startStory.id === endStory.id) { 
+						$scope.$emit('storyMoved', startStory);
+					} 
+					else {
+						$scope.$emit('storyBlockMoved', startStory, endStory);
+					}			
 				}
 			});
 		}, 0);
+	}
+
+	function moveStory (uiStory, storyToMove, nextStory) {
+		moveStoryBlock(uiStory, storyToMove, storyToMove, nextStory);
 	}
 
 	$scope.$on('storyMovedToTop', function (e, story) {

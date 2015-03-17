@@ -389,6 +389,35 @@ module.exports = function () {
 		consumer.enqueue(thing, afterEnqueue);
 	};
 
+	var moveBlock = function (startStory, endStory, newNextId, callback) {
+		var thing = {
+			id: uuid.v4(),
+			action: 'move-block',
+			params: {
+				startStory: startStory,
+				endStory: endStory,
+				nextId: newNextId
+			}
+		};
+
+		var afterEnqueue = function (err) {
+			if (err) {
+				return callback(err);
+			}
+			// When the queue consumer is done with
+			// our thing, we'll emit an event named
+			// thing.id. and then we'll callback.
+			ee.once(thing.id, function (err, movedStory) {
+				if (err) {
+					return callback(err);
+				}
+				callback(null, movedStory);
+			});
+		};
+
+		consumer.enqueue(thing, afterEnqueue);
+	};
+
 	var oldMoveStory = function (story, newNextId, success, failure) {
 		var storiesToSave = {};
 		var saveChecks = [];
@@ -564,6 +593,97 @@ module.exports = function () {
 			});
 	};
 
+	var moveStoryBlock = function (startStory, endStory, newNextId, callback) {
+		couch.stories.findByListId(startStory.projectId, function (err, allStories) {
+			if (err) {
+				return callback(err);
+			}
+
+			var storyMap = {};
+			allStories.forEach(function (story) {
+				storyMap[story.id] = story;
+			});
+
+			if (!storyMap[startStory.id]) {
+				return callback({
+					message: "The start of the story block was deleted by someone else",
+					story: startStory
+				});
+			}
+			if (!storyMap[endStory.id]) {
+				return callback({
+					message: "The end of the story block was deleted by someone else",
+					story: endStory
+				});
+			}
+
+			var start = storyMap[startStory.id];
+			var end = storyMap[endStory.id];
+
+			// Assumes the list has integrity
+			var current = start;
+			while (current.id !== end.id) {
+				if (isLastStory(current)) {
+					return callback({
+						message: "Start -> End does not appear to be a continuous block",
+						story: startStory
+					});
+				}
+				current = storyMap[current.nextId];
+			}
+
+			// If we get here, we can move the story block efficiently
+			// without breaking the list integrity.
+
+			// However, we're just here to get things done right now, so
+			// let's do something with O(N) time instead.
+			current = start;
+			var moveCurrentStory = function () {
+				var nextStory = storyMap[current.nextId];
+				oldMoveStory(current, newNextId, function (movedStory) {
+					if (current.id === end.id) {
+						// we're done. 
+						return callback();
+					}
+					else {
+						// we have more to do
+						current = nextStory;
+						moveCurrentStory();
+					}
+				},
+				function (err) {
+					return callback(err);
+				});
+			};
+
+			moveCurrentStory();
+		});
+	};
+
+	var handleMoveBlockThing = function (err, thing, callback) {
+		var startStory = thing.params.startStory;
+		var endStory = thing.params.endStory;
+
+		if (err) {
+			ee.emit(thing.id, err, startStory);
+			return callback();
+		}
+
+		// Now that we have the processing queue to ourselves,
+		// validate that we can move this block without breaking
+		// the list integrity.
+		moveStoryBlock(startStory, endStory, thing.params.nextId, function (err) {
+			if (err) {
+				ee.emit(thing.id, err, startStory);
+				return callback();
+			}
+
+			ee.emit(thing.id, null, startStory);
+			return callback();
+		});
+	};
+
+
 
 	var oldRemoveStory = function (story, success, failure) {
 
@@ -695,6 +815,9 @@ module.exports = function () {
 			else if (thing.action === 'move') {
 				handleMoveThing(err, thing, next);
 			}
+			else if (thing.action === 'move-block') {
+				handleMoveBlockThing(err, thing, next);
+			}
 			else if (thing.action == 'remove') {
 				handleRemoveThing(err, thing, next);
 			}
@@ -777,6 +900,7 @@ module.exports = function () {
 		add: addStory,
 		markOwnerNotified: markStoryOwnerNotified,
 		move: moveStory,
+		moveBlock: moveBlock,
 		remove: removeStory,
 		find: findStoriesByListId,
 		findByListId: findStoriesByListId,

@@ -225,6 +225,36 @@ CircleBlvd.Services.stories = function ($http) {
 	// to implement it, future self.
 	var stories = function() {
 
+		var moveBlock = function (startStory, endStory, newNextStory, callback) {
+			var body = {};
+			body.startStory = startStory;
+			body.endStory = endStory;
+
+			if (newNextStory) {
+				body.newNextId = newNextStory.id;
+			}
+			else {
+				body.newNextId = getLastStoryId(startStory);
+			}
+
+			if (isFacade) {
+				callback();
+				return;
+			}
+
+			$http.put('/data/story/move-block', body)
+			.success(function (response) {
+				// TODO: Move stuff around or something
+				callback(null, response);
+			})
+			.error(function (data, status) {
+				callback({
+					status: status,
+					data: data
+				});
+			});
+		};
+
 		return {
 			setFacade: function (val) {
 				isFacade = val;
@@ -240,33 +270,9 @@ CircleBlvd.Services.stories = function ($http) {
 			add: addStory,
 			insertFirst: insertFirstStory,
 			move: function (story, newNextStory, callback) {
-				var body = {};
-				body.story = story;
-
-				if (newNextStory) {
-					body.newNextId = newNextStory.id;
-				}
-				else {
-					body.newNextId = getLastStoryId(story);
-				}
-
-				if (isFacade) {
-					callback();
-					return;
-				}
-
-				$http.put('/data/story/move', body)
-				.success(function (response) {
-					// TODO: Move stuff around or something
-					callback(null, response);
-				})
-				.error(function (data, status) {
-					callback({
-						status: status,
-						data: data
-					});
-				});
+				moveBlock(story, story, newNextStory, callback);
 			},
+			moveBlock: moveBlock,
 			find: findStory,
 			save: saveStory,
 			saveComment: saveStoryComment,
