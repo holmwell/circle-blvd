@@ -197,27 +197,45 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		}
 	}
 
-	$scope.$on('beforeStoryHighlighted', function (e, highlightType) {
-		// Only allow one story to be highlighted for now.
+	$scope.$on('storyHighlight', function (e, story, highlightType) {
+
 		if (highlightType === 'single') {
+			// Only allow one story to be highlighted.
 			unhighlightAllStories();	
 		}
+
+		story.isHighlighted = true;
+		story.highlightedFrom = $scope.mouse.direction;
+
+		highlightedStories.push(story);
+	});
+					
+
+	$scope.$on('beforeStoryHighlighted', function (e, highlightType) {
+
 	});
 
 	$scope.$on('storyHighlighted', function (e, story) {
-		highlightedStories.push(story);
+		
 	});
 
-	$scope.$on('storyUnhighlighted', function (e, story) {
-		var indexToRemove = -1;
-		highlightedStories.forEach(function (highlighted, index) {
-			if (highlighted.id === story.id) {
-				indexToRemove = index;
-			}
-		});
+	$scope.$on('storyUnhighlighted', function (e, story) {});
 
-		if (indexToRemove >= 0) {
-			highlightedStories.splice(indexToRemove, 1);
+	$scope.$on('storyUnhighlight', function (e, story) {
+		if (story.highlightedFrom !== $scope.mouse.direction) {
+			story.isHighlighted = false;
+			story.highlightedFrom = 'none';
+				
+			var indexToRemove = -1;
+			highlightedStories.forEach(function (highlighted, index) {
+				if (highlighted.id === story.id) {
+					indexToRemove = index;
+				}
+			});
+
+			if (indexToRemove >= 0) {
+				highlightedStories.splice(indexToRemove, 1);
+			}
 		}
 	});
 
