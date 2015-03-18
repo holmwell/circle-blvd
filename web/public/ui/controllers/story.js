@@ -143,11 +143,17 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 			story.isHighlighted = true;
 			story.highlightedFrom = 'first';
 			$scope.$emit('storyHighlighted', story);
+
+			$scope.mouse.isHighlighting = true;
 		}
 	}
 
+	$scope.$on('mouseUp', function () {
+		$scope.mouse.isHighlighting = false; 
+	});
+
 	$scope.mouseEnter = function (story) {
-		if ($scope.mouse.isButtonDown) {
+		if ($scope.mouse.isHighlighting) {
 			if (!story.isHighlighted) {
 				$scope.$emit('beforeStoryHighlighted');
 				story.isHighlighted = true;
@@ -158,7 +164,7 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 	};
 
 	$scope.mouseLeave = function (story) {
-		if ($scope.mouse.isButtonDown) {
+		if ($scope.mouse.isHighlighting) {
 			if (story.isHighlighted 
 				&& story.highlightedFrom !== 'first'
 				&& story.highlightedFrom !== $scope.mouse.direction) {
