@@ -198,7 +198,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	}
 
 	$scope.$on('storyHighlight', function (e, story, highlightType) {
-
 		if (highlightType === 'single') {
 			// Only allow one story to be highlighted.
 			unhighlightAllStories();	
@@ -206,26 +205,24 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 		story.isHighlighted = true;
 		story.highlightedFrom = $scope.mouse.direction;
-
 		highlightedStories.push(story);
 	});
 					
 
-	$scope.$on('beforeStoryHighlighted', function (e, highlightType) {
 
-	});
+	$scope.$on('storyUnhighlight', function (e, story, direction) {
+		if (highlightedStories.length <= 1) {
+			return;
+		}
 
-	$scope.$on('storyHighlighted', function (e, story) {
+		var isAboveFirstHighlight = function () {
+			if ($scope.mouse.dragStartPoint.y > $scope.mouse.position.y) {
+				return true;
+			}
+			return false;
+		};
 		
-	});
-
-	$scope.$on('storyUnhighlighted', function (e, story) {});
-
-	$scope.$on('storyUnhighlight', function (e, story) {
-		if (story.highlightedFrom !== $scope.mouse.direction) {
-			story.isHighlighted = false;
-			story.highlightedFrom = 'none';
-				
+		var unhighlight = function () {
 			var indexToRemove = -1;
 			highlightedStories.forEach(function (highlighted, index) {
 				if (highlighted.id === story.id) {
@@ -233,9 +230,25 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				}
 			});
 
+			// Remove everything after the unhighlighted story.
+			// This helps us recover if a mouse-leave event isn't
+			// handled in order or something.
+			var count = highlightedStories.length-indexToRemove
+
 			if (indexToRemove >= 0) {
-				highlightedStories.splice(indexToRemove, 1);
+				var removedStories = highlightedStories.splice(indexToRemove, count);
+				removedStories.forEach(function (removedStory) {
+					removedStory.isHighlighted = false;
+					removedStory.highlightedFrom = 'none';
+				});
 			}
+		}
+
+		if (isAboveFirstHighlight() && direction === 'down') {
+			unhighlight();
+		}
+		else if (!isAboveFirstHighlight() && direction === 'up') {
+			unhighlight();
 		}
 	});
 

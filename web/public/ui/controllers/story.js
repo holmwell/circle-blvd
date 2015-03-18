@@ -161,7 +161,7 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 	$scope.mouseLeave = function (story) {
 		if ($scope.mouse.isHighlighting) {
 			if (story.isHighlighted && story.highlightedFrom !== 'first') {
-				$scope.$emit('storyUnhighlight', story);
+				$scope.$emit('storyUnhighlight', story, $scope.mouse.direction);
 			}
 		}
 	};
