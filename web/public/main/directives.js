@@ -65,7 +65,8 @@ directive('spStoryList', function () {
 			mindset: '=',
 			isFacade: '=',
 			isChecklist: '=',
-			keyboard: '='
+			keyboard: '=',
+			mouse: '='
 		}
 	}
 }).

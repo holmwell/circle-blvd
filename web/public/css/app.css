@@ -280,8 +280,13 @@ h4, h5 {
   width: 270px;
   /*top: 100px;
   *//*right: 10%;*/
-  
+}
 
+#selectionBox {
+  position: fixed;
+  border: solid 2px goldenrod;
+  z-index: 10000;
+  display: none;
 }
 
 #backlog {

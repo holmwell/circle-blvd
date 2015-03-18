@@ -4,6 +4,7 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 
 	$scope.isHeaderVisible = true;
 	$scope.keyboard = {};
+	$scope.mouse = {};
 
 	// If children want to hide the top header.
 	$scope.hideHeader = function () {
@@ -21,6 +22,28 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 
 	$scope.setMindsetLabel = function (text) {
 		$scope.mindsetLabel = text;
+	};
+
+	$scope.mousedown = function (e) {
+		$scope.mouse.isButtonDown = true;
+		$scope.mouse.isButtonUp = false;
+		$scope.mouse.dragStartPoint = {
+			x: e.pageX,
+			y: e.pageY
+		};
+		$scope.$broadcast('mouseDown', e);
+	};
+
+	$scope.mouseup = function (e) {
+		$scope.mouse.isButtonDown = false;
+		$scope.mouse.isButtonUp = true;
+		$scope.$broadcast('mouseUp', e);
+	};
+
+	$scope.mousemove = function (e) {
+		if ($scope.mouse.isButtonDown) {
+			$scope.$broadcast('mouseDrag', e);	
+		}
 	};
 
 	$scope.keydown = function(e) {

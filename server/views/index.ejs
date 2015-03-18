@@ -51,7 +51,12 @@
   </script>
   <% } %>
 </head>
-<body ng-controller="TopLevelCtrl" ng-keydown="keydown($event)" ng-keyup="keyup($event)">
+<body ng-controller="TopLevelCtrl" 
+  ng-mouseup="mouseup($event)"
+  ng-mousedown="mousedown($event)"
+  ng-mousemove="mousemove($event)"
+  ng-keydown="keydown($event)" 
+  ng-keyup="keyup($event)">
 <div id="topLevel">
   <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" 
     aria-labelledby="errorTitle" aria-hidden="true">

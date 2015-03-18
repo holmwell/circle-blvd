@@ -448,6 +448,34 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		event.preventDefault();
 	});
 
+	$scope.$on('mouseUp', function (e) {
+		var selectionBox = $('#selectionBox');
+		selectionBox.hide();
+	});
+
+	$scope.$on('mouseDrag', function (e, event) {
+		var selectionBox = $('#selectionBox');
+
+		var startPoint = $scope.mouse.dragStartPoint;
+		var endPoint = {
+			x: event.pageX,
+			y: event.pageY
+		};
+
+		var topLeft = {
+			left: Math.min(startPoint.x, endPoint.x),
+			top: Math.min(startPoint.y, endPoint.y)
+		};
+
+		var width = Math.max(startPoint.x, endPoint.x) - Math.min(startPoint.x, endPoint.x);
+		var height = Math.max(startPoint.y, endPoint.y) - Math.min(startPoint.y, endPoint.y);
+
+		selectionBox.offset(topLeft);
+		selectionBox.width(width);
+		selectionBox.height(height);
+		selectionBox.show();
+	});
+
 
 
 	$scope.$on('beforeStorySelected', function (e) {
