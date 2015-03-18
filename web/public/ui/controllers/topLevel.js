@@ -41,6 +41,29 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 	};
 
 	$scope.mousemove = function (e) {
+		$scope.mouse.previousPosition = $scope.mouse.position;
+		$scope.mouse.position = {
+			x: e.pageX,
+			y: e.pageY
+		};
+
+		if ($scope.mouse.position && $scope.mouse.previousPosition) {
+			var previous = $scope.mouse.previousPosition;
+			var position = $scope.mouse.position;
+
+			if (previous.y > position.y) {
+				$scope.mouse.isMovingUp = true;
+				$scope.mouse.isMovingDown = false;
+				$scope.mouse.direction = 'up';
+			}
+
+			if (previous.y < position.y) {
+				$scope.mouse.isMovingUp = false;
+				$scope.mouse.isMovingDown = true;
+				$scope.mouse.direction = 'down';
+			}
+		}
+
 		if ($scope.mouse.isButtonDown) {
 			$scope.$broadcast('mouseDrag', e);	
 		}

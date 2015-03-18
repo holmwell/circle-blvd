@@ -191,17 +191,39 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		while (highlightedStories.length > 0) {
 			var story = highlightedStories.pop();
 			story.isHighlighted = false;
+			// TODO: This is a bit fragile ... should
+			// wrap the highlight methods soon.
+			story.highlightedFrom = 'none';
 		}
 	}
 
-	$scope.$on('beforeStoryHighlighted', function (e) {
+	$scope.$on('beforeStoryHighlighted', function (e, highlightType) {
 		// Only allow one story to be highlighted for now.
-		unhighlightAllStories();
+		if (highlightType === 'single') {
+			unhighlightAllStories();	
+		}
 	});
 
 	$scope.$on('storyHighlighted', function (e, story) {
 		highlightedStories.push(story);
 	});
+
+	$scope.$on('storyUnhighlighted', function (e, story) {
+		var indexToRemove = -1;
+		highlightedStories.forEach(function (highlighted, index) {
+			if (highlighted.id === story.id) {
+				indexToRemove = index;
+			}
+		});
+
+		if (indexToRemove >= 0) {
+			highlightedStories.splice(indexToRemove, 1);
+		}
+	});
+
+	$scope.mouseLeave = function (story) {
+		
+	};
 
 	var isShiftDown = function () {
 		var is = $scope.keyboard && 
@@ -450,6 +472,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		event.preventDefault();
 	});
 
+	$scope.$on('mouseDown', function (e) {
+
+	});
+
 	$scope.$on('mouseUp', function (e) {
 		var selectionBox = $('#selectionBox');
 		selectionBox.hide();
@@ -475,12 +501,12 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		selectionBox.offset(topLeft);
 		selectionBox.width(width);
 		selectionBox.height(height);
-		if (isMovingTask) {
-			selectionBox.hide();
-		}
-		else {
-			selectionBox.show();
-		}
+		// if (isMovingTask) {
+		// 	selectionBox.hide();
+		// }
+		// else {
+		// 	selectionBox.show();
+		// }
 		
 	});
 

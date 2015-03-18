@@ -139,11 +139,35 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 		// FYI: Stories will be highlighted when they are
 		// selected (opened). This is the desired behavior for now.
 		if (!story.isSelected) {
-			$scope.$emit('beforeStoryHighlighted');
+			$scope.$emit('beforeStoryHighlighted', 'single');
 			story.isHighlighted = true;
+			story.highlightedFrom = 'first';
 			$scope.$emit('storyHighlighted', story);
 		}
 	}
+
+	$scope.mouseEnter = function (story) {
+		if ($scope.mouse.isButtonDown) {
+			if (!story.isHighlighted) {
+				$scope.$emit('beforeStoryHighlighted');
+				story.isHighlighted = true;
+				story.highlightedFrom = $scope.mouse.direction;
+				$scope.$emit('storyHighlighted', story);
+			}
+		}
+	};
+
+	$scope.mouseLeave = function (story) {
+		if ($scope.mouse.isButtonDown) {
+			if (story.isHighlighted 
+				&& story.highlightedFrom !== 'first'
+				&& story.highlightedFrom !== $scope.mouse.direction) {
+				story.isHighlighted = false;
+				story.highlightedFrom = 'none';
+				$scope.$emit('storyUnhighlighted', story);
+			}
+		}
+	};
 
 	$scope.deselect = function (story, event) {
 		if (story && story.isSelected) {
