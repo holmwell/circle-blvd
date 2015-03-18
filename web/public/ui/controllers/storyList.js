@@ -14,6 +14,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	var highlightedStories = [];
 	var clipboardStories = [];
 
+	var isMovingTask = false;
+
 	// HACK: Until we can figure out how to stop this properly,
 	// reload the page when this happens.
 	var handleHierarchyRequestErr = function (e) {
@@ -473,7 +475,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		selectionBox.offset(topLeft);
 		selectionBox.width(width);
 		selectionBox.height(height);
-		selectionBox.show();
+		if (isMovingTask) {
+			selectionBox.hide();
+		}
+		else {
+			selectionBox.show();
+		}
+		
 	});
 
 
@@ -1033,6 +1041,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 
 	var startMove = function (ui) {
+		isMoving = true;
 		// It's useful to know the state of things before the move.
 		var preMoveStoryElement = ui.item;
 		preMoveStoryBefore = getStoryBefore(preMoveStoryElement);
@@ -1310,10 +1319,12 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			deactivate: function (event, ui) {
 				// ui.item.removeClass('dragging');
 				storyNodeMoved(ui);
+				isMovingTask = false;
 			},
 			start: function (event, ui) {
 				// The drop shadow slows down the phones a bit
 				// ui.item.addClass('dragging');
+				isMovingTask = true;
 				startMove(ui);
 			}
 		});
