@@ -233,38 +233,56 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		return is;
 	};
 
-	// TODO: Refactor this junk
-	var isHighlightingUp = false;
+	var isHighlightingUp = function () {
+		// Determine the direction of the current highlight.
+		// If the most recently highlighted story's next story
+		// is highlighted, that means we're moving up.
+		if (highlightedStories.length <= 1) {
+			return false;
+		}
 
+		var lastHighlighted = highlightedStories[highlightedStories.length-1];
+		var nextStory = stories.get(lastHighlighted.nextId);
+		if (!nextStory) {
+			return false;
+		}
+
+		return nextStory.isHighlighted;
+	};
+
+	// TODO: Refactor this junk
 	$scope.$on('keyDownArrow', function (e, event) {
 		if (selectedStory || highlightedStories.length === 0) {
 			return;
-		}
-
-		if (highlightedStories.length === 1) {
-			isHighlightingUp = false;
 		}
 	
 		// If the shift key is pressed, add to the selection, 
 		// otherwise ... 
 		var recentStory;
 		if (isShiftDown()) {
-			if (!isHighlightingUp) {
-				// highlighting down ...
-				recentStory = highlightedStories[highlightedStories.length-1];
+			var lastHighlighted = highlightedStories[highlightedStories.length-1];
+			var nextStory = stories.get(lastHighlighted.nextId);
+
+			if (!nextStory) {
+				return;
 			}
-			else {
-				// highlighting up ...
-				recentStory = highlightedStories.pop();
-				recentStory.isHighlighted = false;
+
+			if (nextStory.isHighlighted) {
+				// Highlighting up
+				var storyToUnhighlight = highlightedStories.pop();
+				storyToUnhighlight.isHighlighted = false;
 
 				// Stop the window from the scrolling, and then scroll
 				// to the highlighted story
 				event.preventDefault();
 				var preventOpening = true;
 				var delay = 0;
-				scrollToStory(recentStory.id, preventOpening, delay);
+				scrollToStory(storyToUnhighlight.id, preventOpening, delay);
 				return;
+			}
+			else {
+				// Highlighting down
+				recentStory = highlightedStories[highlightedStories.length-1];
 			}
 		}
 		else {
@@ -308,31 +326,25 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			return;
 		}
 
-		if (highlightedStories.length === 1) {
-			isHighlightingUp = true;
-		}
-
-		var recentStory;
 		if (isShiftDown()) {
-			if (isHighlightingUp) {
-				recentStory = highlightedStories[highlightedStories.length-1];
+			// TODO: What happens when a label filter is applied to the list?
+			var lastHighlighted = highlightedStories[highlightedStories.length-1];
+			var previousStory = 
+				stories.getPrevious(lastHighlighted, stories.get(lastHighlighted.id));
 
-				var previousStory = 
-					stories.getPrevious(recentStory, stories.get(recentStory.id));
-				//TODO: highlight blocks + labels
-				while (previousStory && $scope.shouldHideStory(previousStory)) {
-					previousStory = 
-						stories.getPrevious(previousStory, stories.get(previousStory.id));
-				}
+			if (!previousStory) {
+				return;
+			}
 
-				if (previousStory) {
-					previousStory.isHighlighted = true;
-					highlightedStories.push(previousStory);
-				}
+			if (previousStory.isHighlighted) {
+				// Highlighting down
+				var storyToUnhighlight = highlightedStories.pop();
+				storyToUnhighlight.isHighlighted = false;
 			}
 			else {
-				recentStory = highlightedStories.pop();
-				recentStory.isHighlighted = false;
+				// Highlighting up
+				previousStory.isHighlighted = true;
+				highlightedStories.push(previousStory);
 			}
 
 			event.preventDefault();
@@ -411,9 +423,9 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			clipboardStories.push(story);
 		});
 
-		// Only highlight the most recently highlighted story
+		// Only highlight the top-most story
 		var highlightedStory;
-		if (isHighlightingUp) { 
+		if (isHighlightingUp()) { 
 			highlightedStory = highlightedStories[highlightedStories.length-1];
 		}
 		else {
