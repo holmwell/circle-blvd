@@ -197,30 +197,64 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		}
 	}
 
+	var isMouseAboveFirstHighlight = function () {
+		if (!$scope.mouse.dragStartPoint || !$scope.mouse.position) {
+			return false;
+		}
+
+		if ($scope.mouse.dragStartPoint.y > $scope.mouse.position.y) {
+			return true;
+		}
+		return false;
+	};
+
+
 	$scope.$on('storyHighlight', function (e, story, highlightType) {
 		if (highlightType === 'single') {
 			// Only allow one story to be highlighted.
 			unhighlightAllStories();	
 		}
 
-		story.isHighlighted = true;
-		story.highlightedFrom = $scope.mouse.direction;
-		highlightedStories.push(story);
+		var highlight = function (storyToHighlight) {
+			if (!storyToHighlight) {
+				return;
+			}
+			storyToHighlight.isHighlighted = true;
+			storyToHighlight.highlightedFrom = $scope.mouse.direction;
+			highlightedStories.push(storyToHighlight);
+		};
+
+		if (highlightedStories.length === 0) {
+			highlight(story);
+			return;
+		}
+
+		// Account for the mouse leaving and re-entering
+		// the list during a drag. Also makes fast drags
+		// work, if they're going in one direction
+		if (!isMouseAboveFirstHighlight()) {
+			var current = highlightedStories[highlightedStories.length-1];
+
+			while (current && current.id !== story.id) {
+				current = stories.get(current.nextId);
+				highlight(current);
+			}
+		}
+		else {
+			var current = highlightedStories[highlightedStories.length-1];
+
+			while (current && current.id !== story.id) {
+				current = stories.getPrevious(current, stories.get(current.id));
+				highlight(current);
+			}
+		}
 	});
 					
-
 
 	$scope.$on('storyUnhighlight', function (e, story, direction) {
 		if (highlightedStories.length <= 1) {
 			return;
 		}
-
-		var isAboveFirstHighlight = function () {
-			if ($scope.mouse.dragStartPoint.y > $scope.mouse.position.y) {
-				return true;
-			}
-			return false;
-		};
 		
 		var unhighlight = function () {
 			var indexToRemove = -1;
@@ -244,10 +278,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			}
 		}
 
-		if (isAboveFirstHighlight() && direction === 'down') {
+		if (isMouseAboveFirstHighlight() && direction === 'down') {
 			unhighlight();
 		}
-		else if (!isAboveFirstHighlight() && direction === 'up') {
+		else if (!isMouseAboveFirstHighlight() && direction === 'up') {
 			unhighlight();
 		}
 	});
