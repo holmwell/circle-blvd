@@ -450,7 +450,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			var preventOpening = true;
 			var delay = 0;
 			var isMovingUp = true;
-			scrollToStory(recentStory.id, preventOpening, delay, isMovingUp);
+			scrollToStory(previousStory.id, preventOpening, delay, isMovingUp);
 		}
 		else {
 			// Move the highlighted story up one visible story
@@ -685,8 +685,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	function moveStoryBlock (uiStartStory, startStory, endStory, nextStory) {
 		var storyToMove = startStory;
 
-		if (storyToMove.id === nextStory.id 
-			|| storyToMove.nextId === nextStory.id
+		if (startStory.id === nextStory.id 
+			|| startStory.nextId === nextStory.id
+			|| endStory.id === nextStory.id
+			|| endStory.nextId === nextStory.id
 			|| isStoryBetween(nextStory, startStory, endStory)) {
 			// Do nothing.
 			return;
