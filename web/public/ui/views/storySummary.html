@@ -2,6 +2,7 @@
 
 <span ng-if="hasLabels" ng-repeat="s in spans"><span 
         ng-if="s.isLabel" 
+        ng-mouseup="prevent($event)"
         ng-click="selectLabel($event, s.label)"> <span 
         class="story-label">{{s.text}}</span></span><span 
         ng-if="!s.isLabel && !s.isPostLabel"> {{s.text}}</span><span 

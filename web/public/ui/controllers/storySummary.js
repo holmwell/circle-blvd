@@ -8,6 +8,11 @@ function StorySummaryCtrl(lib, session, $scope) {
         e.stopPropagation();
     };
 
+    $scope.prevent = function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    };
+
     var updateScope = function (summary) {
         var hasLabels = false;
         var summary = $scope.story.summary;
