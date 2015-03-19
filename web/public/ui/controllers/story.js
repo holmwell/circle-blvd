@@ -146,6 +146,15 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 		}
 	};
 
+	var lastClickedStory = undefined;
+	$scope.rememberHighlight = function (story) {
+		if ($scope.mouse.lastClickedStory && 
+			$scope.mouse.lastClickedStory.id === story.id) {
+			$scope.select(story);
+		}
+		$scope.mouse.lastClickedStory = story;
+	};
+
 	$scope.$on('mouseUp', function () {
 		$scope.mouse.isHighlighting = false; 
 	});
@@ -153,6 +162,7 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 	$scope.handleSingleClicks = function (story) {
 		if ($scope.keyboard.isShiftDown) {
 			$scope.select(story);
+			return;
 		}
 	};
 
