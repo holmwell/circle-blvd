@@ -10,11 +10,27 @@
 <div ng-if="isStoryMostRecentHighlight(story) && !isMindset('roadmap')"
 	id="highlightedTools" class="hidden-xs">
 	<div class="tools">
-		<div ng-if="!isClipboardActive" class="jsLink" ng-click="cutHighlighted()">
-			<span class="glyphicon glyphicon-scissors"></span> Cut
+		<div ng-if="!isClipboardActive" class="regularTools">
+			<div class="jsLink" ng-click="cutHighlighted()">
+				<span class="glyphicon glyphicon-scissors"></span> Cut
+			</div>
+			<div class="jsLink" ng-click="markHighlightedAs('active')">
+				<span class="done"
+					ng-include="'/img/glyphs/icon-half-circle.svg'"></span> On it
+			</div>
+			<div class="jsLink" ng-click="markHighlightedAs('done')">
+				<span class="done"
+					ng-include="'/img/glyphs/icon-circle.svg'"></span> Done
+			</div>
+			<div class="jsLink" ng-click="markHighlightedAs('assigned')">
+				<span class="done"></span> Will do
+			</div>
 		</div>
-		<div ng-if="isClipboardActive" class="jsLink" ng-click="pasteHighlighted()">
-			<span class="glyphicon glyphicon-paste"></span> Paste
+
+		<div ng-if="isClipboardActive" class="clipboardTools">
+			<div class="jsLink" ng-click="pasteHighlighted()">
+				<span class="glyphicon glyphicon-paste"></span> Paste
+			</div>
 		</div>
 	</div>
 </div>

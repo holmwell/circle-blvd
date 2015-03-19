@@ -295,9 +295,8 @@ h4, h5 {
 #highlightedTools {
   position: absolute;
   left: -2ex; /* this is flush */
-  /*margin-top: -1.5em;*/
   border: none;
-  border-right: 1px dotted #ccc;
+  /*border-right: 1px dotted #ccc;*/
   z-index: 10000;
 }
 #highlightedTools h6 {
@@ -309,14 +308,36 @@ h4, h5 {
   text-align: center;
 }
 #highlightedTools .tools {
-  color: #ccc;
+  color: #ddd;
   padding: 1.5ex;
+}
+#highlightedTools .regularTools {
+  margin-top: -1.95em;
 }
 #highlightedTools .glyphicon {
   padding-right: 0.5ex;
 }
+#highlightedTools .jsLink {
+  margin-bottom: 1ex;
+}
 #highlightedTools .jsLink:hover {
   color: #888;
+}
+#highlightedTools .done {
+  display: inline-block;
+
+  /*border: solid 1px transparent;*/
+  width: 18px;
+  height: 18px;
+  margin-top: -0.25ex;
+  margin-left: -0.35ex;
+  margin-right: 0.35ex;
+  
+  vertical-align: text-top;  
+  opacity: 0.2;
+}
+#highlightedTools .jsLink:hover .done {
+  opacity: 0.6;
 }
 
 #backlog {

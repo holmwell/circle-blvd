@@ -631,6 +631,18 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		
 	});
 
+	$scope.markHighlightedAs = function (newStatus) {
+		highlightedStories.forEach(function (story) {
+			if (story.isDeadline || story.isNextMeeting) {
+				return;
+			}
+
+			if (story.status !== newStatus) {
+				story.status = newStatus;
+				$scope.$emit('storyChanged', story);
+			}
+		});
+	};
 
 
 	$scope.$on('beforeStorySelected', function (e) {
