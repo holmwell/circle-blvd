@@ -176,14 +176,14 @@
 	</div>
 
 	<div class="row no-select hidden-xs" ng-show="!story.isSelected" id="story-{{$index}}">
-		<div class="col-sm-10 paddy">
+		<div class="col-sm-11 paddy">
 			<div class="summary"
 			ng-class="{mine: isStoryMine(story)}">
 				<sp-story-summary/>
 			</div>
 		</div>
 		<div ng-if="(!isMindset('bump') && !isStoryDone(story)) || !story.isAfterNextMeeting || isMindset('roadmap')" 
-			class="col-sm-2 grippy">
+			class="col-sm-1 grippy">
 			<div class="pull-right grippy-viz">
 				<span class="grippy-bar top"></span>
 				<span class="grippy-bar"></span>
