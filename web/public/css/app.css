@@ -289,6 +289,9 @@ h4, h5 {
   display: none;
 }
 
+.moving #highlightedTools {
+  display: none;
+}
 #highlightedTools {
   position: absolute;
   left: -2ex; /* this is flush */

@@ -208,11 +208,14 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		return false;
 	};
 
-
-	$scope.$on('storyHighlight', function (e, story, highlightType) {
+	var highlightStory = function (story, highlightType) {
 		if (highlightType === 'single') {
 			// Only allow one story to be highlighted.
 			unhighlightAllStories();	
+		}
+
+		if (isMovingTask) {
+			return;
 		}
 
 		var highlight = function (storyToHighlight) {
@@ -248,6 +251,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				highlight(current);
 			}
 		}
+	};
+
+
+	$scope.$on('storyHighlight', function (e, story, highlightType) {
+		highlightStory(story, highlightType);
 	});
 					
 
@@ -1446,12 +1454,19 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			scrollSensitivity: 25,
 			deactivate: function (event, ui) {
 				// ui.item.removeClass('dragging');
+				ui.item.removeClass('moving');
 				storyNodeMoved(ui);
 				isMovingTask = false;
+
+				var preMoveStoryElement = ui.item;
+				var storyId = getStoryFacadeFromElement(preMoveStoryElement).id;		    	
+				var story = stories.get(storyId);
+				highlightStory(story, 'single');
 			},
 			start: function (event, ui) {
 				// The drop shadow slows down the phones a bit
 				// ui.item.addClass('dragging');
+				ui.item.addClass('moving');
 				isMovingTask = true;
 				startMove(ui);
 			}
