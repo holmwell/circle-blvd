@@ -7,7 +7,7 @@
 	</div>
 </div>
 
-<div ng-if="isStoryMostRecentHighlight(story)"
+<div ng-if="isStoryMostRecentHighlight(story) && !isMindset('roadmap')"
 	id="highlightedTools" class="hidden-xs">
 	<div class="tools">
 		<div ng-if="!isClipboardActive" class="jsLink" ng-click="cutHighlighted()">
