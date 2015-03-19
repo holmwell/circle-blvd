@@ -394,7 +394,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 		var nextStory = stories.get(recentStory.nextId);
 		//TODO: highlight blocks + labels
-		while (nextStory && $scope.shouldHideStory(nextStory)) {
+		while (nextStory && $scope.shouldHideStory(nextStory)
+			|| ($scope.isClipboardActive && nextStory && nextStory.isInClipboard)) {
 			nextStory = stories.get(nextStory.nextId);
 		}
 
@@ -459,7 +460,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			unhighlightAllStories();
 
 			var previousStory = stories.getPrevious(story, stories.get(story.id));
-			while (previousStory && $scope.shouldHideStory(previousStory)) {
+			while (previousStory && 
+				($scope.shouldHideStory(previousStory) || 
+					($scope.isClipboardActive && previousStory && previousStory.isInClipboard)
+				)
+			) {
 				previousStory = stories.getPrevious(previousStory, previousStory);
 			}
 
