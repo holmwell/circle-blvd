@@ -150,6 +150,12 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 		$scope.mouse.isHighlighting = false; 
 	});
 
+	$scope.handleSingleClicks = function (story) {
+		if ($scope.keyboard.isShiftDown) {
+			$scope.select(story);
+		}
+	};
+
 	$scope.mouseEnter = function (story) {
 		if ($scope.mouse.isHighlighting) {
 			if (!story.isHighlighted) {
