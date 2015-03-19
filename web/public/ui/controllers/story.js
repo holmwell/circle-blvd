@@ -143,16 +143,17 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 
 			story.highlightedFrom = 'first';
 			$scope.mouse.isHighlighting = true;
+			$scope.mouse.lastMouseDownStory = story;
 		}
 	};
 
-	var lastClickedStory = undefined;
 	$scope.rememberHighlight = function (story) {
-		if ($scope.mouse.lastClickedStory && 
-			$scope.mouse.lastClickedStory.id === story.id) {
+		if ($scope.mouse.lastMouseUpStory && 
+			$scope.mouse.lastMouseUpStory.id === story.id &&
+			$scope.mouse.lastMouseUpStory.id === $scope.mouse.lastMouseDownStory.id) {
 			$scope.select(story);
 		}
-		$scope.mouse.lastClickedStory = story;
+		$scope.mouse.lastMouseUpStory = story;
 	};
 
 	$scope.$on('mouseUp', function () {
