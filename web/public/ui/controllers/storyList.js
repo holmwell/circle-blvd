@@ -173,9 +173,15 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			// TODO: Might be cool to remember the highlighted
 			// stories across pages
 			if (highlightedStories.length === 0) {
-				var firstStory = stories.getFirst();
-				firstStory.isHighlighted = true;
-				highlightedStories.push(firstStory);
+				// Let's not highlight any stories by default,
+				// for the time being. The odds of a first-story
+				// selection being useful are low. About all it
+				// gives us is the arrow keys work right away
+				// for changing the highlight.
+				//
+				// var firstStory = stories.getFirst();
+				// firstStory.isHighlighted = true;
+				// highlightedStories.push(firstStory);
 			}
 		}
 		else {
