@@ -289,6 +289,30 @@ h4, h5 {
   display: none;
 }
 
+#highlightedTools {
+  position: absolute;
+  left: -2ex; /* this is flush */
+  /*margin-top: -1.5em;*/
+  border: none;
+  border-right: 1px dotted #ccc;
+  z-index: 10000;
+}
+#highlightedTools h6 {
+  color: #aaa;
+  padding: 0;
+  margin: 0;
+  margin-top: 0.6em;
+  margin-bottom: 0.6em;
+  text-align: center;
+}
+#highlightedTools .tools {
+  color: #ccc;
+  padding: 1.5ex;
+}
+#highlightedTools .glyphicon {
+  padding-right: 0.5ex;
+}
+
 #backlog {
   padding-top: 1ex;
   padding-right: 1.5ex;
@@ -297,6 +321,7 @@ h4, h5 {
  use only for drag-and-drop. */
 .storyWrapper, .filterWrapper {
   padding-left: 1ex;
+  position: static;
 }
 .story, .archive {
   color: #222;

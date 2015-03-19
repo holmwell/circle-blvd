@@ -144,7 +144,7 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 			story.highlightedFrom = 'first';
 			$scope.mouse.isHighlighting = true;
 		}
-	}
+	};
 
 	$scope.$on('mouseUp', function () {
 		$scope.mouse.isHighlighting = false; 

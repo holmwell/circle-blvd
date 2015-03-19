@@ -286,6 +286,26 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		}
 	});
 
+	// These are used in the story directive. It works
+	// because they inherit our scope
+	$scope.isStoryMostRecentHighlight = function (story) {
+		if (highlightedStories.length === 0) {
+			return false;
+		}
+		else if (highlightedStories[highlightedStories.length-1].id === story.id) {
+			return true;
+		}
+		return false;
+	};
+
+	$scope.cutHighlighted = function () {
+		cutHighlighted();
+	};
+
+	$scope.pasteHighlighted = function ()  {
+		pasteHighlighted();
+	};
+
 	$scope.mouseLeave = function (story) {
 		
 	};
@@ -475,8 +495,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		// TODO: Un-cut the things.
 	});
 
-
-	$scope.$on('keyCut', function (e, event) {
+	function cutHighlighted() {
 		if (clipboardStories.length > 0 || highlightedStories.length === 0) {
 			return;
 		}
@@ -500,11 +519,14 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		unhighlightAllStories();
 		highlightedStory.isHighlighted = true;
 		highlightedStories.push(highlightedStory);
+	}
 
+	$scope.$on('keyCut', function (e, event) {
+		cutHighlighted();
 		event.preventDefault();
 	});
 
-	$scope.$on('keyPaste', function (e, event) {
+	function pasteHighlighted() {
 		if (highlightedStories.length === 0 || clipboardStories.length === 0) {
 			return;
 		}
@@ -545,7 +567,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		});
 		clipboardStories = [];
 		$scope.isClipboardActive = false;
+	}
 
+	$scope.$on('keyPaste', function (e, event) {
+		pasteHighlighted();
 		event.preventDefault();
 	});
 
