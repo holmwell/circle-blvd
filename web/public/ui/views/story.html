@@ -38,7 +38,7 @@
 <div class="hidden-xs col-sm-2 debug clear" ng-hide="isMindset('roadmap')">
 	<div class="backlog-mine col-xs-9 debug"
 		ng-class="{done: isStoryDone(story)}">
-		<div ng-show="isStoryMine(story) || (isMindset('mine') && !story.isDeadline && !story.isNextMeeting)" 
+		<div ng-show="(isMindset('mine') && !story.isDeadline && !story.isNextMeeting)" 
 			ng-click="bumpStatus(story)">
 			<i class="bump-status debug" ng-hide="isStoryDone(story)"></i>
 			<i class="arrow glyphicon glyphicon-arrow-right debug"
@@ -78,11 +78,13 @@
 		'next-meeting': story.isNextMeeting,
 		'after-meeting': story.isAfterNextMeeting,
 		highlighted: story.isHighlighted && !isClipboardActive,
-		inClipboard: story.isInClipboard
+		inClipboard: story.isInClipboard,
+		mine: isStoryMine(story)
 	}"
-	ng-dblclick="select(story)" ng-mousedown="highlight(story)"
-		ng-mouseenter="mouseEnter(story)"
-		ng-mouseleave="mouseLeave(story)">
+	ng-dblclick="select(story)" 
+	ng-mousedown="highlight(story)"
+	ng-mouseenter="mouseEnter(story)"
+	ng-mouseleave="mouseLeave(story)">
 	<div ng-if="story.isSelected">
 		<form>
 			<div class="summary row">
