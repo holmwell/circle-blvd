@@ -315,6 +315,9 @@ h4, h5 {
 #highlightedTools .glyphicon {
   padding-right: 0.5ex;
 }
+#highlightedTools .jsLink:hover {
+  color: #888;
+}
 
 #backlog {
   padding-top: 1ex;
