@@ -1216,8 +1216,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 	var startMove = function (ui) {
 		var block = getStartAndEndOfBlock(highlightedStories);
-		console.log(block.start);
-		console.log(block.end);
 
 		// It's useful to know the state of things before the move.
 		//preMoveStoryBefore = getStoryBefore(preMoveStoryElement);
@@ -1225,8 +1223,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			stories.getPrevious(block.start, stories.get(block.start.id));
 		// TODO: This does NOT work. However, we work around it below.
 		// preMoveStoryAfter = getStoryAfter(ui.item);
-
-		console.log(preMoveStoryBefore);
 
 		if (!preMoveStoryBefore) {
 			preMoveStoryBefore = {
@@ -1293,12 +1289,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			storyAfter: getStoryAfterFromModel()
 		};
 
-		// TODO: Check block range
-		console.log("PRE MOVE");
-		console.log(preMove);
+		// console.log("PRE MOVE");
+		// console.log(preMove);
 
-		console.log("POST MOVE");
-		console.log(postMove);
+		// console.log("POST MOVE");
+		// console.log(postMove);
 
 		if (preMove.storyBefore === postMove.storyBefore
 		|| preMove.storyAfter === postMove.storyAfter
@@ -1567,30 +1562,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				// And, we're done. Show our work.
 				$(selector).show();
 				isMovingTask = false;
-
-				var c = stories.getFirst();
-				while (c && c.summary !== "1") {
-					c = stories.get(c.nextId);
-				}
-
-				var c2 = stories.get(c.nextId);
-				var c3 = stories.get(c2 ? c2.nextId : "whatever");
-				console.log(c.summary);
-				console.log(c2.summary);
-				console.log(c3.summary);
-
-				var blah = false;
-				$scope.stories.forEach(function (story) {
-					if (story.summary === "1") {
-						blah = true;
-					}
-					if (blah) {
-						console.log("View model: " + story.summary);
-					}
-					if (story.summary === "3") {
-						blah = false;
-					}
-				});
 			},
 			start: function (event, ui) {
 				// The drop shadow slows down the phones a bit
