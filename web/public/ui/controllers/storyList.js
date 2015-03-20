@@ -691,6 +691,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	});
 
 	var isStoryBetween = function (story, start, end) {	
+		if (!story) {
+			return false;
+		}
+		
 		if (end.id === story.id) {
 			return true;
 		}
@@ -1297,9 +1301,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		console.log(postMove);
 
 		if (preMove.storyBefore === postMove.storyBefore
-		|| preMove.storyAfter === postMove.storyAfter) {
+		|| preMove.storyAfter === postMove.storyAfter
+		|| isStoryBetween(postMove.storyBefore, startStory, endStory)
+		|| isStoryBetween(postMove.storyAfter, startStory, endStory)) {
 			// We didn't actually move. Do nothing.
-			movedStory.isBeingDragged = false;
+			highlightedStories.forEach(function (movedStory) {
+				movedStory.isBeingDragged = false;
+			});
 
 			if ($scope.isMindset('roadmap')) {
 				// HACK: I can't figure out how to deal with this situation
@@ -1557,8 +1565,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				else {
 					var block = getStartAndEndOfBlock(highlightedStories);
 					storyNodeMoved(ui, ui.item, block.start, block.end);
-					$('.highlightedWrapper').show()
 				}
+				$('.highlightedWrapper').show()
 				isMovingTask = false;
 			},
 			start: function (event, ui) {
