@@ -1,3 +1,4 @@
+<div class="text-select">
 <div class="suggestion" ng-show="hasSuggestion">
 	<h4>Suggested action</h4>
 	<p>How about we connect these two stories? Read below to see if this makes sense.</p>
@@ -33,7 +34,7 @@ it means two stories are pointing to it, and there is a next-story loop.</p>
 
 <h4>Stories without a previous story (besides the first story)</h4>
 <div ng-repeat="story in withoutPrevious">
-	<div class="new-story">{{story.summary}}</div>
+	<div class="new-story">{{story.summary}} ({{story.id}})</div>
 </div>
 
 <h4>Primary story group (stories outside of the broken list)</h4>
@@ -42,5 +43,5 @@ it means two stories are pointing to it, and there is a next-story loop.</p>
 		<div class="new-story">{{story.summary}}</div>
 	</div>
 </div>
-
+</div>
 
