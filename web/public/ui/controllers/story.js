@@ -135,7 +135,7 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 		}	
 	};
 
-	$scope.highlight = function (story) {
+	var highlight = function (story) {
 		// FYI: Stories will be highlighted when they are
 		// selected (opened). This is the desired behavior for now.
 		if (!story.isSelected) {
@@ -145,6 +145,16 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 			$scope.mouse.isHighlighting = true;
 			$scope.mouse.lastMouseDownStory = story;
 		}
+	}
+
+	$scope.highlight = function (story) {
+		// Prevent drag operations from resetting our
+		// selection
+		if (story.isHighlighted) {
+			$scope.mouse.isHighlighting = true;
+			return;
+		}
+		highlight(story);
 	};
 
 	$scope.rememberHighlight = function (story) {
@@ -165,6 +175,9 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 			$scope.select(story);
 			return;
 		}
+
+		highlight(story);
+		$scope.mouse.isHighlighting = false; 
 	};
 
 	$scope.mouseEnter = function (story) {
