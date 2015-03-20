@@ -694,7 +694,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		if (!story) {
 			return false;
 		}
-		
+
 		if (end.id === story.id) {
 			return true;
 		}
@@ -1516,6 +1516,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 	var newDraggable = function () {
 		var multidragDataLabel = 'multidrag';
+		var selector = '.highlightedWrapper';
 
 		$('#sortableList').sortable({
 			handle: ".grippy",
@@ -1525,12 +1526,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			tolerance: "pointer",
 			scrollSensitivity: 25,
 			helper: function (event, item) {
-				var selector = '.highlightedWrapper';
 				var highlighted = item.parent().children(selector).clone();
-				
-				// Save highlighted items to memory, 
-				// item.data(multidragDataLabel, highlighted);
-				item.data(multidragDataLabel, item);
 
 				// Hide highlighted items from the view
 				item.siblings(selector).hide();
@@ -1541,33 +1537,60 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			},
 			deactivate: function (event, ui) {
 				// ui.item.removeClass('dragging');
-
 				ui.item.removeClass('moving');
 
-				var item = ui.item.data(multidragDataLabel);
-				// Insert them back into the DOM
-				// ui.item.after(highlighted);
-				// Remove the dragged item, because it is already
-				// inserted in the line above
-				// ui.item.remove();
-				console.log(stories.get(getStoryFacadeFromElement(ui.item).id).summary);
+				var block = getStartAndEndOfBlock(highlightedStories);
+				storyNodeMoved(ui, ui.item, block.start, block.end);
 
-				if (highlightedStories.length === 1) {
-					storyNodeMoved(ui, ui.item, 
-						highlightedStories[0],
-						highlightedStories[0]);
+				// At this point, the server, model and view model
+				// are correct, but it is possible that the DOM is 
+				// out of order.
 
-					// var preMoveStoryElement = ui.item;
-					// var storyId = getStoryFacadeFromElement(preMoveStoryElement).id;		    	
-					// var story = stories.get(storyId);
-					// highlightStory(story, 'single');
+				// This can happen when ui.item is not at the top of
+				// the block. 
+				var facade = getStoryFacadeFromElement(ui.item);
+				var story = stories.get(facade.id);
+				var next  = stories.get(story.nextId);
+				if (next) {
+					var after = $("[data-story-id='" + next.id + "']");
+					ui.item.insertBefore(after);
 				}
 				else {
-					var block = getStartAndEndOfBlock(highlightedStories);
-					storyNodeMoved(ui, ui.item, block.start, block.end);
+					// Need to do this if we're at the bottom of the list
+					var prev = stories.getPrevious(story, story);
+					if (prev) {
+						var before = $("[data-story-id='" + prev.id + "']");
+						ui.item.insertAfter(before);
+					}
 				}
-				$('.highlightedWrapper').show()
+
+				// And, we're done. Show our work.
+				$(selector).show();
 				isMovingTask = false;
+
+				var c = stories.getFirst();
+				while (c && c.summary !== "1") {
+					c = stories.get(c.nextId);
+				}
+
+				var c2 = stories.get(c.nextId);
+				var c3 = stories.get(c2 ? c2.nextId : "whatever");
+				console.log(c.summary);
+				console.log(c2.summary);
+				console.log(c3.summary);
+
+				var blah = false;
+				$scope.stories.forEach(function (story) {
+					if (story.summary === "1") {
+						blah = true;
+					}
+					if (blah) {
+						console.log("View model: " + story.summary);
+					}
+					if (story.summary === "3") {
+						blah = false;
+					}
+				});
 			},
 			start: function (event, ui) {
 				// The drop shadow slows down the phones a bit
