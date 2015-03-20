@@ -1546,9 +1546,21 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				var facade = getStoryFacadeFromElement(ui.item);
 				var story = stories.get(facade.id);
 				var next  = stories.get(story.nextId);
-				if (next) {
-					var after = $("[data-story-id='" + next.id + "']");
-					ui.item.insertBefore(after);
+
+				// Check to make sure the next item in the DOM
+				// matches the model.
+				var domNext = ui.item.next('.storyWrapper');
+				// TODO: Sometimes the above lies.
+
+				if (domNext && domNext.attr('data-story-id')) {
+					if (next) {
+						var after = $("[data-story-id='" + next.id + "']");
+						ui.item.insertBefore(after);
+						// console.log("INSERT BEFORE")
+					}
+					else {
+						console.log("Should never get here. :(");
+					}
 				}
 				else {
 					// Need to do this if we're at the bottom of the list
@@ -1556,6 +1568,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 					if (prev) {
 						var before = $("[data-story-id='" + prev.id + "']");
 						ui.item.insertAfter(before);
+						// console.log("INSERT AFTER")
 					}
 				}
 
