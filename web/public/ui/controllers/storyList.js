@@ -545,17 +545,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		event.preventDefault();
 	});
 
-	function pasteHighlighted() {
-		if (highlightedStories.length === 0 || clipboardStories.length === 0) {
-			return;
-		}
-
-		var nextStory = highlightedStories.pop();
-		nextStory.isHighlighted = false;
-
-		var clipboardMap = {};
-		clipboardStories.forEach(function (story) {
-			clipboardMap[story.id] = story;
+	function getStartAndEndOfBlock(stories) {
+		var map = {};
+		stories.forEach(function (story) {
+			map[story.id] = story;
 		});
 
 		var start;
@@ -565,18 +558,34 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		// are arranged from top to bottom.
 		//
 		// If not, they're bottom to top
-		if (clipboardMap[clipboardStories[0].nextId]) {
-			start = clipboardStories[0];
-			end = clipboardStories[clipboardStories.length-1];
+		if (map[stories[0].nextId]) {
+			start = stories[0];
+			end = stories[stories.length-1];
 		}
 		else {
-			end = clipboardStories[0];
-			start = clipboardStories[clipboardStories.length-1];
+			end = stories[0];
+			start = stories[stories.length-1];
 		}
 
-		moveStoryBlock(start,
-			stories.get(start.id), 
-			stories.get(end.id),
+		return {
+			start: start,
+			end: end
+		};
+	};
+
+	function pasteHighlighted() {
+		if (highlightedStories.length === 0 || clipboardStories.length === 0) {
+			return;
+		}
+
+		var nextStory = highlightedStories.pop();
+		nextStory.isHighlighted = false;
+
+		var block = getStartAndEndOfBlock(clipboardStories);
+
+		moveStoryBlock(block.start,
+			stories.get(block.start.id), 
+			stories.get(block.end.id),
 			stories.get(nextStory.id));
 
 		clipboardStories.forEach(function (story) {
@@ -1202,28 +1211,41 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 
 	var startMove = function (ui) {
-		isMoving = true;
+		var block = getStartAndEndOfBlock(highlightedStories);
+		console.log(block.start);
+		console.log(block.end);
+
 		// It's useful to know the state of things before the move.
-		var preMoveStoryElement = ui.item;
-		preMoveStoryBefore = getStoryBefore(preMoveStoryElement);
+		//preMoveStoryBefore = getStoryBefore(preMoveStoryElement);
+		preMoveStoryBefore = 
+			stories.getPrevious(block.start, stories.get(block.start.id));
 		// TODO: This does NOT work. However, we work around it below.
 		// preMoveStoryAfter = getStoryAfter(ui.item);
 
-		var storyId = getStoryFacadeFromElement(preMoveStoryElement).id;		    	
-		var story = stories.get(storyId);
-		story.isMoving = true; // TODO: Remove this.
-		story.isBeingDragged = true;
+		console.log(preMoveStoryBefore);
+
+		if (!preMoveStoryBefore) {
+			preMoveStoryBefore = {
+				id: "first"
+			};
+		}
+
+		highlightedStories.forEach(function (story) { 
+			var story = stories.get(story.id);
+			story.isMoving = true; // TODO: Remove this.
+			story.isBeingDragged = true;
+		});
 
 		// getStoryAfter(), above, doesn't seem to work 
 		// how we want at this point in time.
-		var nextStory = stories.get(story.nextId);
+		var nextStory = stories.get(block.end.nextId);
 		if (nextStory) {
-			preMoveStoryAfter = { id: story.nextId };
+			preMoveStoryAfter = { id: nextStory.id };
 		}
 		else {
 			preMoveStoryAfter = { id: getLastStoryId() };
 		}
-		
+
 		// TODO: Do we have to do these with the new jQuery sortable?
 		//Set some styles here
 		// drag.get('node').addClass('placeholder-story'); // applied to the storyWrapper
@@ -1233,12 +1255,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		// drag.get('dragNode').one('.story').addClass('dragging-story');
 	};
 
-	var storyNodeMoved = function (ui) {
-		var story = getStoryFacadeFromElement(ui.item);
-		var storyBefore = getStoryBefore(ui.item);
-		var storyAfter = getStoryAfter(ui.item);
+	var storyNodeMoved = function (ui, item, start, end) {
+		var story = getStoryFacadeFromElement(item);
+		var storyBefore = getStoryBefore(item);
+		var storyAfter = getStoryAfter(item);
 
-		var movedStory = stories.get(story.id);
+		var startStory = stories.get(start.id);
+		var endStory = stories.get(end.id);
 
 		var preMove = {
 			storyBefore: stories.get(preMoveStoryBefore.id),
@@ -1265,6 +1288,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			// storyAfter: stories.get(storyAfter.id)
 			storyAfter: getStoryAfterFromModel()
 		};
+
+		// TODO: Check block range
+		console.log("PRE MOVE");
+		console.log(preMove);
+
+		console.log("POST MOVE");
+		console.log(postMove);
 
 		if (preMove.storyBefore === postMove.storyBefore
 		|| preMove.storyAfter === postMove.storyAfter) {
@@ -1301,7 +1331,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		var updateModelStoryOrder = function () {
 			// If the moved story was the first story, the preMove.storyAfter
 			// is now the first story (if it exists).
-			if (stories.getFirst().id === movedStory.id && preMove.storyAfter) {
+			if (stories.getFirst().id === start.id && preMove.storyAfter) {
 				stories.setFirst(preMove.storyAfter);
 			}
 
@@ -1313,17 +1343,17 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			
 			// 2. The story before the moved story, after it was moved.
 			if (postMove.storyBefore) {
-				postMove.storyBefore.nextId = movedStory.id;
+				postMove.storyBefore.nextId = start.id;
 			}
 			else {
 				// No need to set the "nextId" on the "storyBefore," because 
 				// there isn't one. Instead, we know that the moved story
 				// is now the first story.
-				stories.setFirst(movedStory);
+				stories.setFirst(startStory);
 			}
 
-			// 3. The story that was moved, unless it's now the last story.
-			movedStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();	
+			// 3. The last story that was moved, unless it's now the last story.
+			endStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();	
 		}();
 		
 		updateViewModelStoryOrder();
@@ -1331,7 +1361,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		// Without this $timeout, there is a slight delay
 		// in facade mode.
 		$timeout(function() {
-			stories.move(movedStory, postMove.storyAfter, function (err, response) {
+			stories.moveBlock(startStory, endStory, postMove.storyAfter, function (err, response) {
 				if (err) {
 					// We failed. Probably because of a data integrity issue
 					// on the server that we need to wait out. 
@@ -1339,9 +1369,16 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 					return;
 				}
 				else {
-					$scope.$emit('storyMoved', movedStory);
+					if (startStory.id === endStory.id) { 
+						$scope.$emit('storyMoved', startStory);
+					} 
+					else {
+						$scope.$emit('storyBlockMoved', startStory, endStory);
+					}	
 				}
-				movedStory.isBeingDragged = false;
+				highlightedStories.forEach(function (movedStory) {
+					movedStory.isBeingDragged = false;
+				});
 			});
 		}, 0);
 	};
@@ -1470,6 +1507,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	}
 
 	var newDraggable = function () {
+		var multidragDataLabel = 'multidrag';
+
 		$('#sortableList').sortable({
 			handle: ".grippy",
 			placeholder: "dragging-row",
@@ -1477,16 +1516,50 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			opacity: 0.75,
 			tolerance: "pointer",
 			scrollSensitivity: 25,
+			helper: function (event, item) {
+				var selector = '.highlightedWrapper';
+				var highlighted = item.parent().children(selector).clone();
+				
+				// Save highlighted items to memory, 
+				// item.data(multidragDataLabel, highlighted);
+				item.data(multidragDataLabel, item);
+
+				// Hide highlighted items from the view
+				item.siblings(selector).hide();
+
+				var emptyElement = $("<div/>");
+				emptyElement.addClass("dragHelper");
+				return emptyElement.append(highlighted);
+			},
 			deactivate: function (event, ui) {
 				// ui.item.removeClass('dragging');
-				ui.item.removeClass('moving');
-				storyNodeMoved(ui);
-				isMovingTask = false;
 
-				var preMoveStoryElement = ui.item;
-				var storyId = getStoryFacadeFromElement(preMoveStoryElement).id;		    	
-				var story = stories.get(storyId);
-				highlightStory(story, 'single');
+				ui.item.removeClass('moving');
+
+				var item = ui.item.data(multidragDataLabel);
+				// Insert them back into the DOM
+				// ui.item.after(highlighted);
+				// Remove the dragged item, because it is already
+				// inserted in the line above
+				// ui.item.remove();
+				console.log(stories.get(getStoryFacadeFromElement(ui.item).id).summary);
+
+				if (highlightedStories.length === 1) {
+					storyNodeMoved(ui, ui.item, 
+						highlightedStories[0],
+						highlightedStories[0]);
+
+					// var preMoveStoryElement = ui.item;
+					// var storyId = getStoryFacadeFromElement(preMoveStoryElement).id;		    	
+					// var story = stories.get(storyId);
+					// highlightStory(story, 'single');
+				}
+				else {
+					var block = getStartAndEndOfBlock(highlightedStories);
+					storyNodeMoved(ui, ui.item, block.start, block.end);
+					$('.highlightedWrapper').show()
+				}
+				isMovingTask = false;
 			},
 			start: function (event, ui) {
 				// The drop shadow slows down the phones a bit

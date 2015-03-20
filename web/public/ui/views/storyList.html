@@ -48,7 +48,8 @@
 				data-left-story-id="{{story.id}}"
 				data-story-id="{{story.id}}"
 				ng-repeat="story in stories"
-				ng-hide="shouldHideStory(story)">
+				ng-hide="shouldHideStory(story)"
+				ng-class="{highlightedWrapper: story.isHighlighted}">
 				<sp-story/>
 			</div>
 		</div>
