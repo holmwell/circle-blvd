@@ -1708,7 +1708,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				// are correct, but it is possible that the DOM is 
 				// out of order.
 				// ensureDomIntegrity(ui);
-				if (success) {
+				if (success && !$scope.isMindset('roadmap')) {
 					orderBlockInDom(ui, block);
 				}
 
