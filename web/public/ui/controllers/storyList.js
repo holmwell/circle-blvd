@@ -545,27 +545,40 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		event.preventDefault();
 	});
 
-	function getStartAndEndOfBlock(stories) {
-		var map = {};
-		stories.forEach(function (story) {
-			map[story.id] = story;
+	function getStartAndEndOfBlock(storyBlock) {
+		var idMap = {};
+		var nextMap = {};
+
+		storyBlock.forEach(function (story) {
+			idMap[story.id] = story;
+			nextMap[story.nextId] = story;
 		});
 
 		var start;
 		var end;
+
+		storyBlock.forEach(function (story) {
+			if (!idMap[story.nextId]) {
+				end = story;
+			}
+			if (!nextMap[story.id]) {
+				start = story;
+			}
+		});
+
 		// If the first clipboard element's next story
 		// is also in the clipboard, that means the stories
 		// are arranged from top to bottom.
 		//
 		// If not, they're bottom to top
-		if (map[stories[0].nextId]) {
-			start = stories[0];
-			end = stories[stories.length-1];
-		}
-		else {
-			end = stories[0];
-			start = stories[stories.length-1];
-		}
+		// if (map[storyBlock[0].nextId]) {
+		// 	start = storyBlock[0];
+		// 	end = storyBlock[storyBlock.length-1];
+		// }
+		// else {
+		// 	end = storyBlock[0];
+		// 	start = storyBlock[storyBlock.length-1];
+		// }
 
 		return {
 			start: start,
@@ -639,7 +652,14 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		// }
 		
 	});
-
+	$scope.$on('mouseLeave', function () {
+		// If the guest is moving things quickly, sometimes letting go
+		// of the mouse outside the window can be a thing, which messes
+		// up are shared state -- which is a bad idea anyway, and this
+		// is one reason why, but so it goes.
+		$scope.mouse.isHighlighting = false;
+	})
+ 
 	$scope.markHighlightedAs = function (newStatus) {
 		highlightedStories.forEach(function (story) {
 			if (story.isDeadline || story.isNextMeeting) {
@@ -706,6 +726,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			if (current.id === story.id) {
 				return true;
 			}
+
+			if (current.nextId === getLastStoryId()) {
+				return false;
+			}
 			current = stories.get(current.nextId)
 		}
 
@@ -760,7 +784,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		endStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();
 
 		// Update view model
-		updateViewModelStoryOrder();
+		try { 
+			updateViewModelStoryOrder();
+		}
+		catch (ex) {
+			errors.handle("Something unknown happened with the move. Need to refresh page.", "client");
+			return;
+		}
 
 		// ...
 		$timeout(function () {
@@ -1166,7 +1196,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		else {
 			console.log("NEW:     " + storiesInNewOrder.length);
 			console.log("CURRENT: " + storiesList.length);
-			errors.handle("Something unknown happened with the move. Need to refresh page.", "client");
+			throw new Error("New order count mismatch");
+			// errors.handle("Something unknown happened with the move. Need to refresh page.", "client");
 		}
 	};
 
@@ -1178,6 +1209,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	var idAttr = 'data-story-id';
 	var preMoveStoryBefore = undefined;
 	var preMoveStoryAfter = undefined;
+	var preMoveBlockSize = undefined;
+	var siblingSelector = '.storyWrapper';
 
 	var getLastStoryId = function () {
 		return "last-" + (listId || circleId);
@@ -1189,22 +1222,29 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		};
 	};
 
-	var getStoryBefore = function (el) {
-		var previousElement = el.prev();
-		if (previousElement !== null && previousElement.attr(idAttr)) { 
-			return getStoryFacadeFromElement(el.prev());
+	var getStoryBefore = function (el, start, end) {
+		var previousElement = el.prev(siblingSelector);
+
+		while (previousElement !== null && previousElement.attr(idAttr)) { 
+			var storyBefore = getStoryFacadeFromElement(previousElement);
+
+			if (isStoryBetween(storyBefore, start, end)) {
+				previousElement = previousElement.prev(siblingSelector);
+			}
+			else {
+				return storyBefore;
+			}
 		}
-		else {
-			return {
-				id: "first"
-			};
-		}
+
+		return {
+			id: "first"
+		};
 	};
 
 	var getStoryAfter = function (el) {
-		var nextElement = $(el).next();
+		var nextElement = $(el).next(siblingSelector);
 		if (nextElement !== null && nextElement.attr(idAttr)) {
-			return getStoryFacadeFromElement(el.next());
+			return getStoryFacadeFromElement(el.next(siblingSelector));
 		}
 		else {
 			return {
@@ -1216,6 +1256,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 	var startMove = function (ui) {
 		var block = getStartAndEndOfBlock(highlightedStories);
+		preMoveBlockSize = highlightedStories.length;
 
 		// It's useful to know the state of things before the move.
 		//preMoveStoryBefore = getStoryBefore(preMoveStoryElement);
@@ -1255,9 +1296,30 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		// drag.get('dragNode').one('.story').addClass('dragging-story');
 	};
 
+	var hackRefresh = function () {
+		var hackCircleId = circleId;
+		var hackListId = listId;
+		var hackFirstStory = stories.getFirst();
+		var hackAllStories = stories.all();
+
+		$scope.data = null;
+		$scope.$apply();
+		$scope.data = {
+			circleId: hackCircleId,
+			listId: hackListId,
+			firstStory: hackFirstStory,
+			allStories: hackAllStories
+		};
+		$scope.$apply(function () {
+			$timeout(function () {
+				makeStoriesDraggable();
+			}, 500);	
+		});
+	};
+
 	var storyNodeMoved = function (ui, item, start, end) {
 		var story = getStoryFacadeFromElement(item);
-		var storyBefore = getStoryBefore(item);
+		var storyBefore = getStoryBefore(item, start, end);
 		var storyAfter = getStoryAfter(item);
 
 		var startStory = stories.get(start.id);
@@ -1308,27 +1370,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				// HACK: I can't figure out how to deal with this situation
 				// right now, and I think rebinding the page is better
 				// than leaving an artifact
-				var hackCircleId = circleId;
-				var hackListId = listId;
-				var hackFirstStory = stories.getFirst();
-				var hackAllStories = stories.all();
-
-				$scope.data = null;
-				$scope.$apply();
-				$scope.data = {
-					circleId: hackCircleId,
-					listId: hackListId,
-					firstStory: hackFirstStory,
-					allStories: hackAllStories
-				};
-				$scope.$apply(function () {
-					$timeout(function () {
-						makeStoriesDraggable();
-					}, 500);	
-				});
+				hackRefresh();
 			}
 
-			return;
+			return true;
 		}
 
 		var updateModelStoryOrder = function () {
@@ -1359,12 +1404,35 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			endStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();	
 		}();
 		
-		updateViewModelStoryOrder();
+		
+		try {
+			updateViewModelStoryOrder();
+		}
+		catch (ex) {
+			console.log("INTEGRITY ISSUE IN CLIENT");
+			console.log("PRE MOVE");
+			console.log('Before: ' + preMove.storyBefore.summary);
+			console.log('After:  ' + preMove.storyAfter.summary);
+
+			console.log("POST MOVE");
+			console.log('Before: ' + postMove.storyBefore.summary);
+			console.log('After:  ' + postMove.storyAfter.summary);
+
+			console.log("BLOCK:");
+			console.log("Start: " + startStory.summary);
+			console.log("End: " + endStory.summary);
+
+			errors.handle("Something unknown happened with the move. Need to refresh page.", "client")
+			return false;
+		}
 
 		// Without this $timeout, there is a slight delay
 		// in facade mode.
 		$timeout(function() {
 			stories.moveBlock(startStory, endStory, postMove.storyAfter, function (err, response) {
+				highlightedStories.forEach(function (movedStory) {
+					movedStory.isBeingDragged = false;
+				});
 				if (err) {
 					// We failed. Probably because of a data integrity issue
 					// on the server that we need to wait out. 
@@ -1379,11 +1447,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 						$scope.$emit('storyBlockMoved', startStory, endStory);
 					}	
 				}
-				highlightedStories.forEach(function (movedStory) {
-					movedStory.isBeingDragged = false;
-				});
 			});
 		}, 0);
+
+		return true;
 	};
 
 	var attachToDragEvents = function (Y) {
@@ -1509,6 +1576,95 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		// });
 	}
 
+	var getStoryElement = function (id) {
+		return $("[data-story-id='" + id + "']");
+	};
+
+	var checkStoryListDom = function () {
+		var current = stories.getFirst();
+		var element; 
+		while (current && current.nextId !== getLastStoryId()) {
+			console.log("...");
+			element = getStoryElement(current.id);
+			nextElement = element.next(siblingSelector);
+			
+			next = stories.get(current.nextId);
+
+			if (nextElement.attr('data-story-id') !== next.id) {
+				console.log("DOM INTEGRITY BLAH");
+				return;
+			}
+
+			current = next;
+		}
+
+		console.log("DONE");
+	};
+
+	$scope.checkIntegrity = checkStoryListDom;
+
+	var ensureDomIntegrity = function (ui) {
+		// This can happen when ui.item is not at the top of
+		// the block. 
+		var facade = getStoryFacadeFromElement(ui.item);
+		var story = stories.get(facade.id);
+		var next  = stories.get(story.nextId);
+
+		// Check to make sure the next item in the DOM
+		// matches the model.
+		var domNext = ui.item.next(siblingSelector);
+		// TODO: Sometimes the above lies.
+
+		if (domNext && domNext.attr('data-story-id')) {
+			if (next) {
+				var after = getStoryElement(next.id);
+				ui.item.insertBefore(after);
+				console.log("INSERT BEFORE")
+			}
+			else {
+				console.log("Should never get here. :(");
+			}
+		}
+		else {
+			// Need to do this if we're at the bottom of the list
+			var prev = stories.getPrevious(story, story);
+			if (prev) {
+				var before = getStoryElement(prev.id);
+				ui.item.insertAfter(before);
+				console.log("INSERT AFTER")
+			}
+		}
+
+		//////////////////////////////////////////////////////////
+		$timeout(checkStoryListDom, 200);
+	};
+
+
+	var orderBlockInDom = function (ui, block) {
+		// The way we're using jQuery UI is pretty fragile, and
+		// things will mess up if the drop target is not in the 
+		// list.
+		//
+		// Recover from this situation.
+		// console.log("Ordering block ...");
+		var startElement = getStoryElement(block.start.id);
+		var nextElement;
+		var element;
+
+		var current = stories.getPrevious(block.start, stories.get(block.start.id));
+
+		while (current && current.id !== block.end.id) {
+			// console.log(current.summary);
+			element = getStoryElement(current.id);
+			nextElement = getStoryElement(current.nextId);
+			if (nextElement) {
+				nextElement.insertAfter(element);
+			}
+			current = stories.get(current.nextId);
+		}
+	};
+
+
 	var newDraggable = function () {
 		var multidragDataLabel = 'multidrag';
 		var selector = '.highlightedWrapper';
@@ -1535,41 +1691,25 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				ui.item.removeClass('moving');
 
 				var block = getStartAndEndOfBlock(highlightedStories);
-				storyNodeMoved(ui, ui.item, block.start, block.end);
 
+				if (highlightedStories.length !== preMoveBlockSize) {
+					// So, this can be a thing. For now, just hiccup,
+					// don't do any moves, and hope that peace finds us.
+					console.log("BLOCK SIZES DIFFERENT");
+					hackRefresh();
+
+					$(selector).show();
+					isMovingTask = false;
+					return;
+				}
+
+				var success = storyNodeMoved(ui, ui.item, block.start, block.end);
 				// At this point, the server, model and view model
 				// are correct, but it is possible that the DOM is 
 				// out of order.
-
-				// This can happen when ui.item is not at the top of
-				// the block. 
-				var facade = getStoryFacadeFromElement(ui.item);
-				var story = stories.get(facade.id);
-				var next  = stories.get(story.nextId);
-
-				// Check to make sure the next item in the DOM
-				// matches the model.
-				var domNext = ui.item.next('.storyWrapper');
-				// TODO: Sometimes the above lies.
-
-				if (domNext && domNext.attr('data-story-id')) {
-					if (next) {
-						var after = $("[data-story-id='" + next.id + "']");
-						ui.item.insertBefore(after);
-						// console.log("INSERT BEFORE")
-					}
-					else {
-						console.log("Should never get here. :(");
-					}
-				}
-				else {
-					// Need to do this if we're at the bottom of the list
-					var prev = stories.getPrevious(story, story);
-					if (prev) {
-						var before = $("[data-story-id='" + prev.id + "']");
-						ui.item.insertAfter(before);
-						// console.log("INSERT AFTER")
-					}
+				// ensureDomIntegrity(ui);
+				if (success) {
+					orderBlockInDom(ui, block);
 				}
 
 				// And, we're done. Show our work.
@@ -1582,6 +1722,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				ui.item.addClass('moving');
 				isMovingTask = true;
 				startMove(ui);
+
+				$('.dragging-row').height(highlightedStories.length * 50);
 			}
 		});
 

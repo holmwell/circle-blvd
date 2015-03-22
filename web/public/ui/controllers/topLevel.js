@@ -69,6 +69,10 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 		}
 	};
 
+	$scope.mouseleave = function (e) {
+		$scope.$broadcast('mouseLeave', e);
+	}
+
 	$scope.keydown = function(e) {
 		if (e.keyCode === 27) { // esc
 			$scope.$broadcast('keyEscape', e);
