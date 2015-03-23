@@ -225,6 +225,49 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		createStory(lastLine);
 	};
 
+	$scope.manyPaste = function (event) {
+		var startText = "";
+		var textarea = event.target;
+		var pasteText = "";
+
+		var tasks = lib.getCopiedTasks();
+		if (tasks.length === 0) {
+			return;
+		}
+
+		tasks.forEach(function (task) {
+			var line = "";
+			if (task.isDeadline) {
+				line += "-- ";
+			}
+			line += task.summary;
+			if (task.owner) {
+				line += " @" + task.owner;
+			}
+			line += "\n";
+
+			pasteText += line;
+		});
+
+		pasteText = pasteText.trim();
+
+		if ($scope.newMany && $scope.newMany.txt) {
+			startText = $scope.newMany.txt;
+		}
+		else {
+			$scope.newMany = {};	
+		}
+
+		var index = textarea.selectionStart;
+		$scope.newMany.txt = 
+			startText.slice(0, textarea.selectionStart) + 
+			pasteText + 
+			startText.slice(textarea.selectionEnd);
+
+		event.preventDefault();
+		event.stopPropagation();
+	};
+
 	var scrollToStorySpecifiedByUrl = function () {
 		var storyId = $routeParams.storyId;
 		if (!storyId) {

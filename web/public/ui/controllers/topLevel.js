@@ -128,6 +128,10 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 			// Cmd-V
 			$scope.$broadcast('keyPaste', e);
 		}
+		if (e.keyCode === 67 && $scope.keyboard.isCommandDown) {
+			// Cmd-C
+			$scope.$broadcast('keyCopy', e);
+		}
 	};
 
 	$scope.keyup = function (e) {

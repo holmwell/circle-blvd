@@ -42,13 +42,29 @@ CircleBlvd.Services.lib = function ($http) {
         }
     }();
 
+    var copiedTasks = [];
+    var setCopiedTasks = function (tasks) {
+        copiedTasks = [];
+        if (tasks) {
+            tasks.forEach(function (task) {
+                copiedTasks.push(task);
+            });
+        }
+    };
+
+    var getCopiedTasks = function () {
+        return copiedTasks;
+    };
+
     return {
         signIn: signIn,
         consts: {
             ReplaceLabelRegex: ReplaceLabelRegex,
             LabelRegex: LabelRegex
         },
-        mindset: mindset
+        mindset: mindset,
+        setCopiedTasks: setCopiedTasks,
+        getCopiedTasks: getCopiedTasks
     };
 };
 CircleBlvd.Services.lib.$inject = ['$http'];
