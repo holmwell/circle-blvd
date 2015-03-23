@@ -1054,6 +1054,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				});				
 			}
 			else {
+				highlightStory(stories.get(storyId), 'single');
 				scrollToStory(storyId);
 			}
 		})
