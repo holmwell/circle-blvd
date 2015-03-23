@@ -11,9 +11,10 @@
 	id="highlightedTools" class="hidden-xs">
 	<div class="tools">
 		<div ng-if="!isClipboardActive" class="regularTools">
-			<div class="jsLink" ng-click="cutHighlighted()">
-				<span class="glyphicon glyphicon-scissors"></span> Cut
+			<div class="jsLink">
+				<a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span> Link</a>
 			</div>
+
 			<div class="jsLink" ng-click="markHighlightedAs('active')">
 				<span class="done"
 					ng-include="'/img/glyphs/icon-half-circle.svg'"></span> On it
@@ -24,6 +25,10 @@
 			</div>
 			<div class="jsLink" ng-click="markHighlightedAs('assigned')">
 				<span class="done"></span> Will do
+			</div>
+
+			<div class="jsLink" ng-click="cutHighlighted()">
+				<span class="glyphicon glyphicon-scissors"></span> Cut
 			</div>
 		</div>
 

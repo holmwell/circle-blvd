@@ -312,7 +312,7 @@ h4, h5 {
   padding: 1.5ex;
 }
 #highlightedTools .regularTools {
-  margin-top: -1.95em;
+  margin-top: -4em;
 }
 #highlightedTools .glyphicon {
   padding-right: 0.5ex;
@@ -320,8 +320,13 @@ h4, h5 {
 #highlightedTools .jsLink {
   margin-bottom: 1ex;
 }
-#highlightedTools .jsLink:hover {
+#highlightedTools .jsLink a {
+  color: #ddd;
+}
+#highlightedTools .jsLink:hover,
+#highlightedTools .jsLink a:hover {
   color: #888;
+  text-decoration: none;
 }
 #highlightedTools .done {
   display: inline-block;
