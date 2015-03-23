@@ -132,6 +132,21 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 			// Cmd-C
 			$scope.$broadcast('keyCopy', e);
 		}
+
+		if (e.keyCode === 68) {
+			// D
+			$scope.$broadcast('keyDone', e);
+		}
+
+		if (e.keyCode === 87) {
+			// W
+			$scope.$broadcast('keyAssigned', e);
+		}
+
+		if (e.keyCode === 79) {
+			// O
+			$scope.$broadcast('keyActive', e);
+		}
 	};
 
 	$scope.keyup = function (e) {

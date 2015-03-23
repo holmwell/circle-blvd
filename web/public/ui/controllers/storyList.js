@@ -637,6 +637,18 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		});
 	});
 
+	$scope.$on('keyDone', function (e, event) {
+		$scope.markHighlightedAs('done');
+	});
+
+	$scope.$on('keyAssigned', function (e, event) {
+		$scope.markHighlightedAs('assigned');
+	});
+
+	$scope.$on('keyActive', function (e, event) {
+		$scope.markHighlightedAs('active');
+	});
+
 	$scope.$on('mouseDown', function (e) {
 
 	});
