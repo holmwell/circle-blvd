@@ -1422,7 +1422,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			console.log("Start: " + startStory.summary);
 			console.log("End: " + endStory.summary);
 
-			errors.handle("Something unknown happened with the move. Need to refresh page.", "client")
+			errors.handle("Something unknown happened with the move. Need to refresh page.", "client");
+
+			highlightedStories.forEach(function (movedStory) {
+				movedStory.isBeingDragged = false;
+			});
 			return false;
 		}
 
@@ -1430,9 +1434,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		// in facade mode.
 		$timeout(function() {
 			stories.moveBlock(startStory, endStory, postMove.storyAfter, function (err, response) {
-				highlightedStories.forEach(function (movedStory) {
-					movedStory.isBeingDragged = false;
-				});
 				if (err) {
 					// We failed. Probably because of a data integrity issue
 					// on the server that we need to wait out. 
@@ -1449,6 +1450,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				}
 			});
 		}, 0);
+
+		highlightedStories.forEach(function (movedStory) {
+			movedStory.isBeingDragged = false;
+		});
 
 		return true;
 	};
@@ -1700,6 +1705,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 					$(selector).show();
 					isMovingTask = false;
+					//$scope.mouse.lastMouseDownStory = undefined;
 					return;
 				}
 
@@ -1715,6 +1721,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				// And, we're done. Show our work.
 				$(selector).show();
 				isMovingTask = false;
+				//$scope.mouse.lastMouseDownStory = undefined;
 			},
 			start: function (event, ui) {
 				// The drop shadow slows down the phones a bit
