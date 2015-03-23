@@ -537,7 +537,7 @@ h4, h5 {
   background-color: #eee;
 }
 
-.subtle {
+.subtle, .subtle a {
   color: #ccc;
 }
 .subtle a:hover {
@@ -897,11 +897,21 @@ button:focus {
 .action-buttons {
   margin-top: 1ex;
 }
+.action-buttons a:hover {
+  color: #999;
+}
 
-.saveBtn { 
+.saveBtn, .linkToTask { 
   margin: 5px;
   margin-right: 10px;
   margin-top: 0;
+}
+.linkToTask, .topLinkToTask {
+  display: inline-block;
+  vertical-align: middle;
+}
+.topLinkToTask {
+  margin-right: 6px;
 }
 .saveCommentBtn {
   margin-right: 0;
@@ -912,6 +922,9 @@ button:focus {
 }
 .topSaveBtn {
   margin-top: 1ex;
+}
+.topLinkToTask .glyphicon, .linkToTask .glyphicon {
+  margin-right: 0.5ex;
 }
 .saveBtn:hover, .topSaveBtn:hover {
   background-color: white;

@@ -173,7 +173,10 @@
 				</div>
 
 				<div class="btn-wrapper">
-					<button class="saveBtn topSaveBtn btn btn-default pull-right" type="submit" ng-click="save(story, $event)">Save</button>
+					<div class="pull-right">
+						<span class="subtle topLinkToTask"><a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
+						<button class="saveBtn topSaveBtn btn btn-default" type="submit" ng-click="save(story, $event)">Save</button>
+					</div>
 					<button class="saveBtn saveCommentBtn topSaveBtn btn pull-left"
 						ng-click="saveComment(story, $event)">Add comment</button>
 				</div>
@@ -190,7 +193,11 @@
 
 			<div class="action-buttons">
 				<button ng-hide="story.isNextMeeting" class="hidden-xs removeBtn" type="button" ng-click="remove(story)">Remove task</button>
-				<button ng-show="story.isNextMeeting || story.isDeadline" class="saveBtn pull-right btn btn-default" type="submit" ng-click="save(story, $event)">Save</button>
+
+				<div class="pull-right" ng-show="story.isNextMeeting || story.isDeadline">
+					<span class="linkToTask subtle"><a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
+					<button class="saveBtn btn btn-default" type="submit" ng-click="save(story, $event)">Save</button>
+				</div>
 			</div>
 		</form>
 	</div>
