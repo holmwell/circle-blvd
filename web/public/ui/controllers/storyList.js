@@ -649,6 +649,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		$scope.markHighlightedAs('active');
 	});
 
+	$scope.$on('keyClearStatus', function (e) {
+		$scope.markHighlightedAs('');
+	});
+
 	$scope.$on('mouseDown', function (e) {
 
 	});
