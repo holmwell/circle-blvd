@@ -735,13 +735,16 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 	$scope.$on('storyDeselected', function (e, story, event) {
 		selectedStory = undefined;
-		scrollToAndPulse(story);		
+		scrollToAndPulse(story);
 	});
 
 	$scope.$on('insertNewStory', function (e, newStory, callback) {
 		stories.insertFirst(newStory, circleId, listId, function (serverStory) {
 			// add the new story to the front of the backlog.
 			storiesList.unshift(serverStory);
+			if (serverStory.isDeadline) {
+				buildMilepostList(storiesList);
+			}
 			if (callback) {
 				callback(serverStory);
 			}
@@ -976,6 +979,14 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			story.comments = savedStory.comments;
 			story.isOwnerNotified = savedStory.isOwnerNotified;
 		});
+
+		if (storyToSave.isDeadline || storyToSave.isNextMeeting) {
+			$scope.mileposts.forEach(function (milepost) {
+				if (storyToSave.id === milepost.id) {
+					milepost.summary = storyToSave.summary;
+				}
+			});
+		}
 	});
 
 	$scope.$on('storyCommentSaved', function (e, story) {
