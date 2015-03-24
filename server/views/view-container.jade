@@ -29,7 +29,8 @@ block content
           span.icon-bar
           span.icon-bar
         
-        a.navbar-brand(href="/") O
+        a.navbar-brand(href="/")
+          span.circle(ng-include="'/img/glyphs/icon-white-circle.svg'")
         .navbar-title.visible-xs(ng-if="isSignedIn()")
           h2(ng-bind="getActiveCircleName()")
 
@@ -46,8 +47,8 @@ block content
           li(ng-class="{active: isCurrentPath('/tour')}")
             a(href="/#/tour") Tour
 
-  .container-fluid.main.debug
-    .header.clearfix.debug(ng-cloak ng-if="isSignedIn()" ng-hide="!isHeaderVisible")
+  .container-fluid.main.debug.no-select
+    .header.clearfix.debug.text-select(ng-cloak ng-if="isSignedIn()" ng-hide="!isHeaderVisible")
       //- TODO: Removing the spaces breaks the layout. Fix this.
       //- .mindset-container.hidden-xs.debug
       //-   .mindset-element.mindset-element-detailed.debug
