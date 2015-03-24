@@ -15,7 +15,7 @@ function RoadmapMilepostCtrl($scope, $timeout) {
         // Give the story time to close before
         // starting the scroll animation.
         $timeout(function () {
-            $('body').animate({
+            $('html, body').animate({
                 // scrollTopWhenSelected
                 scrollTop: qStory.offset().top - 20
             }, delay);
