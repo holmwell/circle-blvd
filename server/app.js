@@ -901,12 +901,13 @@ var getCookieSettings = function () {
     // Or actually figure out if https is running, and if so
     // use secure cookies
     var oneHour = 3600000;
-    var twoWeeks = 14 * 24 * oneHour;
+    var oneWeek = 7 * 24 * oneHour;
+    var sixWeeks = 6 * oneWeek;
     var cookieSettings = {
         path: '/',
         httpOnly: true,
         secure: false,
-        maxAge: twoWeeks
+        maxAge: sixWeeks
     };
 
     return cookieSettings;
