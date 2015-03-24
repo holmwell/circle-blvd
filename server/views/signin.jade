@@ -1,0 +1,124 @@
+extends view-container
+
+block view
+    .signin(ng-controller="SignInCtrl")
+       .welcome
+            h1 Circle&nbsp;Blvd.
+            .col-sm-offset-2.col-sm-8
+                form
+                    h4 Welcome.
+                    p Sign in here, or create an account at the bottom of this page.
+                    div
+                        input.form-control(type="text" ng-model="user.email" placeholder="Email address")
+                    div
+                        input.form-control(type="password" ng-model="user.password" placeholder="Password")
+                   
+                    .actionRow
+                        .checkbox-inline.remember.pull-left
+                            label.relax
+                                input(type="checkbox" ng-model="rememberMe") 
+                                span Remember me
+                        button.btn.btn-default.pull-right(type="submit" ng-click="signIn()") Sign in 
+
+            .col-sm-offset-2.col-sm-8
+                .clear.message {{message}}
+
+        .intro
+            .col-sm-offset-2.col-sm-8.clear.signin-section
+                h4 Task management for community projects.
+
+                .embed-container
+                    iframe(src="//www.youtube-nocookie.com/embed/-a7n_iyqB0A?rel=0" frameborder="0" allowfullscreen)
+
+                p.below-video Maybe you're organizing a local meetup, or an arts festival, 
+                 | or a movement for change, and you'd like to keep your board of directors
+                 | on the same page.
+
+                p Circle Blvd is for doing just that &mdash; it's for managing tasks, 
+                 | remembering who is doing what, and staying flexible as situations 
+                 | and priorities change.
+
+
+        .tour
+            .col-sm-offset-2.col-sm-8.clear.signin-section
+                h4 Watch the walkthrough, take a tour.
+
+                p Circle Blvd is a task management tool, made for teams of 3-12 people. 
+                 | Below is a 2-minute screencast on how to make a project and get started 
+                 | with the site.
+
+                .embed-container
+                    iframe(src="//www.youtube-nocookie.com/embed/-o-lN-Wn5Wc?rel=0" frameborder="0" allowfullscreen)
+
+                p.below-video This site supports:
+                ul
+                    li Multiple projects
+                    li Unlimited accounts
+                    li Task lists, assignments, status updates, comments
+                    li Drag-and-drop prioritization
+                    li One-line task entry, multiple-task entry
+                    li Email notifications
+                    li Hashtags / label filtering
+                    li Reusable checklists
+                    li Roadmap planning
+                    li Task archives
+                    li Admin management
+                    li Secure communication over HTTPS
+
+                p <span class="glyphicon glyphicon-play"></span> 
+                 | Visit <a href="/#/tour">our tour page</a> to see a self-guided 
+                 | outline of the main aspects of the site.</p>
+
+        .free
+            .col-sm-offset-2.col-sm-8.clear.signin-section
+                h4 Try for free.
+                p Add as many members to your group as you need. 
+                 | Circle Blvd is free to try.
+
+                p If your group enjoys using the site, you 
+                 | can <a href="/#/sponsor">sponsor development</a> 
+                 | to encourage improvements and help share the site with more people.
+
+        .signup#create-account
+            form
+                .col-sm-offset-2.col-sm-8.clear.signin-section
+                    h4 Start today.
+                    p To get started, we need a name for your team, a sign-in address,
+                     | and a name that people in your group will recognize you by.
+
+                    label.sr-only(for="signupCircleName") What's the name of your circle?
+                    div
+                        input#signupCircleName.form-control(type="text" ng-model="signup.circle" placeholder="Circle or group name")
+
+                    label(for="signupEmail") How will you be signing in?
+                    div
+                        input#signupEmail.form-control(type="text" ng-model="signup.email" placeholder="Email address")
+                    div
+                        input.form-control(type="password" ng-model="signup.password" placeholder="Password")
+                    
+                    label(for="signupName") What's your name?
+                    div
+                        input#signupName.form-control(type="text" 
+                            ng-model="signup.name" 
+                            placeholder="First name, full name, or nickname")
+                    
+                    button.btn.btn-default.pull-right(
+                        ng-hide="signup.message"
+                        type="submit" 
+                        ng-click="signUp()") Create circle
+
+                .col-sm-offset-2.col-sm-8.clear.ng-cloak(ng-show="signup.message")
+                    .thanks.story.deadline.not-selected {{signup.message}}
+
+        .donate
+            .col-sm-offset-2.col-sm-8.clear.donate-section
+                img(src="/img/logo-on-black-76px.png")
+                .links
+                    span <a href="/#/tour">tour</a>
+                     | . 
+                    span <a href="/#/about">about</a>
+                     | . 
+                    span(ng-show="isPaymentEnabled()") <a href="/#/sponsor">sponsor</a> . 
+                    span @<a href="https://twitter.com/circleblvd">circleblvd</a>
+                     | . 
+                    span a <a href="http://a.secretproject.org/">secret project</a>
