@@ -19,6 +19,13 @@ Date.prototype.toJSON = function (key) {
          f(this.getUTCMilliseconds())   + 'Z';
 };
 
+angular.module('cbPrelude', [
+    'ngRoute',
+    'ngSanitize',
+    'myApp.filters',
+    'CircleBlvd.services',
+    'myApp.directives']);
+
 // Declare app level module which depends on filters, and services
 angular.module('myApp', [
     'ngRoute',
@@ -31,7 +38,7 @@ angular.module('myApp', [
         var homePage = {templateUrl: 'ui/views/home.html', controller: HomeCtrl};
 
         $routeProvider.when('/', homePage);
-        $routeProvider.when('/signin', {templateUrl: 'ui/views/signin.html', controller: SignInCtrl});
+        //$routeProvider.when('/signin', {templateUrl: 'ui/views/signin.html', controller: SignInCtrl});
 
         $routeProvider.when('/stories/:storyId', homePage);
         $routeProvider.when('/stories', homePage);

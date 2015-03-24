@@ -1,6 +1,6 @@
 'use strict';
 
-function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
+function SignInCtrl(signInName, session, lib, $scope, $window, $http) {
 
 	$scope.signup = {};
 	$scope.signup.once = false;
@@ -15,11 +15,11 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 			session.save();
 
 			if (session.lastLocationPath) {
-				$location.path(session.lastLocationPath);
+				$window.location.href = "/#" + session.lastLocationPath;
 				callback();
 			}
 			else {
-				$location.path("/");
+				$window.location.href = "/";
 				callback();
 			}
 		};
@@ -153,7 +153,7 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 	var init = function () {
 		// Redirect to home if we're already signed in.
 		if ($scope.isSignedIn()) {
-			$location.path('/');
+			$window.location.href = "/";
 			return;
 		}
 
@@ -251,4 +251,4 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $http) {
 
 	init();	
 }
-SignInCtrl.$inject = ['signInName', 'session', 'lib', '$scope', '$location', '$http'];
+SignInCtrl.$inject = ['signInName', 'session', 'lib', '$scope', '$window', '$http'];

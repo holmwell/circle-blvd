@@ -1,6 +1,6 @@
 'use strict';
 
-function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, analytics) {
+function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $timeout, analytics) {
 
 	$scope.isHeaderVisible = true;
 	$scope.keyboard = {};
@@ -283,7 +283,7 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 		$http.get('/auth/signout')
 		.success(function () {
 			resetSession();
-			$location.path("/signin");
+			$window.location.href = "/signin";
 		})
 		.error(function (data, status, headers, config) {
 			// TODO: Is there anything to do?
@@ -370,8 +370,8 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 				return;
 			}
 			// Don't save /signin or /invite paths
-			if (path !== '/signin' && path.indexOf('/invite') !== 0) {
-				session.lastLocationPath = $location.path();	
+			if (path.indexOf('/signin') !== 0 && path.indexOf('/invite') !== 0) {
+				session.lastLocationPath = $location.path();
 			}
 
 			analytics.trackPage();
@@ -402,8 +402,7 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 			.error(function (data, status, headers, config) {
 				if (status === 401) {
 					// TODO: This is not cool.
-					if (path === '/signin' 
-						|| path === '/docs'
+					if (path === '/docs'
 						|| path === '/tour'
 						|| path.indexOf('/tour') === 0
 						|| path === '/sponsor'
@@ -444,4 +443,4 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $timeout, 
 
 	init();
 }
-TopLevelCtrl.$inject = ['session', 'lib', '$scope', '$http', '$location', '$route', '$timeout', 'analytics'];
+TopLevelCtrl.$inject = ['session', 'lib', '$scope', '$http', '$location', '$route', '$window', '$timeout', 'analytics'];
