@@ -33,10 +33,6 @@ html(lang="en" ng-app="cbPrelude" prefix="og: http://opg.me/ns#")
     link(rel="icon" sizes="196x196" href="/img/logo-196px.png")
 
     script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
-    script(src="//code.jquery.com/ui/1.11.1/jquery-ui.js")
-    script(src="/lib/jQuery.ui.touch-punch.js")
-    script(src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
-    script(src="/lib/modernizr/touch.js")
 
     if (analyticsId)
       script.
@@ -47,18 +43,18 @@ html(lang="en" ng-app="cbPrelude" prefix="og: http://opg.me/ns#")
 
         ga('create', '#{analyticsId}', 'auto');
 
-  body(ng-controller="TopLevelCtrl" 
-    ng-mouseup="mouseup($event)"
-    ng-mousedown="mousedown($event)"
-    ng-mousemove="mousemove($event)"
-    ng-mouseleave="mouseleave($event)"
-    ng-keydown="keydown($event)" 
-    ng-keyup="keyup($event)")
-    #topLevel
-      block content
+  body(ng-controller="TopLevelCtrl"
+        ng-mouseup="mouseup($event)"
+        ng-mousedown="mousedown($event)"
+        ng-mousemove="mousemove($event)"
+        ng-mouseleave="mouseleave($event)"
+        ng-keydown="keydown($event)"
+        ng-keyup="keyup($event)")
+    div#topLevel 
+        block content
   
     //- <!-- In production use:
     //- <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
     //- -->
     !{compactJsHtml()}
-    script(src="https://checkout.stripe.com/checkout.js")
+    block bottom
