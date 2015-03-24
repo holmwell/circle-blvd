@@ -57,6 +57,15 @@
   font-size: 14pt;
   margin-top: 1.5ex;
 }
+.navbar-brand .circle {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  opacity: 0.6;
+}
+.navbar-brand .circle:hover {
+  opacity: 1.0;
+}
 
 .topMenu, .header {
   /*display: none;*/
@@ -1043,6 +1052,11 @@ button:focus {
 
 .icon-status {
   stroke: black;
+  fill: transparent;
+}
+
+.icon-status-invert {
+  stroke: white;
   fill: transparent;
 }
 
