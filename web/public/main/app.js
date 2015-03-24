@@ -38,7 +38,6 @@ angular.module('myApp', [
         var homePage = {templateUrl: 'ui/views/home.html', controller: HomeCtrl};
 
         $routeProvider.when('/', homePage);
-        //$routeProvider.when('/signin', {templateUrl: 'ui/views/signin.html', controller: SignInCtrl});
 
         $routeProvider.when('/stories/:storyId', homePage);
         $routeProvider.when('/stories', homePage);
