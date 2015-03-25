@@ -20,32 +20,7 @@ block content
           button.btn.btn-default(type="button" data-dismiss="modal") Close
           button.btn.btn-primary(type="button" data-dismiss="modal" ng-click="reload()") Refresh page
 
-  .navbar.navbar-inverse.topMenu(role="navigation" ng-cloak)
-    .container-fluid
-      .navbar-header
-        button.navbar-toggle(type="button" data-toggle="collapse" data-target="#navigation-circles")
-          span.sr-only Show circles
-          span.icon-bar
-          span.icon-bar
-          span.icon-bar
-        
-        a.navbar-brand(href="/")
-          span.circle(ng-include="'/img/glyphs/icon-white-circle.svg'")
-        .navbar-title.visible-xs(ng-if="isSignedIn()")
-          h2(ng-bind="getActiveCircleName()")
-
-      .collapse.navbar-collapse#navigation-circles
-        ul.nav.navbar-nav
-          li(ng-repeat="circle in circleList()" ng-class="{active: isActiveCircle(circle)}")
-            a.jsLink(ng-click="setActiveCircle(circle, true)" ng-bind="circle.name")
-
-        ul.nav.navbar-nav.navbar-right
-          li(ng-show="hasMainframeAccess()" ng-class="{active: isCurrentPath('/mainframe')}")
-            a(href="/#/mainframe") Mainframe access
-          li(ng-class="{active: isCurrentPath('/sponsor')}")
-            a(href="/#/sponsor") Sponsor
-          li(ng-class="{active: isCurrentPath('/tour')}")
-            a(href="/#/tour") Tour
+  include navbar
 
   .container-fluid.main.debug.no-select
     .header.clearfix.debug.text-select(ng-cloak ng-if="isSignedIn()" ng-hide="!isHeaderVisible")
@@ -98,20 +73,4 @@ block content
 
     block view
 
-  .footer.hidden-xs
-    div a <a href="http://secretproject.org">secret project</a>: circle boulevard . 
-     | v<span>#{version}</span> .
-     | <a href="/#/about">about</a> .
-     | <a href="/#/privacy">privacy</a> .
-     | <a href="/#/contact">contact</a> .
-     | <a href="https://twitter.com/circleblvd">follow</a> .
-     | <a href="/#/sponsor">sponsor</a>
-
-    div <a href="https://github.com/secret-project/circle-blvd">source code</a> on GitHub .
-     | <span>some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a></span>
-
-  .footer.visible-xs
-    div circle boulevard . v<span>#{version}</span>
-    div 
-      span some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a>
-    div <a href="https://github.com/secret-project/circle-blvd">source code</a> on GitHub
+  include inc/footer
