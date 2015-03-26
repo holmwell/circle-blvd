@@ -1,0 +1,191 @@
+
+/* signin.jade */
+.signin {
+
+}
+.signin h1 {
+  text-align: center;
+  margin-bottom: 0.5em;
+  font-size: 36pt;
+  font-weight: bold;
+  color: gold;
+}
+.actionRow {
+  margin-left: 0;
+}
+.actionRow .remember {
+  padding-top: 0.6ex;
+}
+label.relax {
+  font-weight: normal;
+}
+.signin-section, .donate-section {
+  padding-top: 2.4em;
+}
+
+.signin .welcome {
+  color: #f6f6f6;
+  background-color: #181818;
+
+  width: 100%;
+  float: left;
+  padding-bottom: 3.5em;
+}
+.signin .welcome input {
+  color: #f6f6f6;
+  border-color: #444;
+  background-color: #333;
+}
+.signin .welcome .message {
+  text-align: center;
+}
+
+
+.signin .intro {
+  width: 100%;
+  float: left;
+}
+.signin .storyListWrapper {
+  padding-left: 2ex;
+  padding-right: 2ex;
+}
+
+.signin .tour {
+  background-color: #ddd;
+  width: 100%;
+  float: left;
+  margin-top: 3.5em;
+  padding-bottom: 2.5em;
+}
+
+.signin .free {
+  background-color: gold;
+  width: 100%;
+  float: left;
+
+  padding-bottom: 2.5em;
+}
+.signin .free a {
+  color: #333;
+  text-decoration: underline;
+}
+
+.signin .signup, .signin .donate {
+  background-color: #333;
+  color: #ccc;
+
+  float: left;
+  width: 100%;
+  margin-top: 3.5em;
+  padding-bottom: 3.5em;
+}
+.signin .signup {
+  margin-top: 0;
+}
+
+.signin .signup input,
+.signin .signup textarea {
+  color: #ccc;
+  border-color: #222;
+  background-color: #444;
+}
+.signup label {
+  font-weight: normal;
+}
+.thanks {
+  background-color: gold;
+  padding: 1.25ex;
+  padding-left: 1.5ex;
+  cursor: default;
+}
+.signin .donate {
+  margin-top: 0;
+  background-color: black;
+  text-align: center;
+  padding-bottom: 1.9em;
+}
+.signin .donate .links {
+  margin-top: 1.1em;
+}
+.signin .donate .links a {
+  color: goldenrod;
+}
+
+.embed-container { 
+  position: relative; 
+  padding-bottom: 56.25%; 
+  height: 0; 
+  overflow: hidden; 
+  max-width: 100%; 
+  height: auto; 
+} 
+.embed-container iframe, 
+.embed-container object, 
+.embed-container embed { 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 100%; height: 100%; 
+}
+.below-video {
+  padding-top: 1em;
+}
+
+.deadline, .deadline:hover {
+  color: #333;
+  background-color: gold;
+}
+
+/* donate */
+.donations, .about, .sponsor {
+  padding-bottom: 3.5em;
+}
+.donations .btn-wrapper {
+  text-align: center;
+}
+.donations .btn-wrapper .btn {
+  margin-top: 1.1em;
+  margin-right: 10px;
+}
+.donations .received {
+  margin-top: 1.2em;
+}
+
+/* invite */
+.invite.content {
+  padding-top: 3em;
+  padding-bottom: 3em;
+}
+.invite label {
+  font-weight: normal;
+}
+
+.invite .choice {
+  padding-top: 2em;
+  padding-bottom: 1em;
+  text-align: center;
+}
+
+.invite .choice-row {
+  border-bottom: solid 1px #ddd;
+}
+
+.invite .message {
+  margin-top: 1em;
+  padding: 1ex;
+  padding-left: 1.5ex;
+  background-color: #1E69B5;
+  color: white;
+}
+
+.invite .support-circle {
+  margin-top: -0.85ex;
+}
+
+.invite .glyphicon {
+  color: #555;
+}
+
+.invite h3 {
+  margin-top: 1em;
+}
