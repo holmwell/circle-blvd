@@ -3,9 +3,6 @@ extends layout
 block stylesheets
     link( href="css/app.css" rel="stylesheet")
 
-block scripts
-    script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
-
 block content
     include ../inc/navbar
 
@@ -15,6 +12,9 @@ block content
             block view
 
     include ../inc/footer
+
+block prerequisites
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
 
 block bottom
     //- Bootstrap JS for the mobile navbar
