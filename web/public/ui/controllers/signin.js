@@ -5,6 +5,11 @@ function SignInCtrl(signInName, session, lib, $scope, $window, $http) {
 	$scope.signup = {};
 	$scope.signup.once = false;
 
+	var hash = $window.location.hash;
+	if (hash.indexOf('/') >= 0) {
+		session.lastLocationPath = hash.slice(hash.indexOf('/'));
+	}
+
 	var goHome = function (user, session, callback) {
 		var defaultGroup = undefined;
 
@@ -75,6 +80,12 @@ function SignInCtrl(signInName, session, lib, $scope, $window, $http) {
 				if (err) {
 					$scope.message = err.message;
 					return;
+				}
+				else {
+					// Even though we changed the href above,
+					// we don't refresh automatically unless
+					// the URL changes, so force a reload here.
+					$window.location.reload();
 				}
 			});
 		};
@@ -152,7 +163,7 @@ function SignInCtrl(signInName, session, lib, $scope, $window, $http) {
 
 	var init = function () {
 		// Redirect to home if we're already signed in.
-		if ($scope.isSignedIn()) {
+		if ($scope.isSignedIn() && $window.location.pathname !== "/") {
 			$window.location.href = "/";
 			return;
 		}

@@ -1,0 +1,54 @@
+.header.clearfix.debug.text-select(ng-cloak ng-if="isSignedIn()" ng-hide="!isHeaderVisible")
+  //- TODO: Removing the spaces breaks the layout. Fix this.
+  //- .mindset-container.hidden-xs.debug.
+  //-     <div class="mindset-element mindset-element-detailed debug">
+  //-       <span ng-click="setMindset('detailed')" 
+  //-         ng-class="{ 'selected-mindset': isMindset('detailed') }"
+  //-         ng-mouseenter="setMindsetLabel('')"
+  //-         class="glyphicon glyphicon-move debug"></span>
+  //-     </div>
+
+  //-     <div class="mindset-element debug">
+  //-       <span ng-click="setMindset('bump')" 
+  //-         ng-mouseenter="setMindsetLabel('What\'s Next')"
+  //-         ng-mouseleave="setMindsetLabel('')"
+  //-         ng-class="{ 'selected-mindset': isMindset('bump') }"
+  //-         class="glyphicon glyphicon-chevron-up right debug"></span>
+              
+  //-       <span ng-click="setMindset('mine')" 
+  //-         ng-class="{ 'selected-mindset': isMindset('mine') }"
+  //-         ng-mouseenter="setMindsetLabel('Status Update')"
+  //-         ng-mouseleave="setMindsetLabel('')"
+  //-         class="glyphicon glyphicon-record right debug"></span>
+
+  //-       <span ng-click="setMindset('roadmap')"
+  //-         ng-class="{ 'selected-mindset': isMindset('roadmap') }" 
+  //-         ng-mouseenter="setMindsetLabel('Roadmap')"
+  //-         ng-mouseleave="setMindsetLabel('')"
+  //-         class="glyphicon glyphicon-road right debug"></span>
+
+  //-       <div class="label debug">{{mindsetLabel}}</div>
+
+  h2.debug.hidden-xs.title
+    a(href="/" ng-bind="getActiveCircleName()")
+
+  .col-xs-12.debug
+    ul.menu.debug
+      li
+        a(href="/") List
+        span 
+      li
+        a(href="/archives/") Archives
+        span 
+      li
+        a(href="/#/lists") Checklists
+        span 
+      li
+        a(href="/#/profile") Profile
+        span 
+      li.hidden-xs(ng-show="isAdmin()")
+        a(href="/#/admin") Admin
+        span 
+      
+      li
+        a.jsLink(ng-click="signOut()") Sign&nbsp;out

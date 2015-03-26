@@ -1,0 +1,15 @@
+extends prelude-container
+
+block view
+    .content(ng-controller="ContactCtrl")
+        .col-sm-offset-2.col-sm-8.contact
+            h2 Contact
+
+            p Thank you for contacting us at Circle Blvd. This form will send us an email,
+             | and we'll get back to you as soon as possible.
+
+            input.form-control(type="text" ng-model="subject" placeholder="Email subject")
+            textarea.form-control(ng-model="text" rows="9")
+
+            button.btn.btn-default(ng-click="sendEmail()") Send
+            span.message &nbsp; {{emailStatus}}

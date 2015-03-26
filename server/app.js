@@ -35,7 +35,7 @@ var initRoutes  = require('./routes/init');
 
 // Express 4.x routes
 var archives = require('./routes/archives');
-var signin = require('./routes/signin');
+var prelude = require('./routes/prelude');
 
 var couchSessionStore = require('./lib/couch-session-store.js');
 
@@ -100,7 +100,7 @@ var tryToCreateHttpsServer = function (callback) {
 };
 
 var defineRoutes = function () {
-    app.use('/signin', signin.router(app));
+    app.use('/', prelude.router(app));
     app.use('/archives', archives.router(app));
 
     app.post('/auth/signin', auth.signin);
@@ -944,7 +944,7 @@ var configureApp = function() {
         srcPath: staticPath,
         destPath: path.join(staticPath, minJsPath),
         webPath: minJsPath,
-        debug: false
+        debug: true
     });
 
     compact.addNamespace('lib')

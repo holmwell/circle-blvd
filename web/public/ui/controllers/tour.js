@@ -1,6 +1,6 @@
 'use strict';
 
-function TourCtrl(lib, $scope, $location, $routeParams) {
+function TourCtrl(lib, $scope, $window) {
 	var me = "Me";
 
 	$scope.whoami = me;	
@@ -8,26 +8,46 @@ function TourCtrl(lib, $scope, $location, $routeParams) {
 	lib.mindset.set('detailed');
 	$scope.hideHeader();
 
-	var sectionToShow = $routeParams.section || 'tags';
-	var workSectionToShow = $routeParams.section || 'details';
+	var sectionToShow = 'tags';
+	var workSectionToShow = 'details';
+
+	var pathname = $window.location.pathname;
+	if (pathname.indexOf('/tour/work/') === 0) {
+		workSectionToShow = pathname.slice('/tour/work/'.length);
+		workSectionToShow = workSectionToShow || 'details';
+	}
+
+	if (pathname.indexOf('/tour/plan/') === 0) {
+		sectionToShow = pathname.slice('/tour/plan/'.length);
+		sectionToShow = sectionToShow || 'tags';
+	}
 	
+	var setLocation = function (path) {
+		if ($window.location.pathname == path) {
+			return;
+		}
+		else {
+			$window.location.href = path;
+		}
+	}
+
 	$scope.show = function (section) {
 		switch (section) {
 			case 'details':
-				$location.path('/tour/work');
+				setLocation('/tour/work');
 				break;
 			case 'mileposts':
 			case 'checklists':
 			case 'status':
-				$location.path('/tour/work/' + section);
+				setLocation('/tour/work/' + section);
 				break;
 
 			case 'bump':
 			case 'roadmap':
-				$location.path('/tour/plan/' + section);
+				setLocation('/tour/plan/' + section);
 				break;
 			default:
-				$location.path('/tour/plan');
+				setLocation('/tour/plan');
 				break;
 		}
 	};
@@ -199,13 +219,13 @@ function TourCtrl(lib, $scope, $location, $routeParams) {
 	$scope.storyDetails.push(detailStory);
 
 	// Show the tags section on the plan page.
-	if ($location.path().indexOf('/plan') > 0) {
+	if ($window.location.pathname.indexOf('/plan') > 0) {
 		$scope.show(sectionToShow);
 	}
 
 	// Show the details section on the work page.
-	if ($location.path().indexOf('/work') > 0) {
+	if ($window.location.pathname.indexOf('/work') > 0) {
 		$scope.show(workSectionToShow);
 	}
 }
-TourCtrl.$inject = ['lib', '$scope', '$location', '$routeParams'];
+TourCtrl.$inject = ['lib', '$scope', '$window'];

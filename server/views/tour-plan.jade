@@ -1,0 +1,123 @@
+extends tour-container
+
+block view
+    .content.doc-page.clearfix(ng-controller="TourCtrl").
+        <div class="clearfix">
+            <div class="docs col-sm-offset-2 col-sm-8">
+                <h2>Tour: Planning ahead</h2>
+                <p>Ready?</p>
+
+                <div class="row choice-menu">
+                    <div class="col-xs-4 choice">
+                        <a href="/tour"><div class="circle-menu">
+                            <div class="text">Start</div>
+                        </div></a>
+                    </div>
+
+                    <div class="col-xs-4 choice">
+                        <a href="/tour/work"><div class="circle-menu">
+                            <div class="text">Work</div>
+                        </div></a>
+                    </div>
+
+                    <div class="col-xs-4 choice active">
+                        <div class="circle-menu">
+                            <div class="text">Plan</div>
+                        </div>
+                    </div>
+                </div>
+
+                <p>Plan for the short term and the long term. Make something great.</p>
+
+                <div class="row choice-menu">
+                    <div class="col-xs-4 choice plan-choice" ng-class="{active: isShowing('tags')}">
+                        <a class="jsLink" ng-click="show('tags')"><div class="plan-menu">
+                            <i class="glyphicon">#</i>
+                            <div class="text">Tags</div>
+                        </div></a>
+                    </div>
+
+                    <div class="col-xs-4 choice plan-choice" ng-class="{active: isShowing('bump')}">
+                        <a class="jsLink" ng-click="show('bump')"><div class="plan-menu">
+                            <i class="glyphicon glyphicon-chevron-up"></i>
+                            <div class="text">What's Next</div>
+                        </div></a>
+                    </div>
+
+                    <div class="col-xs-4 choice plan-choice" ng-class="{active: isShowing('roadmap')}">
+                        <a class="jsLink" ng-click="show('roadmap')"><div class="plan-menu">
+                            <i class="glyphicon glyphicon-road"></i>
+                            <div class="text">Roadmap</div>
+                        </div></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div ng-cloak ng-if="isShowing('tags')">
+            <div class="docs col-sm-offset-2 col-sm-8">
+                <p>Use <strong>#hashtags</strong> in task summaries to label them as you see fit, 
+                and then filter on those tags. In this example, two tasks are
+                tagged with #Grocery.</p> 
+            </div>
+
+            <sp-story-list 
+                data="tags" 
+                mindset="'detailed'"
+                account-name="whoami"
+                owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
+                keyboard="keyboard"
+                mouse="mouse"
+                is-facade="isFacade"></sp-story-list>
+
+            <div class="docs col-sm-offset-2 col-sm-8">
+                <!-- <p class="after-list">After!</p> -->
+            </div>
+        </div>
+
+
+        <div ng-cloak ng-if="isShowing('bump')">
+            <div class="docs col-sm-offset-2 col-sm-8">
+                <p>At the end of a work session or meeting, you might scan your list for what's next. Use the <i class="glyphicon glyphicon-chevron-up"></i> icon for this mindset.</p> 
+            </div>
+
+            <sp-story-list 
+                data="bump" 
+                mindset="'bump'"
+                account-name="whoami"
+                owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
+                keyboard="keyboard"
+                mouse="mouse"
+                is-facade="isFacade"></sp-story-list>
+
+            <div class="docs col-sm-offset-2 col-sm-8">
+                <p class="after-list">Notice the <i class="glyphicon glyphicon-move"></i> icon is still on tasks above the black task, for minor adjustments as you go.</p>
+            </div>
+        </div>
+
+        <div ng-cloak ng-if="isShowing('roadmap')">
+            <div class="hidden-xs">
+                <sp-story-list 
+                    data="roadmap"
+                    mindset="'roadmap'" 
+                    account-name="whoami"
+                    owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
+                    keyboard="keyboard"
+                    mouse="mouse"
+                    is-facade="isFacade"></sp-story-list>
+            </div>
+            <div class="visible-xs">
+                <p>(The roadmap mindset has a lot going on, and it's only visible on larger screens.)</p>
+            </div>
+
+            <div class="docs col-sm-offset-2 col-sm-8">
+                <p class="after-list">With the <i class="glyphicon glyphicon-road"></i> mindset,
+                you can move tasks great distances within your list very quickly. This is just a
+                small demonstration, but we think you'll get the idea.</p>
+
+                <p>Use the <i class="glyphicon glyphicon-move"></i> icon to 
+                move tasks from the left column to the right. With a longer list, selecting the 
+                mileposts on the right will scroll to where they are in the left column.</p>
+            </div>
+        </div>
