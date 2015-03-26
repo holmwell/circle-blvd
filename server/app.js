@@ -944,7 +944,7 @@ var configureApp = function() {
         srcPath: staticPath,
         destPath: path.join(staticPath, minJsPath),
         webPath: minJsPath,
-        debug: true
+        debug: false
     });
 
     compact.addNamespace('lib')
