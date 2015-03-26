@@ -988,6 +988,7 @@ var configureApp = function() {
         .addJs('ui/controllers/privacy.js')
         .addJs('ui/controllers/donate.js')
         .addJs('ui/controllers/admin.js')
+        .addJs('ui/controllers/removeHash.js')
         .addJs('ui/controllers/mainframe.js')
         .addJs('ui/controllers/fix.js')
 

@@ -1,6 +1,6 @@
 'use strict';
 
-function SignInCtrl(signInName, session, lib, $scope, $window, $http) {
+function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http) {
 
 	$scope.signup = {};
 	$scope.signup.once = false;
@@ -8,6 +8,16 @@ function SignInCtrl(signInName, session, lib, $scope, $window, $http) {
 	var hash = $window.location.hash;
 	if (hash.indexOf('/') >= 0) {
 		session.lastLocationPath = hash.slice(hash.indexOf('/'));
+
+		// Redirect to the page if it is public and does not
+		// require a signin.
+		var path = $location.path();
+
+		// isPagePublic is defined in TopLevelCtrl, and it is
+		// a bad practice to use scope inheritance like this.
+		if ($scope.isPagePublic(path)) {
+			$window.location.href = path;
+		}
 	}
 
 	var goHome = function (user, session, callback) {
@@ -181,4 +191,4 @@ function SignInCtrl(signInName, session, lib, $scope, $window, $http) {
 
 	init();	
 }
-SignInCtrl.$inject = ['signInName', 'session', 'lib', '$scope', '$window', '$http'];
+SignInCtrl.$inject = ['signInName', 'session', 'lib', '$scope', '$location', '$window', '$http'];

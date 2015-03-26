@@ -362,6 +362,22 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 		});
 	}(); // closure
 
+	$scope.isPagePublic = function (path) {
+		if (path === '/docs'
+			|| path === '/tour'
+			|| path.indexOf('/tour') === 0
+			|| path === '/sponsor'
+			|| path === '/donate'
+			|| path === '/about'
+			|| path === '/privacy'
+			|| path === '/invite'
+			|| path.indexOf('/invite') === 0) {
+			return true;
+		}
+
+		return false;
+	};
+
 	var init = function() {
 		$scope.$on('$routeChangeSuccess', function () {
 			$scope.isHeaderVisible = true;
@@ -402,15 +418,7 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 			.error(function (data, status, headers, config) {
 				if (status === 401) {
 					// TODO: This is not cool.
-					if (path === '/docs'
-						|| path === '/tour'
-						|| path.indexOf('/tour') === 0
-						|| path === '/sponsor'
-						|| path === '/donate'
-						|| path === '/about'
-						|| path === '/privacy'
-						|| path === '/invite'
-						|| path.indexOf('/invite') === 0) {
+					if ($scope.isPagePublic(path)) {
 						// We're fine. 
 					}
 					else {

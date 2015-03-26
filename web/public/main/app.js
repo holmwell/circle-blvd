@@ -36,6 +36,7 @@ angular.module('myApp', [
     config(['$routeProvider', function ($routeProvider) {
 
         var homePage = {templateUrl: 'ui/views/home.html', controller: HomeCtrl};
+        var useServerRoute = {templateUrl: 'ui/views/redirecting.html', controller: RemoveHashCtrl};
 
         $routeProvider.when('/', homePage);
 
@@ -49,22 +50,25 @@ angular.module('myApp', [
         $routeProvider.when('/invite/:inviteId', {templateUrl: 'ui/views/invite.html', controller: InviteCtrl});
         $routeProvider.when('/invite', {templateUrl: 'ui/views/invite.html', controller: InviteCtrl});
 
-        $routeProvider.when('/about', {templateUrl: 'ui/views/about.html', controller: AboutCtrl});
         $routeProvider.when('/contact', {templateUrl: 'ui/views/contact.html', controller: ContactCtrl});
-        $routeProvider.when('/privacy', {templateUrl: 'ui/views/privacy.html', controller: PrivacyCtrl});
-        $routeProvider.when('/sponsor', {templateUrl: 'ui/views/sponsor.html', controller: SponsorCtrl});
-        $routeProvider.when('/donate', {templateUrl: 'ui/views/donate.html', controller: DonateCtrl});
-
-        $routeProvider.when('/docs', {templateUrl: 'ui/views/tour.html', controller: TourCtrl});
-        $routeProvider.when('/tour', {templateUrl: 'ui/views/tour.html', controller: TourCtrl});
-        $routeProvider.when('/tour/work', {templateUrl: 'ui/views/tour-work.html', controller: TourCtrl});
-        $routeProvider.when('/tour/work/:section', {templateUrl: 'ui/views/tour-work.html', controller: TourCtrl});
-        $routeProvider.when('/tour/plan', {templateUrl: 'ui/views/tour-plan.html', controller: TourCtrl});
-        $routeProvider.when('/tour/plan/:section', {templateUrl: 'ui/views/tour-plan.html', controller: TourCtrl});
 
         $routeProvider.when('/mainframe', {templateUrl: 'ui/views/mainframe.html', controller: MainframeCtrl});
         $routeProvider.when('/initialize', {templateUrl: 'ui/views/initialize.html', controller: InitializeCtrl});
         $routeProvider.when('/fix', {templateUrl: 'ui/views/fix.html', controller: FixCtrl});
+
+        // Legacy routes. These routes have since moved to the server side,
+        // but there might still be links in the wild, so we need to keep
+        // them active, possibly forever.
+        $routeProvider.when('/about', useServerRoute);
+        $routeProvider.when('/privacy', useServerRoute);
+        $routeProvider.when('/sponsor', useServerRoute);
+        $routeProvider.when('/donate', useServerRoute);
+        $routeProvider.when('/docs', useServerRoute);
+        $routeProvider.when('/tour', useServerRoute);
+        $routeProvider.when('/tour/work', useServerRoute);
+        $routeProvider.when('/tour/work/:section', useServerRoute);
+        $routeProvider.when('/tour/plan', useServerRoute);
+        $routeProvider.when('/tour/plan/:section', useServerRoute);
 
         $routeProvider.otherwise({redirectTo: '/'});
     }])
