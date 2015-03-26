@@ -75,6 +75,10 @@ router.get("/invite/:inviteId", function (req, res, next) {
     res.render('prelude/invite', params);
 });
 
+router.get("/docs", function (req, res, next) {
+    res.redirect("/tour");
+});
+
 
 // router.get("/contact", function (req, res, next) {
 //     // TODO: Redirect to signin
