@@ -1,0 +1,18 @@
+.modal.fade#errorModal(tabindex="-1" role="dialog" 
+  aria-labelledby="errorTitle" aria-hidden="true")
+  .modal-dialog
+    .modal-content
+      .modal-header
+        button.close(type="button" data-dismiss="modal" aria-hidden="true") &times;
+        h4.modal-title#errorTitle Sorry, something didn't work
+
+      .modal-body
+        p Sorry, we failed to save what you did just now. We're still 
+         | working on making the website perfect, and it seems we have
+         | a bit of work to do.
+        
+        p If you keep seeing this message, please let us know.
+        
+      .modal-footer
+        button.btn.btn-default(type="button" data-dismiss="modal") Close
+        button.btn.btn-primary(type="button" data-dismiss="modal" ng-click="reload()") Refresh page

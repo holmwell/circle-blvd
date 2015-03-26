@@ -31,10 +31,17 @@ var getDefaultParams = function (req) {
     var params = {
         host: req.get('Host'),
         version: version,
-        analyticsId: analyticsId
+        analyticsId: analyticsId,
+        angularModuleName: 'cbPrelude'
     };
 
     return params;
+};
+
+var render = function (view) {
+    return function (req, res, next) {
+        res.render('prelude/' + view, getDefaultParams(req));
+    };
 };
 
 router.get("/signin", function (req, res, next) {
@@ -42,45 +49,21 @@ router.get("/signin", function (req, res, next) {
         res.redirect('/');
     }
     else {
-        res.render('signin', getDefaultParams(req));
+        res.render('prelude/signin', getDefaultParams(req));
     }
 });
 
-router.get("/about", function (req, res, next) {
-    res.render('about', getDefaultParams(req));
-});
+router.get("/about", render('about'));
 
-router.get('/tour', function (req, res, next) {
-    res.render('tour', getDefaultParams(req));
-});
+router.get('/tour', render('tour'));
+router.get('/tour/work', render('tour-work'));
+router.get('/tour/work/*', render('tour-work'));
+router.get('/tour/plan', render('tour-plan'));
+router.get('/tour/plan/*', render('tour-plan'));
 
-router.get('/tour/work', function (req, res, next) {
-    res.render('tour-work', getDefaultParams(req));
-});
-
-router.get('/tour/work/*', function (req, res, next) {
-    res.render('tour-work', getDefaultParams(req));
-});
-
-router.get('/tour/plan', function (req, res, next) {
-    res.render('tour-plan', getDefaultParams(req));
-});
-
-router.get('/tour/plan/*', function (req, res, next) {
-    res.render('tour-plan', getDefaultParams(req));
-});
-
-router.get("/privacy", function (req, res, next) {
-    res.render('privacy', getDefaultParams(req));
-});
-
-router.get("/sponsor", function (req, res, next) {
-    res.render('sponsor', getDefaultParams(req));
-});
-
-router.get("/donate", function (req, res, next) {
-    res.render('donate', getDefaultParams(req));
-});
+router.get("/privacy", render('privacy'));
+router.get("/sponsor", render('sponsor'));
+router.get("/donate", render('donate'));
 
 // router.get("/contact", function (req, res, next) {
 //     // TODO: Redirect to signin
@@ -89,7 +72,7 @@ router.get("/donate", function (req, res, next) {
 
 router.get('/', function (req, res, next) {
     if (!req.isAuthenticated()) {
-        res.render('signin', getDefaultParams(req));
+        res.render('prelude/signin', getDefaultParams(req));
     }
     else {
         next();

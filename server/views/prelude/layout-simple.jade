@@ -1,0 +1,19 @@
+extends layout
+
+block stylesheets
+    link( href="css/app.css" rel="stylesheet")
+
+block scripts
+    script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
+    //- Bootstrap JS for the mobile navbar
+    script(src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
+
+block content
+    include ../inc/navbar
+
+    .container-fluid.main.debug
+        block header
+        .view
+            block view
+
+    include ../inc/footer
