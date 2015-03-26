@@ -57,7 +57,7 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 	};
 
 	var getInviteUrl = function (invite) {
-		return getBaseUrl() + '/#/invite/' + invite._id;
+		return getBaseUrl() + '/invite/' + invite._id;
 	};
 	$scope.getInviteUrl = getInviteUrl;
 

@@ -56,14 +56,25 @@ router.get("/signin", function (req, res, next) {
 router.get("/about", render('about'));
 
 router.get('/tour', render('tour'));
+
 router.get('/tour/work', render('tour-work'));
 router.get('/tour/work/*', render('tour-work'));
+
 router.get('/tour/plan', render('tour-plan'));
 router.get('/tour/plan/*', render('tour-plan'));
 
 router.get("/privacy", render('privacy'));
 router.get("/sponsor", render('sponsor'));
 router.get("/donate", render('donate'));
+
+router.get("/invite", render('invite'));
+router.get("/invite/:inviteId", function (req, res, next) {
+    var params = getDefaultParams(req);
+    params.inviteId = req.params.inviteId;
+
+    res.render('prelude/invite', params);
+});
+
 
 // router.get("/contact", function (req, res, next) {
 //     // TODO: Redirect to signin

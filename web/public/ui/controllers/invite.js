@@ -1,6 +1,6 @@
 'use strict';
 
-function InviteCtrl(lib, session, $scope, $http, $location, $routeParams, errors) {
+function InviteCtrl(inviteId, lib, session, $scope, $http, $window, errors) {
 
     $scope.hideHeader(); // defined in TopLevelCtrl
 
@@ -8,7 +8,6 @@ function InviteCtrl(lib, session, $scope, $http, $location, $routeParams, errors
     $scope.createNew = false;
 
     var isLoading = true;
-    var inviteId = $routeParams.inviteId;
     var invite = undefined;
     if (!inviteId) {
         return;
@@ -72,7 +71,7 @@ function InviteCtrl(lib, session, $scope, $http, $location, $routeParams, errors
         session.user = user;
         session.save();
 
-        $location.path('/');
+        $window.location.href = "/";
     };
 
     var handleInviteError = function (data, status) {
@@ -124,4 +123,4 @@ function InviteCtrl(lib, session, $scope, $http, $location, $routeParams, errors
         });
     };
 }
-InviteCtrl.$inject = ['lib', 'session', '$scope', '$http', '$location', '$routeParams', 'errors'];
+InviteCtrl.$inject = ['inviteId', 'lib', 'session', '$scope', '$http', '$window', 'errors'];

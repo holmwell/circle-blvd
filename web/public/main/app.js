@@ -19,7 +19,7 @@ Date.prototype.toJSON = function (key) {
          f(this.getUTCMilliseconds())   + 'Z';
 };
 
-angular.module('cbPrelude', [
+CircleBlvd.Prelude = angular.module('cbPrelude', [
     'ngRoute',
     'ngSanitize',
     'myApp.filters',
@@ -47,9 +47,6 @@ angular.module('myApp', [
         $routeProvider.when('/profile', {templateUrl: 'ui/views/profile.html', controller: ProfileCtrl});
         $routeProvider.when('/admin', {templateUrl: 'ui/views/admin.html', controller: AdminCtrl});
 
-        $routeProvider.when('/invite/:inviteId', {templateUrl: 'ui/views/invite.html', controller: InviteCtrl});
-        $routeProvider.when('/invite', {templateUrl: 'ui/views/invite.html', controller: InviteCtrl});
-
         $routeProvider.when('/contact', {templateUrl: 'ui/views/contact.html', controller: ContactCtrl});
 
         $routeProvider.when('/mainframe', {templateUrl: 'ui/views/mainframe.html', controller: MainframeCtrl});
@@ -69,6 +66,9 @@ angular.module('myApp', [
         $routeProvider.when('/tour/work/:section', useServerRoute);
         $routeProvider.when('/tour/plan', useServerRoute);
         $routeProvider.when('/tour/plan/:section', useServerRoute);
+        $routeProvider.when('/invite/:inviteId', useServerRoute);
+        $routeProvider.when('/invite', useServerRoute);
+
 
         $routeProvider.otherwise({redirectTo: '/'});
     }])
