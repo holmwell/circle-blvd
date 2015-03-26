@@ -44,17 +44,16 @@ html(lang="en" ng-app="#{angularModuleName}" prefix="og: http://opg.me/ns#")
         ga('create', '#{analyticsId}', 'auto');
 
   body(ng-controller="TopLevelCtrl"
-        ng-mouseup="mouseup($event)"
-        ng-mousedown="mousedown($event)"
-        ng-mousemove="mousemove($event)"
-        ng-mouseleave="mouseleave($event)"
-        ng-keydown="keydown($event)"
-        ng-keyup="keyup($event)")
-    div#topLevel 
-        block content
+    ng-mouseup="mouseup($event)" ng-mousedown="mousedown($event)"
+    ng-mousemove="mousemove($event)"
+    ng-mouseleave="mouseleave($event)"
+    ng-keydown="keydown($event)" ng-keyup="keyup($event)")
+    #topLevel
+      block content
   
     //- <!-- In production use:
     //- <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
     //- -->
-    !{compactJsHtml()}
+
+    div !{compactJsHtml()}
     block bottom
