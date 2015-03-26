@@ -5,7 +5,17 @@ CircleBlvd.Services.analytics = function ($window, $location) {
 	// https://developers.google.com/analytics/devguides/collection/analyticsjs/pages
 	var trackPage = function () {
 		if ($window.ga) {
-			$window.ga('send', 'pageview', $location.path());
+			var hash = $window.location.hash;
+			var path;
+
+			if (hash.length > 0) {
+				path = $location.path();
+			}
+			else {
+				path = $window.location.pathname;
+			}
+
+			$window.ga('send', 'pageview', path);
 		}
 	};
 

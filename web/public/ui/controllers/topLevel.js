@@ -379,6 +379,10 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 	};
 
 	var init = function() {
+		if ($window.location.hash.length === 0) {
+			analytics.trackPage();
+		}
+
 		$scope.$on('$routeChangeSuccess', function () {
 			$scope.isHeaderVisible = true;
 			var path = $location.path();
