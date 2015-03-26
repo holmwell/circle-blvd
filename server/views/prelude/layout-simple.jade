@@ -5,8 +5,6 @@ block stylesheets
 
 block scripts
     script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
-    //- Bootstrap JS for the mobile navbar
-    script(src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
 
 block content
     include ../inc/navbar
@@ -17,3 +15,7 @@ block content
             block view
 
     include ../inc/footer
+
+block bottom
+    //- Bootstrap JS for the mobile navbar
+    script(src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
