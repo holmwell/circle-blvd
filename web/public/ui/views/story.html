@@ -93,14 +93,17 @@
 	ng-mouseenter="mouseEnter(story)"
 	ng-mouseleave="mouseLeave(story)">
 	<div ng-if="story.isSelected">
-		<form>
+		<form name="storyForm" ng-submit="save(story, event)">
 			<div class="summary row">
 				<div class="visible-xs col-xs-12">
 					<div class="deselect"><a class="subtle jslink" ng-click="deselect(story, $event)">Hide details</a></div>
 				</div>
 				<div class="col-xs-12 col-sm-9 summary-input">
-					<input id="boxForStory{{story.id}}" class="form-control"
-				type="text" ng-model="story.summary"/></div>
+					<input id="boxForStory{{story.id}}" 
+					class="form-control"
+					type="text" 
+					ng-model="story.summary"
+					ng-model-options="{ updateOn: 'submit' }"/></div>
 				<div class="hidden-xs col-sm-3">
 					<div class="deselect"><a ng-click="deselect(story, $event)">Hide details</a></div>
 				</div>
@@ -108,7 +111,10 @@
 
 			<div class="top-info" ng-hide="story.isNextMeeting || story.isDeadline">
 				<div class="owner">Who's doing this?
-					<input type="text" ng-model="story.owner" typeahead-owners 
+					<input type="text" 
+					ng-model="story.owner" 
+					ng-model-options="{ updateOn: 'submit' }"
+					typeahead-owners 
 					class="typeahead form-control" />
 				</div>
 				<div class="owner-placeholder"></div>
@@ -121,7 +127,10 @@
 					</div>
 				</div>
 				<div class="textarea-container">
-					<textarea autosize ng-model="story.description" class="form-control" />
+					<textarea autosize 
+					ng-model="story.description" 
+					ng-model-options="{ updateOn: 'submit' }"
+					class="form-control" />
 				</div>
 			</div>
 
@@ -174,13 +183,16 @@
 			<div class="commentArea" ng-if="!(story.isNextMeeting || story.isDeadline)">
 				<div class="commentHeading">Questions or comments?</div>
 				<div class="textarea-container">
-					<textarea autosize placeholder="Add comment or link ..." ng-model="story.newComment" class="form-control"/>
+					<textarea autosize placeholder="Add comment or link ..." 
+					ng-model="story.newComment" 
+					ng-model-options="{ updateOn: 'submit' }"
+					class="form-control"/>
 				</div>
 
 				<div class="btn-wrapper">
 					<div class="pull-right">
 						<span class="subtle topLinkToTask"><a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
-						<button class="saveBtn topSaveBtn btn btn-default" type="submit" ng-click="save(story, $event)">Save</button>
+						<button class="saveBtn topSaveBtn btn btn-default" type="submit">Save</button>
 					</div>
 					<button class="saveBtn saveCommentBtn topSaveBtn btn pull-left"
 						ng-click="saveComment(story, $event)">Add comment</button>
@@ -201,7 +213,7 @@
 
 				<div class="pull-right" ng-show="story.isNextMeeting || story.isDeadline">
 					<span class="linkToTask subtle"><a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
-					<button class="saveBtn btn btn-default" type="submit" ng-click="save(story, $event)">Save</button>
+					<button class="saveBtn btn btn-default" type="submit">Save</button>
 				</div>
 			</div>
 		</form>
