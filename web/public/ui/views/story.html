@@ -185,7 +185,7 @@
                 <div class="textarea-container">
                     <textarea autosize placeholder="Add comment or link ..." 
                     ng-model="story.newComment" 
-                    ng-model-options="{ updateOn: 'submit' }"
+                    ng-model-options="{ updateOn: 'submit blur' }"
                     class="form-control"/>
                 </div>
 
@@ -195,6 +195,7 @@
                         <button class="saveBtn topSaveBtn btn btn-default" type="submit">Save</button>
                     </div>
                     <button class="saveBtn saveCommentBtn topSaveBtn btn pull-left"
+                        type="button"
                         ng-click="saveComment(story, $event)">Add comment</button>
                 </div>
                 
