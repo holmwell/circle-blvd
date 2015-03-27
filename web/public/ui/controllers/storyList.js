@@ -16,6 +16,15 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 	var isMovingTask = false;
 
+	// TODO: Possibly make it so this isn't just on page load
+	var visibilityHelper = $('#visibilityHelper');
+	if (visibilityHelper.is(':hidden')) {
+		$scope.isScreenXs = true;
+	}
+	else {
+		$scope.isScreenXs = false;
+	}
+
 	// HACK: Until we can figure out how to stop this properly,
 	// reload the page when this happens.
 	var handleHierarchyRequestErr = function (e) {

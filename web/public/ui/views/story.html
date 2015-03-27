@@ -7,7 +7,7 @@
     </div>
 </div>
 
-<div ng-if="isStoryMostRecentHighlight(story) && !isMindset('roadmap')"
+<div ng-if="!isScreenXs && isStoryMostRecentHighlight(story) && !isMindset('roadmap')"
     id="highlightedTools" class="hidden-xs">
     <div class="tools">
         <div ng-if="!isClipboardActive" class="regularTools">
@@ -40,7 +40,7 @@
     </div>
 </div>
 
-<div class="hidden-xs col-sm-2 debug clear" ng-hide="isMindset('roadmap')">
+<div ng-if="!isScreenXs" class="hidden-xs col-sm-2 debug clear" ng-hide="isMindset('roadmap')">
     <div class="backlog-mine col-xs-9 debug"
         ng-class="{done: isStoryDone(story)}">
         <div ng-show="(isMindset('mine') && !story.isDeadline && !story.isNextMeeting)" 
@@ -104,7 +104,7 @@
                     type="text" 
                     ng-model="story.summary"
                     ng-model-options="{ updateOn: 'submit' }"/></div>
-                <div class="hidden-xs col-sm-3">
+                <div ng-if="!isScreenXs" class="hidden-xs col-sm-3">
                     <div class="deselect"><a ng-click="deselect(story, $event)">Hide details</a></div>
                 </div>
             </div>
@@ -154,7 +154,7 @@
                         ng-click="setStoryStatus(story, 'assigned')"
                         class="btn btn-default neutral form-control">Will do</a>
                     </div>
-                    <div class="hidden-xs col-sm-3 wider">
+                    <div ng-if="!isScreenXs" class="hidden-xs col-sm-3 wider">
                         <a ng-class="{ active: isStoryActive(story) }"
                         ng-click="setStoryStatus(story, 'active')"
                         class="btn btn-default in-progress form-control">
@@ -209,7 +209,7 @@
             </div>
 
             <div class="action-buttons">
-                <button ng-hide="story.isNextMeeting" class="hidden-xs removeBtn" type="button" ng-click="remove(story)">Remove task</button>
+                <button ng-if="!isScreenXs" ng-hide="story.isNextMeeting" class="hidden-xs removeBtn" type="button" ng-click="remove(story)">Remove task</button>
 
                 <div class="pull-right" ng-show="story.isNextMeeting || story.isDeadline">
                     <span class="linkToTask subtle"><a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
@@ -219,7 +219,7 @@
         </form>
     </div>
 
-    <div class="row no-select hidden-xs" ng-show="!story.isSelected" id="story-{{$index}}">
+    <div ng-if="!isScreenXs" class="row no-select hidden-xs" ng-show="!story.isSelected" id="story-{{$index}}">
         <div class="col-sm-11 paddy">
             <div class="summary"
             ng-class="{mine: isStoryMine(story)}">
@@ -305,6 +305,7 @@
 </div>
 
 <div class="backlog-owner hidden-xs col-sm-2 debug no-select" 
+    ng-if="!isScreenXs"
     ng-hide="isMindset('roadmap')"
     ng-class="{'after': story.isAfterNextMeeting}"
     ng-dblclick="select(story)" ng-mousedown="highlight(story)">
