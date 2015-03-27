@@ -108,8 +108,8 @@ function TourCtrl(lib, $scope, $window) {
 
 	var startList = [];
 	startList.push("Find road atlas for Pacific Northwest");
-	startList.push("Sign up for dance lessons");
-	startList.push("Ask friends for music suggestions");
+	startList.push("Pick first road trip destination");
+	startList.push("Buy snacks");
 	startList.push({
 		isNextMeeting: true,
 		summary: "That's all for today"
