@@ -24,7 +24,11 @@ CircleBlvd.Prelude = angular.module('cbPrelude', [
     'ngSanitize',
     'myApp.filters',
     'CircleBlvd.services',
-    'myApp.directives']);
+    'myApp.directives'])
+    .config(['$controllerProvider', function ($controllerProvider) {
+        // TODO: Complete port to Angular 1.3
+        $controllerProvider.allowGlobals();
+    }]);
 
 // Declare app level module which depends on filters, and services
 angular.module('myApp', [
@@ -71,6 +75,10 @@ angular.module('myApp', [
 
 
         $routeProvider.otherwise({redirectTo: '/'});
+    }])
+    .config(['$controllerProvider', function ($controllerProvider) {
+        // TODO: Complete port to Angular 1.3
+        $controllerProvider.allowGlobals();
     }])
     .factory('$exceptionHandler', ['$injector', function ($injector) {
         return function (exception, cause) {
