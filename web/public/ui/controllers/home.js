@@ -127,6 +127,12 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 			line = line.trim();
 		}
 
+		// Parse status
+		if (line.indexOf("!") === line.length-1) {
+			story.status = "assigned";
+			line = line.substring(0, line.length-1);
+		}
+
 		// Parse owners
 		if (line.length > 1
 			&& line.substring(line.length-2, line.length) === "@@") {

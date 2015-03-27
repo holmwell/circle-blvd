@@ -405,6 +405,7 @@ var defineRoutes = function () {
         copy.summary = story.summary;
         copy.description = story.description;
         copy.owner = story.owner;
+        copy.status = story.status;
         copy.labels = story.labels;
 
         copy.isDeadline = story.isDeadline;
