@@ -128,25 +128,32 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		}
 
 		// Parse owners
-		var owners = $scope.owners || [];
-		var ownerFound = story.isDeadline || false;
-		var lowerCaseLine = line.toLowerCase();
-		owners.forEach(function (owner) {
-			if (ownerFound) {
-				return;
-			}
-			var lowerCaseOwner = owner.toLowerCase();
-			// owners start with the @ sign and
-			// are at the end of the line
-			var ownerIndex = lowerCaseLine.indexOf(lowerCaseOwner);
-			if (ownerIndex > 0 
-				&& line[ownerIndex-1] === '@'
-				&& line.length === ownerIndex + owner.length) {
-				ownerFound = true;
-				story.owner = owner;
-				line = line.substring(0, ownerIndex-1).trim();
-			}
-		});
+		if (line.length > 1
+			&& line.substring(line.length-2, line.length) === "@@") {
+			story.owner = $scope.profileName;
+			line = line.substring(0, line.length-2).trim();
+		}
+		else {
+			var owners = $scope.owners || [];
+			var ownerFound = story.isDeadline || false;
+			var lowerCaseLine = line.toLowerCase();
+			owners.forEach(function (owner) {
+				if (ownerFound) {
+					return;
+				}
+				var lowerCaseOwner = owner.toLowerCase();
+				// owners start with the @ sign and
+				// are at the end of the line
+				var ownerIndex = lowerCaseLine.indexOf(lowerCaseOwner);
+				if (ownerIndex > 0 
+					&& line[ownerIndex-1] === '@'
+					&& line.length === ownerIndex + owner.length) {
+					ownerFound = true;
+					story.owner = owner;
+					line = line.substring(0, ownerIndex-1).trim();
+				}
+			});
+		}
 
 		// Parse labels
 		story.labels = [];
