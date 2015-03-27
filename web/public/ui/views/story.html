@@ -1,321 +1,321 @@
 <div ng-if="story.isHighlighted && isClipboardActive">
-	<div class="story col-sm-offset-2 col-xs-12 debug paste-destination" ng-class="{
-			'col-sm-8': !isMindset('roadmap'),
-			'col-sm-12': isMindset('roadmap')
-		}">
-		<div class="paddy">(clipboard tasks will be moved here)</div>
-	</div>
+    <div class="story col-sm-offset-2 col-xs-12 debug paste-destination" ng-class="{
+            'col-sm-8': !isMindset('roadmap'),
+            'col-sm-12': isMindset('roadmap')
+        }">
+        <div class="paddy">(clipboard tasks will be moved here)</div>
+    </div>
 </div>
 
 <div ng-if="isStoryMostRecentHighlight(story) && !isMindset('roadmap')"
-	id="highlightedTools" class="hidden-xs">
-	<div class="tools">
-		<div ng-if="!isClipboardActive" class="regularTools">
-			<div class="jsLink">
-				<a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span> Link</a>
-			</div>
+    id="highlightedTools" class="hidden-xs">
+    <div class="tools">
+        <div ng-if="!isClipboardActive" class="regularTools">
+            <div class="jsLink">
+                <a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span> Link</a>
+            </div>
 
-			<div class="jsLink" ng-click="markHighlightedAs('active')">
-				<span class="done"
-					ng-include="'/img/glyphs/icon-half-circle.svg'"></span> On it
-			</div>
-			<div class="jsLink" ng-click="markHighlightedAs('done')">
-				<span class="done"
-					ng-include="'/img/glyphs/icon-circle.svg'"></span> Done
-			</div>
-			<div class="jsLink" ng-click="markHighlightedAs('assigned')">
-				<span class="done"></span> Will do
-			</div>
+            <div class="jsLink" ng-click="markHighlightedAs('active')">
+                <span class="done"
+                    ng-include="'/img/glyphs/icon-half-circle.svg'"></span> On it
+            </div>
+            <div class="jsLink" ng-click="markHighlightedAs('done')">
+                <span class="done"
+                    ng-include="'/img/glyphs/icon-circle.svg'"></span> Done
+            </div>
+            <div class="jsLink" ng-click="markHighlightedAs('assigned')">
+                <span class="done"></span> Will do
+            </div>
 
-			<div class="jsLink" ng-click="cutHighlighted()">
-				<span class="glyphicon glyphicon-scissors"></span> Cut
-			</div>
-		</div>
+            <div class="jsLink" ng-click="cutHighlighted()">
+                <span class="glyphicon glyphicon-scissors"></span> Cut
+            </div>
+        </div>
 
-		<div ng-if="isClipboardActive" class="clipboardTools">
-			<div class="jsLink" ng-click="pasteHighlighted()">
-				<span class="glyphicon glyphicon-paste"></span> Paste
-			</div>
-		</div>
-	</div>
+        <div ng-if="isClipboardActive" class="clipboardTools">
+            <div class="jsLink" ng-click="pasteHighlighted()">
+                <span class="glyphicon glyphicon-paste"></span> Paste
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="hidden-xs col-sm-2 debug clear" ng-hide="isMindset('roadmap')">
-	<div class="backlog-mine col-xs-9 debug"
-		ng-class="{done: isStoryDone(story)}">
-		<div ng-show="(isMindset('mine') && !story.isDeadline && !story.isNextMeeting)" 
-			ng-click="bumpStatus(story)">
-			<i class="bump-status debug" ng-hide="isStoryDone(story)"></i>
-			<i class="arrow glyphicon glyphicon-arrow-right debug"
-			ng-show="isStoryDone(story) && isStoryMine(story)"></i>
-		</div>
-	</div>
-	<div class="backlog-status col-xs-3 debug no-select">
-		<i class="done-status" 
-			ng-show="story.isDeadline && !story.isAfterNextMeeting" 
-			ng-click="archive(story)" 
-			title="archive milepost"
-			ng-include="'/img/glyphs/icon-circle.svg'"></i>
-		<i class="done-status" 
-			ng-show="isStoryDone(story)" 
-			ng-click="archive(story)" 
-			title="archive task" 
-			ng-include="'/img/glyphs/icon-circle.svg'"></i>
-		<i class="active-status" 
-			ng-show="isStoryActive(story)"
-			ng-include="'/img/glyphs/icon-half-circle.svg'"></i>
-		<i class="sad-status glyphicon glyphicon-stop" 
-		ng-show="isStorySad(story)"></i>
-		<i class="new-status glyphicon glyphicon-gift"
-		ng-show="(isStoryNew(story) && (isStoryMine(story) || isMindset('mine')))"></i>
-	</div>
+    <div class="backlog-mine col-xs-9 debug"
+        ng-class="{done: isStoryDone(story)}">
+        <div ng-show="(isMindset('mine') && !story.isDeadline && !story.isNextMeeting)" 
+            ng-click="bumpStatus(story)">
+            <i class="bump-status debug" ng-hide="isStoryDone(story)"></i>
+            <i class="arrow glyphicon glyphicon-arrow-right debug"
+            ng-show="isStoryDone(story) && isStoryMine(story)"></i>
+        </div>
+    </div>
+    <div class="backlog-status col-xs-3 debug no-select">
+        <i class="done-status" 
+            ng-show="story.isDeadline && !story.isAfterNextMeeting" 
+            ng-click="archive(story)" 
+            title="archive milepost"
+            ng-include="'/img/glyphs/icon-circle.svg'"></i>
+        <i class="done-status" 
+            ng-show="isStoryDone(story)" 
+            ng-click="archive(story)" 
+            title="archive task" 
+            ng-include="'/img/glyphs/icon-circle.svg'"></i>
+        <i class="active-status" 
+            ng-show="isStoryActive(story)"
+            ng-include="'/img/glyphs/icon-half-circle.svg'"></i>
+        <i class="sad-status glyphicon glyphicon-stop" 
+        ng-show="isStorySad(story)"></i>
+        <i class="new-status glyphicon glyphicon-gift"
+        ng-show="(isStoryNew(story) && (isStoryMine(story) || isMindset('mine')))"></i>
+    </div>
 </div>
 
 
 <div class="story col-xs-12 debug no-select" ng-class="{ 
-		'col-sm-12': isMindset('roadmap'),
-		'col-sm-8': !isMindset('roadmap'),
-		selected: story.isSelected, 
-		'not-selected': !story.isSelected,
-		first: story.isFirstStory,
-		'first-at-load': story.isFirstAtLoad,
-		deadline: story.isDeadline,
-		'next-meeting': story.isNextMeeting,
-		'after-meeting': story.isAfterNextMeeting,
-		highlighted: story.isHighlighted && !isClipboardActive,
-		inClipboard: story.isInClipboard,
-		mine: isStoryMine(story)
-	}"
-	ng-dblclick="select(story)" 
-	ng-click="handleSingleClicks(story)"
-	ng-mousedown="highlight(story)"
-	ng-mouseup="rememberHighlight(story)"
-	ng-mouseenter="mouseEnter(story)"
-	ng-mouseleave="mouseLeave(story)">
-	<div ng-if="story.isSelected">
-		<form name="storyForm" ng-submit="save(story, event)">
-			<div class="summary row">
-				<div class="visible-xs col-xs-12">
-					<div class="deselect"><a class="subtle jslink" ng-click="deselect(story, $event)">Hide details</a></div>
-				</div>
-				<div class="col-xs-12 col-sm-9 summary-input">
-					<input id="boxForStory{{story.id}}" 
-					class="form-control"
-					type="text" 
-					ng-model="story.summary"
-					ng-model-options="{ updateOn: 'submit' }"/></div>
-				<div class="hidden-xs col-sm-3">
-					<div class="deselect"><a ng-click="deselect(story, $event)">Hide details</a></div>
-				</div>
-			</div>
+        'col-sm-12': isMindset('roadmap'),
+        'col-sm-8': !isMindset('roadmap'),
+        selected: story.isSelected, 
+        'not-selected': !story.isSelected,
+        first: story.isFirstStory,
+        'first-at-load': story.isFirstAtLoad,
+        deadline: story.isDeadline,
+        'next-meeting': story.isNextMeeting,
+        'after-meeting': story.isAfterNextMeeting,
+        highlighted: story.isHighlighted && !isClipboardActive,
+        inClipboard: story.isInClipboard,
+        mine: isStoryMine(story)
+    }"
+    ng-dblclick="select(story)" 
+    ng-click="handleSingleClicks(story)"
+    ng-mousedown="highlight(story)"
+    ng-mouseup="rememberHighlight(story)"
+    ng-mouseenter="mouseEnter(story)"
+    ng-mouseleave="mouseLeave(story)">
+    <div ng-if="story.isSelected">
+        <form name="storyForm" ng-submit="save(story, event)">
+            <div class="summary row">
+                <div class="visible-xs col-xs-12">
+                    <div class="deselect"><a class="subtle jslink" ng-click="deselect(story, $event)">Hide details</a></div>
+                </div>
+                <div class="col-xs-12 col-sm-9 summary-input">
+                    <input id="boxForStory{{story.id}}" 
+                    class="form-control"
+                    type="text" 
+                    ng-model="story.summary"
+                    ng-model-options="{ updateOn: 'submit' }"/></div>
+                <div class="hidden-xs col-sm-3">
+                    <div class="deselect"><a ng-click="deselect(story, $event)">Hide details</a></div>
+                </div>
+            </div>
 
-			<div class="top-info" ng-hide="story.isNextMeeting || story.isDeadline">
-				<div class="owner">Who's doing this?
-					<input type="text" 
-					ng-model="story.owner" 
-					ng-model-options="{ updateOn: 'submit' }"
-					typeahead-owners 
-					class="typeahead form-control" />
-				</div>
-				<div class="owner-placeholder"></div>
-			</div>
+            <div class="top-info" ng-hide="story.isNextMeeting || story.isDeadline">
+                <div class="owner">Who's doing this?
+                    <input type="text" 
+                    ng-model="story.owner" 
+                    ng-model-options="{ updateOn: 'submit' }"
+                    typeahead-owners 
+                    class="typeahead form-control" />
+                </div>
+                <div class="owner-placeholder"></div>
+            </div>
 
-			<div class="description">
-				<div>What are the details?
-					<div class="created-by pull-right" ng-show="story.createdBy">
-						story created by {{story.createdBy.name}}
-					</div>
-				</div>
-				<div class="textarea-container">
-					<textarea autosize 
-					ng-model="story.description" 
-					ng-model-options="{ updateOn: 'submit' }"
-					class="form-control" />
-				</div>
-			</div>
+            <div class="description">
+                <div>What are the details?
+                    <div class="created-by pull-right" ng-show="story.createdBy">
+                        story created by {{story.createdBy.name}}
+                    </div>
+                </div>
+                <div class="textarea-container">
+                    <textarea autosize 
+                    ng-model="story.description" 
+                    ng-model-options="{ updateOn: 'submit' }"
+                    class="form-control" />
+                </div>
+            </div>
 
-			<div class="status" ng-hide="story.isNextMeeting || story.isDeadline">Task progress?
-				<div class="row">
-					<div class="col-xs-5 col-sm-3 debug">
-						<a ng-class="{ active: isStorySad(story) }"
-						ng-click="setStoryStatus(story, 'sad')"
-						class="btn btn-default sad form-control">
-						<i class="btn-icon-status glyphicon glyphicon-stop"></i>
-						<span>Help?</span></a>
-					</div>
-					<div class="col-xs-3 col-sm-1 wider debug">
-						<a ng-class="{ active: isStoryNew(story) }"
-						ng-click="setStoryStatus(story, '')"
-						class="btn btn-default question neutral form-control">
-						<span class="txt">?</span></a>
-					</div>
-					<div class="col-xs-4 col-sm-2 wider">
-						<a ng-class="{ active: isStoryAssigned(story) }"
-						ng-click="setStoryStatus(story, 'assigned')"
-						class="btn btn-default neutral form-control">Will do</a>
-					</div>
-					<div class="hidden-xs col-sm-3 wider">
-						<a ng-class="{ active: isStoryActive(story) }"
-						ng-click="setStoryStatus(story, 'active')"
-						class="btn btn-default in-progress form-control">
-						<i class="btn-icon-status" ng-include="'/img/glyphs/icon-half-circle.svg'"></i>
-						<span>On it</span>
-					</a>
-					</div>
-					<div class="col-xs-6 visible-xs">
-						<a ng-class="{ active: isStoryActive(story) }"
-						ng-click="setStoryStatus(story, 'active')"
-						class="btn btn-default in-progress form-control">
-						<i class="btn-icon-status" ng-include="'/img/glyphs/icon-half-circle.svg'"></i>
-						<span>On it</span></a>
-					</div>
-					<div class="col-xs-6 col-sm-3 wider">
-						<a ng-class="{ active: isStoryDone(story) }"
-						ng-click="setStoryStatus(story, 'done')"
-						class="btn btn-default done form-control">
-						<i class="btn-icon-status" ng-include="'/img/glyphs/icon-circle.svg'"></i>
-						<span>Done!</span>
-						</a>
-					</div>
-				</div>
-			</div>
+            <div class="status" ng-hide="story.isNextMeeting || story.isDeadline">Task progress?
+                <div class="row">
+                    <div class="col-xs-5 col-sm-3 debug">
+                        <a ng-class="{ active: isStorySad(story) }"
+                        ng-click="setStoryStatus(story, 'sad')"
+                        class="btn btn-default sad form-control">
+                        <i class="btn-icon-status glyphicon glyphicon-stop"></i>
+                        <span>Help?</span></a>
+                    </div>
+                    <div class="col-xs-3 col-sm-1 wider debug">
+                        <a ng-class="{ active: isStoryNew(story) }"
+                        ng-click="setStoryStatus(story, '')"
+                        class="btn btn-default question neutral form-control">
+                        <span class="txt">?</span></a>
+                    </div>
+                    <div class="col-xs-4 col-sm-2 wider">
+                        <a ng-class="{ active: isStoryAssigned(story) }"
+                        ng-click="setStoryStatus(story, 'assigned')"
+                        class="btn btn-default neutral form-control">Will do</a>
+                    </div>
+                    <div class="hidden-xs col-sm-3 wider">
+                        <a ng-class="{ active: isStoryActive(story) }"
+                        ng-click="setStoryStatus(story, 'active')"
+                        class="btn btn-default in-progress form-control">
+                        <i class="btn-icon-status" ng-include="'/img/glyphs/icon-half-circle.svg'"></i>
+                        <span>On it</span>
+                    </a>
+                    </div>
+                    <div class="col-xs-6 visible-xs">
+                        <a ng-class="{ active: isStoryActive(story) }"
+                        ng-click="setStoryStatus(story, 'active')"
+                        class="btn btn-default in-progress form-control">
+                        <i class="btn-icon-status" ng-include="'/img/glyphs/icon-half-circle.svg'"></i>
+                        <span>On it</span></a>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 wider">
+                        <a ng-class="{ active: isStoryDone(story) }"
+                        ng-click="setStoryStatus(story, 'done')"
+                        class="btn btn-default done form-control">
+                        <i class="btn-icon-status" ng-include="'/img/glyphs/icon-circle.svg'"></i>
+                        <span>Done!</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
 
-			<div class="commentArea" ng-if="!(story.isNextMeeting || story.isDeadline)">
-				<div class="commentHeading">Questions or comments?</div>
-				<div class="textarea-container">
-					<textarea autosize placeholder="Add comment or link ..." 
-					ng-model="story.newComment" 
-					ng-model-options="{ updateOn: 'submit' }"
-					class="form-control"/>
-				</div>
+            <div class="commentArea" ng-if="!(story.isNextMeeting || story.isDeadline)">
+                <div class="commentHeading">Questions or comments?</div>
+                <div class="textarea-container">
+                    <textarea autosize placeholder="Add comment or link ..." 
+                    ng-model="story.newComment" 
+                    ng-model-options="{ updateOn: 'submit' }"
+                    class="form-control"/>
+                </div>
 
-				<div class="btn-wrapper">
-					<div class="pull-right">
-						<span class="subtle topLinkToTask"><a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
-						<button class="saveBtn topSaveBtn btn btn-default" type="submit">Save</button>
-					</div>
-					<button class="saveBtn saveCommentBtn topSaveBtn btn pull-left"
-						ng-click="saveComment(story, $event)">Add comment</button>
-				</div>
-				
-				<div class="comments clear">
-					<div class="comment" ng-repeat="comment in story.comments | reverse" ng-class-odd="'odd'">
-						<div class="text" append-linky ng-model="comment.text"><span class="name">{{comment.createdBy.name}}, </span><span class="timestamp">{{
-							comment.timestamp | date: getTimestampFilter(comment)
-						}}: </span></div>
+                <div class="btn-wrapper">
+                    <div class="pull-right">
+                        <span class="subtle topLinkToTask"><a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
+                        <button class="saveBtn topSaveBtn btn btn-default" type="submit">Save</button>
+                    </div>
+                    <button class="saveBtn saveCommentBtn topSaveBtn btn pull-left"
+                        ng-click="saveComment(story, $event)">Add comment</button>
+                </div>
+                
+                <div class="comments clear">
+                    <div class="comment" ng-repeat="comment in story.comments | reverse" ng-class-odd="'odd'">
+                        <div class="text" append-linky ng-model="comment.text"><span class="name">{{comment.createdBy.name}}, </span><span class="timestamp">{{
+                            comment.timestamp | date: getTimestampFilter(comment)
+                        }}: </span></div>
 
-					</div>
-				</div>
-			</div>
+                    </div>
+                </div>
+            </div>
 
-			<div class="action-buttons">
-				<button ng-hide="story.isNextMeeting" class="hidden-xs removeBtn" type="button" ng-click="remove(story)">Remove task</button>
+            <div class="action-buttons">
+                <button ng-hide="story.isNextMeeting" class="hidden-xs removeBtn" type="button" ng-click="remove(story)">Remove task</button>
 
-				<div class="pull-right" ng-show="story.isNextMeeting || story.isDeadline">
-					<span class="linkToTask subtle"><a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
-					<button class="saveBtn btn btn-default" type="submit">Save</button>
-				</div>
-			</div>
-		</form>
-	</div>
+                <div class="pull-right" ng-show="story.isNextMeeting || story.isDeadline">
+                    <span class="linkToTask subtle"><a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
+                    <button class="saveBtn btn btn-default" type="submit">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
 
-	<div class="row no-select hidden-xs" ng-show="!story.isSelected" id="story-{{$index}}">
-		<div class="col-sm-11 paddy">
-			<div class="summary"
-			ng-class="{mine: isStoryMine(story)}">
-				<sp-story-summary/>
-			</div>
-		</div>
-		<div ng-if="(!isMindset('bump') && !isStoryDone(story)) || !story.isAfterNextMeeting || isMindset('roadmap')" 
-			class="col-sm-1 grippy">
-			<div class="pull-right grippy-viz">
-				<span class="grippy-bar top"></span>
-				<span class="grippy-bar"></span>
-				<div class="row">
-					<div class="col-sm-offset-5">
-						<div class="glyphicon glyphicon-move">&nbsp;</div>
-					</div>
-				</div>
-				<span class="grippy-bar top"></span>
-				<span class="grippy-bar"></span>
-			</div>
-		</div>
+    <div class="row no-select hidden-xs" ng-show="!story.isSelected" id="story-{{$index}}">
+        <div class="col-sm-11 paddy">
+            <div class="summary"
+            ng-class="{mine: isStoryMine(story)}">
+                <sp-story-summary/>
+            </div>
+        </div>
+        <div ng-if="(!isMindset('bump') && !isStoryDone(story)) || !story.isAfterNextMeeting || isMindset('roadmap')" 
+            class="col-sm-1 grippy">
+            <div class="pull-right grippy-viz">
+                <span class="grippy-bar top"></span>
+                <span class="grippy-bar"></span>
+                <div class="row">
+                    <div class="col-sm-offset-5">
+                        <div class="glyphicon glyphicon-move">&nbsp;</div>
+                    </div>
+                </div>
+                <span class="grippy-bar top"></span>
+                <span class="grippy-bar"></span>
+            </div>
+        </div>
 
-		<div ng-if="(isMindset('bump') || isStoryDone(story)) && story.isAfterNextMeeting && !isMindset('roadmap')" 
-			class="col-sm-1 bumpy"
-			ng-click="moveToTop($event, story)">
-			<div class="pull-right bumpy-viz">
-				<div ng-hide="story.isFirstStory" 
-				class="glyphicon glyphicon-chevron-up">&nbsp;</div>
-			</div>
-		</div>
-	</div>
+        <div ng-if="(isMindset('bump') || isStoryDone(story)) && story.isAfterNextMeeting && !isMindset('roadmap')" 
+            class="col-sm-1 bumpy"
+            ng-click="moveToTop($event, story)">
+            <div class="pull-right bumpy-viz">
+                <div ng-hide="story.isFirstStory" 
+                class="glyphicon glyphicon-chevron-up">&nbsp;</div>
+            </div>
+        </div>
+    </div>
 
-		<div class="no-select phone-row hidden-sm hidden-md hidden-lg" 
-		ng-class="{mine: isStoryMine(story)}"
-		ng-hide="story.isSelected" 
-		id="story-{{$index}}">
-			<div class="col-xs-11 paddy">
-			<div class="phone-backlog-status col-xs-2 debug no-select">
-				<i class="done-status" 
-					ng-show="story.isDeadline && !story.isAfterNextMeeting" 
-					ng-click="archive(story)" 
-					title="archive milepost">
-				</i>
-				<i ng-show="isStoryDone(story)" 
-					class="done-status"
-					ng-click="archive(story)" 
-					title="archive story">
-				</i>
-				<i class="active-status" ng-show="isStoryActive(story)"></i>
-				<i class="sad-status glyphicon glyphicon-stop" 
-				ng-show="isStorySad(story)"></i>
-				<span class="new-status glyphicon glyphicon-gift"
-				ng-show="(isStoryNew(story) && isStoryMine(story))"></span>
-			</div>
-			<div class="phone-summary col-xs-8">
-				<sp-story-summary/>
-			</div>
-			<div class="col-xs-2 details-link" ng-show="story.isHighlighted">
-				<a class="subtle jsLink" ng-click="select(story)">
-					<!-- <span class="glyphicon glyphicon-arrow-right"></span> -->details</a>
-			</div>
-		</div>
-		
-		<div class="col-xs-1 grippy" ng-hide="isAndroid">
-			<div class="pull-right grippy-viz">
-				<span class="grippy-bar top"></span>
-				<span class="grippy-bar"></span>
-				<div>
-					<div class="col-xs-offset-4">
-						<div class="glyphicon glyphicon-move">&nbsp;</div>
-					</div>
-				</div>
-				<span class="grippy-bar top"></span>
-				<span class="grippy-bar"></span>
-			</div>
-		</div> 
+        <div class="no-select phone-row hidden-sm hidden-md hidden-lg" 
+        ng-class="{mine: isStoryMine(story)}"
+        ng-hide="story.isSelected" 
+        id="story-{{$index}}">
+            <div class="col-xs-11 paddy">
+            <div class="phone-backlog-status col-xs-2 debug no-select">
+                <i class="done-status" 
+                    ng-show="story.isDeadline && !story.isAfterNextMeeting" 
+                    ng-click="archive(story)" 
+                    title="archive milepost">
+                </i>
+                <i ng-show="isStoryDone(story)" 
+                    class="done-status"
+                    ng-click="archive(story)" 
+                    title="archive story">
+                </i>
+                <i class="active-status" ng-show="isStoryActive(story)"></i>
+                <i class="sad-status glyphicon glyphicon-stop" 
+                ng-show="isStorySad(story)"></i>
+                <span class="new-status glyphicon glyphicon-gift"
+                ng-show="(isStoryNew(story) && isStoryMine(story))"></span>
+            </div>
+            <div class="phone-summary col-xs-8">
+                <sp-story-summary/>
+            </div>
+            <div class="col-xs-2 details-link" ng-show="story.isHighlighted">
+                <a class="subtle jsLink" ng-click="select(story)">
+                    <!-- <span class="glyphicon glyphicon-arrow-right"></span> -->details</a>
+            </div>
+        </div>
+        
+        <div class="col-xs-1 grippy" ng-hide="isAndroid">
+            <div class="pull-right grippy-viz">
+                <span class="grippy-bar top"></span>
+                <span class="grippy-bar"></span>
+                <div>
+                    <div class="col-xs-offset-4">
+                        <div class="glyphicon glyphicon-move">&nbsp;</div>
+                    </div>
+                </div>
+                <span class="grippy-bar top"></span>
+                <span class="grippy-bar"></span>
+            </div>
+        </div> 
 
-		<!-- <div class="col-xs-1 debug on" ng-if="isMindset('bump')">
-			<div class="pull-right bumpy-viz">
-				<div class="glyphicon glyphicon-chevron-up">&nbsp;</div>
-			</div>
-		</div> -->
-	</div>
+        <!-- <div class="col-xs-1 debug on" ng-if="isMindset('bump')">
+            <div class="pull-right bumpy-viz">
+                <div class="glyphicon glyphicon-chevron-up">&nbsp;</div>
+            </div>
+        </div> -->
+    </div>
 </div>
 
 <div class="backlog-owner hidden-xs col-sm-2 debug no-select" 
-	ng-hide="isMindset('roadmap')"
-	ng-class="{'after': story.isAfterNextMeeting}"
-	ng-dblclick="select(story)" ng-mousedown="highlight(story)">
-	<span>{{story.owner}}</span><span ng-show="isStoryNew(story)">?</span>
-	<div 
-		class="notify" 
-		ng-if="isNotificationEnabled()"
-		ng-class="{ notified: story.isOwnerNotified }"
-		ng-show="isOwnerInCircle(story.owner) && isStoryNew(story)"
-		title="notify owner"><i class="glyphicon glyphicon-envelope" ng-click="notify(story, $event)"></i>
-		<span ng-show="story.isNotifying">o</span>
-		<i ng-show="story.isOwnerNotified" title="ok!" class="glyphicon glyphicon-ok"></i>
-	</div>
+    ng-hide="isMindset('roadmap')"
+    ng-class="{'after': story.isAfterNextMeeting}"
+    ng-dblclick="select(story)" ng-mousedown="highlight(story)">
+    <span>{{story.owner}}</span><span ng-show="isStoryNew(story)">?</span>
+    <div 
+        class="notify" 
+        ng-if="isNotificationEnabled()"
+        ng-class="{ notified: story.isOwnerNotified }"
+        ng-show="isOwnerInCircle(story.owner) && isStoryNew(story)"
+        title="notify owner"><i class="glyphicon glyphicon-envelope" ng-click="notify(story, $event)"></i>
+        <span ng-show="story.isNotifying">o</span>
+        <i ng-show="story.isOwnerNotified" title="ok!" class="glyphicon glyphicon-ok"></i>
+    </div>
 </div>
