@@ -345,13 +345,7 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 					circleId: circleId,
 					circle: $scope.getActiveCircle()
 				};
-				$timeout(makeStoriesDraggable, 0);
-				scrollToStorySpecifiedByUrl();
-
-				// UX: Hide story-entry panel at first.
-				// $timeout(function() {
-				// 	$scope.showEntry('many');
-				// }, 300);
+				// Event: See 'storyListBuilt' below
 			})
 			.error(handleInitError);
 
@@ -381,6 +375,15 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 
 		addKeyListener();
 	};
+
+	$scope.$on('storyListBuilt', function () {
+		scrollToStorySpecifiedByUrl();
+
+		// UX: Hide story-entry panel at first.
+		// $timeout(function() {
+		// 	$scope.showEntry('many');
+		// }, 300);
+	});
 
 	init();
 }

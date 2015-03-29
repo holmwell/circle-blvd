@@ -50,7 +50,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		$scope.mileposts = milepostList;
 	};
 
-	var buildStoryList = function (firstStory, serverStories) {
+	var buildStoryList = function (firstStory, serverStories, buildDelay) {
 		storiesList = [];
 
 		stories.init(serverStories);
@@ -73,11 +73,14 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			return;
 		}
 
+		$scope.stories = storiesList;
+
 		// TODO: If we don't have a first story, relax.
 		var currentStory = stories.getFirst();
 		var isAfterNextMeeting = false;
 
-		while (currentStory) {
+
+		var addAndGetNextStory = function (currentStory) {
 			storiesList.push(currentStory); // <3 pass by reference	
 
 			if (isAfterNextMeeting) {
@@ -94,10 +97,58 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			else {
 				currentStory = undefined;
 			}
+
+			return currentStory;
+		};
+
+
+		// Add the first 10 stories immediately, so that
+		// the view renders as soon as possible.
+		var count = 0;
+		while (currentStory) {
+			currentStory = addAndGetNextStory(currentStory);
+			if (count > 10) {
+				break;
+			}
+			count++;
 		}
 
 
-		$scope.stories = storiesList;
+		// We build the list slowly by adding elements to the view
+		// 10 at a time, so that the UI doesn't lock up while the
+		// page is loading. 
+		//
+		// This means the page will take a full two seconds to load
+		// if there are 200 items. We'll want to address this need
+		// in the future, but at this point in development, where
+		// not many people have large projects, I think this is a 
+		// reasonable limitation.
+		var buildListSlowly = function () {
+			var delay = 100;
+			var increment = 10;
+
+			if (typeof(buildDelay) !== undefined) {
+				delay = buildDelay;
+			}
+ 
+			$timeout(function () {
+				var count = 0;
+				while (currentStory) {
+					currentStory = addAndGetNextStory(currentStory);
+					if (count > increment) {
+						buildListSlowly();
+						break;
+					}
+					count++;
+				}
+
+				if (!currentStory) {
+					$scope.$emit('storyListBuilt');
+				}
+			}, delay);
+		};
+
+		buildListSlowly();
 		
 		// For designing
 		// $scope.select(stories.getFirst());
@@ -176,9 +227,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			circle = newVal.circle;
 			circleId = newVal.circleId;
 			listId = newVal.listId || undefined;
-			buildStoryList(newVal.firstStory, newVal.allStories);
-			buildMilepostList(storiesList);
-			$scope.nextMeeting = findNextMeeting();
+
+			buildStoryList(newVal.firstStory, newVal.allStories, newVal.delay);
+			// Event: See 'storyListBuilt'
+
 			// TODO: Might be cool to remember the highlighted
 			// stories across pages
 			if (highlightedStories.length === 0) {
@@ -201,6 +253,14 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			$scope.mileposts = [];
 		}
 	});
+
+	$scope.$on('storyListBuilt', function () {
+		buildMilepostList(storiesList);
+		$scope.nextMeeting = findNextMeeting();
+
+		activateDragAndDrop();
+	});
+
 
 	var unhighlightAllStories = function () {
 		while (highlightedStories.length > 0) {
@@ -1367,7 +1427,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 			circleId: hackCircleId,
 			listId: hackListId,
 			firstStory: hackFirstStory,
-			allStories: hackAllStories
+			allStories: hackAllStories,
+			delay: 0
 		};
 		$scope.$apply(function () {
 			$timeout(function () {
@@ -1867,9 +1928,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		}, 0);
 	};
 
-	$scope.$watch('$viewContentLoaded', function (e) {
-		activateDragAndDrop();
-	});
 
 	$scope.$watch('isFacade', function (newVal) {
 		isFacade = newVal;
