@@ -210,8 +210,7 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 		session.save();
 		$scope.$broadcast("circleChanged", circle._id);
 		if (refreshPage) {
-			$window.location.href = "/";
-			$route.reload();
+			$window.location.href = "/#/";
 		}
 	};
 

@@ -385,6 +385,11 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		// }, 300);
 	});
 
+	$scope.$on('circleChanged', function () {
+		circleId = session.activeCircle;
+		init();
+	});
+
 	init();
 }
 HomeCtrl.$inject = ['lib', 'session', 'hacks', 
