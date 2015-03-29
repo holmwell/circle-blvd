@@ -100,17 +100,20 @@
     <div class="collapse navbar-collapse" id="navigation-circles">
       <ul class="nav navbar-nav">
         <li ng-repeat="circle in circleList()" ng-class="{active: isActiveCircle(circle)}">
-          <a class="jsLink" 
+          <a class="jsLink" data-toggle="collapse" data-target="#navigation-circles.in"
             ng-click="setActiveCircle(circle, true)">{{circle.name}}</a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li ng-show="hasMainframeAccess()"
           ng-class="{active: isCurrentPath('/mainframe')}"><a 
+          data-toggle="collapse" data-target="#navigation-circles.in"
           href="#/mainframe">Mainframe access</a></li>
         <li ng-class="{active: isCurrentPath('/sponsor')}"><a 
+          data-toggle="collapse" data-target="#navigation-circles.in"
           href="/sponsor">Sponsor</a></li> 
         <li ng-class="{active: isCurrentPath('/tour')}"><a 
+          data-toggle="collapse" data-target="#navigation-circles.in"
           href="/tour">Tour</a></li> 
       </ul>
     </div>

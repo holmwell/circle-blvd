@@ -15,12 +15,16 @@
     .collapse.navbar-collapse#navigation-circles
       ul.nav.navbar-nav
         li(ng-repeat="circle in circleList()" ng-class="{active: isActiveCircle(circle)}")
-          a.jsLink(ng-click="setActiveCircle(circle, true)" ng-bind="circle.name")
+          a.jsLink(data-toggle="collapse" data-target="#navigation-circles.in"
+            ng-click="setActiveCircle(circle, true)" ng-bind="circle.name")
 
       ul.nav.navbar-nav.navbar-right
         li(ng-show="hasMainframeAccess()" ng-class="{active: isCurrentPath('/mainframe')}")
-          a(href="/#/mainframe") Mainframe access
+          a(href="/#/mainframe" 
+            data-toggle="collapse" data-target="#navigation-circles.in") Mainframe access
         li(ng-class="{active: isCurrentPath('/sponsor')}")
-          a(href="/sponsor") Sponsor
+          a(href="/sponsor"
+            data-toggle="collapse" data-target="#navigation-circles.in") Sponsor
         li(ng-class="{active: isCurrentPath('/tour')}")
-          a(href="/tour") Tour
+          a(href="/tour"
+            data-toggle="collapse" data-target="#navigation-circles.in") Tour
