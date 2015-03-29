@@ -768,6 +768,22 @@
   text-align: right;
   opacity: 0.6;
 }
+
+.backlog-status .done-status,
+.backlog-status .active-status,
+.backlog-status .sad-status,
+.backlog-status .new-status {
+  display: none;
+}
+
+.backlog-status.done .done-status,
+.backlog-status.active .active-status,
+.backlog-status.sad .sad-status,
+.backlog-status.new .new-status {
+  display: inline-block;
+}
+
+
 .backlog-mine {
   padding: 0.5ex;
   padding-top: 0.75ex;

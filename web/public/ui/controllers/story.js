@@ -76,6 +76,18 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 		}
 	};
 
+	$scope.getStatusCssClass = function (story) {
+		switch (story.status) {
+			case "sad":
+			case "assigned":
+			case "active":
+			case "done":
+			    return story.status;
+			default: 
+				return "new";
+		}
+	};
+
 	var statusOrder = ['sad','assigned','active','done'];
 	$scope.bumpStatus = function (story) {
 		if (story) {

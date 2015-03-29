@@ -50,24 +50,21 @@
             ng-show="isStoryDone(story) && isStoryMine(story)"></i>
         </div>
     </div>
-    <div class="backlog-status col-xs-3 debug no-select">
+    <div class="backlog-status col-xs-3 debug no-select {{getStatusCssClass(story)}}">
         <i class="done-status" 
             ng-show="story.isDeadline && !story.isAfterNextMeeting" 
             ng-click="archive(story)" 
             title="archive milepost"
             ng-include="'/img/glyphs/icon-circle.svg'"></i>
-        <i class="done-status" 
-            ng-show="isStoryDone(story)" 
+        <i class="done-status"  
             ng-click="archive(story)" 
             title="archive task" 
             ng-include="'/img/glyphs/icon-circle.svg'"></i>
         <i class="active-status" 
-            ng-show="isStoryActive(story)"
             ng-include="'/img/glyphs/icon-half-circle.svg'"></i>
-        <i class="sad-status glyphicon glyphicon-stop" 
-        ng-show="isStorySad(story)"></i>
+        <i class="sad-status glyphicon glyphicon-stop"></i>
         <i class="new-status glyphicon glyphicon-gift"
-        ng-show="(isStoryNew(story) && (isStoryMine(story) || isMindset('mine')))"></i>
+        ng-show="(isStoryMine(story) || isMindset('mine'))"></i>
     </div>
 </div>
 
@@ -252,7 +249,7 @@
         </div>
     </div>
 
-        <div class="no-select phone-row hidden-sm hidden-md hidden-lg" 
+    <div ng-if="isScreenXs" class="no-select phone-row hidden-sm hidden-md hidden-lg" 
         ng-class="{mine: isStoryMine(story)}"
         ng-hide="story.isSelected" 
         id="story-{{$index}}">
