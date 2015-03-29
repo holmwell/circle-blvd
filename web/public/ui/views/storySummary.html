@@ -4,6 +4,6 @@
         ng-if="s.isLabel" 
         ng-mouseup="prevent($event)"
         ng-click="selectLabel($event, s.label)"> <span 
-        class="story-label">{{s.text}}</span></span><span 
-        ng-if="!s.isLabel && !s.isPostLabel"> {{s.text}}</span><span 
-        ng-if="s.isPostLabel">{{s.text}}</span></span>
+        class="story-label">{{::s.text}}</span></span><span 
+        ng-if="!s.isLabel && !s.isPostLabel"> {{::s.text}}</span><span 
+        ng-if="s.isPostLabel">{{::s.text}}</span></span>

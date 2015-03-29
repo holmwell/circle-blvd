@@ -12,7 +12,7 @@
     <div class="tools">
         <div ng-if="!isClipboardActive" class="regularTools">
             <div class="jsLink">
-                <a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span> Link</a>
+                <a href="/#/stories/{{::story.id}}"><span class="glyphicon glyphicon-link"></span> Link</a>
             </div>
 
             <div class="jsLink" ng-click="markHighlightedAs('active')">
@@ -99,7 +99,7 @@
                     <div class="deselect"><a class="subtle jslink" ng-click="deselect(story, $event)">Hide details</a></div>
                 </div>
                 <div class="col-xs-12 col-sm-9 summary-input">
-                    <input id="boxForStory{{story.id}}" 
+                    <input id="boxForStory{{::story.id}}" 
                     class="form-control"
                     type="text" 
                     ng-model="story.summary"
@@ -123,7 +123,7 @@
             <div class="description">
                 <div>What are the details?
                     <div class="created-by pull-right" ng-show="story.createdBy">
-                        story created by {{story.createdBy.name}}
+                        story created by {{::story.createdBy.name}}
                     </div>
                 </div>
                 <div class="textarea-container">
@@ -191,7 +191,7 @@
 
                 <div class="btn-wrapper">
                     <div class="pull-right">
-                        <span class="subtle topLinkToTask"><a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
+                        <span class="subtle topLinkToTask"><a href="/#/stories/{{::story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
                         <button class="saveBtn topSaveBtn btn btn-default" type="submit">Save</button>
                     </div>
                     <button class="saveBtn saveCommentBtn topSaveBtn btn pull-left"
@@ -201,7 +201,7 @@
                 
                 <div class="comments clear">
                     <div class="comment" ng-repeat="comment in story.comments | reverse" ng-class-odd="'odd'">
-                        <div class="text" append-linky ng-model="comment.text"><span class="name">{{comment.createdBy.name}}, </span><span class="timestamp">{{
+                        <div class="text" append-linky ng-model="comment.text"><span class="name">{{::comment.createdBy.name}}, </span><span class="timestamp">{{::
                             comment.timestamp | date: getTimestampFilter(comment)
                         }}: </span></div>
 
@@ -213,7 +213,7 @@
                 <button ng-if="!isScreenXs" ng-hide="story.isNextMeeting" class="hidden-xs removeBtn" type="button" ng-click="remove(story)">Remove task</button>
 
                 <div class="pull-right" ng-show="story.isNextMeeting || story.isDeadline">
-                    <span class="linkToTask subtle"><a href="/#/stories/{{story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
+                    <span class="linkToTask subtle"><a href="/#/stories/{{::story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
                     <button class="saveBtn btn btn-default" type="submit">Save</button>
                 </div>
             </div>

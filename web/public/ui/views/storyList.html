@@ -46,8 +46,8 @@
 		</div>
 		<div id="sortableList">
 			<div class="storyWrapper row debug no-select" 
-				data-left-story-id="{{story.id}}"
-				data-story-id="{{story.id}}"
+				data-left-story-id="{{::story.id}}"
+				data-story-id="{{::story.id}}"
 				ng-repeat="story in stories"
 				ng-hide="shouldHideStory(story)"
 				ng-class="{highlightedWrapper: story.isHighlighted}">
@@ -59,7 +59,7 @@
 	<div id="mileposts-wrapper" class="debug" ng-if="isMindset('roadmap')">
 		<div id="mileposts" class="debug">
 			<div class="storyWrapper row debug no-select" 
-				data-story-id="{{story.id}}"
+				data-story-id="{{::story.id}}"
 				ng-repeat="story in mileposts">
 				<sp-roadmap-milepost/>
 			</div>
