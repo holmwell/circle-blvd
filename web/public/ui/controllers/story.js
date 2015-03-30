@@ -1,6 +1,39 @@
 'use strict';
 
-function StoryCtrl(session, lib, $scope, $timeout) {
+function StoryCtrl(session, lib, $scope, $timeout, $element) {
+
+	// Hide this element if it's not on the screen or within
+	// our off-screen buffer. We do this so there is a limited
+	// number of Angular watchers at any given time, as they
+	// are expensive.
+	function isElementInViewport (el) {
+		return true;
+		// Disable in roadmap view, for smooth scrolling 
+		// across vast distances
+		if (lib.mindset.is('roadmap')) {
+			return true;
+		}
+
+	    //special bonus for those using jQuery
+	    if (typeof jQuery === "function" && el instanceof jQuery) {
+	        el = el[0];
+	    }
+
+	    var rect = el.getBoundingClientRect();
+	    var bufferHeight = 800;
+
+	    return (
+	        rect.top >= -bufferHeight &&
+	        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) + bufferHeight /*or $(window).height() */
+	    );
+	}
+
+	$scope.$on('viewportChanged', function () {
+		var isOnScreen = isElementInViewport($element);
+		if (isOnScreen !== $scope.isOnScreen) {
+			$scope.isOnScreen = isOnScreen;
+		}
+	});
 
 	$scope.isAndroid = function() {
         // return /Android/i.test(navigator.userAgent);
@@ -287,4 +320,4 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 		return false;
 	};
 }
-StoryCtrl.$inject = ['session', 'lib', '$scope', '$timeout'];
+StoryCtrl.$inject = ['session', 'lib', '$scope', '$timeout', '$element'];

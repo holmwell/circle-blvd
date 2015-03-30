@@ -1,4 +1,4 @@
-function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, errors) {
+function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $interval, lib, hacks, errors) {
 	var circleId = undefined;
 	var listId = undefined;
 
@@ -24,6 +24,20 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	else {
 		$scope.isScreenXs = false;
 	}
+
+	var didScroll = false;
+	$document.bind('scroll', function (e) {
+		didScroll = true;
+	}); 
+
+	$interval(function () {
+		if (didScroll) {
+			didScroll = false;
+			$timeout(function () {
+				$scope.$broadcast('viewportChanged');
+			}, 50);
+		}
+	}, 200);
 
 	// HACK: Until we can figure out how to stop this properly,
 	// reload the page when this happens.
@@ -255,6 +269,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	});
 
 	$scope.$on('storyListBuilt', function () {
+		$scope.$broadcast('viewportChanged');
 		buildMilepostList(storiesList);
 		$scope.nextMeeting = findNextMeeting();
 
@@ -1958,4 +1973,4 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		}
 	};
 }
-StoryListCtrl.$inject = ['$scope', '$timeout', '$http', '$location', '$route', 'lib', 'hacks', 'errors'];
+StoryListCtrl.$inject = ['$scope', '$timeout', '$http', '$location', '$route', '$document', '$interval', 'lib', 'hacks', 'errors'];

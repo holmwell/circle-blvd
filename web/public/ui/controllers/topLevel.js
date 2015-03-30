@@ -152,6 +152,14 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 			// ? (question mark)
 			$scope.$broadcast('keyClearStatus', e);
 		}
+
+		// Scrolling: page up, page down, end, home
+		if (e.keyCode === 33
+			|| e.keyCode === 34
+			|| e.keyCode === 35
+			|| e.keyCode === 36) {
+			$scope.$broadcast('viewportChanged');
+		}
 	};
 
 	$scope.keyup = function (e) {
@@ -376,6 +384,7 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 
 		return false;
 	};
+
 
 	var init = function() {
 		if ($window.location.hash.length === 0) {
