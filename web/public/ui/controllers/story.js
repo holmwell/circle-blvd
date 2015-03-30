@@ -76,7 +76,7 @@ function StoryCtrl(session, lib, $scope, $timeout) {
 		}
 	};
 
-	$scope.getStatusCssClass = function (story) {
+	$scope.getStatusClass = function (story) {
 		switch (story.status) {
 			case "sad":
 			case "assigned":

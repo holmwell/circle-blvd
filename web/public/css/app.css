@@ -439,6 +439,13 @@
  *  roadmap
  *  bump
  */
+.show-mindset-mine,
+.show-mindset-detailed,
+.show-mindset-roadmap,
+.show-mindset-bump {
+  display: none;
+}
+
 .mindset-detailed .show-mindset-detailed,
 .mindset-roadmap .show-mindset-roadmap,
 .mindset-mine .show-mindset-mine,
@@ -796,13 +803,22 @@
   display: none;
 }
 
-.backlog-status.done .done-status,
-.backlog-status.active .active-status,
-.backlog-status.sad .sad-status,
-.backlog-status.new .new-status {
+.done .backlog-status .done-status,
+.active .backlog-status .active-status,
+.sad .backlog-status .sad-status,
+.new .backlog-status .new-status {
   display: inline-block;
 }
 
+.show-status-new,
+.done .hide-status-done {
+  display: none;
+}
+
+.hide-status-done,
+.new .show-status-new {
+  display: inline-block;
+}
 
 .backlog-mine {
   padding: 0.5ex;
