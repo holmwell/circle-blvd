@@ -1261,6 +1261,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		return lib.mindset.is(m);
 	};
 
+	$scope.getMindsetClass = function () {
+		if ($scope.mindset) {
+			return "mindset-" + $scope.mindset;
+		}
+		return "mindset-" + lib.mindset.get();
+	};
+
 	function updateViewModelStoryOrder() {
 		// The YUI drag-and-drop stuff manipulates the DOM, 
 		// but doesn't touch our view-model, so we need to 

@@ -433,6 +433,26 @@
   background-color: white;
 }
 
+/* Mindsets:
+ *  detailed
+ *  mine
+ *  roadmap
+ *  bump
+ */
+.mindset-detailed .show-mindset-detailed,
+.mindset-roadmap .show-mindset-roadmap,
+.mindset-mine .show-mindset-mine,
+.mindset-bump .show-mindset-bump {
+  display: block;
+}
+.mindset-detailed .hide-mindset-detailed,
+.mindset-roadmap .hide-mindset-roadmap,
+.mindset-mine .hide-mindset-mine,
+.mindset-bump .hide-mindset-bump {
+  display: none;
+}
+
+
 .filter, .paste-destination, .paste-destination:hover {
   background-color: #1E69B5;
   color: white;

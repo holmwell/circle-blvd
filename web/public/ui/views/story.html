@@ -40,7 +40,7 @@
     </div>
 </div>
 
-<div ng-if="::!isScreenXs" class="hidden-xs col-sm-2 debug clear" ng-hide="isMindset('roadmap')">
+<div ng-if="::!isScreenXs" class="hidden-xs col-sm-2 debug clear hide-mindset-roadmap">
     <div class="backlog-mine col-xs-9 debug"
         ng-class="{done: isStoryDone(story)}">
         <div ng-show="(isMindset('mine') && !story.isDeadline && !story.isNextMeeting)" 
@@ -302,9 +302,8 @@
     </div>
 </div>
 
-<div class="backlog-owner hidden-xs col-sm-2 debug no-select" 
+<div class="backlog-owner hidden-xs col-sm-2 debug no-select hide-mindset-roadmap" 
     ng-if="::!isScreenXs"
-    ng-hide="isMindset('roadmap')"
     ng-class="{'after': story.isAfterNextMeeting}"
     ng-dblclick="select(story)" ng-mousedown="highlight(story)">
     <span>{{story.owner}}</span><span ng-show="isStoryNew(story)">?</span>
