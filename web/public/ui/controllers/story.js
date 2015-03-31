@@ -110,6 +110,10 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 	};
 
 	$scope.getStatusClass = function (story) {
+		if (story.isDeadline) {
+			return "deadline";
+		}
+
 		switch (story.status) {
 			case "sad":
 			case "assigned":

@@ -803,6 +803,10 @@
   display: none;
 }
 
+.deadline .backlog-status .done-status-archive {
+  display: inherit;
+}
+
 .done .backlog-status .done-status,
 .active .backlog-status .active-status,
 .sad .backlog-status .sad-status,
