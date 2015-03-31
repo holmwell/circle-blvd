@@ -1823,6 +1823,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 			opacity: 0.75,
 			tolerance: "pointer",
 			scrollSensitivity: 25,
+			axis: "y",
 			helper: function (event, item) {
 				var highlighted = item.parent().children(selector).clone();
 
