@@ -878,7 +878,9 @@ module.exports = function () {
 			storyToSave.owner = story.owner;
 			storyToSave.status = story.status || "";
 			storyToSave.description = story.description;
-			storyToSave.labels = story.labels;
+			if (story.labels) {
+				storyToSave.labels = story.labels;
+			}
 
 			// isDeadline should not be changed
 			// storyToSave.isDeadline = story.isDeadline;
