@@ -422,6 +422,24 @@ module.exports = function () {
 		var storiesToSave = {};
 		var saveChecks = [];
 
+		if (!story || !newNextId) {
+			// Sanity checks
+			return failure({ 
+				status: 400,
+				message: "Story or new next ID were not specified."
+			});
+		}
+
+		if (story.nextId === newNextId) {
+			// Basic integrity failure
+			return failure({
+				status: 400,
+				message: "New next ID cannot be the same as the story ID, as this would " +
+					"create a circular reference, which would be very bad."
+			})
+		}
+
+
 		var addToStoriesToSave = function (s) {
 			if (s) {
 				if (storiesToSave[s.id]) {
