@@ -4,6 +4,7 @@ var events  = require('events');
 var http    = require('http');
 var path    = require('path');
 var routes  = require('./routes');
+var io      = require('socket.io')();
 
 // express middleware
 var compression    = require('compression');
@@ -193,7 +194,15 @@ var defineRoutes = function () {
         var onSettingsUpdate = function (setting) {
             if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
                 // TODO: Tell the client if we started the server?
-                tryToCreateHttpsServer();
+                tryToCreateHttpsServer(function (err) {
+                    if (err) {
+                        console.log(err);
+                        return;
+                    }
+                    if (sslServer.isRunning) {
+                        io.attach(sslServer);
+                    }
+                });
             }
             if (setting.name === 'stripe-secret-key') {
                 payment.setApiKey(setting.value);
@@ -367,6 +376,7 @@ var defineRoutes = function () {
         }));
     });
 
+
     // Checklists!
     app.post("/data/:circleId/list", ensure.circle, function (req, res) {
         var list = {
@@ -418,6 +428,7 @@ var defineRoutes = function () {
     };
 
     var addStory = function (story, res) {
+        ioNotify(res, story.projectId);
         db.stories.add(story, handle(res));
     };
 
@@ -444,9 +455,11 @@ var defineRoutes = function () {
     app.post("/data/story/", ensure.auth, function (req, res) {
         var data = req.body;
         var circleId = data.projectId;
+
         ensure.isCircle(circleId, req, res, function() {
             // Add the story if we're under the server limit.
             limits.users.story(circleId, guard(res, function () {
+
                 var story = copyStory(data);
                 story.createdBy = getCreatedBy(req);
                 console.log("STORY: ");
@@ -467,6 +480,7 @@ var defineRoutes = function () {
     };
 
     var saveStoryWithComment = function (story, req, res) {
+        ioNotify(res, story.projectId);
         db.stories.save(story, 
             function (savedStory) {
                 if (story.newComment) {
@@ -555,6 +569,7 @@ var defineRoutes = function () {
         var story = body.story;
         var newNextId = body.newNextId;
         ensure.isCircle(story.projectId, req, res, function () {
+            ioNotify(res, startStory.projectId);
             db.stories.move(story, newNextId, handle(res));
         });
     });
@@ -568,6 +583,7 @@ var defineRoutes = function () {
 
         ensure.isCircle(startStory.projectId, req, res, function () {
             ensure.isCircle(endStory.projectId, req, res, function () {
+                ioNotify(res, startStory.projectId);
                 db.stories.moveBlock(startStory, endStory, newNextId, handle(res));
             });
         });
@@ -584,6 +600,7 @@ var defineRoutes = function () {
                 var stories = [];
                 stories.push(story);
 
+                ioNotify(res, story.projectId);
                 db.archives.addStories(stories, 
                 function (body) {
                     // TODO: If this breaks then we have a data
@@ -601,6 +618,7 @@ var defineRoutes = function () {
     app.put("/data/story/remove", ensure.auth, function (req, res) {
         var story = req.body;
         ensure.isCircle(story.projectId, req, res, function () {
+            ioNotify(res, story.projectId);
             removeStory(story, res);
         });
     });
@@ -828,11 +846,43 @@ var defineRoutes = function () {
     });
 };
 
-var startServer = function () {
-    http.createServer(app).listen(app.get('port'), function () {
-        console.log("Express http server listening on port " + app.get('port'));
+var initSocketIO = function () {
+    // TODO: Some authorization would be great.
+    io.on('connection', function (socket) {
+        socket.on('join-circle', function (data) {
+            if (!data.circle) {
+                return;
+            }
+            socket.join(data.circle);
+        });
     });
-        
+
+    app.use(function (req, res, next){
+        res.on('finish', function(){
+            if (res.circleBlvd && res.circleBlvd.notifyCircle) {
+                var circleId = res.circleBlvd.notifyCircle;
+                io.to(circleId).emit('o');
+            }
+        });
+        next();
+    });
+};
+
+var ioNotify = function (res, circleId) {
+    if (!res.circleBlvd) {
+        res.circleBlvd = {};
+    }
+    res.circleBlvd.notifyCircle = circleId;
+};
+
+var startServer = function () {
+    var httpServer = http.createServer(app);
+
+    httpServer.listen(app.get('port'), function () {
+        console.log("Express http server listening on port " + app.get('port'));
+        io.attach(httpServer);
+    });
+
     // Run an https server if we can.
     tryToCreateHttpsServer(function (err, success) {
         if (err) {
@@ -840,9 +890,12 @@ var startServer = function () {
         }
         else {
             console.log(success);
+            if (sslServer.isRunning) {
+                io.attach(sslServer.server);
+            }
         }
     });
-}
+};
 
 var forceHttps = function(req, res, next) {
     if (!sslServer.isRunning()) {
@@ -1032,9 +1085,13 @@ var configureApp = function() {
         
         // Set settings
         app.use(appSettings);
-        
+
+        // Real-time engine
+        initSocketIO();
+
         // Routes
         defineRoutes();
+
         // Catch errors
         app.use(function (err, req, res, next) {
             if (err) {
@@ -1042,6 +1099,7 @@ var configureApp = function() {
             }
             // TODO: Should not get here.
         });
+
         ready();
     };
 

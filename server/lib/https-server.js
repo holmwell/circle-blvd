@@ -83,6 +83,7 @@ module.exports = function () {
 		isRunning: function () {
 			return httpsServer ? true : false;
 		},
-		create: tryToCreateHttpsServer
+		create: tryToCreateHttpsServer,
+		server: httpsServer
 	};
 }(); // closure
