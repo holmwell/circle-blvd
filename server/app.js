@@ -200,7 +200,7 @@ var defineRoutes = function () {
                         return;
                     }
                     if (sslServer.isRunning()) {
-                        io.attach(sslServer);
+                        io.attach(sslServer.getServer());
                     }
                 });
             }
@@ -891,7 +891,7 @@ var startServer = function () {
         else {
             console.log(success);
             if (sslServer.isRunning()) {
-                io.attach(sslServer.server);
+                io.attach(sslServer.getServer());
             }
         }
     });

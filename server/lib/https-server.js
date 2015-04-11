@@ -84,6 +84,8 @@ module.exports = function () {
 			return httpsServer ? true : false;
 		},
 		create: tryToCreateHttpsServer,
-		server: httpsServer
+		getServer: function () {
+			return httpsServer
+		}
 	};
 }(); // closure
