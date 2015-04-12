@@ -569,7 +569,7 @@ var defineRoutes = function () {
         var story = body.story;
         var newNextId = body.newNextId;
         ensure.isCircle(story.projectId, req, res, function () {
-            ioNotify(res, startStory.projectId);
+            ioNotify(res, story.projectId);
             db.stories.move(story, newNextId, handle(res));
         });
     });
