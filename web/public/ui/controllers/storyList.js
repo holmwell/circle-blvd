@@ -805,15 +805,20 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 
 	$scope.$on('storySelected', function (e, story) {
 		selectedStory = story;
-		// Bring the focus to the default input box, 
-		// which is likely the summary text.
-		//
-		// We do need this timeout wrapper around focus
-		// for this to work, for whatever reason.
-		$timeout(function () {
-			var boxId = "boxForStory" + story.id;
-			hacks.focus(boxId);
-		});
+		if (!$scope.isScreenXs) {
+			// Bring the focus to the default input box, 
+			// which is likely the summary text.
+			//
+			// We do need this timeout wrapper around focus
+			// for this to work, for whatever reason.
+			//
+			// This behavior is annoying on phones, so don't do
+			// that. TODO: Detect tablets too and don't do it.
+			$timeout(function () {
+				var boxId = "boxForStory" + story.id;
+				hacks.focus(boxId);
+			});			
+		}
 	});
 
 
