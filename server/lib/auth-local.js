@@ -65,6 +65,7 @@ module.exports = function () {
 	return {
 		attach: attach,
 		signin: authenticateLocal,
-		signout: signout
+		signout: signout,
+		findUser: auth.findUserById
 	};
 }(); // closure

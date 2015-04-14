@@ -57,6 +57,8 @@ var findUserById = function(id, callback) {
 	});
 };
 
+exports.findUserById = findUserById;
+
 // callback = fn(error, user);
 var verify = function(email, password, callback) {
 	db.users.findByEmail(email, function (err, user) {

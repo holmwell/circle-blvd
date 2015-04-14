@@ -846,14 +846,56 @@ var defineRoutes = function () {
     });
 };
 
-var initSocketIO = function () {
-    // TODO: Some authorization would be great.
+var initSocketIO = function (sessionMiddleware) {
+    io.use(function (socket, next) {
+        sessionMiddleware(socket.request, {}, next);
+    });
+
+    io.use(function (socket, next) {
+        // Add our user to the request, if we can.
+        if (socket && 
+            socket.request && 
+            socket.request.session && 
+            socket.request.session.passport && 
+            socket.request.session.passport.user) {
+            var user = socket.request.session.passport.user;
+            auth.findUser(user, function (err, user) {
+                if (err) {
+                    return next(err);
+                }
+                socket.request.user = user;
+                next();
+            });
+        }
+        else {
+            next();
+        }
+    });
+
     io.on('connection', function (socket) {
         socket.on('join-circle', function (data) {
             if (!data.circle) {
+                // No circle specified
                 return;
             }
-            socket.join(data.circle);
+
+            var user = socket.request.user;
+            var hasAccess = false;
+
+            // Only allow access circle events if
+            // we're members of some sort.
+            if (user && user.memberships) {
+                var groups = user.memberships;
+                for (var groupKey in groups) {
+                    if (groups[groupKey].circle === data.circle) {
+                        hasAccess = true;
+                    }
+                }
+            }
+
+            if (hasAccess) {
+                socket.join(data.circle);
+            }
         });
     });
 
@@ -1069,11 +1111,12 @@ var configureApp = function() {
         var sessionSecret = settings['session-secret'].value;
         var SessionStore = couchSessionStore(expressSession);
         var cookieSettings = getCookieSettings();
-        app.use(expressSession({ 
+        var sessionMiddleware = expressSession({ 
             store: new SessionStore(),
             secret: sessionSecret,
             cookie: cookieSettings
-        }));
+        });
+        app.use(sessionMiddleware);
 
         var stripeApiKey = settings['stripe-secret-key'];
         if (stripeApiKey) {
@@ -1087,7 +1130,7 @@ var configureApp = function() {
         app.use(appSettings);
 
         // Real-time engine
-        initSocketIO();
+        initSocketIO(sessionMiddleware);
 
         // Routes
         defineRoutes();
