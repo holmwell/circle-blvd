@@ -114,6 +114,10 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 			return "deadline";
 		}
 
+		if (story.isNextMeeting) {
+			return "next-meeting";
+		}
+
 		switch (story.status) {
 			case "sad":
 			case "assigned":
