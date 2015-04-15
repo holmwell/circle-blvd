@@ -1111,6 +1111,23 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		var viewModel = stories.get(story.id);
 		viewModel.status = story.status;
 
+
+		if (story.newComment) {
+			var commentFound = false;
+			// Add this new comment to the story's comment list
+			// if we don't already have it.
+			for (index in viewModel.comments) {
+				var comment = viewModel.comments[index];
+				if (comment.timestamp === story.newComment.timestamp
+					&& comment.createdBy.id === story.newComment.createdBy.id) {
+					commentFound = true;
+				}
+			}
+			if (!commentFound) {
+				viewModel.comments.push(story.newComment);
+			}
+		}
+
 		if (!viewModel.isSelected) {
 			viewModel.labels = story.labels;
 			viewModel.summary = story.summary;
