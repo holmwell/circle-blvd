@@ -591,8 +591,8 @@
 .owner-placeholder {
   /*border: dotted 1px #999;*/
   margin-left: 10px;
-  text-align: center;
-  padding-top: 1.4em;
+  text-align: left;
+  padding-top: 1.9em;
   height: 4em;
 }
 

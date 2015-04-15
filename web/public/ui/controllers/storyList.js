@@ -805,6 +805,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 
 	$scope.$on('storySelected', function (e, story) {
 		selectedStory = story;
+		// TODO: Where should this go, really? 
+		if (story.warning) {
+			delete story.warning;
+		}
 		if (!$scope.isScreenXs) {
 			// Bring the focus to the default input box, 
 			// which is likely the summary text.
@@ -1092,6 +1096,25 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		// TODO: Do we need this serverStory runaround?
 		var serverStory = stories.get(story.id);
 		stories.save(serverStory);
+	});
+
+	$scope.$on('ioStory', function (e, payload) {
+		var story = payload.data;
+		var viewModel = stories.get(story.id);
+		viewModel.status = story.status;
+
+		if (!viewModel.isSelected) {
+			viewModel.labels = story.labels;
+			viewModel.summary = story.summary;
+			viewModel.description = story.description;
+			viewModel.owner = story.owner;
+
+			pulse(viewModel);
+		}
+		else {
+			viewModel.warning = payload.user + " has just edited this task."
+			pulse(viewModel);
+		}
 	});
 
 	$scope.$on('storyNotify', function (e, story, event) {

@@ -480,7 +480,7 @@ var defineRoutes = function () {
     };
 
     var saveStoryWithComment = function (story, req, res) {
-        ioNotify(res, story.projectId);
+        ioNotify(res, story.projectId, 'story', story);
         db.stories.save(story, 
             function (savedStory) {
                 if (story.newComment) {
@@ -903,18 +903,31 @@ var initSocketIO = function (sessionMiddleware) {
         res.on('finish', function(){
             if (res.circleBlvd && res.circleBlvd.notifyCircle) {
                 var circleId = res.circleBlvd.notifyCircle;
-                io.to(circleId).emit('o');
+                if (res.circleBlvd.notifyType) {
+                    var payload = {};
+                    // Attached the signed in user to the payload
+                    if (req.user) {
+                        payload.user = req.user.name;
+                    }
+                    payload.data = res.circleBlvd.notifyData;
+                    io.to(circleId).emit(res.circleBlvd.notifyType, payload);
+                }
+                else {
+                    io.to(circleId).emit('o');
+                }
             }
         });
         next();
     });
 };
 
-var ioNotify = function (res, circleId) {
+var ioNotify = function (res, circleId, type, data) {
     if (!res.circleBlvd) {
         res.circleBlvd = {};
     }
     res.circleBlvd.notifyCircle = circleId;
+    res.circleBlvd.notifyType = type;
+    res.circleBlvd.notifyData = data;
 };
 
 var startServer = function () {

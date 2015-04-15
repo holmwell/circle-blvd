@@ -385,6 +385,21 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 		return false;
 	};
 
+	var initSocketIO = function () {
+		if (typeof(io) !== 'undefined') {
+			var socket = io();
+			io.connect();
+
+			socket.emit('join-circle', { circle: session.activeCircle });
+			socket.on('o', function () {
+				$scope.$broadcast('o');
+			});
+
+			socket.on('story', function (data) {
+				$scope.$broadcast('ioStory', data);
+			});
+		}
+	}(); // closure
 
 	var init = function() {
 		if ($window.location.hash.length === 0) {
