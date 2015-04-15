@@ -398,6 +398,10 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 			socket.on('story', function (data) {
 				$scope.$broadcast('ioStory', data);
 			});
+
+			socket.on('move-block', function (data) {
+				$scope.$broadcast('ioMoveBlock', data);
+			});
 		}
 	}(); // closure
 

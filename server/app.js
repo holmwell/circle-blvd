@@ -569,7 +569,11 @@ var defineRoutes = function () {
         var story = body.story;
         var newNextId = body.newNextId;
         ensure.isCircle(story.projectId, req, res, function () {
-            ioNotify(res, story.projectId);
+            ioNotify(res, story.projectId, 'move-block', {
+                startStoryId: story.id,
+                endStoryId: story.id,
+                newNextId: newNextId
+            });
             db.stories.move(story, newNextId, handle(res));
         });
     });
@@ -583,7 +587,11 @@ var defineRoutes = function () {
 
         ensure.isCircle(startStory.projectId, req, res, function () {
             ensure.isCircle(endStory.projectId, req, res, function () {
-                ioNotify(res, startStory.projectId);
+                ioNotify(res, startStory.projectId, 'move-block', {
+                    startStoryId: startStory.id,
+                    endStoryId: endStory.id,
+                    newNextId: newNextId
+                });
                 db.stories.moveBlock(startStory, endStory, newNextId, handle(res));
             });
         });

@@ -870,7 +870,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		return false;
 	};
 
-	function moveStoryBlock (uiStartStory, startStory, endStory, nextStory) {
+	function moveStoryBlock (uiStartStory, startStory, endStory, nextStory, isLocalOnly) {
 		var storyToMove = startStory;
 
 		if (startStory.id === nextStory.id 
@@ -879,6 +879,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 			|| endStory.nextId === nextStory.id
 			|| isStoryBetween(nextStory, startStory, endStory)) {
 			// Do nothing.
+			// console.log('start ' + startStory.id);
+			// console.log('start.next ' + startStory.nextId)
+			// console.log('end   ' + endStory.id);
+			// console.log('next  ' + nextStory.id);
 			return;
 		}
 
@@ -930,6 +934,10 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		$timeout(function () {
 			pulse(startStory);
 		}, 100);
+
+		if (isLocalOnly) {
+			return;
+		}
 
 		// Update server
 		$timeout(function() {
@@ -1115,6 +1123,17 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 			viewModel.warning = payload.user + " has just edited this task."
 			pulse(viewModel);
 		}
+	});
+
+	$scope.$on('ioMoveBlock', function (e, payload) {
+		var startStory = stories.get(payload.data.startStoryId);
+		var endStory = stories.get(payload.data.endStoryId);
+		var nextId = payload.data.newNextId;
+
+		var nextStory = stories.get(nextId);
+
+		var isLocalOnly = true;
+		moveStoryBlock(startStory, startStory, endStory, nextStory, isLocalOnly);
 	});
 
 	$scope.$on('storyNotify', function (e, story, event) {
