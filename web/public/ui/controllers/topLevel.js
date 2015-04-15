@@ -409,6 +409,10 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 				$scope.$broadcast('ioStoryRemoved', data);
 			});
 
+			socket.on('story-highlighted', function (data) {
+				$scope.$broadcast('ioStoryHighlighted', data);
+			});
+
 			socket.on('connect', function (data) {
 				socket.emit('join-circle', { circle: session.activeCircle });
 			});
@@ -416,10 +420,18 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 			socket.on('disconnect', function (data) {
 				console.log("IO DISCONNECT")
 				console.log(data)
-				// TODO: Refresh our data when we reconnect.
+				// TODO: Refresh our data when we reconnect?
+			});
+
+			$scope.$on('storyHighlighted', function (e, story) {
+				socket.emit('story-highlighted', {
+					circle: story.projectId,
+					storyId: story.id
+				});
 			});
 
 			io.connect();
+
 		}
 	}(); // closure
 

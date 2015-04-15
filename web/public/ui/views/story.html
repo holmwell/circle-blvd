@@ -81,6 +81,7 @@
             'next-meeting': story.isNextMeeting,
             'after-meeting': story.isAfterNextMeeting,
             highlighted: story.isHighlighted && !isClipboardActive,
+            'team-highlighted': isStoryHighlightedByTeam(story),
             inClipboard: story.isInClipboard,
             mine: isStoryMine(story)
         }"

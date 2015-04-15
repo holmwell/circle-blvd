@@ -13,6 +13,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 
 	var highlightedStories = [];
 	var clipboardStories = [];
+	var teamHighlightedStories = {};
 
 	var isMovingTask = false;
 
@@ -315,6 +316,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 			storyToHighlight.isHighlighted = true;
 			storyToHighlight.highlightedFrom = $scope.mouse.direction;
 			highlightedStories.push(storyToHighlight);
+			$scope.$emit('storyHighlighted', storyToHighlight);
 		};
 
 		if (highlightedStories.length === 0) {
@@ -486,6 +488,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		if (nextStory) {
 			nextStory.isHighlighted = true;
 			highlightedStories.push(nextStory);
+			$scope.$emit('storyHighlighted', nextStory);
 
 			// Stop the window from the scrolling, and then scroll
 			// to the highlighted story
@@ -501,6 +504,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 			// Revert if we're at the bottom
 			recentStory.isHighlighted = true;
 			highlightedStories.push(recentStory);
+			$scope.$emit('storyHighlighted', recentStory);
 		}
 	});
 
@@ -529,6 +533,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 				// Highlighting up
 				previousStory.isHighlighted = true;
 				highlightedStories.push(previousStory);
+				$scope.$emit('storyHighlighted', previousStory);
 			}
 
 			event.preventDefault();
@@ -555,6 +560,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 			if (previousStory) {
 				previousStory.isHighlighted = true;
 				highlightedStories.push(previousStory);
+				$scope.$emit('storyHighlighted', previousStory);
 
 				// Stop the window from scrolling, and then scroll
 				// to the highlighted story
@@ -568,6 +574,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 				// Revert if we're at the top
 				story.isHighlighted = true;
 				highlightedStories.push(story);
+				$scope.$emit('storyHighlighted', story);
 			}
 		}
 	});
@@ -809,6 +816,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		if (story.warning) {
 			delete story.warning;
 		}
+		if ($scope.isStoryHighlightedByTeam(story)) {
+			story.warning = teamHighlightedStories[story.id] + " is also looking at this task.";
+		}
+
+
 		if (!$scope.isScreenXs) {
 			// Bring the focus to the default input box, 
 			// which is likely the summary text.
@@ -1197,6 +1209,37 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		var shouldAnimate = true;
 		removeFromView(storyToRemove, storyToRemove, shouldAnimate);
 	});
+
+	$scope.$on('ioStoryHighlighted', function (e, payload) {
+		var storyId = payload.data.storyId;
+		var story = stories.get(storyId);
+		if (story) { 
+			// Clear old data
+			for (index in teamHighlightedStories) {
+				if (teamHighlightedStories[index] === payload.user) {
+					delete teamHighlightedStories[index];
+				}
+			}
+
+			// Save new data
+			if (story.isHighlighted && payload.user === $scope.accountName) {
+				// Do nothing.
+			}
+			else {
+				teamHighlightedStories[payload.user] = story;
+				if (teamHighlightedStories[story.id] !== $scope.accountName) {
+					teamHighlightedStories[story.id] = payload.user;
+				}
+			}
+		}
+	});
+
+	$scope.isStoryHighlightedByTeam = function (story) {
+		if (teamHighlightedStories[story.id]) {
+			return true;
+		}
+		return false;
+	};
 
 	$scope.$on('storyNotify', function (e, story, event) {
 		if (!story.isNotifying && !story.isOwnerNotified) {

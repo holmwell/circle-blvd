@@ -511,6 +511,13 @@
 .story.highlighted {
   border: solid 2px #3994d0;
 }
+.story.team-highlighted {
+  border: dotted 2px #3994d0;
+}
+.highlighted.team-highlighted {
+  /* gold is too light, but orange is not quite right */
+  border: dotted 2px orange;
+}
 
 .story .details-link .subtle {
   color: #999;

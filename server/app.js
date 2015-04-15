@@ -881,6 +881,23 @@ var initSocketIO = function (sessionMiddleware) {
         }
     });
 
+    function hasAccessToCircle(user, circleId) {
+        var hasAccess = false;
+
+        // Only allow access circle events if
+        // we're members of some sort.
+        if (user && user.memberships) {
+            var groups = user.memberships;
+            for (var groupKey in groups) {
+                if (groups[groupKey].circle === circleId) {
+                    hasAccess = true;
+                }
+            }
+        }
+
+        return hasAccess;
+    }
+
     io.on('connection', function (socket) {
         socket.on('join-circle', function (data) {
             if (!data.circle) {
@@ -888,22 +905,23 @@ var initSocketIO = function (sessionMiddleware) {
                 return;
             }
 
-            var user = socket.request.user;
-            var hasAccess = false;
-
-            // Only allow access circle events if
-            // we're members of some sort.
-            if (user && user.memberships) {
-                var groups = user.memberships;
-                for (var groupKey in groups) {
-                    if (groups[groupKey].circle === data.circle) {
-                        hasAccess = true;
-                    }
-                }
-            }
-
-            if (hasAccess) {
+            if (hasAccessToCircle(socket.request.user, data.circle)) {
                 socket.join(data.circle);
+            }
+        });
+
+        socket.on('story-highlighted', function (data) {
+            var user = socket.request.user;
+            var circleId = data.circle;
+            var storyId = data.storyId;
+            
+            if (hasAccessToCircle(user, circleId)) {
+                io.to(circleId).emit('story-highlighted', {
+                    data: {
+                        storyId: storyId
+                    },
+                    user: user.name
+                });
             }
         });
     });
