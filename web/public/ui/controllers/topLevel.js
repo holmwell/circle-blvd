@@ -388,9 +388,7 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 	var initSocketIO = function () {
 		if (typeof(io) !== 'undefined') {
 			var socket = io();
-			io.connect();
 
-			socket.emit('join-circle', { circle: session.activeCircle });
 			socket.on('o', function () {
 				$scope.$broadcast('o');
 			});
@@ -409,7 +407,19 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 
 			socket.on('remove-story', function (data) {
 				$scope.$broadcast('ioStoryRemoved', data);
-			})
+			});
+
+			socket.on('connect', function (data) {
+				socket.emit('join-circle', { circle: session.activeCircle });
+			});
+
+			socket.on('disconnect', function (data) {
+				console.log("IO DISCONNECT")
+				console.log(data)
+				// TODO: Refresh our data when we reconnect.
+			});
+
+			io.connect();
 		}
 	}(); // closure
 
