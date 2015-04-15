@@ -136,25 +136,25 @@
                 <div class="status" ng-hide="story.isNextMeeting || story.isDeadline">Task progress?
                     <div class="row">
                         <div class="col-xs-5 col-sm-3 debug">
-                            <a ng-class="{ active: isStorySad(story) }"
+                            <a ng-class="{ 'btn-active': isStorySad(story) }"
                             ng-click="setStoryStatus(story, 'sad')"
                             class="btn btn-default sad form-control">
                             <i class="btn-icon-status glyphicon glyphicon-stop"></i>
                             <span>Help?</span></a>
                         </div>
                         <div class="col-xs-3 col-sm-1 wider debug">
-                            <a ng-class="{ active: isStoryNew(story) }"
+                            <a ng-class="{ 'btn-active': isStoryNew(story) }"
                             ng-click="setStoryStatus(story, '')"
                             class="btn btn-default question neutral form-control">
                             <span class="txt">?</span></a>
                         </div>
                         <div class="col-xs-4 col-sm-2 wider">
-                            <a ng-class="{ active: isStoryAssigned(story) }"
+                            <a ng-class="{ 'btn-active': isStoryAssigned(story) }"
                             ng-click="setStoryStatus(story, 'assigned')"
                             class="btn btn-default neutral form-control">Will do</a>
                         </div>
                         <div ng-if="::!isScreenXs" class="hidden-xs col-sm-3 wider">
-                            <a ng-class="{ active: isStoryActive(story) }"
+                            <a ng-class="{ 'btn-active': isStoryActive(story) }"
                             ng-click="setStoryStatus(story, 'active')"
                             class="btn btn-default in-progress form-control">
                             <i class="btn-icon-status" ng-include="'/img/glyphs/icon-half-circle.svg'"></i>
@@ -162,14 +162,14 @@
                         </a>
                         </div>
                         <div class="col-xs-6 visible-xs">
-                            <a ng-class="{ active: isStoryActive(story) }"
+                            <a ng-class="{ 'btn-active': isStoryActive(story) }"
                             ng-click="setStoryStatus(story, 'active')"
                             class="btn btn-default in-progress form-control">
                             <i class="btn-icon-status" ng-include="'/img/glyphs/icon-half-circle.svg'"></i>
                             <span>On it</span></a>
                         </div>
                         <div class="col-xs-6 col-sm-3 wider">
-                            <a ng-class="{ active: isStoryDone(story) }"
+                            <a ng-class="{ 'btn-active': isStoryDone(story) }"
                             ng-click="setStoryStatus(story, 'done')"
                             class="btn btn-default done form-control">
                             <i class="btn-icon-status" ng-include="'/img/glyphs/icon-circle.svg'"></i>

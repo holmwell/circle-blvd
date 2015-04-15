@@ -607,18 +607,18 @@
   position: relative;
   left: -0.1ex;
 }
-#backlog .status .sad.active {
+#backlog .status .sad.btn-active {
   background-color: #a00;
   color: white;
 }
-#backlog .status .neutral.active {
+#backlog .status .neutral.btn-active {
   background-color: white;
 }
-#backlog .status .in-progress.active {
+#backlog .status .in-progress.btn-active {
   background-color: #608A43;
   color: white;
 }
-#backlog .status .done.active {
+#backlog .status .done.btn-active {
   background-color: #606;
   color: white;
 }
@@ -915,7 +915,7 @@
   margin-left: 0;
 }
 
-.active .btn-icon-status .icon-status {
+.btn-active .btn-icon-status .icon-status {
   stroke: white;
 }
 
