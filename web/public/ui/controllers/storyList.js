@@ -1111,7 +1111,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 
 			pulse(viewModel);
 		}
-		else {
+		else if (payload.user !== $scope.accountName) {
 			viewModel.warning = payload.user + " has just edited this task."
 			pulse(viewModel);
 		}
