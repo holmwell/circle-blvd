@@ -402,6 +402,14 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 			socket.on('move-block', function (data) {
 				$scope.$broadcast('ioMoveBlock', data);
 			});
+
+			socket.on('new-story', function (data) {
+				$scope.$broadcast('ioStoryAdded', data);
+			});
+
+			socket.on('remove-story', function (data) {
+				$scope.$broadcast('ioStoryRemoved', data);
+			})
 		}
 	}(); // closure
 

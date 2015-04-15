@@ -831,13 +831,17 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		scrollToAndPulse(story);
 	});
 
+	function insertNewStoryIntoViewModel (serverStory) {
+		// add the new story to the front of the backlog.
+		storiesList.unshift(serverStory);
+		if (serverStory.isDeadline) {
+			buildMilepostList(storiesList);
+		}
+	}
+
 	$scope.$on('insertNewStory', function (e, newStory, callback) {
 		stories.insertFirst(newStory, circleId, listId, function (serverStory) {
-			// add the new story to the front of the backlog.
-			storiesList.unshift(serverStory);
-			if (serverStory.isDeadline) {
-				buildMilepostList(storiesList);
-			}
+			insertNewStoryIntoViewModel(serverStory);
 			if (callback) {
 				callback(serverStory);
 			}
@@ -974,7 +978,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		moveStory(story, storyToMove, nextMeeting);
 	});
 
-	var removeFromView = function (viewStory, serverStory) {
+	var removeFromView = function (viewStory, serverStory, shouldAnimate) {
 
 		var nextStory = stories.get(serverStory.nextId);
 
@@ -996,9 +1000,19 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 			previousStory.nextId = nextStory ? nextStory.id : getLastStoryId();
 		}
 
-		var storyIndex = storiesList.indexOf(viewStory);
-		storiesList.splice(storyIndex, 1);
-		stories.remove(viewStory.id);
+		function actuallyRemove() {
+			var storyIndex = storiesList.indexOf(viewStory);
+			storiesList.splice(storyIndex, 1);
+			stories.remove(viewStory.id);
+		}
+
+		if (shouldAnimate) {
+			getStoryElement(viewStory.id).fadeOut(actuallyRemove);
+		}
+		else {
+			actuallyRemove();
+		}
+		
 
 		// TODO: Do we need this for 'remove'?
 		// $timeout(makeStoriesDraggable, 0);
@@ -1151,6 +1165,37 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 
 		var isLocalOnly = true;
 		moveStoryBlock(startStory, startStory, endStory, nextStory, isLocalOnly);
+	});
+
+	$scope.$on('ioStoryAdded', function (e, payload) {
+		var story = payload.data;
+
+		if (stories.get(story.id)) {
+			return;
+		}
+
+		stories.local.add(story);
+		if (story.isFirstStory) {
+			stories.setFirst(story);
+		}
+		insertNewStoryIntoViewModel(story);
+		$timeout(function () {
+			pulse(story);
+		}, 100);
+		
+		// TODO: Check list integrity. If bad, get
+		// the list again from the server.
+	});
+
+	$scope.$on('ioStoryRemoved', function (e, payload) {
+		var story = payload.data;
+		if (!stories.get(story.id)) {
+			return;
+		}
+
+		var storyToRemove = stories.get(story.id);
+		var shouldAnimate = true;
+		removeFromView(storyToRemove, storyToRemove, shouldAnimate);
 	});
 
 	$scope.$on('storyNotify', function (e, story, event) {

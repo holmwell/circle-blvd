@@ -103,6 +103,10 @@ CircleBlvd.Services.stories = function ($http) {
 		};
 	}(); // closure
 
+	var addStoryLocally = function (story) {
+		s[story.id] = story;
+	};
+
 	var addStory = function (story, callback) {
 		var onSuccess = function (newStory) {
 			s[newStory.id] = newStory;
@@ -266,6 +270,9 @@ CircleBlvd.Services.stories = function ($http) {
 			init: function (data) {
 				s = data;
 				usefulStories.init();
+			},
+			local: {
+				add: addStoryLocally
 			},
 			add: addStory,
 			insertFirst: insertFirstStory,

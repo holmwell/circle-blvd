@@ -428,7 +428,7 @@ var defineRoutes = function () {
     };
 
     var addStory = function (story, res) {
-        ioNotify(res, story.projectId);
+        ioNotify(res, story.projectId, 'new-story', story);
         db.stories.add(story, handle(res));
     };
 
@@ -462,8 +462,8 @@ var defineRoutes = function () {
 
                 var story = copyStory(data);
                 story.createdBy = getCreatedBy(req);
-                console.log("STORY: ");
-                console.log(story);
+                // console.log("STORY: ");
+                // console.log(story);
                 addStory(story, res);
             }));
         });
@@ -598,6 +598,9 @@ var defineRoutes = function () {
     });
 
     var removeStory = function (story, res) {
+        // FYI: This happens for both deleted stories and archived
+        // stories. We might want to distinguish between the two.
+        ioNotify(res, story.projectId, 'remove-story', story);
         db.stories.remove(story, handle(res));
     };
 
@@ -608,7 +611,6 @@ var defineRoutes = function () {
                 var stories = [];
                 stories.push(story);
 
-                ioNotify(res, story.projectId);
                 db.archives.addStories(stories, 
                 function (body) {
                     // TODO: If this breaks then we have a data
@@ -626,7 +628,6 @@ var defineRoutes = function () {
     app.put("/data/story/remove", ensure.auth, function (req, res) {
         var story = req.body;
         ensure.isCircle(story.projectId, req, res, function () {
-            ioNotify(res, story.projectId);
             removeStory(story, res);
         });
     });
