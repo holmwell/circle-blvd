@@ -19,6 +19,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 	var teamHighlightedStories = {};
 
 	var isMovingTask = false;
+	var storyBeingInserted = undefined;
 
 	// TODO: Possibly make it so this isn't just on page load
 	var visibilityHelper = $('#visibilityHelper');
@@ -854,7 +855,9 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		}
 	}
 
+	// Called when the entry panel receives a new story.
 	$scope.$on('insertNewStory', function (e, newStory, callback) {
+		storyBeingInserted = newStory;
 		stories.insertFirst(newStory, circleId, listId, function (serverStory) {
 			insertNewStoryIntoViewModel(serverStory);
 			if (callback) {
@@ -1182,10 +1185,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		moveStoryBlock(startStory, startStory, endStory, nextStory, isLocalOnly);
 	});
 
+
 	$scope.$on('ioStoryAdded', function (e, payload) {
 		var story = payload.data;
 
-		if (stories.get(story.id)) {
+		// TODO: Make a more robust way of determining
+		// if we're receiving an echo of our own insertion.
+		if (stories.get(story.id) || story.summary === storyBeingInserted.summary) {
 			return;
 		}
 
