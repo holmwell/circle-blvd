@@ -327,5 +327,9 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 		}
 		return false;
 	};
+
+	$scope.selectOwner = function (owner) {
+		$scope.$emit('ownerSelected', owner);
+	};
 }
 StoryCtrl.$inject = ['session', 'lib', '$scope', '$timeout', '$element'];

@@ -24,7 +24,7 @@
 				</div>
 			</div>
 		</div>
-		<div ng-show="selectedLabels.length > 0" class="filterWrapper row">
+		<div ng-show="selectedLabels.length > 0 || selectedOwner" class="filterWrapper row">
 			<div class="col-sm-2" ng-hide="isMindset('roadmap')"></div>
 			<div class="col-xs-12 story filter"
 				ng-class="{
@@ -36,6 +36,9 @@
 					<ul>
 						<li ng-repeat="label in selectedLabels">
 							<a class="active-filter" ng-click="deselectLabel(label)">{{label}}</a>
+						</li>
+						<li ng-if="selectedOwner"> 
+							<a class="active-filter" ng-click="deselectOwner()">owned by {{selectedOwner}}</a>
 						</li>
 					</ul>
 					<div class="clear-filter pull-right">

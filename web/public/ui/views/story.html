@@ -308,7 +308,8 @@
     <div class="backlog-owner hidden-xs col-sm-2 debug no-select hide-mindset-roadmap" 
         ng-if="::!isScreenXs"
         ng-class="{'after': story.isAfterNextMeeting}"
-        ng-dblclick="select(story)" ng-mousedown="highlight(story)">
+        ng-dblclick="select(story)" 
+        ng-mousedown="selectOwner(story.owner)">
         <span>{{story.owner}}</span><span class="show-status-new">?</span>
         <div 
             class="notify" 

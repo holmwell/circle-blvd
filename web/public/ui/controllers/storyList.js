@@ -8,6 +8,9 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 	var isFacade = false;
 	var isChecklist = false;
 
+	var selectedOwner = undefined;
+	$scope.selectedOwner = selectedOwner;
+
 	var selectedLabels = [];
 	$scope.selectedLabels = selectedLabels;
 
@@ -1386,9 +1389,19 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		}
 	});
 
+	$scope.$on('ownerSelected', function (e, owner) {
+		if (owner) {
+			selectedOwner = owner;
+			$scope.selectedOwner = selectedOwner;
+		}
+	})
+
 	$scope.clearFilter = function () {
 		selectedLabels = [];
 		$scope.selectedLabels = selectedLabels;
+
+		selectedOwner = undefined;
+		$scope.selectedOwner = selectedOwner;
 	};
 
 	$scope.deselectLabel = function (text) {
@@ -1397,6 +1410,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 			selectedLabels.splice(labelIndex, 1);	
 		}
 	};
+
+	$scope.deselectOwner = function () {
+		selectedOwner = undefined;
+		$scope.selectedOwner = selectedOwner;
+	}
 
 	$scope.shouldHideStory = function (story) {
 		var shouldHide = false;
@@ -1415,6 +1433,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 						break;
 					}
 				}	
+			}
+		}
+
+		// Owner filter
+		if (selectedOwner) {
+			if (story.owner !== selectedOwner) {
+				shouldHide = true;
 			}
 		}
 		

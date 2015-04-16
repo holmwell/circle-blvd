@@ -754,6 +754,11 @@
   padding-bottom: 1.1ex;
   padding-left: 0.5ex;
   padding-right: 0;
+
+  cursor: pointer;
+}
+.backlog-owner:hover {
+  text-decoration: underline;
 }
 .backlog-owner.after {
   color: #bbb;
