@@ -1418,6 +1418,13 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 
 	$scope.shouldHideStory = function (story) {
 		var shouldHide = false;
+
+		// Always show deadlines and next meeting, 
+		// so that people have context for the tasks
+		if (story.isDeadline || story.isNextMeeting) {
+			return false;
+		}
+
 		// Labels
 		if (selectedLabels.length > 0) {
 			shouldHide = false;
