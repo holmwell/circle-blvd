@@ -128,7 +128,11 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		}
 
 		// Parse status
-		if (line.indexOf("!") === line.length-1) {
+		if (line.indexOf("!!") === line.length-2) {
+			story.status = "done"
+			line = line.substring(0, line.length-2);
+		}
+		else if (line.indexOf("!") === line.length-1) {
 			story.status = "assigned";
 			line = line.substring(0, line.length-1);
 		}
