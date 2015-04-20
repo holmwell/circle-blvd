@@ -757,7 +757,7 @@
 
   cursor: pointer;
 }
-.backlog-owner:hover {
+.owner-name:hover {
   text-decoration: underline;
 }
 .backlog-owner.after {
