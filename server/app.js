@@ -908,6 +908,9 @@ var initSocketIO = function (sessionMiddleware) {
             if (hasAccessToCircle(socket.request.user, data.circle)) {
                 socket.join(data.circle);
             }
+            else {
+                socket.join(data.circle + "-guest");
+            }
         });
 
         socket.on('story-highlighted', function (data) {
@@ -939,9 +942,12 @@ var initSocketIO = function (sessionMiddleware) {
                     payload.data = res.circleBlvd.notifyData;
                     io.to(circleId).emit(res.circleBlvd.notifyType, payload);
                 }
-                else {
-                    io.to(circleId).emit('o');
-                }
+
+                // Always emit a ping to guest listeners.
+                // This is basically a workaround for mobile
+                // clients until we develop a more proper solution.
+                var circleGuests = circleId + "-guest";
+                io.to(circleGuests).emit('o');
             }
         });
         next();
