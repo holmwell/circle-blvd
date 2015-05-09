@@ -1,6 +1,6 @@
 circle blvd.
 ===============
-Circle Blvd 1.4 is a task management tool, made for teams of 3-12 people. 
+Circle Blvd 1.4 is a task management tool, made for teams of 1-12 people. 
 
 Circle Blvd supports:
  * Multiple projects
@@ -18,11 +18,11 @@ Circle Blvd supports:
 
 This software is free, and it runs on Mac, Linux, and Windows. You can install it on your own computer, using instructions below as a guide, or you can create an account on [https://circleblvd.org](https://circleblvd.org), which is also free, supported by donations.
 
-Circle Blvd is accessible on desktop computers, tablets, and phones (tested on Android and iOS devices).
+Circle Blvd is a web server. It is accessible on desktop computers, tablets, and phones (tested on Android and iOS devices).
 
 Circle Blvd is perhaps best for clubs and boards of directors. It was initially created for the Corvallis Swing Dance Society, a volunteer organization that hosts 3-4 events each month, with a weekly board meeting.
 
-A self-guided tour is at [https://circleblvd.org/#/tour](https://circleblvd.org/#/tour). Have fun! 
+A self-guided tour is at [https://circleblvd.org/tour](https://circleblvd.org/tour).
 
 
 running on AWS
@@ -46,7 +46,7 @@ If you can run Apache CouchDB on your system, you can run Circle Blvd.
         git clone https://github.com/secret-project/circle-blvd.git
         cd circle-blvd/server/
         npm install --production
-        node server.js
+        npm start
   
 3. Go to [http://localhost:3000](http://localhost:3000)
 
