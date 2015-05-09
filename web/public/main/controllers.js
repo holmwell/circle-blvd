@@ -1,7 +1,7 @@
 'use strict';
 
 /* Controllers */
-function InitializeCtrl($scope, $location, $http) {
+function InitializeCtrl($scope, $window, $http) {
 
 	$scope.error = {};
 
@@ -33,7 +33,9 @@ function InitializeCtrl($scope, $location, $http) {
 		var initializeSuccess = function(data, status, headers, config) {
 			// After initialization is a success, log in.
 			var loginSuccess = function(data, status, headers, config) {
-				$location.path('/');
+				// Refresh the page. The server will take
+				// care of the rest.
+				$window.location.href = "/";
 			};
 
 			var loginFailure = function(data, status, headers, config) {
@@ -81,6 +83,6 @@ function InitializeCtrl($scope, $location, $http) {
 		.error(initializeFailure);
 	};
 }
-InitializeCtrl.$inject = ['$scope', '$location', '$http'];
+InitializeCtrl.$inject = ['$scope', '$window', '$http'];
 
 

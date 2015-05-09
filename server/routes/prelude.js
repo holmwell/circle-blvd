@@ -86,7 +86,11 @@ router.get("/docs", function (req, res, next) {
 // });
 
 router.get('/', function (req, res, next) {
-    if (!req.isAuthenticated()) {
+    // Redirect to 'initialize' on first-time use.
+    if (app.isInitializing) {
+        res.render("prelude/initialize", getDefaultParams(req));
+    }
+    else if (!req.isAuthenticated()) {
         res.render('prelude/signin', getDefaultParams(req));
     }
     else {

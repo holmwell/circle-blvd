@@ -1,3 +1,4 @@
+/// <reference path="../../../typings/angularjs/angular.d.ts"/>
 'use strict';
 var CircleBlvd = {};
 CircleBlvd.Services = {};
@@ -54,7 +55,6 @@ angular.module('myApp', [
         $routeProvider.when('/contact', {templateUrl: 'ui/views/contact.html', controller: ContactCtrl});
 
         $routeProvider.when('/mainframe', {templateUrl: 'ui/views/mainframe.html', controller: MainframeCtrl});
-        $routeProvider.when('/initialize', {templateUrl: 'ui/views/initialize.html', controller: InitializeCtrl});
         $routeProvider.when('/fix', {templateUrl: 'ui/views/fix.html', controller: FixCtrl});
 
         // Legacy routes. These routes have since moved to the server side,
@@ -72,7 +72,6 @@ angular.module('myApp', [
         $routeProvider.when('/tour/plan/:section', useServerRoute);
         $routeProvider.when('/invite/:inviteId', useServerRoute);
         $routeProvider.when('/invite', useServerRoute);
-
 
         $routeProvider.otherwise({redirectTo: '/'});
     }])

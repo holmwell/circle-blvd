@@ -829,29 +829,7 @@ var defineRoutes = function () {
     // Also, this depends on the static middleware being
     // near the top of the stack.
     app.get('*', function (req, res) {
-        // Redirect to 'initialize' on first-time use.
-        //
-        // Use a cookie to control flow and prevent redirect loops.
-        // Maybe not the best idea; feel free to have a better one.
-        var usersExist = function(callback) {
-            db.users.count(function (err, count) {
-                if (err) {
-                    return callback(err);
-                }
-                callback(null, count > 0);
-            });
-        };
-
-        usersExist(guard(res, function (exist) {
-            if (!exist && !req.cookies.initializing) {
-                res.cookie('initializing', 'yep');
-                res.redirect('/#/initialize');
-            }
-            else {
-                res.clearCookie('initializing');
-                routes.index(req, res, app);            
-            }
-        }));
+        routes.index(req, res, app);
     });
 };
 
@@ -1175,6 +1153,32 @@ var configureApp = function() {
         // Set settings
         app.use(appSettings);
 
+        app.use(function (req, res, next) {
+            // Is this our first run? 
+            // TODO: We really only need to call this once.
+            // It doesn't need to be a middleware. The main
+            // thing is that app.isInitializing should be
+            // correct all the time.
+            var usersExist = function (callback) {
+                db.users.count(function (err, count) {
+                    if (err) {
+                        return callback(err);
+                    }
+                    callback(null, count > 0);
+                });
+            };
+    
+            usersExist(guard(res, function (exist) {
+                if (!exist) {
+                    app.isInitializing = true;
+                }
+                else {
+                    app.isInitializing = false;
+                }
+                next();
+            }));
+        });
+
         // Real-time engine
         initSocketIO(sessionMiddleware);
 
@@ -1188,7 +1192,7 @@ var configureApp = function() {
             }
             // TODO: Should not get here.
         });
-
+        
         ready();
     };
 
