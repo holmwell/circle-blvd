@@ -393,19 +393,19 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 				$scope.$broadcast('o');
 			});
 
-			socket.on('story', function (data) {
+			socket.on('story-save', function (data) {
 				$scope.$broadcast('ioStory', data);
 			});
 
-			socket.on('move-block', function (data) {
+			socket.on('story-move-block', function (data) {
 				$scope.$broadcast('ioMoveBlock', data);
 			});
 
-			socket.on('new-story', function (data) {
+			socket.on('story-add', function (data) {
 				$scope.$broadcast('ioStoryAdded', data);
 			});
 
-			socket.on('remove-story', function (data) {
+			socket.on('story-remove', function (data) {
 				$scope.$broadcast('ioStoryRemoved', data);
 			});
 

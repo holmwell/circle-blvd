@@ -428,7 +428,7 @@ var defineRoutes = function () {
     };
 
     var addStory = function (story, res) {
-        ioNotify(res, story.projectId, 'new-story', story);
+        ioNotify(res, story.projectId, 'story-add', story);
         db.stories.add(story, handle(res));
     };
 
@@ -480,7 +480,7 @@ var defineRoutes = function () {
     };
 
     var saveStoryWithComment = function (story, req, res) {
-        ioNotify(res, story.projectId, 'story', story);
+        ioNotify(res, story.projectId, 'story-save', story);
         db.stories.save(story, 
             function (savedStory) {
                 if (story.newComment) {
@@ -569,7 +569,7 @@ var defineRoutes = function () {
         var story = body.story;
         var newNextId = body.newNextId;
         ensure.isCircle(story.projectId, req, res, function () {
-            ioNotify(res, story.projectId, 'move-block', {
+            ioNotify(res, story.projectId, 'story-move-block', {
                 startStoryId: story.id,
                 endStoryId: story.id,
                 newNextId: newNextId
@@ -587,7 +587,7 @@ var defineRoutes = function () {
 
         ensure.isCircle(startStory.projectId, req, res, function () {
             ensure.isCircle(endStory.projectId, req, res, function () {
-                ioNotify(res, startStory.projectId, 'move-block', {
+                ioNotify(res, startStory.projectId, 'story-move-block', {
                     startStoryId: startStory.id,
                     endStoryId: endStory.id,
                     newNextId: newNextId
@@ -600,7 +600,7 @@ var defineRoutes = function () {
     var removeStory = function (story, res) {
         // FYI: This happens for both deleted stories and archived
         // stories. We might want to distinguish between the two.
-        ioNotify(res, story.projectId, 'remove-story', story);
+        ioNotify(res, story.projectId, 'story-remove', story);
         db.stories.remove(story, handle(res));
     };
 
