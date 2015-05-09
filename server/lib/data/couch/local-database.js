@@ -44,7 +44,7 @@ module.exports = function (databaseName, designDocs) {
 		// Create database!
 		databaseExists(function (err, exists) {
 			if (err) {
-				throw (err);
+				callback(err);
 			}
 			else if (exists) {
 				designDocs.create(database, callback);
@@ -89,7 +89,19 @@ module.exports = function (databaseName, designDocs) {
 	// to necessarily do.
 	createDatabaseAndViews(function (err) {
 		if (err) {
+			if (err.code === 'ECONNREFUSED') {
+				console.log("Local-database: Could not connect to CouchDB.");
+				console.log("Local-database: Is CouchDB running?");
+			}
+			else {
+				console.log("Local-database: Could not create the database.");
+			}
+			console.log("Local-database: Here is the error: ");
 			console.log(err);
+			
+			// Kill the server.
+			console.log("Local-database: Shutting down this program.");
+			throw (err);
 		}
 		else {
 			// database ready.
