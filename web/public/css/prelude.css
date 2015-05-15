@@ -58,6 +58,10 @@ label.relax {
   padding-bottom: 2.5em;
 }
 
+.signin .tour h4 {
+  margin-top: 1.5em;
+}
+
 .signin .free {
   background-color: gold;
   width: 100%;
@@ -81,6 +85,9 @@ label.relax {
 }
 .signin .signup {
   margin-top: 0;
+}
+.signin .signup h2 {
+  color: #ccc;
 }
 
 .signin .signup input,
@@ -188,4 +195,13 @@ label.relax {
 
 .invite h3 {
   margin-top: 1em;
+}
+
+.intro .for-glyph {
+  margin-top: 3em;
+  text-align: center;
+  vertical-align: middle;
+}
+.intro .glyphicon {
+  font-size: 36pt;
 }
