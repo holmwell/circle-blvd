@@ -71,11 +71,17 @@ block view
 
         .tour
             .col-sm-offset-2.col-sm-8.clear.signin-section
-                h4 Watch the walkthrough, take a tour.
+                h2 Lay your team's path
 
-                p Circle Blvd is a really nice todo list, made for teams of up to 12 people. 
-                 | Below is a 2-minute screencast on how to make an account and get started 
-                 | with the site.
+                .row.before-video
+                    .col-xs-8.col-sm-9
+                        p Circle Blvd is for people with things to do. 
+                         | It's a basically just a really nice todo list, 
+                         | made for teams of up to 12 people. 
+                        p Below is a 2-minute screencast on how to make an account and get started 
+                         | with the site.
+                    .col-xs-4.col-sm-3.for-glyph
+                        span(ng-include="'/img/glyphs/icon-same-idea.svg'")
 
                 .embed-container
                     iframe(src="//www.youtube-nocookie.com/embed/-o-lN-Wn5Wc?rel=0" frameborder="0" allowfullscreen)
@@ -96,7 +102,7 @@ block view
                     li Secure communication over HTTPS
 
                 p <span class="glyphicon glyphicon-play"></span> 
-                 | Visit <a href="/#/tour">our tour page</a> to see a self-guided 
+                 | Visit <a href="/tour">our tour page</a> to see a self-guided 
                  | outline of the main aspects of the site.
 
                 h4 Get the app, too.
