@@ -112,7 +112,7 @@ function TourCtrl(lib, $scope, $window) {
 	startList.push("Buy snacks");
 	startList.push({
 		isNextMeeting: true,
-		summary: "That's all for today"
+		summary: "Begin road trip"
 	});
 	
 	var startData = getTaskListFromArray(startList);
