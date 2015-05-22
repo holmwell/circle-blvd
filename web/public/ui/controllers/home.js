@@ -179,10 +179,11 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 	};
 
 	var isCreatingStory = false;
-	$scope.create = function (line) {
-		if (!isCreatingStory && line) {
+	$scope.create = function (task) {
+		if (!isCreatingStory && task && task.summary) {
 			isCreatingStory = true;
-			var newStory = parseStory(line);
+			var newStory = parseStory(task.summary);
+			newStory.description = task.description;
 			insertNewStory(newStory, function () {
 				$scope.newStory = undefined;
 				isCreatingStory = false;

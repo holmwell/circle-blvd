@@ -50,22 +50,29 @@
 			<div ng-show="isAdding['story']" class="debug new-story row alignWithStoryList">
 				<form>
 					<div class="input-group">
-						<input id="storyEntry" type="text" class="form-control" ng-model="newStory" />
+						<input id="storyEntry" tabindex="1" type="text" class="form-control" ng-model="newStory.summary" />
 						<span class="input-group-btn">
-							<button class="btn btn-default pull-right" ng-click="create(newStory)">Add task</button>
+							<button tabindex="3" class="btn btn-default pull-right" ng-click="create(newStory)">Add task</button>
 						</span>
 					</div>
+
+					<textarea class="form-control" tabindex="2" ng-model="newStory.description"
+						autosize 
+						placeholder="Task description ..."></textarea>
 				</form>
 			</div>
 
 			<div ng-show="isAdding['deadline']" class="debug row new-story after-meeting deadline alignWithStoryList">
 				<form>
 					<div class="input-group">
-						<input id="deadlineEntry" type="text" class="form-control" ng-model="newDeadline.summary"/>
+						<input id="deadlineEntry" tabindex="1" type="text" class="form-control" ng-model="newDeadline.summary"/>
 						<span class="input-group-btn">
-							<button class="btn btn-default pull-right" ng-click="createDeadline(newDeadline)">Add milepost</button>
+							<button tabindex="3" class="btn btn-default pull-right" ng-click="createDeadline(newDeadline)">Add milepost</button>
 						</span>
 					</div>
+					<textarea tabindex="2" class="form-control" ng-model="newDeadline.description"
+						autosize 
+						placeholder="Milepost description ..."></textarea>
 				</form>
 			</div>
 

@@ -315,7 +315,10 @@
 .new-story:hover {
   background-color: #eee;
 }
-
+.new-story textarea {
+  margin-top: 1ex;
+  height: 7em;
+}
 
 .entry-facade-container {
   padding: 0;
