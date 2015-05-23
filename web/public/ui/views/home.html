@@ -50,7 +50,9 @@
 			<div ng-show="isAdding['story']" class="debug new-story row alignWithStoryList">
 				<form>
 					<div class="input-group">
-						<input id="storyEntry" tabindex="1" type="text" class="form-control" ng-model="newStory.summary" />
+						<input id="storyEntry" tabindex="1" type="text"
+						autocomplete="off" 
+						class="form-control" ng-model="newStory.summary" />
 						<span class="input-group-btn">
 							<button tabindex="3" class="btn btn-default pull-right" ng-click="create(newStory)">Add task</button>
 						</span>
@@ -65,7 +67,9 @@
 			<div ng-show="isAdding['deadline']" class="debug row new-story after-meeting deadline alignWithStoryList">
 				<form>
 					<div class="input-group">
-						<input id="deadlineEntry" tabindex="1" type="text" class="form-control" ng-model="newDeadline.summary"/>
+						<input id="deadlineEntry" tabindex="1" type="text"
+						autocomplete="off" 
+						class="form-control" ng-model="newDeadline.summary"/>
 						<span class="input-group-btn">
 							<button tabindex="3" class="btn btn-default pull-right" ng-click="createDeadline(newDeadline)">Add milepost</button>
 						</span>
