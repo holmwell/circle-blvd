@@ -471,7 +471,22 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 						}
 					}
 
-					session.circleList = circleList;
+					// Sort the circle list by name
+					var circleArray = [];
+					for (var key in circleList) {
+						circleArray.push(circleList[key]);
+					}
+					circleArray.sort(function (a, b) {
+						if (a.name < b.name) {
+							return -1;
+						}
+						if (a.name > b.name) {
+							return 1;
+						}
+						return 0;
+					});
+
+					session.circleList = circleArray;
 				}(); // closure
 				
 				session.save();
