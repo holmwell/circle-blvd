@@ -19,6 +19,7 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 
 		function getCircleSuccess(data, status) {
 			$scope.circleName = data.name;
+			$scope.isArchived = data.isArchived || false;
 			if (data.colors) {
 				$scope.milepostBackground = data.colors.mileposts.background;
 				$scope.milepostForeground = data.colors.mileposts.foreground;
@@ -340,6 +341,25 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 			errors.handle(data, status);
 		});
 	};
+
+	$scope.$watch('isArchived', function (newVal, oldVal) {
+		if (typeof $scope.isArchived === 'undefined') {
+			return;
+		}
+
+		if (newVal === oldVal || typeof oldVal === 'undefined') {
+			return;
+		}
+
+		var data = {
+			isArchived: $scope.isArchived
+		};
+		$http.put('/data/circle/' + activeCircle + '/archive', data)
+		.success(function() {
+			$route.reload();
+		})
+		.error(errors.handle);
+	});
 
 	var init = function () {
 		$scope.memberGroups = {};

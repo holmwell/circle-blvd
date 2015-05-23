@@ -271,6 +271,15 @@ var defineRoutes = function () {
         }));
     });
 
+    app.put("/data/circle/:circleId/archive", ensure.circleAdmin, function (req, res) {
+        var circleId = req.params.circleId;
+        var isArchived = req.body.isArchived;
+        db.circles.get(circleId, guard(res, function (circle) {
+            circle.isArchived = isArchived;
+            db.circles.update(circle, handle(res));
+        }));
+    });
+
     app.put("/data/circle/:circleId/colors/mileposts", ensure.circleAdmin, function (req, res) {
         var data = req.body;
         var circleId = req.params.circleId;

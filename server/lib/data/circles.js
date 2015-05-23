@@ -38,7 +38,8 @@ module.exports = function () {
 			for (var key in circles) {
 				var circle = circles[key];
 				if (circle.createdBy
-				&& circle.createdBy.id === user._id) {
+				&& circle.createdBy.id === user._id
+				&& !circle.isArchived) {
 					circlesCreatedCount++;
 				}
 			}

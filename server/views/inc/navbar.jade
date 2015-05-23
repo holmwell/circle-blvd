@@ -14,7 +14,9 @@
 
     .collapse.navbar-collapse#navigation-circles
       ul.nav.navbar-nav
-        li(ng-repeat="circle in circleList()" ng-class="{active: isActiveCircle(circle)}")
+        li(ng-repeat="circle in circleList()" 
+          ng-hide="circle.isArchived"
+          ng-class="{active: isActiveCircle(circle)}")
           a.jsLink(data-toggle="collapse" data-target="#navigation-circles.in"
             ng-click="setActiveCircle(circle, true)" ng-bind="circle.name")
 

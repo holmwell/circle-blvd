@@ -466,7 +466,8 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 								_id: memberships[key].circle, 
 								id: memberships[key].circle,
 								name: memberships[key].circleName,
-								colors: memberships[key].circleColors
+								colors: memberships[key].circleColors,
+								isArchived: memberships[key].circleIsArchived
 							};
 						}
 					}
@@ -474,7 +475,8 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 					// Sort the circle list by name
 					var circleArray = [];
 					for (var key in circleList) {
-						circleArray.push(circleList[key]);
+						var circle = circleList[key];
+						circleArray.push(circle);
 					}
 					circleArray.sort(function (a, b) {
 						if (a.name < b.name) {
