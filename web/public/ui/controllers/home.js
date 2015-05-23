@@ -115,6 +115,12 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		var story = {};
 
 		line = line.trim();
+		// One-character tasks
+		if (line.length === 1) {
+			story.summary = line;
+			return story;
+		}
+		
 		// Parse mileposts
 		if (line.indexOf('--') === 0) {
 			story.isDeadline = true;
