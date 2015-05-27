@@ -58,8 +58,10 @@
 						</span>
 					</div>
 
-					<textarea class="form-control" tabindex="2" ng-model="newStory.description"
-						autosize 
+					<textarea class="form-control" tabindex="2" 
+						ng-model="newStory.description" 
+						autosize
+						show-model="isAdding['story']"
 						placeholder="Task description ..."></textarea>
 				</form>
 			</div>
@@ -76,6 +78,7 @@
 					</div>
 					<textarea tabindex="2" class="form-control" ng-model="newDeadline.description"
 						autosize 
+						show-model="isAdding['deadline']"
 						placeholder="Milepost description ..."></textarea>
 				</form>
 			</div>

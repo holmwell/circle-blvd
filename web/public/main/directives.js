@@ -75,17 +75,32 @@ directive('autosize', ['$timeout', function ($timeout) {
 		restrict: 'A',
 		link: function(scope, elem, attr, ctrl) {
 			// Uses: https://github.com/jackmoore/autosize
+			// If this isn't in a timeout block then it
+			// gets fired before things are ready to be
+			// resized.
 			$timeout(function () {
-				// If this isn't in a timeout block then it
-				// gets fired before things are ready to be
-				// resized.
-				elem.autosize();
+				// For elements that are initially hidden,
+				// do not run autosize right now.
+				if (!angular.isDefined(attr.showModel)) {
+					elem.autosize();
+				}
 
 				// Trigger a resize when the model value is
 				// changed to "" or something equivalent.
 				scope.$watch(attr.ngModel, function (newVal) {
 					if (!newVal) {
 						elem.trigger('autosize.resize');
+					}
+				});
+
+				// showModel is a variable that is set to true when
+				// the textarea is to be shown. We need this if we 
+				// want to resize elements that are initially hidden.
+				scope.$watch(attr.showModel, function (newVal, oldVal) {
+					if (!oldVal && newVal) {
+						$timeout(function () {
+							elem.autosize();
+						});
 					}
 				});
 			});
