@@ -1191,7 +1191,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 
 		// TODO: Make a more robust way of determining
 		// if we're receiving an echo of our own insertion.
-		if (stories.get(story.id) || story.summary === storyBeingInserted.summary) {
+		if (stories.get(story.id) || 
+			(storyBeingInserted && story.summary === storyBeingInserted.summary)) {
 			return;
 		}
 
