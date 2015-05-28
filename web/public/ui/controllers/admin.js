@@ -81,76 +81,12 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 		});
 	};
 
-	var addMemberSuccess = function (member) {
-		$scope.memberName = "";
-		$scope.memberEmail = "";
-		$scope.memberPassword = "";
-		getLatestMemberData();
-		
-		var welcomeTxt = "Welcome to " + $scope.circleName + 
-			" on Circle Blvd.\n\n";
-
-		// Don't mention the actual email address here, for privacy.
-		welcomeTxt += "To sign in, please go to " + getBaseUrl() + 
-			" and use your email address. For your initial password, please ask " +
-			session.user.name + ".";
-
-		var story = {
-			summary: "Sign in to Circle Blvd.",
-			description: welcomeTxt,
-			owner: member.name
-		};
-
-		stories.insertFirst(story, activeCircle, function (savedStory) {
-			// TODO: Mention this, perhaps?
-		});
-	};
-
-	var addMemberFailure = function() {
-		errors.handle("Sad inside add member. :(");
-	};
 
 	$scope.isGroupImplied = function (group) {
 		if (group && group.name) {
 			return group.name === "_implied";
 		}
 		return false;
-	};
-
-	$scope.addMember = function(memberName, memberEmail, memberPassword, memberGroups) {
-		if (!impliedGroup) {
-			errors.handle("Attempt to add a member to a circle without an implied group.");
-			return;
-		}
-
-		var data = {
-			name: memberName,
-			email: memberEmail,
-			password: memberPassword,
-			memberships: []
-		};
-
-		for (var groupId in memberGroups) {
-			if (memberGroups[groupId] === true) {
-				data.memberships.push({
-					circle: activeCircle,
-					group: groupId,
-					level: "member"
-				});
-			}
-		}
-
-		// Add the implied group
-		// TODO: This should be on the server.
-		data.memberships.push({
-			circle: activeCircle,
-			group: impliedGroup.id,
-			level: "member"
-		});	
-		
-		$http.post('/data/' + activeCircle + '/member', data)
-		.success(addMemberSuccess)
-		.error(addMemberFailure);
 	};
 
 	$scope.removeMember = function (member) {

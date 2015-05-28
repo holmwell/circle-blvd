@@ -147,12 +147,6 @@ var defineRoutes = function () {
         db.users.removeMembership(reqUser, circleId, handle(res));
     });
 
-    app.post("/data/:circleId/member", ensure.circleAdmin, function (req, res) {
-        var circleId = req.params.circleId;
-        var member = req.body;
-        db.users.addMembership(member, circleId, handle(res));
-    });
-
     app.put("/data/:circleId/member/groups", ensure.circleAdmin, function (req, res) {
         var circleId = req.params.circleId;
         var member = req.body;

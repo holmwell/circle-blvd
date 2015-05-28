@@ -98,46 +98,6 @@
 		</div>
 	</li>
 </ul>
-			
-<form>
-	<h4>Create accounts for people</h4>
-	<div class="row">
-		<div class="col-sm-7">
-			<p>As a group admin, sometimes you might want 
-			to create an account for someone and add 
-			him or her to your circle in one step.</p>
-
-			<p>If there is already an account associated
-			with the email address you specify, that 
-			account is added to your circle, and the name
-			and password fields are ignored.</p>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-5">
-			<input class="form-control" type="text" 
-			ng-model="memberName" placeholder="Name"/>
-			
-			<input class="form-control" type="email" 
-			ng-model="memberEmail" placeholder="Email"/>
-			
-			<input  class="form-control" type="password" 
-			ng-model="memberPassword" placeholder="Password"/>
-			
-			<button class="btn btn-default" ng-click="addMember(memberName, memberEmail, memberPassword, memberGroups)">Create account</button> (and add member)
-		</div>
-
-		<div class="col-sm-3">
-			<div style="margin-bottom: 1ex;">Select groups:</div>
-			<div ng-repeat="group in groups">
-				<div class="checkbox" ng-hide="isGroupImplied(group)">
-					<label><input type="checkbox" ng-model="memberGroups[group.id]"> {{group.name}}</label>
-				</div>
-			</div>
-			
-		</div>
-	</div>
-</form>
 
 <form>
 	<h4>Archive circle</h4>
