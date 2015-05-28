@@ -1,9 +1,11 @@
 'use strict';
 
-function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
+function ListsCtrl(lib, session, $scope, $http, $filter, $timeout, errors) {
 
     var circleId = session.activeCircle;
     var selectedList = undefined;
+
+    $scope.profileName = session.user.name || '';
 
     $scope.showEntry = function () {
         $scope.isAddingNew = true;
@@ -65,46 +67,8 @@ function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
         $scope.$broadcast('insertNewStory', newStory, callback);
     };
 
-    // TODO: Use a service for this
     var parseStory = function (line) {
-        var story = {};
-
-        line = line.trim();
-        // Parse mileposts
-        if (line.indexOf('--') === 0) {
-            story.isDeadline = true;
-            // Remove all preceding hyphens,
-            // so mileposts denoted with '----' 
-            // are also possible.
-            while (line.indexOf('-') === 0) {
-                line = line.substring(1);
-            }
-            line = line.trim();
-        }
-
-        // Parse owners
-        var owners = $scope.owners || [];
-        var ownerFound = story.isDeadline || false;
-        var lowerCaseLine = line.toLowerCase();
-        owners.forEach(function (owner) {
-            if (ownerFound) {
-                return;
-            }
-            var lowerCaseOwner = owner.toLowerCase();
-            // owners start with the @ sign and
-            // are at the end of the line
-            var ownerIndex = lowerCaseLine.indexOf(lowerCaseOwner);
-            if (ownerIndex > 0 
-                && line[ownerIndex-1] === '@'
-                && line.length === ownerIndex + owner.length) {
-                ownerFound = true;
-                story.owner = owner;
-                line = line.substring(0, ownerIndex-1).trim();
-            }
-        });
-
-        story.summary = line;
-        return story;
+        return lib.parseStory(line, $scope);
     };
 
     //
@@ -155,4 +119,4 @@ function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
     updateView();
     init();
 }
-ListsCtrl.$inject = ['session', '$scope', '$http', '$filter', '$timeout', 'errors'];
+ListsCtrl.$inject = ['lib', 'session', '$scope', '$http', '$filter', '$timeout', 'errors'];
