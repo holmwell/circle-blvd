@@ -156,7 +156,7 @@ exports.init = function (req, res, app) {
 	var addNextMeeting = function () {
 		var story = {};	
 		story.projectId = defaultCircleId;
-		story.summary = "Next meeting";
+		story.summary = "Next";
 		story.isNextMeeting = true;
 
 		db.stories.add(story, function (err, body) {

@@ -121,7 +121,7 @@ function TourCtrl(lib, $scope, $window) {
 	var bumpList = [];
 	bumpList.push({
 		isNextMeeting: true,
-		summary: "Next meeting"
+		summary: "Next"
 	});
 	bumpList.push("Write thank-you cards");
 	bumpList.push("Review reading list");

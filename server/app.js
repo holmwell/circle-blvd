@@ -661,7 +661,7 @@ var defineRoutes = function () {
                 // TODO: Consider passing in the summary from the client,
                 // as 'meeting' should be a configurable word.
                 var story = {};
-                story.summary = "Next meeting";
+                story.summary = "Next";
                 story.isNextMeeting = true;
 
                 addStory(story, res);

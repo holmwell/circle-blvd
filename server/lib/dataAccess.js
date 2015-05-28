@@ -27,8 +27,8 @@ var addStoriesForFirstCircle = function (newCircle, adminAccount, callback) {
 	welcome.isFirstStory = true;
 	welcome.description = "Hi! This is your task list. The main idea is that " +
 	"tasks closer to the top want to be completed before the ones closer " + 
-	"to the bottom.\n\nPlay around with it. Maybe start by moving the 'Next " + 
-	"meeting' around, or add a few tasks.\n\nAdd more people to this circle from " +
+	"to the bottom.\n\nPlay around with it. Maybe start by moving the 'Next' task " +
+	"around, or add a few tasks.\n\nAdd more people to this circle from " +
 	"the admin page, and you can make more circles from your profile page.";
 
 	var seeTour = newStory();
@@ -36,7 +36,7 @@ var addStoriesForFirstCircle = function (newCircle, adminAccount, callback) {
 	seeTour.description = "That's it! Thanks for joining Circle Blvd."
 
 	var nextMeeting = newStory();
-	nextMeeting.summary = "Next meeting";
+	nextMeeting.summary = "Next";
 	nextMeeting.isNextMeeting = true;
 
 	var stories = [
