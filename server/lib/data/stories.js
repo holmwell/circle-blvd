@@ -612,7 +612,8 @@ module.exports = function () {
 	};
 
 	var moveStoryBlock = function (startStory, endStory, newNextId, callback) {
-		couch.stories.findByListId(startStory.projectId, function (err, allStories) {
+		var listId = startStory.listId || startStory.projectId;
+		couch.stories.findByListId(listId, function (err, allStories) {
 			if (err) {
 				return callback(err);
 			}

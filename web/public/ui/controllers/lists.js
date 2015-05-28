@@ -65,7 +65,7 @@ function ListsCtrl(session, $scope, $http, $filter, $timeout, errors) {
         $scope.$broadcast('insertNewStory', newStory, callback);
     };
 
-    //
+    // TODO: Use a service for this
     var parseStory = function (line) {
         var story = {};
 
