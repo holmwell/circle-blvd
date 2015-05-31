@@ -160,9 +160,17 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 
 	$scope.moveToTop = function (e, story) {
 		$scope.$emit('storyMovedToTop', story);
+		isMovingToTop = false;
 		e.stopPropagation();
 		e.preventDefault();
 	};
+
+	var isMovingToTop = false;
+	$scope.beforeMoveToTop = function (e, story) {
+		// Remember state so that the remember highlight function
+		// can know to not select our story.
+		isMovingToTop = true;
+	}
 
 	var isDragging = false;
 	$scope.$on('spIsDragging', function (e, val) {
@@ -213,7 +221,8 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 	$scope.rememberHighlight = function (story) {
 		if ($scope.mouse.lastMouseUpStory && 
 			$scope.mouse.lastMouseUpStory.id === story.id &&
-			$scope.mouse.lastMouseUpStory.id === $scope.mouse.lastMouseDownStory.id) {
+			$scope.mouse.lastMouseUpStory.id === $scope.mouse.lastMouseDownStory.id &&
+			!isMovingToTop) {
 			$scope.select(story);
 		}
 		$scope.mouse.lastMouseUpStory = story;

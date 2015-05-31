@@ -244,6 +244,7 @@
 
             <div ng-if="(isMindset('bump') || isStoryDone(story)) && story.isAfterNextMeeting && !isMindset('roadmap')" 
                 class="col-sm-1 bumpy"
+                ng-mousedown="beforeMoveToTop($event, story)"
                 ng-click="moveToTop($event, story)">
                 <div class="pull-right bumpy-viz">
                     <div ng-hide="story.isFirstStory" 
