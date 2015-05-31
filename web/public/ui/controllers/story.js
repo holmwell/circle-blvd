@@ -223,6 +223,10 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 		$scope.mouse.isHighlighting = false; 
 	});
 
+	$scope.$on('labelSelected', function () {
+		$scope.mouse.isHighlighting = false;
+	});
+
 	$scope.handleSingleClicks = function (story) {
 		if ($scope.keyboard.isShiftDown) {
 			$scope.select(story);
