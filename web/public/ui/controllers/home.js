@@ -34,11 +34,11 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 				hacks.focus(panelName + 'Entry');
 			}
 		};
-
-		$scope.hideEntry = function () {
-			$scope.isAddingNew = undefined;
-		};	
 	}();
+
+	$scope.hideEntry = function () {
+		$scope.isAddingNew = undefined;
+	};
 
 	$scope.$watch('searchEntry', function (val) {
 		$scope.$broadcast('cbSearchEntry', val);
@@ -58,6 +58,9 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 	$scope.$on('keyEscape', function (e) {
 		if ($scope.isSearching) {
 			$scope.hideSearch();
+		}
+		if ($scope.isAddingNew) {
+			$scope.hideEntry();
 		}
 	}); 
 
