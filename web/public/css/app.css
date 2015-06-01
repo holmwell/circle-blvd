@@ -352,22 +352,22 @@
 
   color: #e6e6e6;
 }
-.show-search,
-.search .glyphicon-search {
+.show-search {
   font-size: 1.25em;
-}
-.search .glyphicon-search {
-  margin-top: 0.35ex;
-  margin-left: 1.85ex;
 }
 
 .show-search .glyphicon {
   cursor: pointer;
+  margin-right: 0.5ex;
 }
 .show-search .glyphicon:hover, 
-.show-search.active,
-.search .glyphicon-search {
+.show-search .active,
+.searchBarLabel {
   color: #aaa;
+}
+.searchBarLabel {
+  vertical-align: top;
+  font-size: 0.8em;
 }
 
 .alignWithStoryList, .story, .archive {

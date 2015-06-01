@@ -1402,14 +1402,12 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 			selectedOwner = owner;
 			$scope.selectedOwner = selectedOwner;
 		}
-	})
+	});
 
 	$scope.clearFilter = function () {
 		selectedLabels = [];
 		$scope.selectedLabels = selectedLabels;
-
-		selectedOwner = undefined;
-		$scope.selectedOwner = selectedOwner;
+		$scope.deselectOwner();
 	};
 
 	$scope.deselectLabel = function (text) {
@@ -1422,7 +1420,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 	$scope.deselectOwner = function () {
 		selectedOwner = undefined;
 		$scope.selectedOwner = selectedOwner;
-	}
+		$scope.$emit('ownerSelected', selectedOwner);
+	};
 
 	$scope.shouldHideStory = function (story) {
 		var shouldHide = false;

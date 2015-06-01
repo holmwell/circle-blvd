@@ -55,6 +55,24 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		$scope.searchEntry = undefined;
 	};
 
+	$scope.$on('keyEscape', function (e) {
+		if ($scope.isSearching) {
+			$scope.hideSearch();
+		}
+	}); 
+
+	$scope.selectOwner = function (owner) {
+		$scope.$broadcast('ownerSelected', owner);
+	};
+
+	$scope.$on('ownerSelected', function (e, owner) {
+		$scope.selectedOwner = owner;
+	});
+
+	$scope.setSearchBarLabel = function (text) {
+		$scope.searchBarLabel = text;
+	};
+
 	$scope.selectChecklist = function (list) {
 		$scope.checklistDescription = list.description;
 		selectedChecklist = list;

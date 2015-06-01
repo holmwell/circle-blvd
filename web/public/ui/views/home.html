@@ -7,7 +7,7 @@
 	<p><a href="#/fix">Follow this link</a>, please.</p>
 </div>
 
-<div class="entry-facade no-select" ng-hide="isSearching || isAddingNew || isBacklogBroken">
+<div class="entry-facade no-select" ng-hide="isAddingNew || isBacklogBroken">
 	<div class="clearfix entry-facade-container">
 		<div class="col-xs-12 debug alignWithStoryList"
 			ng-class="{
@@ -15,12 +15,31 @@
 				'col-sm-offset-2': !isMindset('roadmap'),
 				'col-sm-8': !isMindset('roadmap')
 			}">
-			<div class="col-xs-6 show-search debug" ng-class="{ active: isSearching }">
-				<span ng-click="showSearch()" class="glyphicon glyphicon-search"></span>
+			<div class="col-xs-6 show-search debug">
+				<span ng-click="showSearch()" 
+					ng-class="{ active: isSearching }"
+					ng-mouseenter="setSearchBarLabel('Search')"
+					ng-mouseleave="setSearchBarLabel('')"
+					class="glyphicon glyphicon-search"></span>
+
+				<span ng-click="selectOwner(profileName)" 
+					ng-class="{ active: selectedOwner === profileName }"
+					ng-mouseenter="setSearchBarLabel('My tasks')"
+					ng-mouseleave="setSearchBarLabel('')"
+					class="glyphicon glyphicon-record"></span>
+
+				<span class="searchBarLabel">{{searchBarLabel}}</span>
 			</div>
+
 			<div class="col-xs-6 show-entry">
-				+ <a ng-click="showEntry()" class="jsLink">Add task</a>
+				<div class="pull-right" ng-show="isSearching">
+					<a ng-click="hideSearch()" class="jsLink subtle">Hide search</a>
+				</div>
+				<span ng-hide="isSearching">
+					+ <a ng-click="showEntry()" class="jsLink">Add task</a>
+				</span>
 			</div>
+
 		</div>
 	</div>
 </div>
@@ -34,12 +53,6 @@
 				'col-sm-offset-2': !isMindset('roadmap'),
 				'col-sm-8': !isMindset('roadmap')
 			}">
-			<div class="row alignWithStoryList">
-				<span class="glyphicon glyphicon-search"></span>
-				<div class="pull-right">
-					<a ng-click="hideSearch()" class="jsLink subtle">Hide search</a>
-				</div>
-			</div>
 
 			<div class="debug new-story row alignWithStoryList">
 				<input id="searchEntry" type="text" autocomplete="off" 
