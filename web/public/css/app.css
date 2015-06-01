@@ -285,11 +285,11 @@
   padding-left: 1ex;
 }
 
-.entry {
+.entry, .search {
   padding-left: 1ex;
   padding-right: 1.5ex;
 }
-.entry .roadmapOffset {
+.entry .roadmapOffset, .search .roadmapOffset {
   margin-left: 2ex;
   padding-right: 3.5ex;
 }
@@ -320,17 +320,56 @@
   height: 4em;
 }
 
+.search .new-story {
+  background-color: #1E69B5;
+  /*background-color: transparent;*/
+}
+.search .new-story:hover {
+  background-color: #2272B8;
+}
+
 .entry-facade-container {
   padding: 0;
-  margin-bottom: 1ex;
   margin-right: 0.5ex;
+  margin-left: 0;
 }
+.entry-facade-container .alignWithStoryList {
+  padding: 0;
+}
+
 .show-entry {
   padding: 0.5ex;
   text-align: right;
   padding-bottom: 0;
   padding-right: 0;
 }
+.show-search {
+  margin-left: 0;
+  padding-top: 0.25ex;
+  padding-bottom: 0;
+  padding-left: 1.25ex;
+  font-size: 1.25em;
+
+  color: #e6e6e6;
+}
+.show-search,
+.search .glyphicon-search {
+  font-size: 1.25em;
+}
+.search .glyphicon-search {
+  margin-top: 0.35ex;
+  margin-left: 1.85ex;
+}
+
+.show-search .glyphicon {
+  cursor: pointer;
+}
+.show-search .glyphicon:hover, 
+.show-search.active,
+.search .glyphicon-search {
+  color: #aaa;
+}
+
 .alignWithStoryList, .story, .archive {
   max-width: 550px;
 }

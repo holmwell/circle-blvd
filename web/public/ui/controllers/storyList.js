@@ -7,6 +7,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 	var stories = CircleBlvd.Services.stories($http);
 	var isFacade = false;
 	var isChecklist = false;
+	var searchEntry = undefined;
 
 	var selectedOwner = undefined;
 	$scope.selectedOwner = selectedOwner;
@@ -1432,6 +1433,15 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 			return false;
 		}
 
+		// Search
+		if (searchEntry && searchEntry.length > 0) {
+			for (index in searchEntry) {
+				if (story.summary.toLowerCase().indexOf(searchEntry[index]) < 0) {
+					shouldHide = true;
+				}
+			}
+		}
+
 		// Labels
 		if (selectedLabels.length > 0) {
 			shouldHide = false;
@@ -2146,6 +2156,16 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 	$scope.$watch('isFacade', function (newVal) {
 		isFacade = newVal;
 		stories.setFacade(isFacade);
+	});
+
+	$scope.$on('cbSearchEntry', function (e, val) {
+		if (!val) {
+			searchEntry = undefined;
+		}
+		else {
+			val = val.toLowerCase();
+			searchEntry = val.split(" ");
+		}
 	});
 
 	// TODO: Is this an ok way to configure the story list behavior?

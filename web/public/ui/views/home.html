@@ -7,18 +7,49 @@
 	<p><a href="#/fix">Follow this link</a>, please.</p>
 </div>
 
-<div class="entry-facade no-select" ng-hide="isAddingNew || isBacklogBroken">
+<div class="entry-facade no-select" ng-hide="isSearching || isAddingNew || isBacklogBroken">
 	<div class="clearfix entry-facade-container">
-		<div class="col-xs-12 debug show-entry alignWithStoryList"
+		<div class="col-xs-12 debug alignWithStoryList"
 			ng-class="{
 				'col-sm-7': isMindset('roadmap'),
 				'col-sm-offset-2': !isMindset('roadmap'),
 				'col-sm-8': !isMindset('roadmap')
-			}">			
+			}">
+			<div class="col-xs-6 show-search debug" ng-class="{ active: isSearching }">
+				<span ng-click="showSearch()" class="glyphicon glyphicon-search"></span>
+			</div>
+			<div class="col-xs-6 show-entry">
 				+ <a ng-click="showEntry()" class="jsLink">Add task</a>
+			</div>
 		</div>
 	</div>
 </div>
+
+<div class="search" ng-show="isSearching">
+	<div class="row">
+		<div class="col-xs-12 debug"
+			ng-class="{
+				roadmapOffset: isMindset('roadmap'),
+				'col-sm-7': isMindset('roadmap'),
+				'col-sm-offset-2': !isMindset('roadmap'),
+				'col-sm-8': !isMindset('roadmap')
+			}">
+			<div class="row alignWithStoryList">
+				<span class="glyphicon glyphicon-search"></span>
+				<div class="pull-right">
+					<a ng-click="hideSearch()" class="jsLink subtle">Hide search</a>
+				</div>
+			</div>
+
+			<div class="debug new-story row alignWithStoryList">
+				<input id="searchEntry" type="text" autocomplete="off" 
+					placeholder="Search ..."
+					class="form-control" ng-model="searchEntry" />
+			</div>
+		</div>
+	</div>
+</div>
+
 
 <div class="entry" ng-show="isAddingNew">
 	<div class="row">

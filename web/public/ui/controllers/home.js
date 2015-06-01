@@ -19,6 +19,7 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		$scope.isAdding['deadline'] = false;
 
 		$scope.showEntry = function (panelName) {
+			$scope.hideSearch();
 			if (!panelName) {
 				$scope.isAddingNew = true;
 				$scope.showEntry('story');
@@ -38,6 +39,21 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 			$scope.isAddingNew = undefined;
 		};	
 	}();
+
+	$scope.$watch('searchEntry', function (val) {
+		$scope.$broadcast('cbSearchEntry', val);
+	});
+
+	$scope.showSearch = function () {
+		$scope.isSearching = true;
+		$scope.isAddingNew = undefined;
+		hacks.focus('searchEntry');
+	};
+
+	$scope.hideSearch = function () {
+		$scope.isSearching = undefined;
+		$scope.searchEntry = undefined;
+	};
 
 	$scope.selectChecklist = function (list) {
 		$scope.checklistDescription = list.description;
