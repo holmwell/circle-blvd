@@ -297,7 +297,7 @@ button:focus {
   opacity: 0.6;
 }
 
-.donations {
+.donations, .prelude-content {
   padding-top: 2.4em;
 }
 .sponsor .donations {

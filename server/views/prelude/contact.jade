@@ -2,7 +2,7 @@ extends layout-simple
 
 block view
     div(ng-controller="ContactCtrl")
-        .content
+        .content.prelude-content
             .col-sm-offset-2.col-sm-8.contact
                 h2 Contact
                 div(ng-cloak ng-show="!isSignedIn()")
