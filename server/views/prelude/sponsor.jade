@@ -24,7 +24,7 @@ block view
 
             div(ng-show="isSignedIn()")
                 p Thank you for your support.
-                .row.clear
+                .row.clear(ng-cloak)
                     .donations(ng-show="supportsPayments")
                         .row.plans
                             div(ng-repeat="plan in plans")
