@@ -1436,7 +1436,12 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		if (searchEntry && searchEntry.length > 0) {
 			for (index in searchEntry) {
 				if (story.summary.toLowerCase().indexOf(searchEntry[index]) < 0) {
-					shouldHide = true;
+					if (story.owner && story.owner.toLowerCase().indexOf(searchEntry[index]) >= 0) {
+						// Stay cool.
+					}
+					else {
+						shouldHide = true;
+					}
 				}
 			}
 		}
@@ -2163,7 +2168,20 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		}
 		else {
 			val = val.toLowerCase();
-			searchEntry = val.split(" ");
+			// searchEntry = val.split(" ");
+			// Get phrases surrounded by quotes: 
+			// http://stackoverflow.com/questions/16261635/javascript-split-string-by-space-but-ignore-space-in-quotes-notice-not-to-spli
+			searchEntry = val.match(/(?:[^\s"]+|"[^"]*")+/g);
+			// Remove quotes
+			for (index in searchEntry) {
+				var token = searchEntry[index];
+
+				if (token.length >= 2 &&
+					token.charAt(0) === '"' && 
+					token.charAt(token.length-1) === '"') {
+					searchEntry[index] = token.substring(1, token.length - 1);
+				}
+			}
 		}
 	});
 
