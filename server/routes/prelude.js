@@ -62,11 +62,7 @@ router.get("/docs", function (req, res, next) {
     res.redirect("/tour");
 });
 
-
-// router.get("/contact", function (req, res, next) {
-//     // TODO: Redirect to signin
-//     res.render('contact', getDefaultParams(req));
-// });
+router.get("/contact", render('contact'));
 
 router.get('/', function (req, res, next) {
     // Redirect to 'initialize' on first-time use.

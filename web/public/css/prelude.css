@@ -197,6 +197,12 @@ label.relax {
   margin-top: 1em;
 }
 
+/* contact */
+.content .contact {
+  padding-bottom: 2em;
+}
+
+/* sign in (mostly) */
 .intro .for-glyph,
 .tour .for-glyph {
   margin-top: 3em;

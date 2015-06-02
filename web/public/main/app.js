@@ -52,8 +52,6 @@ angular.module('myApp', [
         $routeProvider.when('/profile', {templateUrl: 'ui/views/profile.html', controller: ProfileCtrl});
         $routeProvider.when('/admin', {templateUrl: 'ui/views/admin.html', controller: AdminCtrl});
 
-        $routeProvider.when('/contact', {templateUrl: 'ui/views/contact.html', controller: ContactCtrl});
-
         $routeProvider.when('/mainframe', {templateUrl: 'ui/views/mainframe.html', controller: MainframeCtrl});
         $routeProvider.when('/fix', {templateUrl: 'ui/views/fix.html', controller: FixCtrl});
 
@@ -61,6 +59,7 @@ angular.module('myApp', [
         // but there might still be links in the wild, so we need to keep
         // them active, possibly forever.
         $routeProvider.when('/about', useServerRoute);
+        $routeProvider.when('/contact', useServerRoute);
         $routeProvider.when('/privacy', useServerRoute);
         $routeProvider.when('/sponsor', useServerRoute);
         $routeProvider.when('/donate', useServerRoute);

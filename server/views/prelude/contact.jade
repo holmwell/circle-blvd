@@ -1,0 +1,22 @@
+extends layout-simple
+
+block view
+    div(ng-controller="ContactCtrl")
+        .content
+            .col-sm-offset-2.col-sm-8.contact
+                h2 Contact
+                div(ng-cloak ng-show="!isSignedIn()")
+                    p.
+                        Thank you for visiting our contact page. 
+                        Please <a href="/signin">sign in</a> to write to us.
+
+                div(ng-cloak ng-show="isSignedIn()")
+                    p.
+                        Thank you for contacting us at Circle Blvd. This form will send us an email,
+                        and we'll get back to you as soon as possible.
+
+                    input.form-control(type="text" ng-model="subject" placeholder="Email subject")
+                    textarea.form-control(ng-model="text" rows="9")
+
+                    button.btn.btn-default(ng-click="sendEmail()") Send
+                    span.message &nbsp; {{emailStatus}}

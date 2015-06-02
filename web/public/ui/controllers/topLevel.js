@@ -376,6 +376,7 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 			|| path === '/sponsor'
 			|| path === '/donate'
 			|| path === '/about'
+			|| path === '/contact'
 			|| path === '/privacy'
 			|| path === '/invite'
 			|| path.indexOf('/invite') === 0) {
@@ -438,6 +439,16 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 	var init = function() {
 		if ($window.location.hash.length === 0) {
 			analytics.trackPage();
+
+			var locationPath = $window.location.pathname;
+			// Don't save these paths
+			if (locationPath.indexOf('/signin') !== 0 && 
+				locationPath.indexOf('/invite') !== 0) {
+				// Save all other paths for redirecting back 
+				// to them after signing in.
+				session.lastLocationPath = locationPath;
+				session.save();
+			}	
 		}
 
 		$scope.$on('$routeChangeSuccess', function () {

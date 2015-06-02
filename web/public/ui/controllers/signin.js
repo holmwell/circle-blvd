@@ -95,7 +95,9 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 					// Even though we changed the href above,
 					// we don't refresh automatically unless
 					// the URL changes, so force a reload here.
-					$window.location.reload();
+					if ($window.location.href === "/") {
+						$window.location.reload();
+					}
 				}
 			});
 		};
