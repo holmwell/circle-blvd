@@ -1448,7 +1448,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 
 		// Labels
 		if (selectedLabels.length > 0) {
-			shouldHide = false;
 
 			if (!story.labels || story.labels.length <= 0) {
 				shouldHide = true;
