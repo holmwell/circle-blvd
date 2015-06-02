@@ -197,15 +197,22 @@ label.relax {
   margin-top: 1em;
 }
 
-.intro .for-glyph, .tour .for-glyph {
+.intro .for-glyph 
+.tour .for-glyph {
   margin-top: 3em;
   text-align: center;
   vertical-align: middle;
 }
+.about .for-glyph {
+  text-align: center;
+  vertical-align: middle;
+  margin-top: 3em;
+}
 .tour .for-glyph {
   margin-top: 0;
 }
-.intro .glyphicon {
+.intro .glyphicon,
+.about .glyphicon {
   font-size: 36pt;
 }
 .before-video {
