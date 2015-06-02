@@ -197,7 +197,7 @@ label.relax {
   margin-top: 1em;
 }
 
-.intro .for-glyph 
+.intro .for-glyph,
 .tour .for-glyph {
   margin-top: 3em;
   text-align: center;
