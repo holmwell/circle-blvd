@@ -286,7 +286,7 @@ button:focus {
   border: solid 1px transparent;
   width: 26px;
   height: 26px;
-  margin-left: -0.75ex;
+  margin-left: 0;
   
   vertical-align: text-top;
   
