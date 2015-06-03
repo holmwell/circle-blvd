@@ -221,10 +221,14 @@
         </div>
 
         <div ng-if="::!isScreenXs" class="row no-select hidden-xs" ng-show="!story.isSelected" id="story-{{$index}}">
-            <div class="col-sm-11 paddy">
-                <div class="summary"
-                ng-class="{mine: isStoryMine(story)}">
+            <div class="col-sm-10 paddy">
+                <div class="summary" ng-class="{mine: isStoryMine(story)}">
                     <sp-story-summary/>
+                </div>
+            </div>
+            <div class="col-sm-1 paddy details-icon">
+                <div class="pull-right" ng-show="story.isOver" ng-click="select(story)">
+                    <span class="glyphicon glyphicon-option-horizontal"></span>
                 </div>
             </div>
             <div ng-if="(!isMindset('bump') && !isStoryDone(story)) || !story.isAfterNextMeeting || isMindset('roadmap')" 

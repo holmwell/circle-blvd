@@ -284,6 +284,11 @@
 .paddy .summary {
   padding-left: 1ex;
 }
+.details-icon {
+  opacity: 0.4;
+  padding-top: 1.10ex;
+  padding-bottom: 0.40ex;
+}
 
 .entry, .search {
   padding-left: 1ex;

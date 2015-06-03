@@ -252,6 +252,7 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 				$scope.$emit('storyHighlight', story);
 			}
 		}
+		story.isOver = true;
 	};
 
 	$scope.mouseLeave = function (story) {
@@ -260,6 +261,7 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 				$scope.$emit('storyUnhighlight', story, $scope.mouse.direction);
 			}
 		}
+		story.isOver = false;
 	};
 
 	$scope.deselect = function (story, event) {
