@@ -206,7 +206,7 @@ module.exports = function () {
 		});
 	};
 
-	// TODO: Refactor duplicate update code.
+	// TODO: Refactor mostly-duplicate update code.
 	var updateUserNotificationEmail = function (user, newEmail, success, failure) {
 		var newEmail = newEmail.toLowerCase();
 		if (user.notifications && user.notifications.email === newEmail) {
@@ -214,14 +214,15 @@ module.exports = function () {
 			return success(user);
 		}
 
-		findUserByEmail(newEmail, function (err, account) {
-			if (account) {
-				return failure("Sorry, that email address is already in use.")
+		findUserById(user.id, function (err, account) {
+			if (err) {
+				console.log(err);
+				return failure("Sorry, our website isn't working right now.")
 			}
 
 			user.notifications = user.notifications || {};
 			user.notifications.email = newEmail;
-			
+
 			couch.users.update(user, function (err, body) {
 				if (err && err.error === 'conflict') {
 					findUserById(user.id, function (err, latestUser) {
