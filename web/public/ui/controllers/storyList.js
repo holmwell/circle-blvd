@@ -1023,6 +1023,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 			var storyIndex = storiesList.indexOf(viewStory);
 			storiesList.splice(storyIndex, 1);
 			stories.remove(viewStory.id);
+
+			// Update the view model
+			if (viewStory.isDeadline) {
+				buildMilepostList(storiesList);
+			}
 		}
 
 		if (shouldAnimate) {
