@@ -5,23 +5,55 @@ block view
         .col-sm-offset-2.col-sm-8.sponsor
             h2 Sponsor Circle Blvd.
             p Thank you for considering becoming a sponsor.
-            p.
-                Much has been done to complete the first draft of the site you are visiting. 
-                We are now ready for a small, but sizeable audience.
-            p.
-                To guarantee a future for Circle Blvd and 
-                <a href="http://secretproject.org">Secret Project</a>, our first financial 
-                goal is to reach $2,000 in revenues per month, or about 100 individuals 
-                contributing $20 per month.
 
-            div(ng-show="!isSignedIn()")
+            p The goal of <a href="https://secretproject.org">Secret Project</a> and 
+             | Circle Blvd is to provide the best organizational tools available to 
+             | small groups who might not have a six-figure budget. In turn, organizations
+             | can focus on making our towns and cities better places to live. 
+
+            p To achieve this goal, all of our work is available to the public free of charge, and 
+             | this is made possible through your generous sponsorship.
+
+            .row
+                .col-xs-4.col-sm-3.for-glyph
+                    span.glyphicon.glyphicon-move
+                .col-xs-8.col-sm-9
+                    h4 Following is sponsorship 
+                    p There are many opportunities to contribute to the Circle Blvd project. The easiest
+                     | is to follow us on Twitter at <a href="http://twitter.com/circleblvd">@circleblvd</a>
+                     | and <a href="http://twitter.com/_proj">@_proj</a>. This helps us know who is 
+                     | actively interested in what we're contributing to your communities.
+
+            .row
+                .col-xs-4.col-sm-3.for-glyph
+                    span.glyphicon.glyphicon-wrench
+                .col-xs-8.col-sm-9
+                    h4 Coding is sponsorship 
+                    p The code for this website and our app is available on GitHub, at 
+                     | <a href="https://github.com/secret-project">secret-project</a> and
+                     | <a href="https://github.com/secret-project/circle-blvd">circle-blvd</a>, and you 
+                     | are welcome to read it and make changes. Let us know how we can help you 
+                     | get involved.
+
+            .row
+                .col-xs-4.col-sm-3.for-glyph
+                    span.glyphicon.glyphicon-piggy-bank
+                .col-xs-8.col-sm-9
+                    h4 Funding is sponsorship 
+                    p Aside from working directly on the project, this is the most straight-forward
+                     | way you or your organization can further development of Circle Blvd and 
+                     | its companion products from Secret Project.  
+
+            div(ng-show="!isSignedIn() && supportsPayments")
                 p.
-                    To sponsor Circle Blvd, please <a href="/signin/#/sponsor">sign in</a>. 
+                    To fund Circle Blvd with a monthly contribution, please <a href="/signin/#/sponsor">sign in</a>. 
                     To make a one-time donation without creating an account, please visit 
                     our <a href="/donate">donation</a> page.
 
-            div(ng-show="isSignedIn()")
-                p Thank you for your support.
+            div(ng-show="isSignedIn() && supportsPayments")
+                p To fund Circle Blvd with a monthly contribution, please choose any of the 
+                 | three options below. To make a one-time donation, please visit 
+                 | our <a href="/donate">donation</a> page.
                 .row.clear(ng-cloak)
                     .donations(ng-show="supportsPayments")
                         .row.plans
@@ -47,6 +79,9 @@ block view
 
                         p.col-sm-4.subtle.cancel(ng-show="activePlan.name")
                             a.jsLink.subtle(ng-click="cancelSubscription()") cancel sponsorship
+
+            div(ng-show="supportsPayments")
+                p Thank you.
 
 append bottom
     script(src="https://checkout.stripe.com/checkout.js")

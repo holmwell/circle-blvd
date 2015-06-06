@@ -209,7 +209,8 @@ label.relax {
   text-align: center;
   vertical-align: middle;
 }
-.about .for-glyph {
+.about .for-glyph,
+.sponsor .for-glyph {
   text-align: center;
   vertical-align: middle;
   margin-top: 3em;
@@ -218,7 +219,8 @@ label.relax {
   margin-top: 0;
 }
 .intro .glyphicon,
-.about .glyphicon {
+.about .glyphicon,
+.sponsor .glyphicon {
   font-size: 36pt;
 }
 .before-video {
