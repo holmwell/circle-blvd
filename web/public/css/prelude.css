@@ -198,8 +198,17 @@ label.relax {
 }
 
 /* contact */
-.content .contact {
+.content .contact,
+.content .create-circle {
   padding-bottom: 2em;
+}
+
+/* create circle */
+.create-circle .message {
+  margin-top: 1em;
+}
+.create-circle .circle-entry {
+  margin-top: 1.5em;
 }
 
 /* sign in (mostly) */

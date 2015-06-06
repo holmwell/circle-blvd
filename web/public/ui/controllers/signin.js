@@ -24,8 +24,7 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 		var defaultGroup = undefined;
 
 		var onCircleFound = function (circle) {
-			var defaultCircle = "1";
-			session.activeCircle = circle || defaultCircle;
+			session.activeCircle = circle;
 			session.user = user;
 			session.save();
 
@@ -72,7 +71,9 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 			tryToFindGroupStartingAtIndex(0);
 		}
 		else {
-			callback(null);
+			// Not a member of any groups. Go to create one.
+			$window.location.href = "/create";
+			callback();
 		}
 	};
 

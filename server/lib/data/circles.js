@@ -30,6 +30,7 @@ module.exports = function () {
 
 			// TODO: Need to remove dups from the view
 			var circles = {};
+			rawCircles = rawCircles || [];
 			rawCircles.forEach(function (circle) {
 				circles[circle._id] = circle;
 			});

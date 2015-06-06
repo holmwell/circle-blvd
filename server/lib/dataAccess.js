@@ -76,7 +76,7 @@ var addStoriesForNewCircle = function (newCircle, adminAccount, callback) {
 
 	var nextMeeting = {};
 	nextMeeting.projectId = newCircle._id;
-	nextMeeting.summary = "Next meeting";
+	nextMeeting.summary = "Next";
 	nextMeeting.isNextMeeting = true;
 
 	db.stories.add(nextMeeting, callback);	

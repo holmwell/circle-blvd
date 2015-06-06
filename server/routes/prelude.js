@@ -36,6 +36,15 @@ router.get("/signin", function (req, res, next) {
     }
 });
 
+router.get("/create", function (req, res, next) {
+    if (!req.isAuthenticated()) {
+        res.redirect('/signin');
+    }
+    else {
+        render('create-circle')(req, res, next);
+    }
+});
+
 router.get("/about", render('about'));
 
 router.get('/tour', render('tour'));

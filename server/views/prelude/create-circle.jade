@@ -1,0 +1,24 @@
+extends layout-simple
+
+block view
+    div(ng-controller="CreateCircleCtrl")
+        .content.prelude-content
+            .col-sm-offset-2.col-sm-8.create-circle
+                h2 Create a circle
+
+                p Welcome. 
+
+                p A circle is a team, organization, board of directors, or group with a task list.
+
+                p When you create a circle here, you'll become the circle's administrator, and be 
+                 | able to invite people to join your group. After creating a circle, below, you'll be brought
+                 | to its (empty) task list.
+
+                .row.circle-entry
+                    .col-sm-6
+                        input.form-control(ng-model="newCircleName" type="text" placeholder="New circle name")
+                        button.btn.btn-default(ng-click="createCircle(newCircleName)") Create circle
+                .row
+                    .col-sm-12(ng-cloak)
+                        .pull-left(ng-show="isCreatingCircle") &nbsp;...
+                        p.message.clear {{message}}
