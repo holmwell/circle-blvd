@@ -206,6 +206,41 @@ module.exports = function () {
 		});
 	};
 
+	// TODO: Refactor duplicate update code.
+	var updateUserNotificationEmail = function (user, newEmail, success, failure) {
+		var newEmail = newEmail.toLowerCase();
+		if (user.notifications && user.notifications.email === newEmail) {
+			// Nothing to do
+			return success(user);
+		}
+
+		findUserByEmail(newEmail, function (err, account) {
+			if (account) {
+				return failure("Sorry, that email address is already in use.")
+			}
+
+			user.notifications = user.notifications || {};
+			user.notifications.email = newEmail;
+			
+			couch.users.update(user, function (err, body) {
+				if (err && err.error === 'conflict') {
+					findUserById(user.id, function (err, latestUser) {
+						updateUserNotificationEmail(latestUser, newEmail, success, failure);
+					});
+					return;
+				}
+
+				if (err) {
+					console.log(err);
+					return failure("Sorry, our website isn't working right now.");
+				}
+
+				user._rev = body.rev;
+				success(user);
+			});	
+		});
+	};
+
 	var updateUserPassword = function(user, password, success, failure) {
 		if (!isValidUser(user)) {
 			return failure("Need a valid user. Sorry.");
@@ -433,6 +468,7 @@ module.exports = function () {
 		update: updateUser,
 		updateName: updateUserName,
 		updateEmail: updateUserEmail,
+		updateNotificationEmail: updateUserNotificationEmail,
 		updatePassword: updateUserPassword,
 		validatePassword: validateUserPassword,
 		updateGroups: updateUserGroups,

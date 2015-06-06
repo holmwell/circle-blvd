@@ -70,9 +70,7 @@ exports.updateNotificationEmail = function (req, res) {
 	basicChecks(req, res, function () {
 		var data = req.body;
 		var user = req.user;
-		user.notifications = user.notifications || {};
-		user.notifications.email = data.notificationEmail;
-		db.users.update(user, onSuccess, onError);
+		db.users.updateNotificationEmail(user, data.notificationEmail, onSuccess, onError);
 	});
 };
 
