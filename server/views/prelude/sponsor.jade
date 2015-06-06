@@ -50,10 +50,14 @@ block view
                     To make a one-time donation without creating an account, please visit 
                     our <a href="/donate">donation</a> page.
 
+                p Thank you.
+
             div(ng-show="isSignedIn() && supportsPayments")
                 p To fund Circle Blvd with a monthly contribution, please choose any of the 
                  | three options below. To make a one-time donation, please visit 
                  | our <a href="/donate">donation</a> page.
+
+                p Thank you.
                 .row.clear(ng-cloak)
                     .donations(ng-show="supportsPayments")
                         .row.plans
@@ -79,9 +83,6 @@ block view
 
                         p.col-sm-4.subtle.cancel(ng-show="activePlan.name")
                             a.jsLink.subtle(ng-click="cancelSubscription()") cancel sponsorship
-
-            div(ng-show="supportsPayments")
-                p Thank you.
 
 append bottom
     script(src="https://checkout.stripe.com/checkout.js")
