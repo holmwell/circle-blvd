@@ -175,6 +175,13 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 		return false;
 	};
 
+	var signinInfoChanged = function () {
+		$scope.message = undefined;
+	};
+
+	$scope.$watch('user.email', signinInfoChanged);
+	$scope.$watch('user.password', signinInfoChanged);
+
 	var init = function () {
 		// Redirect to home if we're already signed in.
 		if ($scope.isSignedIn() && $window.location.pathname !== "/") {
