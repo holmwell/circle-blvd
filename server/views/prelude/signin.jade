@@ -21,7 +21,8 @@ block view
                         button.btn.btn-default.pull-right(type="submit" ng-click="signIn()") Sign in 
 
             .col-sm-offset-2.col-sm-8
-                .clear.message(ng-cloak) {{message}}
+                .clear.message(ng-cloak) {{message}} 
+                    span(ng-show="signinFailure") <a class="jsLink" ng-click="sendSecret()">Forgot password</a>?
 
         .intro
             .col-sm-offset-2.col-sm-8.clear.signin-section

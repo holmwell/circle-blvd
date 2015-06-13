@@ -106,6 +106,7 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 
 		var failure = function(data, status) {
 			$scope.message = "Sorry, please try something else."
+			$scope.signinFailure = true;
 			if (status === 429) {
 				$scope.message = "Sorry, it seems someone is trying " + 
 				"to guess your password, so we aren't allowing any more sign-in " + 
@@ -175,8 +176,26 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 		return false;
 	};
 
+	$scope.sendSecret = function () {
+		var data = {
+			email: $scope.user.email
+		};
+
+		$http.post('/auth/signin/forgot', data)
+		.success(function () {
+			$scope.signinFailure = undefined;
+			$scope.message = "Ok! Check your email, please.";
+		})
+		.error(function () {
+			$scope.signinFailure = undefined;
+			$scope.message = "Sorry, our computers are broken now. " +
+				"Please try again at a later time.";
+		});
+	};
+
 	var signinInfoChanged = function () {
 		$scope.message = undefined;
+		$scope.signinFailure = undefined;
 	};
 
 	$scope.$watch('user.email', signinInfoChanged);
