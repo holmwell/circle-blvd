@@ -1,84 +1,18 @@
-var designDocs = require('./design-docs-session.js');
-var LocalDatabase = require('./data/couch/local-database.js');
+var database = require('./data/sessions/session-database.js');
 
 module.exports = function (session) {
-	var databaseName = process.env.DATABASE_NAME || 'circle-blvd';
-	databaseName += '-sessions';
 	
-	var database = LocalDatabase(databaseName, designDocs);
-
-	var lastMainenanceDate = undefined;
-	var actuallyPerformMaintenance = function () {
-		lastMainenanceDate = new Date();
-
-		var deleteExpiredSessions = function () {
-			var earliestDate = "";
-			var endkey = new Date().toISOString();
-
-			var options = {
-				startkey: earliestDate,
-				endkey: endkey
-			};
-
-			database.view("sessions", "byExpires", options, function (err, body) {
-				if (err) {
-					return console.log(err);
-				}
-
-				var bulkDoc = {};
-				var options = {};
-				bulkDoc.docs = [];
-
-				body.rows.forEach (function (doc) {
-					var deleteDoc = {
-						_id: doc.id,
-						_rev: doc.value,
-						_deleted: true
-					};
-					bulkDoc.docs.push(deleteDoc);
-				});
-
-				database.bulk(bulkDoc, options, function (err, body) {
-					if (err) {
-						console.log(err);
-					}
-				});
-			});
-		};
-
-		var performAllMaintenance = function () {
-			deleteExpiredSessions();
-			database.compact();
-		};
-
-		process.nextTick(performAllMaintenance);
-	};
-
 	// Dates are equal if they share the same day of the year.
-	// We don't care about units smaller than days.
+    // We don't care about units smaller than days.
 	var areDatesEqual = function (date1, date2) {
-		if (date1.getYear() !== date2.getYear()
-		|| date1.getMonth() !== date2.getMonth()
-		|| date1.getDay() !== date2.getDay()) {
-			return false;
-		}
+        if (date1.getYear() !== date2.getYear()
+        || date1.getMonth() !== date2.getMonth()
+        || date1.getDay() !== date2.getDay()) {
+            return false;
+        }
 
-		return true;
-	};
-
-	var performMaintenance = function () {
-		// actually perform maintenance if it hasn't
-		// been done today, otherwise no.
-		if (!lastMainenanceDate) {
-			return actuallyPerformMaintenance();
-		}
-		if (areDatesEqual(new Date(), lastMainenanceDate)) {
-			// do nothing
-			return;
-		}
-
-		actuallyPerformMaintenance();
-	};
+        return true;
+    };
 
 	var getSessionDoc = function (sid, callback) {
 		database.get(sid, function (err, doc) {
@@ -90,7 +24,7 @@ module.exports = function (session) {
 	};
 
 	var getSession = function (sid, callback) {
-		performMaintenance();
+		database.performMaintenance();
 		getSessionDoc(sid, function (err, doc) {
 			if (err) {
 				return callback(err);

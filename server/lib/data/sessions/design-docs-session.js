@@ -2,7 +2,7 @@
 //
 // The design docs for circle-blvd-sessions.
 //
-var designDocs = require("./data/couch/design-docs.js");
+var designDocs = require("../../data/couch/design-docs.js");
 
 var sessionsDesignDoc = {
 	url: '_design/sessions',
