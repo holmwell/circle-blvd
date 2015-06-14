@@ -47,6 +47,20 @@ var getCommentNotificationMessage = function (comment, story, req) {
 	return message;
 };
 
+var getForgotPasswordMessage = function (session, req) {
+	var message = "Hi. You asked to reset your password on Circle Blvd.\n\n";
+	message += "To do so, please go here: ";
+
+	var protocol = req.protocol || "http";
+	message += protocol + "://" + req.get('Host') + "/auth/forgot/" + 
+		session._id + "/" + session.secret;
+	
+	message += "\n\n";
+	message += "Thank you for using the site.\n";
+
+	return message;
+};
+
 var newStory = function (story, sender, req, callback) {
 	if (story.isOwnerNotified) {
 		var err = new Error("Story owner has already been notified.");
@@ -244,10 +258,31 @@ var newComment = function (params, req) {
 	});
 };
 
+var forgotPassword = function (params, req, callback) {
+	if (!params || !params.user || !params.session) {
+		callback("Invalid parameters to notify.forgotPassword");
+		return;
+	}
+
+	var user    = params.user;
+	var session = params.session;
+	var message = getForgotPasswordMessage(session, req);
+
+	var params = {
+		story: { summary: "" }, // facade hack
+		sender: user,
+		recipients: [user],
+		message: getForgotPasswordMessage(session, req),
+		subjectPrefix: "password reset for " + req.get('Host')
+	};
+
+	sendStoryNotification(params, callback);
+};
 
 module.exports = function () {
 	return {
 		newStory: newStory,
-		newComment: newComment
+		newComment: newComment,
+		forgotPassword: forgotPassword
 	};
 }(); // closure

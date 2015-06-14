@@ -37,6 +37,7 @@ var initRoutes  = require('./routes/init');
 // Express 4.x routes
 var archives = require('./routes/archives');
 var prelude = require('./routes/prelude');
+var authRoutes = require('./routes/auth');
 
 var couchSessionStore = require('./lib/couch-session-store.js');
 
@@ -103,9 +104,7 @@ var tryToCreateHttpsServer = function (callback) {
 var defineRoutes = function () {
     app.use('/', prelude.router(app));
     app.use('/archives', archives.router(app));
-
-    app.post('/auth/signin', auth.signin);
-    app.get('/auth/signout', auth.signout);
+    app.use('/auth', authRoutes.router(auth, app));
 
     // Search engine things
     app.get('/sitemap.txt', routes.sitemap);

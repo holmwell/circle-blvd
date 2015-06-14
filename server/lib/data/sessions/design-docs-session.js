@@ -8,7 +8,7 @@ var sessionsDesignDoc = {
 	url: '_design/sessions',
 	body: 
 	{
-		version: "1.0.2",
+		version: "1.0.3",
 		language: "javascript",
 		views: {
 			byExpires: {
@@ -17,6 +17,10 @@ var sessionsDesignDoc = {
 						&& doc.session.cookie 
 						&& doc.session.cookie.expires) {
 						emit(doc.session.cookie.expires, doc._rev);
+					}
+
+					if (doc.expires) {
+						emit(doc.expires, doc._rev);
 					}
 				}
 			}

@@ -176,20 +176,30 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 		return false;
 	};
 
+	var sendingSecret = false;
 	$scope.sendSecret = function () {
+		if (sendingSecret) {
+			// already sending ...
+			return;
+		}
+		
+		sendingSecret = true;
+		$scope.signinFailure = undefined;
+		$scope.message = "Sending emal ...";
+
 		var data = {
 			email: $scope.user.email
 		};
 
 		$http.post('/auth/signin/forgot', data)
 		.success(function () {
-			$scope.signinFailure = undefined;
 			$scope.message = "Ok! Check your email, please.";
+			sendingSecret = false;
 		})
 		.error(function () {
-			$scope.signinFailure = undefined;
 			$scope.message = "Sorry, our computers are broken now. " +
 				"Please try again at a later time.";
+			sendingSecret = false;
 		});
 	};
 

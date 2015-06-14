@@ -206,6 +206,11 @@ exports.local = function(req, success, failure) {
 	});
 };
 
+// Authenticate a user directly. Used for forgotten passwords.
+exports.forceSignin = function (user, req, callback) {
+	req.login(user, callback);
+};
+
 exports.usernameField = function(val) {
 	if (val) {
 		usernameField = val;
