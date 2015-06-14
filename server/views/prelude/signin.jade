@@ -22,7 +22,7 @@ block view
 
             .col-sm-offset-2.col-sm-8
                 .clear.message(ng-cloak) {{message}} 
-                    span(ng-show="signinFailure") <a class="jsLink" ng-click="sendSecret()">Forgot password</a>?
+                    span(ng-show="signinFailure && isNotificationEnabled()") <a class="jsLink" ng-click="sendSecret()">Forgot password</a>?
 
         .intro
             .col-sm-offset-2.col-sm-8.clear.signin-section

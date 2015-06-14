@@ -167,11 +167,16 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 	};
 
 	$scope.isPaymentEnabled = function () {
-		if (session.settings) {
-			if (session.settings['stripe-public-key']) {
-				return true;
-			}
-			return false;
+		if (session.settings && session.settings['stripe-public-key'].value) {
+			return true;
+		}
+		return false;
+	};
+
+	// TODO: Duplicate code in story.js
+	$scope.isNotificationEnabled = function () {
+		if (session.settings && session.settings['smtp-enabled'].value) {
+			return true;
 		}
 		return false;
 	};
