@@ -47,6 +47,7 @@ router.get("/create", function (req, res, next) {
 
 router.get("/about", render('about'));
 
+router.get('/tips', render('tips'));
 router.get('/tour', render('tour'));
 
 router.get('/tour/work', render('tour-work'));

@@ -198,9 +198,18 @@ label.relax {
 }
 
 /* contact */
+.content .tips,
 .content .contact,
 .content .create-circle {
   padding-bottom: 2em;
+}
+
+/* tips */
+.tips ul {
+  list-style-type: circle;
+}
+.tips .glyphicon {
+  color: #aaa;
 }
 
 /* create circle */

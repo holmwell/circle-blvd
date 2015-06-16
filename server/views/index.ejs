@@ -105,6 +105,10 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        <li ng-class="{active: isCurrentPath('/tips')}")><a 
+          href="/tips" 
+          data-toggle="collapse" data-target="#navigation-circles"><span 
+          class="glyphicon glyphicon-flash"></span></a></li>
         <li ng-show="hasMainframeAccess()"
           ng-class="{active: isCurrentPath('/mainframe')}"><a 
           data-toggle="collapse" data-target="#navigation-circles.in"
