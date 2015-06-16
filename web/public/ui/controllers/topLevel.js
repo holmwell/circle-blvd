@@ -223,6 +223,11 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 	};
 
 	$scope.isCurrentPath = function (val) {
+		var pathname = $window.location.pathname;
+		if (pathname.indexOf(val) >= 0) {
+			return true;
+		}
+
 		var path = $location.path();
 		if (!path) {
 			return false;
@@ -371,6 +376,7 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 
 	$scope.isPagePublic = function (path) {
 		if (path === '/docs'
+			|| path === '/tips'
 			|| path === '/tour'
 			|| path.indexOf('/tour') === 0
 			|| path === '/sponsor'
