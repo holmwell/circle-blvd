@@ -125,7 +125,7 @@ var defineRoutes = function () {
     app.get("/data/user", ensure.auth, userRoutes.user);
     app.put("/data/user/name", ensure.auth, userRoutes.updateName);
     app.put("/data/user/email", ensure.auth, userRoutes.updateEmail);
-    app.put("/data/user/notificationEmail", ensure.auth, userRoutes.updateNotificationEmail)
+    app.put("/data/user/notificationEmail", ensure.auth, userRoutes.updateNotificationEmail);
     app.put("/data/user/password", ensure.auth, userRoutes.updatePassword);
 
 
