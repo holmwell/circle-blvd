@@ -1059,7 +1059,7 @@ var configureApp = function() {
     app.use(compression());
 
     var staticPath = path.join(__dirname, '../web/public');
-    var minJsPath = '/_js/';
+    var minJsPath = '/_js';
 
     // for minifying JavaScript
     var compact = compactModule.createCompact({
