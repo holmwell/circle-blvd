@@ -287,13 +287,28 @@ var defineRoutes = function () {
     });
 
     // Invites!
-    app.get("/data/:circleId/invite/:count", ensure.circle, function (req, res) {
+    app.post("/data/:circleId/invite", ensure.circleAdmin, function (req, res) {
+        var data = req.body;
+
         var invite = {
             circleId: req.params.circleId,
-            count: req.params.count || 1
+            count: 1,
+            name: data.name
         };
 
-        db.invites.create(invite, handle(res));
+        if (data.email) {
+            invite.email = data.email;
+        }
+
+        db.invites.create(invite, guard(res, function (invite) {
+            if (invite.email) {
+                // TODO: Send email
+                res.status(200).send(invite);
+            }
+            else {
+                res.status(200).send(invite);
+            }
+        }));
     });
 
     app.get("/data/invite/:inviteId", function (req, res) {

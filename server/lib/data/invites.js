@@ -21,6 +21,8 @@ var create = function (doc, callback) {
         var invite = {
             circleId: doc.circleId,
             count: doc.count,
+            name: doc.name,
+            email: doc.email,
             expires: Date.now() + fiveDays, 
             type: "invite"
         };

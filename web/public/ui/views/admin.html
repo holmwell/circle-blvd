@@ -46,15 +46,33 @@
 			Each invitation link is good for one invite, and will expire 
 			after 5 days.</p>
 
-			<div class="inviteUrlPanel" ng-show="inviteUrl">
-				<label>Invite link:</label>
-				<div>{{inviteUrl}}</div>
-				<div>&gt; <a href="{{inviteUrl}}">go there</a> &lt;</div>
-			</div>
+			<p class="ng-cloak" ng-if="isNotificationEnabled()">If you specify an email 
+			address, we'll try emailing the invitation. If you don't 
+			specify an address, you will need to send the invitation 
+			URL to them by some other means (e.g. iMessage, Facebook).</p>
 		</div>
 	</div>
-	<button class="btn btn-default"
-	ng-click="createInvite(1)">Create invite</button>
+
+	<div class="row">
+		<div class="col-sm-5">
+			<input ng-model="inviteName" class="form-control" type="text" placeholder="Name"/>
+		</div>
+		<div class="col-sm-2">
+			<button ng-if="!isNotificationEnabled()" class="btn btn-default"
+				ng-click="createInvite(inviteName)">Create invite</button>
+		</div>	
+	</div>
+	<div class="row" ng-if="isNotificationEnabled()" >
+		<div class="col-sm-5">
+			<input ng-model="inviteEmail" class="form-control" type="email" placeholder="Email (optional)"/>
+		</div>
+
+		<div class="col-sm-2">
+			<button class="btn btn-default"
+			ng-click="createInvite(inviteName, inviteEmail)">Create invite</button>
+		</div>
+	</div>
+	
 </form>
 
 <div ng-show="invites">
@@ -62,7 +80,7 @@
 	<ul class="adminList">
 		<li ng-repeat="invite in invites" ng-class-odd="'odd'">
 			<div class="row">
-				<div class="col-xs-8">{{getInviteUrl(invite)}}</div>
+				<div class="col-xs-8">{{invite.name}}: {{getInviteUrl(invite)}}</div>
 				<div class="col-xs-2"><a href="{{getInviteUrl(invite)}}">view</a></div>
 			</div>
 		</li>
