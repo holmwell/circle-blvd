@@ -81,8 +81,8 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 			isCreatingInvite = false;
 			getLatestInviteData();
 			// Reset the UI
-			$scope.inviteName = undefined;
-			$scope.inviteEmail = undefined;
+			$scope.inviteForm.$setPristine();
+			$scope.invite = {};
 		})
 		.error(function (data, status) {
 			isCreatingInvite = false;
@@ -92,12 +92,10 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 
 	// TODO: Refactor. This is also defined in story.js
 	$scope.isNotificationEnabled = function () {
+		if (session.settings && session.settings['smtp-enabled'].value) {
+			return true;
+		}
 		return false;
-
-		// if (session.settings && session.settings['smtp-enabled'].value) {
-		// 	return true;
-		// }
-		// return false;
 	};
 
 

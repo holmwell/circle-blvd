@@ -61,6 +61,27 @@ var getForgotPasswordMessage = function (session, req) {
 	return message;
 };
 
+var getInvitationMessage = function (invite, req) {
+	var message = "Hi. You've been invited by " + invite.from + " to join ";
+	message += invite.circleName;
+	message += " on Circle Blvd.\n\n";
+	message += "To do so, please go here: ";
+
+	var protocol = req.protocol || "http";
+	var baseUrl = protocol + "://" + req.get('Host');
+	message +=  baseUrl + "/invite/" + invite._id + "\n\n";
+	
+	message += "If you're unfamiliar with Circle Blvd, be sure to ";
+	message += "check out our tour: ";
+	message += baseUrl + "/tour";
+	message += "\n\n";
+	message += ""
+	message += "Thank you.\n";
+
+	return message;
+};
+
+
 var newStory = function (story, sender, req, callback) {
 	if (story.isOwnerNotified) {
 		var err = new Error("Story owner has already been notified.");
@@ -272,8 +293,35 @@ var forgotPassword = function (params, req, callback) {
 		story: { summary: "" }, // facade hack
 		sender: user,
 		recipients: [user],
-		message: getForgotPasswordMessage(session, req),
+		message: message,
 		subjectPrefix: "password reset for " + req.get('Host')
+	};
+
+	sendStoryNotification(params, callback);
+};
+
+var invitation = function (params, req, callback) {
+	if (!params || !params.user || !params.invite) {
+		callback("Invalid parameters to notify.invite");
+		return;
+	}
+
+	var user    = params.user;
+	var invite  = params.invite;
+	invite.from = user.name;
+	var message = getInvitationMessage(invite, req);
+
+	if (!invite.email) {
+		callback("params.invite.email not specified in notify.invite");
+		return;
+	}
+
+	var params = {
+		story: { summary: "" }, // facade hack
+		sender: user,
+		recipients: [{name: invite.name, email: invite.email}],
+		message: message,
+		subjectPrefix: "circle blvd invitation"
 	};
 
 	sendStoryNotification(params, callback);
@@ -283,6 +331,7 @@ module.exports = function () {
 	return {
 		newStory: newStory,
 		newComment: newComment,
-		forgotPassword: forgotPassword
+		forgotPassword: forgotPassword,
+		invitation: invitation
 	};
 }(); // closure

@@ -300,14 +300,21 @@ var defineRoutes = function () {
             invite.email = data.email;
         }
 
-        db.invites.create(invite, guard(res, function (invite) {
-            if (invite.email) {
-                // TODO: Send email
-                res.status(200).send(invite);
+        db.invites.create(invite, guard(res, function (dbInvite) {
+            if (!dbInvite.email) {
+                res.status(200).send(dbInvite);
+                return;
             }
-            else {
-                res.status(200).send(invite);
-            }
+
+            // Send a notification (email) to the person invited.
+            var params = {
+                user: req.user,
+                invite: dbInvite
+            };
+
+            notify.invitation(params, req, guard(res, function () {
+                res.status(200).send(dbInvite);
+            }));
         }));
     });
 
