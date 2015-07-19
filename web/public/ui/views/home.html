@@ -7,7 +7,7 @@
 	<p><a href="#/fix">Follow this link</a>, please.</p>
 </div>
 
-<div ng-cloak ng-show="::isFirstView">
+<div ng-cloak ng-show="isFirstView && !isMindset('roadmap')">
 	<div class="list-introduction">
 		<div class="clearfix">
 			<div class="alignWithStoryList col-xs-12 col-sm-offset-2 col-sm-8">
@@ -59,7 +59,6 @@
 		</div>
 	</div>
 </div>
-	
 
 <div class="entry-facade no-select" ng-hide="isAddingNew || isBacklogBroken">
 	<div class="clearfix entry-facade-container">
