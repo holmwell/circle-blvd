@@ -217,6 +217,7 @@
 		</div>
 	</div>
 </div>
+
 <sp-story-list 
 	circle="circle"
 	data="data" 
@@ -227,3 +228,5 @@
 	enable-alt-mode="(isManualAltMode || isAltMode)"
 />
 </div>
+
+<div ng-if="::isFirstView" class="hide-introduction"><a href="/#/" class="subtle link-btn">Hide introduction</a></div>

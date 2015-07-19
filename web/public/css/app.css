@@ -746,10 +746,13 @@
   color: #999;
 }
 
-.saveBtn, .linkToTask { 
+.saveBtn, .linkToTask, .link-btn { 
   margin: 5px;
   margin-right: 10px;
   margin-top: 0;
+}
+.link-btn {
+  color: #aaa; 
 }
 .linkToTask, .topLinkToTask {
   display: inline-block;
@@ -765,7 +768,7 @@
   color: #222;
   border-color: #ccc;
 }
-.topSaveBtn {
+.topSaveBtn, .link-btn {
   margin-top: 1ex;
 }
 .topLinkToTask .glyphicon, .linkToTask .glyphicon {
@@ -1130,8 +1133,12 @@
 /* documentation */
 .doc-page, 
 .list-introduction,
+.hide-introduction,
 .welcome {
   padding-bottom: 2.6em;
+}
+.hide-introduction {
+  text-align: center;
 }
 .docs {
   padding: 0;
