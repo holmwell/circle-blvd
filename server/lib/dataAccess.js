@@ -35,7 +35,7 @@ var addStoriesForFirstCircle = function (newCircle, adminAccount, callback) {
 	// "the admin page, and you can make more circles from your profile page.";
 
 	var nextMeeting = newStory();
-	nextMeeting.summary = "Next meeting";
+	nextMeeting.summary = "Next planning meeting";
 	nextMeeting.isNextMeeting = true;
 
 	var stories = [
@@ -74,7 +74,7 @@ var addStoriesForNewCircle = function (newCircle, adminAccount, callback) {
 
 	var nextMeeting = {};
 	nextMeeting.projectId = newCircle._id;
-	nextMeeting.summary = "Next meeting";
+	nextMeeting.summary = "Next planning meeting";
 	nextMeeting.isNextMeeting = true;
 
 	db.stories.add(nextMeeting, callback);	
