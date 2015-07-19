@@ -290,6 +290,12 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		});
 	};
 
+	var maybeShowWelcomeMessage = function () {
+		if ($routeParams.displayType === "first") {
+			$scope.isFirstView = true;
+		}
+	};
+
 	var init = function() {
 		$scope.owners = [];
 
@@ -357,6 +363,7 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 
 	$scope.$on('storyListBuilt', function () {
 		scrollToStorySpecifiedByUrl();
+		maybeShowWelcomeMessage();
 
 		// UX: Hide story-entry panel at first.
 		// $timeout(function() {

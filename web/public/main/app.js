@@ -44,6 +44,7 @@ angular.module('myApp', [
         var useServerRoute = {templateUrl: 'ui/views/redirecting.html', controller: RemoveHashCtrl};
 
         $routeProvider.when('/', homePage);
+        $routeProvider.when('/home/:displayType', homePage);
 
         $routeProvider.when('/stories/:storyId', homePage);
         $routeProvider.when('/stories', homePage);

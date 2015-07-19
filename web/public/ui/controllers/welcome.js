@@ -69,7 +69,9 @@ function WelcomeCtrl(lib, session, hacks, $scope, $http, $location, errors) {
 
 				var positionNextMeeting = function () {
 					var done = function () {
-						$location.path('/');
+						// TODO: Move this into some flow controller,
+						// like flow.first()
+						$location.path('/home/first');
 					}
 
 					if (laterTasks.length > 0) {

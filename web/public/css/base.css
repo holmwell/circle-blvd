@@ -346,3 +346,30 @@ button:focus {
   padding-left: 3ex;
   margin-bottom: 0;
 }
+
+/* signin / docs */
+.intro .for-glyph,
+.tour .for-glyph,
+.list-introduction .for-glyph {
+  margin-top: 3em;
+  text-align: center;
+  vertical-align: middle;
+}
+.about .for-glyph,
+.sponsor .for-glyph {
+  text-align: center;
+  vertical-align: middle;
+  margin-top: 3em;
+}
+.tour .for-glyph {
+  margin-top: 0;
+}
+.list-introduction .for-glyph {
+  margin-top: 2em;
+}
+.intro .glyphicon,
+.about .glyphicon,
+.sponsor .glyphicon,
+.list-introduction .for-glyph .glyphicon {
+  font-size: 36pt;
+}
