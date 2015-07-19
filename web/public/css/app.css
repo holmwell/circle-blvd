@@ -1128,7 +1128,8 @@
 }
 
 /* documentation */
-.doc-page {
+.doc-page, 
+.welcome {
   padding-bottom: 2.6em;
 }
 .docs {

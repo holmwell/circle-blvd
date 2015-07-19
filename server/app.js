@@ -1120,6 +1120,7 @@ var configureApp = function() {
         .addJs('ui/controllers/storySummary.js')
         .addJs('ui/controllers/roadmapMilepost.js')
         .addJs('ui/controllers/home.js')
+        .addJs('ui/controllers/welcome.js')
         .addJs('ui/controllers/signin.js')
         .addJs('ui/controllers/archive.js')
         .addJs('ui/controllers/lists.js')
