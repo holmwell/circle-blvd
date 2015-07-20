@@ -10,11 +10,12 @@ function MainframeCtrl(session, $scope, $http, errors) {
 
 		var getCirclesSuccess = function(data, status, headers, config) {
 			if (data === {}) {
-				// do nothing. 
+				$scope.circleCount = 0;
 			}
 			else {
 				$scope.circle = undefined;
 				$scope.circles = data;
+				$scope.circleCount = data.length;
 			}
 		};
 
@@ -95,6 +96,11 @@ function MainframeCtrl(session, $scope, $http, errors) {
 		getLatestCircleData();
 		getLatestWaitlistData();
 		getLatestSettingData();
+
+		$http.get('/data/metrics/members/count')
+		.success(function (count) {
+			$scope.memberCount = count;
+		});
 	}
 	init();
 }

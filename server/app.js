@@ -38,6 +38,7 @@ var initRoutes  = require('./routes/init');
 var archives = require('./routes/archives');
 var prelude = require('./routes/prelude');
 var authRoutes = require('./routes/auth');
+var metrics = require('./routes/metrics');
 
 var couchSessionStore = require('./lib/couch-session-store.js');
 
@@ -105,6 +106,8 @@ var defineRoutes = function () {
     app.use('/', prelude.router(app));
     app.use('/archives', archives.router(app));
     app.use('/auth', authRoutes.router(auth, app));
+
+    app.use('/data/metrics', metrics.router(app));
 
     // Search engine things
     app.get('/sitemap.txt', routes.sitemap);

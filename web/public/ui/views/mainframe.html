@@ -4,6 +4,10 @@
 <p ng-show="!isSignedIn()">Please <a href="#/signin">sign in</a>.</p>
 
 <div ng-show="isSignedIn()">
+	<h4>Metrics</h4>
+	<div>Circles: {{circleCount}}</div>
+	<div>Members: {{memberCount}}</div>
+
 	<form id="circleForm">
 		<h4>Circles</h4>
 		<div class="row">

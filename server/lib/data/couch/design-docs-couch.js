@@ -7,7 +7,7 @@ var usersDesignDoc = {
 	url: '_design/users',
 	body: 
 	{
-		version: "1.0.5",
+		version: "1.0.6",
 		language: "javascript",
 		views: {
 			byEmail: {
@@ -23,6 +23,14 @@ var usersDesignDoc = {
 						emit(doc.id, doc);
 					}
 				}
+			},
+			count: {
+				map: function (doc) {
+					if (doc.type === "user") {
+						emit(null, doc._id);
+					}
+				},
+				reduce : "_count"
 			},
 			byName: {
 				map: function (doc) {

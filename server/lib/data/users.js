@@ -479,10 +479,7 @@ module.exports = function () {
 			couch.users.getAll(callback);
 		},
 		count: function(callback) {
-			couch.users.getAll(function (err, users) {
-				var userCount = users ? users.length : null;
-				callback(err, userCount);
-			});
+			couch.users.count(callback);
 		}
 	};
 }(); // closure
