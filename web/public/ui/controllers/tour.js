@@ -127,6 +127,10 @@ function TourCtrl(lib, $scope, $window) {
 	startList.push("Buy snacks");
 	startList.push({
 		isNextMeeting: true,
+		summary: "Next planning meeting"
+	});
+	startList.push({
+		isDeadline: true,
 		summary: "Begin road trip"
 	});
 	

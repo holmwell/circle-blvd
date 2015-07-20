@@ -63,6 +63,10 @@ block view
                     .embed-container
                         iframe(src="//www.youtube-nocookie.com/embed/-a7n_iyqB0A?rel=0" frameborder="0" allowfullscreen)
 
+                    p.below-video.
+                        You can <a href="/signin">make a new account</a> on the sign-in page, or <a href="/#/profile">start a new circle</a> on the profile&nbsp;page.
+
+
 
             div(ng-cloak ng-if="isShowing('list')")
                 .clearfix
@@ -72,7 +76,7 @@ block view
                             where we'll start.
 
                         p.
-                            Below is an example list with four items in it, outlining
+                            Below is an example list with five items in it, outlining
                             a hypothetical road trip. The list is interactive, meaning it
                             will react the same way as a list in a real account.
 
@@ -80,6 +84,45 @@ block view
                 sp-story-list(data="demo" account-name="whoami" 
                         owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
                         keyboard="keyboard" mouse="mouse" is-facade="isFacade")
+
+                //- TODO: This is duplicated on the home page
+                .docs.col-sm-offset-2.col-sm-8.list-introduction.
+                    <p class="after-list">The list has three parts:</p>
+
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-3 for-glyph">
+                            <span class="glyphicon glyphicon-triangle-top"></span>
+                        </div>
+                        <div class="col-xs-8 col-sm-9">
+                            <h4>Tasks above the next meeting</h4>
+                            <p>This section is what your team is
+                                actively focusing on. Typically, these tasks are expected to be finished 
+                                within a week.</p>
+                         </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-3 for-glyph">
+                            <span class="glyphicon glyphicon-sort"></span>
+                        </div>
+                        <div class="col-xs-8 col-sm-9">
+                            <h4>The next planning meeting</h4>
+                            <p>This is a special task that every project 
+                                has. Use it as a cut line for what your team is doing and not doing
+                                before your next planning meeting.</p>
+                         </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-3 for-glyph">
+                            <span class="glyphicon glyphicon-triangle-bottom"></span>
+                        </div>
+                        <div class="col-xs-8 col-sm-9">
+                            <h4>Tasks below</h4>
+                            <p>Tasks to be accomplished someday, maybe. Use these tasks
+                                for future reference and short- and long-term planning.</p>
+                         </div>
+                    </div>
 
                 .docs.col-sm-offset-2.col-sm-8
                     h3 Moving tasks
@@ -92,24 +135,11 @@ block view
                     p All the tasks can be moved &ndash; we just use that square 
                      | placeholder to make the list easier on the eyes.
 
+                    h3 Mileposts
+                    p The last task in the above list is a <a href="/tour/work/mileposts">milepost</a>.
+                     | Use them to prioritize tasks relative to due dates or special events. They're covered in more
+                     | detail later in the tour.
 
-                    h3 Using the black task for focus
-                    p The black tasks signifies your next deadline, or milestone. Move the black task to a different spot. Go on. We'll wait.
-                    p ...
-                    p Ok? How you use the black task will change over time. It's just one tool to help you get 
-                     | things done.
-
-                    p.
-                        For personal projects, we like to use it for what we're
-                        actively thinking about. For group projects, we like to move it
-                        below the tasks we want to accomplish before the next meeting.
-
-                    p You can rename it to suit your project.
-
-                    h3 You're ready
-                    p That's it, the basics of Circle Blvd, a website (and app) for making group todo lists.
-
-                    p You can <a href="/signin">make a new account</a> on the sign-in page, or <a href="/#/profile">start a new circle</a> on the profile page. Use the admin page to invite people to your circles.
 
 
             div(ng-cloak ng-if="isShowing('team')")
