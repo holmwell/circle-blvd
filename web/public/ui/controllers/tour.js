@@ -12,6 +12,12 @@ function TourCtrl(lib, $scope, $window) {
 	var workSectionToShow = 'details';
 
 	var pathname = $window.location.pathname;
+	if (pathname.indexOf('/tour/start') === 0 
+	|| pathname.endsWith('/tour')) {
+		sectionToShow = pathname.slice('/tour/start/'.length);
+		sectionToShow = sectionToShow || 'intro';
+	}
+
 	if (pathname.indexOf('/tour/work/') === 0) {
 		workSectionToShow = pathname.slice('/tour/work/'.length);
 		workSectionToShow = workSectionToShow || 'details';
@@ -33,6 +39,15 @@ function TourCtrl(lib, $scope, $window) {
 
 	$scope.show = function (section) {
 		switch (section) {
+			case 'intro':
+				setLocation('/tour');
+				break;
+			case 'list':
+			case 'team':
+			case 'app':
+				setLocation('/tour/start/' + section);
+				break;
+
 			case 'details':
 				setLocation('/tour/work');
 				break;

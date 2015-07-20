@@ -1180,6 +1180,13 @@
 .docs .plan-menu .glyphicon {
   font-size: 36pt;
 }
+.docs .plan-menu .glyphicon.team {
+  margin-left: -1.1ex;
+  opacity: 0.6;
+}
+.docs .plan-menu .glyphicon.team.third {
+  opacity: 0.3;
+}
 
 /* contact */
 .contact {

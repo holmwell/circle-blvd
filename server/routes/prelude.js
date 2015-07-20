@@ -49,6 +49,8 @@ router.get("/about", render('about'));
 
 router.get('/tips', render('tips'));
 router.get('/tour', render('tour'));
+router.get('/tour/start', render('tour'));
+router.get('/tour/start/*', render('tour'));
 
 router.get('/tour/work', render('tour-work'));
 router.get('/tour/work/*', render('tour-work'));
