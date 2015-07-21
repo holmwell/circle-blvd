@@ -11,6 +11,12 @@ router.get("/members/count", ensure.mainframe, function (req, res) {
 	}));
 });
 
+router.get("/members/admins/count", ensure.mainframe, function (req, res) {
+	db.users.adminCount(errors.guard(res, function (count) {
+		res.status(200).send(count.toString());
+	}));
+});
+
 module.exports = function () {
     return {
         router: function (a) {

@@ -480,6 +480,7 @@ module.exports = function () {
 		},
 		count: function(callback) {
 			couch.users.count(callback);
-		}
+		},
+		adminCount: couch.users.adminCount
 	};
 }(); // closure

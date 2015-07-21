@@ -7,7 +7,7 @@ var usersDesignDoc = {
 	url: '_design/users',
 	body: 
 	{
-		version: "1.0.6",
+		version: "1.0.7",
 		language: "javascript",
 		views: {
 			byEmail: {
@@ -70,6 +70,19 @@ var usersDesignDoc = {
 					}
 					return keys[0][0][1];
 				}
+			},
+			administrative: {
+				map: function(doc) {
+					if (doc.type === "user" && doc.memberships) {
+						for (var index in doc.memberships) {
+							if (doc.memberships[index].name === "Administrative") {
+								emit(doc._id, doc);
+								break;
+							}
+						}
+					}
+				},
+				reduce: "_count"
 			}
 		}
 	}
@@ -410,21 +423,21 @@ designDocs.add(storiesDesignDoc);
 
 
 var listsDesignDoc = {
-    url: '_design/lists',
-    body: 
-    {
-        version: "1.0.0",
-        language: "javascript",
-        views: {
-            byCircleId: {
-                map: function (doc) {
-                    if (doc.type === "list") {
-                        emit(doc.circleId, doc);
-                    }
-                }
-            }
-        }
-    }
+	url: '_design/lists',
+	body: 
+	{
+		version: "1.0.0",
+		language: "javascript",
+		views: {
+			byCircleId: {
+				map: function (doc) {
+					if (doc.type === "list") {
+						emit(doc.circleId, doc);
+					}
+				}
+			}
+		}
+	}
 };
 designDocs.add(listsDesignDoc);
 

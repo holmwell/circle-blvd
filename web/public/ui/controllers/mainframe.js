@@ -97,9 +97,15 @@ function MainframeCtrl(session, $scope, $http, errors) {
 		getLatestWaitlistData();
 		getLatestSettingData();
 
+		// TODO: Maybe combine these into one call?
 		$http.get('/data/metrics/members/count')
 		.success(function (count) {
 			$scope.memberCount = count;
+		});
+
+		$http.get('/data/metrics/members/admins/count')
+		.success(function (count) {
+			$scope.adminCount = count;
 		});
 	}
 	init();
