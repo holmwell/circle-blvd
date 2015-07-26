@@ -83,7 +83,7 @@
 }
 #highlightedTools .tools {
   color: #ddd;
-  padding: 1.5ex;
+  padding: 1.6ex;
 }
 #highlightedTools .regularTools {
   margin-top: -4em;
@@ -547,8 +547,17 @@
   text-decoration: line-through;
 }
 
-.story {
+.story, 
+.backlog-status, 
+.backlog-owner,
+.tools {
   border: solid 2px transparent;
+}
+.backlog-status,
+.backlog-owner,
+.tools {
+  border-left: 0;
+  border-right: 0;
 }
 
 .story.mine {
