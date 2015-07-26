@@ -79,6 +79,8 @@ function InviteCtrl(inviteId, lib, session, $scope, $http, $window, errors) {
             $scope.message = "Sorry, the invite is no longer available.";
         }
         else {
+            // TODO: This does not work on this page, as #errorModal
+            // is not defined.
             errors.handle(data, status);
         }
     };

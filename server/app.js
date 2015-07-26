@@ -290,7 +290,7 @@ var defineRoutes = function () {
     });
 
     // Invites!
-    app.post("/data/:circleId/invite", ensure.circleAdmin, function (req, res) {
+    app.post("/data/circle/:circleId/invite", ensure.circleAdmin, function (req, res) {
         var data = req.body;
 
         var invite = {

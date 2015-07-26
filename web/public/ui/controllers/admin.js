@@ -75,7 +75,7 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 			inviteData.email = inviteEmail;
 		}
 
-		$http.post('/data/' + activeCircle + '/invite', inviteData)
+		$http.post('/data/circle/' + activeCircle + '/invite', inviteData)
 		.success(function (data) {
 			$scope.inviteUrl = getInviteUrl(data);
 			isCreatingInvite = false;
