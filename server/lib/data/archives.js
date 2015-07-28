@@ -67,6 +67,7 @@ module.exports = function () {
 	return {
 		addStories: addStoriesToArchive,
 		findByCircleId: findArchivesByCircleId,
-		countByCircleId: countArchivesByCircleId
+		countByCircleId: countArchivesByCircleId,
+		allStats: couch.archives.stats
 	};
 }(); // closure

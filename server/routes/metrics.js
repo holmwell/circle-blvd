@@ -17,6 +17,12 @@ router.get("/members/admins/count", ensure.mainframe, function (req, res) {
 	}));
 });
 
+router.get("/circles/stats", ensure.mainframe, function (req, res) {
+    db.archives.allStats(errors.guard(res, function (stats) {
+        res.status(200).send(stats);
+    }));
+});
+
 module.exports = function () {
     return {
         router: function (a) {

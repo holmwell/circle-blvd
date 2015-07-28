@@ -4,14 +4,8 @@
 <p ng-show="!isSignedIn()">Please <a href="#/signin">sign in</a>.</p>
 
 <div ng-show="isSignedIn()">
-	<h4>Metrics</h4>
-	<div>Circles: {{circleCount}}</div>
-	<div>Members: {{memberCount}}</div>
-	<!-- TODO: This metric isn't accurate. -->
-	<!-- <div>Admins: {{adminCount}}</div> -->
-
 	<form id="circleForm">
-		<h4>Circles</h4>
+		<h4>Create circle</h4>
 		<div class="row">
 			<div class="col-xs-3">
 				<div><input type="text" ng-model="circle.name" 
@@ -23,6 +17,40 @@
 		</div>
 	</form>
 
+	<h4>Metrics</h4>
+	<ul class="adminList">
+		<li>
+			<div class="row">
+				<div class="col-xs-12">Circles: {{circleCount}}</div>
+			</div>
+		</li>
+		<li class="odd">
+			<div class="row">
+				<div class="col-xs-12">Members: {{memberCount}}</div>
+			<!-- TODO: This metric isn't accurate. -->
+			<!-- <div>Admins: {{adminCount}}</div> -->
+			</div>
+		</li>
+	</ul>
+
+	<h4>Active circles</h4>
+	<ul class="adminList">
+		<li>
+			<div class="row">
+				<div class="col-xs-offset-3 col-xs-3">Last archive</div>
+				<div class="col-xs-3">Archive count</div>
+			</div>
+		</li>
+		<li ng-repeat="stat in circleStats" ng-class-odd="'odd'">
+			<div class="row">
+				<div class="col-xs-3">{{stat.name}}</div>
+				<div class="col-xs-3">{{stat.lastArchiveTimestamp}}</div>
+				<div class="col-xs-3">{{stat.archiveCount}}</div>
+			</div>
+		</li>
+	</ul>
+
+	<h4>All circles</h4>
 	<ul class="adminList">
 		<li ng-repeat="circle in circles" ng-class-odd="'odd'">
 			<div class="row">

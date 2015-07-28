@@ -6,6 +6,26 @@ function MainframeCtrl(session, $scope, $http, errors) {
 		errors.handle(data, status);
 	};
 
+	var circleStats = undefined;
+	var circleDict = undefined;
+
+	var maybeUpdateStats = function () {
+		if (circleStats && circleDict) {
+			// We have circle stats and the circle dict. 
+			// Combine the two.
+			$scope.circleStats = [];
+			for (var circleId in circleStats) {
+				var stat = circleStats[circleId];
+				var circle = circleDict[circleId];
+				$scope.circleStats.push({
+					name: circle.name,
+					lastArchiveTimestamp: new Date(stat.max).toDateString(),
+					archiveCount: stat.count
+				});
+			}
+		}
+	};
+
 	var getLatestCircleData = function () {
 
 		var getCirclesSuccess = function(data, status, headers, config) {
@@ -16,6 +36,16 @@ function MainframeCtrl(session, $scope, $http, errors) {
 				$scope.circle = undefined;
 				$scope.circles = data;
 				$scope.circleCount = data.length;
+
+				// Build a dictionary to tie in to the stats. This will
+				// obviously not work with millions of circles, but let's 
+				// take this one order of magnitude at a time.
+				circleDict = {};
+				for (var index in data) {
+					var circle = data[index];
+					circleDict[circle._id] = circle;
+				}
+				maybeUpdateStats();
 			}
 		};
 
@@ -106,6 +136,12 @@ function MainframeCtrl(session, $scope, $http, errors) {
 		$http.get('/data/metrics/members/admins/count')
 		.success(function (count) {
 			$scope.adminCount = count;
+		});
+
+		$http.get('/data/metrics/circles/stats')
+		.success(function (stats) {
+			circleStats = stats;
+			maybeUpdateStats();
 		});
 	}
 	init();

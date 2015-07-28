@@ -446,7 +446,7 @@ var archivesDesignDoc = {
 	url: '_design/archives',
 	body: 
 	{
-		version: "1.0.2",
+		version: "1.0.3",
 		language: "javascript",
 		views: {
 			byCircleId: {
@@ -464,6 +464,15 @@ var archivesDesignDoc = {
 					}
 				},
 				reduce : "_count"
+			},
+
+			stats: {
+				map: function (doc) {
+					if (doc.type === "archive") {
+						emit([doc.projectId, doc.timestamp], doc.timestamp);
+					}
+				},
+				reduce: "_stats"
 			}
 		}
 	}
