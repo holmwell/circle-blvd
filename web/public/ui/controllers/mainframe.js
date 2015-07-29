@@ -10,6 +10,7 @@ function MainframeCtrl(session, $scope, $http, errors) {
 	var circleDict = undefined;
 
 	var maybeUpdateStats = function () {
+		var now = Date.now();
 		if (circleStats && circleDict) {
 			// We have circle stats and the circle dict. 
 			// Combine the two.
@@ -17,11 +18,22 @@ function MainframeCtrl(session, $scope, $http, errors) {
 			for (var circleId in circleStats) {
 				var stat = circleStats[circleId];
 				var circle = circleDict[circleId];
-				$scope.circleStats.push({
-					name: circle.name,
-					lastArchiveTimestamp: new Date(stat.max).toDateString(),
-					archiveCount: stat.count
-				});
+				var lastArchiveDate = new Date(stat.max);
+				var eightMonths = 1000 * 60 * 60 * 24 * 30 * 8;
+
+				if (now - eightMonths < lastArchiveDate.getTime()) {
+					$scope.circleStats.push({
+						name: circle.name,
+						lastArchiveTimestamp: lastArchiveDate.toDateString(),
+						archiveCount: stat.count,
+						sortKey: stat.max
+					});
+
+					// Sort by most recently active
+					$scope.circleStats.sort(function (a, b) {
+						return b.sortKey - a.sortKey;
+					});
+				}
 			}
 		}
 	};
