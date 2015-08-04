@@ -21,28 +21,26 @@ var addStoriesForFirstCircle = function (newCircle, adminAccount, callback) {
 		return story;
 	};
 
-	var welcome = newStory();
-	welcome.summary = "Welcome! Please open me first";
-	welcome.status = "active";
-	welcome.isFirstStory = true;
-	welcome.description = "Hi! This is your task list. The main idea is that " +
-	"tasks closer to the top want to be completed before the ones closer " + 
-	"to the bottom.\n\nPlay around with it. Maybe start by moving the 'Next' task " +
-	"around, or add a few tasks.\n\nAdd more people to this circle from " +
-	"the admin page, and you can make more circles from your profile page.";
-
-	var seeTour = newStory();
-	seeTour.summary = "Check out the tour to see what this thing can do";
-	seeTour.description = "That's it! Thanks for joining Circle Blvd."
+	// TODO: Do we want this 'welcome' task? (July 2015)
+	// It's confusing, because it wasn't entered by a person.
+	// 
+	// var welcome = newStory();
+	// welcome.summary = "Welcome! Please open me first";
+	// welcome.status = "active";
+	// welcome.isFirstStory = true;
+	// welcome.description = "Hi! This is your task list. The main idea is that " +
+	// "tasks closer to the top want to be completed before the ones closer " + 
+	// "to the bottom.\n\nPlay around with it. Maybe start by moving the 'Next meeting' task " +
+	// "around, or add a few tasks.\n\nAdd more people to this circle from " +
+	// "the admin page, and you can make more circles from your profile page.";
 
 	var nextMeeting = newStory();
-	nextMeeting.summary = "Next";
+	nextMeeting.summary = "Next planning meeting";
 	nextMeeting.isNextMeeting = true;
 
 	var stories = [
-		welcome,
-		nextMeeting,
-		seeTour
+//		welcome,
+		nextMeeting
 	];
 	stories.reverse();
 
@@ -76,7 +74,7 @@ var addStoriesForNewCircle = function (newCircle, adminAccount, callback) {
 
 	var nextMeeting = {};
 	nextMeeting.projectId = newCircle._id;
-	nextMeeting.summary = "Next";
+	nextMeeting.summary = "Next planning meeting";
 	nextMeeting.isNextMeeting = true;
 
 	db.stories.add(nextMeeting, callback);	

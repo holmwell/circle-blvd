@@ -221,26 +221,6 @@ label.relax {
 }
 
 /* sign in (mostly) */
-.intro .for-glyph,
-.tour .for-glyph {
-  margin-top: 3em;
-  text-align: center;
-  vertical-align: middle;
-}
-.about .for-glyph,
-.sponsor .for-glyph {
-  text-align: center;
-  vertical-align: middle;
-  margin-top: 3em;
-}
-.tour .for-glyph {
-  margin-top: 0;
-}
-.intro .glyphicon,
-.about .glyphicon,
-.sponsor .glyphicon {
-  font-size: 36pt;
-}
 .before-video {
   margin-bottom: 0.75em;
 }
@@ -260,3 +240,13 @@ label.relax {
   padding-left: 2.25em;
   text-align: center;
 }
+
+.docs .app-screenshot-container img {
+  border: solid 1ex #ccc;
+  padding: 1ex;
+}
+
+.docs h3.first {
+  margin-top: 0;
+} 
+

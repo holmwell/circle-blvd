@@ -38,6 +38,7 @@ var initRoutes  = require('./routes/init');
 var archives = require('./routes/archives');
 var prelude = require('./routes/prelude');
 var authRoutes = require('./routes/auth');
+var metrics = require('./routes/metrics');
 
 var couchSessionStore = require('./lib/couch-session-store.js');
 
@@ -105,6 +106,8 @@ var defineRoutes = function () {
     app.use('/', prelude.router(app));
     app.use('/archives', archives.router(app));
     app.use('/auth', authRoutes.router(auth, app));
+
+    app.use('/data/metrics', metrics.router(app));
 
     // Search engine things
     app.get('/sitemap.txt', routes.sitemap);
@@ -287,13 +290,35 @@ var defineRoutes = function () {
     });
 
     // Invites!
-    app.get("/data/:circleId/invite/:count", ensure.circle, function (req, res) {
+    app.post("/data/circle/:circleId/invite", ensure.circleAdmin, function (req, res) {
+        var data = req.body;
+
         var invite = {
             circleId: req.params.circleId,
-            count: req.params.count || 1
+            count: 1,
+            name: data.name
         };
 
-        db.invites.create(invite, handle(res));
+        if (data.email) {
+            invite.email = data.email;
+        }
+
+        db.invites.create(invite, guard(res, function (dbInvite) {
+            if (!dbInvite.email) {
+                res.status(200).send(dbInvite);
+                return;
+            }
+
+            // Send a notification (email) to the person invited.
+            var params = {
+                user: req.user,
+                invite: dbInvite
+            };
+
+            notify.invitation(params, req, guard(res, function () {
+                res.status(200).send(dbInvite);
+            }));
+        }));
     });
 
     app.get("/data/invite/:inviteId", function (req, res) {
@@ -1098,6 +1123,7 @@ var configureApp = function() {
         .addJs('ui/controllers/storySummary.js')
         .addJs('ui/controllers/roadmapMilepost.js')
         .addJs('ui/controllers/home.js')
+        .addJs('ui/controllers/welcome.js')
         .addJs('ui/controllers/signin.js')
         .addJs('ui/controllers/archive.js')
         .addJs('ui/controllers/lists.js')

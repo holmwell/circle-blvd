@@ -84,14 +84,15 @@ module.exports = function () {
 			email: email,
 			id: uuid.v4(),
 			memberships: memberships,
-			isReadOnly: isReadOnly
+			isReadOnly: isReadOnly,
+			joinDate: new Date() // TODO: Dependency injection for testing?
 		};
 		
 		if (!isValidUser(user)) {
 			return failure("User cannot be null?");
 		}
 
-		var addUser = function (user, password) {
+		var addUserToDatabase = function (user, password) {
 			user = normalizeUser(user);
 			couch.users.add(user, password, function (err, body) {
 				if (err) {
@@ -117,7 +118,7 @@ module.exports = function () {
 					// This is an external error.
 					return failure("User email already exists");
 				}
-				addUser(user, password);
+				addUserToDatabase(user, password);
 			});
 		});
 	};
@@ -479,10 +480,8 @@ module.exports = function () {
 			couch.users.getAll(callback);
 		},
 		count: function(callback) {
-			couch.users.getAll(function (err, users) {
-				var userCount = users ? users.length : null;
-				callback(err, userCount);
-			});
-		}
+			couch.users.count(callback);
+		},
+		adminCount: couch.users.adminCount
 	};
 }(); // closure

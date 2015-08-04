@@ -1,0 +1,49 @@
+<div class="content">
+	<div class="welcome col-sm-offset-2 col-sm-8 text-select">
+		<div ng-cloak ng-show="isStep('1')">
+			<p>Welcome. To get started, please enter two or three tasks that 
+				you want to get done this week. 
+
+			<p>For example, "Contact so-and-so to discuss future plans"</p>
+
+			<textarea class="form-control" rows="3" 
+				placeholder="Tasks to do soon, one per line"
+				ng-model="initialTasksRawText"
+			/>
+			<div>
+				<a href="/#/" class="subtle link-btn pull-left">Skip this, I'm a pro.</a>
+				<button class="btn btn-primary pull-right"
+					ng-class="{ disabled: !initialTasksRawText }"
+					ng-click="toNextStep()">Continue</button>
+			</div>
+		</div>
+
+		<div ng-cloak ng-show="isStep('2')">
+			<p>Thanks. Next, please enter up to four tasks you want done later &ndash;
+				maybe in the next month, or maybe further out.</p>
+			<textarea class="form-control" rows="4"
+				placeholder="Tasks to be done later, one per line"
+				ng-model="laterTasksRawText"
+			/>
+			<div>
+				<button class="btn btn-primary pull-right"
+					ng-class="{ disabled: !laterTasksRawText }"
+					ng-click="toNextStep()">Continue</button>
+			</div>
+		</div>
+
+		<div ng-cloak ng-show="isStep('3')">
+			<form>
+				<p>Finally, enter a milepost &ndash; an important event or deadline for your group. 
+					Pick something a few weeks out. Maybe prefix it with a date, like, "July 30: Waterfront festival."</p>
+				<input class="form-control" placeholder="Upcoming milepost"
+					ng-model="milepostRawText"
+				/>
+				<div>
+					<button class="btn btn-primary pull-right"
+						ng-click="finish()">Finish</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

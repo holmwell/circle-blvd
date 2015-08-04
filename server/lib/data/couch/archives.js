@@ -43,9 +43,20 @@ module.exports = function () {
 		});
 	};
 
+	// This is intended for mainframe reports -- to get
+	// stats on all the archives.
+	var getArchiveStats = function (callback) {
+		var options = {
+			group_level: 1,
+			returnKeys: true
+		};
+		couch.view("archives/stats", options, callback);
+	};
+
 	return {
 		add: addArchives,
 		findByCircleId: findArchivesByCircleId,
-		countByCircleId: countArchivesByCircleId
+		countByCircleId: countArchivesByCircleId,
+		stats: getArchiveStats
 	};
 }(); // closure

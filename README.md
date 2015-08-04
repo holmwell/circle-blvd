@@ -28,7 +28,7 @@ A self-guided tour is at [https://circleblvd.org/tour](https://circleblvd.org/to
 running on AWS
 ----------------
 To get Circle Blvd up and running on an EC2 instance in about 20 minutes, 
-as a daemon, please find a quickstart in [./deploy/amazon-ec2](https://github.com/secret-project/circle-blvd/tree/master/deploy/amazon-ec2). 
+as a daemon, please find a quickstart in [./deploy/amazon-ec2](https://github.com/holmwell/circle-blvd/tree/master/deploy/amazon-ec2). 
 
 
 running for fun
@@ -43,7 +43,7 @@ If you can run Apache CouchDB on your system, you can run Circle Blvd.
 1. Install and start CouchDB
 2. Do the standard command prompt things:
 
-        git clone https://github.com/secret-project/circle-blvd.git
+        git clone https://github.com/holmwell/circle-blvd.git
         cd circle-blvd/server/
         npm install --production
         npm start
@@ -62,7 +62,7 @@ might like to know:
 Uses `nodeunit` for now.
 
 ### Deployment
-There is an assume-it-all-works deployment outline in [./deploy/git-hook](https://github.com/secret-project/circle-blvd/tree/master/deploy/git-hook).
+There is an assume-it-all-works deployment outline in [./deploy/git-hook](https://github.com/holmwell/circle-blvd/tree/master/deploy/git-hook).
 
 ### License
 BSD, 2-clause. See the LICENSE.txt file for details. 

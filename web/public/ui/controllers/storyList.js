@@ -1188,7 +1188,9 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		var nextStory = stories.get(nextId);
 
 		var isLocalOnly = true;
-		moveStoryBlock(startStory, startStory, endStory, nextStory, isLocalOnly);
+		if (startStory && endStory && nextStory) {
+			moveStoryBlock(startStory, startStory, endStory, nextStory, isLocalOnly);
+		}
 	});
 
 

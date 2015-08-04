@@ -83,7 +83,7 @@
 }
 #highlightedTools .tools {
   color: #ddd;
-  padding: 1.5ex;
+  padding: 1.6ex;
 }
 #highlightedTools .regularTools {
   margin-top: -4em;
@@ -547,8 +547,17 @@
   text-decoration: line-through;
 }
 
-.story {
+.story, 
+.backlog-status, 
+.backlog-owner,
+.tools {
   border: solid 2px transparent;
+}
+.backlog-status,
+.backlog-owner,
+.tools {
+  border-left: 0;
+  border-right: 0;
 }
 
 .story.mine {
@@ -746,10 +755,13 @@
   color: #999;
 }
 
-.saveBtn, .linkToTask { 
+.saveBtn, .linkToTask, .link-btn { 
   margin: 5px;
   margin-right: 10px;
   margin-top: 0;
+}
+.link-btn {
+  color: #aaa; 
 }
 .linkToTask, .topLinkToTask {
   display: inline-block;
@@ -765,7 +777,7 @@
   color: #222;
   border-color: #ccc;
 }
-.topSaveBtn {
+.topSaveBtn, .link-btn {
   margin-top: 1ex;
 }
 .topLinkToTask .glyphicon, .linkToTask .glyphicon {
@@ -1128,8 +1140,14 @@
 }
 
 /* documentation */
-.doc-page {
+.doc-page, 
+.list-introduction,
+.hide-introduction,
+.welcome {
   padding-bottom: 2.6em;
+}
+.hide-introduction {
+  text-align: center;
 }
 .docs {
   padding: 0;
@@ -1170,6 +1188,13 @@
 }
 .docs .plan-menu .glyphicon {
   font-size: 36pt;
+}
+.docs .plan-menu .glyphicon.team {
+  margin-left: -1.1ex;
+  opacity: 0.6;
+}
+.docs .plan-menu .glyphicon.team.third {
+  opacity: 0.3;
 }
 
 /* contact */

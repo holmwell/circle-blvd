@@ -200,6 +200,32 @@ module.exports = function () {
 		});
 	};
 
+	var countUsers = function (callback) {
+		couch.view("users/count", function (err, rows) {
+			if (err) {
+				return callback(err);
+			}
+			var count = 0;
+			if (rows && rows.length > 0) {
+				count = rows[0];
+			}
+			callback(null, count);
+		});
+	};
+
+	var adminCount = function (callback) {
+		couch.view("users/administrative", function (err, rows) {
+			if (err) {
+				return callback(err);
+			}
+			var count = 0;
+			if (rows && rows.length > 0) {
+				count = rows[0];
+			}
+			callback(null, count);
+		});
+	};
+
 	return {
 		users: {
 			add: addUser,
@@ -211,6 +237,8 @@ module.exports = function () {
 			findByCircleAndName: findUserByCircleAndName,
 			findMany: findUsersById,
 			getAll: getAllUsers,
+			count: countUsers,
+			adminCount: adminCount,
 			update: updateUser,
 			updatePassword: updateUserPassword
 		},

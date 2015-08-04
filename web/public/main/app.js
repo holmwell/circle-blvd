@@ -44,9 +44,11 @@ angular.module('myApp', [
         var useServerRoute = {templateUrl: 'ui/views/redirecting.html', controller: RemoveHashCtrl};
 
         $routeProvider.when('/', homePage);
+        $routeProvider.when('/home/:displayType', homePage);
 
         $routeProvider.when('/stories/:storyId', homePage);
         $routeProvider.when('/stories', homePage);
+        $routeProvider.when('/welcome', {templateUrl: 'ui/views/welcome.html', controller: WelcomeCtrl});
         $routeProvider.when('/lists', {templateUrl: 'ui/views/lists.html', controller: ListsCtrl});
         $routeProvider.when('/archives', {templateUrl: 'ui/views/archives.html', controller: ArchivesCtrl});
         $routeProvider.when('/profile', {templateUrl: 'ui/views/profile.html', controller: ProfileCtrl});

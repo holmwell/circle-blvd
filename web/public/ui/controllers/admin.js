@@ -63,22 +63,39 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 	$scope.getInviteUrl = getInviteUrl;
 
 	var isCreatingInvite = false;
-	$scope.createInvite = function (count) {
+	$scope.createInvite = function (inviteName, inviteEmail) {
 		if (isCreatingInvite) {
 			return;
 		}
 		isCreatingInvite = true;
 
-		$http.get('/data/' + activeCircle + '/invite/' + count)
+		var inviteData = {};
+		inviteData.name = inviteName;
+		if (inviteEmail) {
+			inviteData.email = inviteEmail;
+		}
+
+		$http.post('/data/circle/' + activeCircle + '/invite', inviteData)
 		.success(function (data) {
 			$scope.inviteUrl = getInviteUrl(data);
 			isCreatingInvite = false;
 			getLatestInviteData();
+			// Reset the UI
+			$scope.inviteForm.$setPristine();
+			$scope.invite = {};
 		})
 		.error(function (data, status) {
 			isCreatingInvite = false;
 			errors.handle(data, status);
 		});
+	};
+
+	// TODO: Refactor. This is also defined in story.js
+	$scope.isNotificationEnabled = function () {
+		if (session.settings && session.settings['smtp-enabled'].value) {
+			return true;
+		}
+		return false;
 	};
 
 

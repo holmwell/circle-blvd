@@ -38,7 +38,7 @@
 	</div>
 </form>
 
-<form>
+<form name="inviteForm">
 	<h4>Invite people</h4>
 	<div class="row">
 		<div class="col-sm-8 col-md-7">
@@ -46,24 +46,60 @@
 			Each invitation link is good for one invite, and will expire 
 			after 5 days.</p>
 
-			<div class="inviteUrlPanel" ng-show="inviteUrl">
-				<label>Invite link:</label>
-				<div>{{inviteUrl}}</div>
-				<div>&gt; <a href="{{inviteUrl}}">go there</a> &lt;</div>
-			</div>
+			<p class="ng-cloak" ng-if="isNotificationEnabled()">If you specify an email 
+			address, we'll try emailing the invitation. If you don't 
+			specify an address, you will need to send the invitation 
+			URL to them by some other means (e.g. iMessage, Facebook).</p>
 		</div>
 	</div>
-	<button class="btn btn-default"
-	ng-click="createInvite(1)">Create invite</button>
+
+	<div class="row">
+		<div class="col-sm-5">
+			<input ng-model="invite.name" class="form-control" type="text" placeholder="Name"/>
+		</div>
+		<div class="col-sm-2">
+			<button ng-if="!isNotificationEnabled()" class="btn btn-default"
+				ng-click="createInvite(invite.name)">Create invite</button>
+		</div>	
+	</div>
+	<div class="row" ng-if="isNotificationEnabled()" >
+		<div class="col-sm-5">
+			<input ng-model="invite.email" class="form-control" type="email" placeholder="Email (optional)"/>
+		</div>
+
+		<div class="col-sm-2">
+			<button class="btn btn-default"
+			ng-click="createInvite(invite.name, invite.email)">Create invite</button>
+		</div>
+	</div>
+	
 </form>
 
 <div ng-show="invites">
 	<h4>Open invitations</h4>
 	<ul class="adminList">
+		<li>
+			<div class="row">
+				<div class="col-xs-4">
+					<h5>Name</h5>
+				</div>
+				<div class="col-xs-7">
+					<h5>Invite link</h5>
+				</div>
+			</div>
+		</li>
 		<li ng-repeat="invite in invites" ng-class-odd="'odd'">
 			<div class="row">
-				<div class="col-xs-8">{{getInviteUrl(invite)}}</div>
-				<div class="col-xs-2"><a href="{{getInviteUrl(invite)}}">view</a></div>
+				<div class="col-xs-4">
+					<div>
+						{{invite.name}} 
+						<span ng-show="invite.email">&lt;{{invite.email}}&gt;</span>
+					</div>
+				</div>
+				<div class="col-xs-7">
+					<div>{{ getInviteUrl(invite) }}</div>
+				</div>
+				<div class="col-xs-1"><a href="{{getInviteUrl(invite)}}">view</a></div>
 			</div>
 		</li>
 	</ul>

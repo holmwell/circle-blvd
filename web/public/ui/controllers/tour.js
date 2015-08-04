@@ -11,7 +11,26 @@ function TourCtrl(lib, $scope, $window) {
 	var sectionToShow = 'tags';
 	var workSectionToShow = 'details';
 
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/endsWith
+	if (!String.prototype.endsWith) {
+		String.prototype.endsWith = function(searchString, position) {
+			var subjectString = this.toString();
+			if (position === undefined || position > subjectString.length) {
+				position = subjectString.length;
+			}
+			position -= searchString.length;
+			var lastIndex = subjectString.indexOf(searchString, position);
+			return lastIndex !== -1 && lastIndex === position;
+		};
+	}
+
 	var pathname = $window.location.pathname;
+	if (pathname.indexOf('/tour/start') === 0 
+	|| pathname.endsWith('/tour')) {
+		sectionToShow = pathname.slice('/tour/start/'.length);
+		sectionToShow = sectionToShow || 'intro';
+	}
+
 	if (pathname.indexOf('/tour/work/') === 0) {
 		workSectionToShow = pathname.slice('/tour/work/'.length);
 		workSectionToShow = workSectionToShow || 'details';
@@ -33,6 +52,15 @@ function TourCtrl(lib, $scope, $window) {
 
 	$scope.show = function (section) {
 		switch (section) {
+			case 'intro':
+				setLocation('/tour');
+				break;
+			case 'list':
+			case 'team':
+			case 'app':
+				setLocation('/tour/start/' + section);
+				break;
+
 			case 'details':
 				setLocation('/tour/work');
 				break;
@@ -112,6 +140,10 @@ function TourCtrl(lib, $scope, $window) {
 	startList.push("Buy snacks");
 	startList.push({
 		isNextMeeting: true,
+		summary: "Next planning meeting"
+	});
+	startList.push({
+		isDeadline: true,
 		summary: "Begin road trip"
 	});
 	
