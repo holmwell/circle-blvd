@@ -1,4 +1,4 @@
-circle blvd.
+circle blvd.readme
 ===============
 Circle Blvd 1.4 is a task management tool, made for teams of 1-12 people. 
 
