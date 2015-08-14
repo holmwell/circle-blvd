@@ -1,4 +1,4 @@
-function StoryListCtrl(session, $scope, $timeout, $http, $location, $route, $document, $interval, lib, hacks, errors) {
+function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $interval, lib, hacks, errors) {
 	var circleId = undefined;
 	var listId = undefined;
 
@@ -750,9 +750,7 @@ function StoryListCtrl(session, $scope, $timeout, $http, $location, $route, $doc
 	});
 
 	$scope.$on('keyTakeOwnership', function (e) {
-		// TODO: Our account name should be passed in to the
-		// story list directive.
-		var owner = session && session.user && session.user.name; 
+		var owner = $scope.accountName; 
 		$scope.setOwnerForHighlighted(owner);
 	});
 
@@ -2240,4 +2238,4 @@ function StoryListCtrl(session, $scope, $timeout, $http, $location, $route, $doc
 		}
 	};
 }
-StoryListCtrl.$inject = ['session', '$scope', '$timeout', '$http', '$location', '$route', '$document', '$interval', 'lib', 'hacks', 'errors'];
+StoryListCtrl.$inject = ['$scope', '$timeout', '$http', '$location', '$route', '$document', '$interval', 'lib', 'hacks', 'errors'];
