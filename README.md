@@ -1,10 +1,10 @@
 circle blvd.
 ===============
-Circle Blvd 1.4 is a task management tool, made for teams of 1-12 people. 
+Circle Blvd 1.4 is a task management tool, made for teams of 1-12 people.
 
 Circle Blvd supports:
  * Multiple projects
- * Unlimited user accounts 
+ * Unlimited user accounts
  * Task lists, assignments, status updates, comments
  * Drag-and-drop prioritization
  * One-line task entry, multiple-line entry
@@ -27,13 +27,13 @@ A self-guided tour is at [https://circleblvd.org/tour](https://circleblvd.org/to
 
 running on AWS
 ----------------
-To get Circle Blvd up and running on an EC2 instance in about 20 minutes, 
-as a daemon, please find a quickstart in [./deploy/amazon-ec2](https://github.com/holmwell/circle-blvd/tree/master/deploy/amazon-ec2). 
+To get Circle Blvd up and running on an EC2 instance in about 20 minutes,
+as a daemon, please find a quickstart in [./deploy/amazon-ec2](https://github.com/holmwell/circle-blvd/tree/master/deploy/amazon-ec2).
 
 
 running for fun
 ----------------
-If you can run Apache CouchDB on your system, you can run Circle Blvd. 
+If you can run Apache CouchDB on your system, you can run Circle Blvd.
 
 ### Prerequisites
 1. Node >= 0.10
@@ -47,7 +47,7 @@ If you can run Apache CouchDB on your system, you can run Circle Blvd.
         cd circle-blvd/server/
         npm install --production
         npm start
-  
+
 3. Go to [http://localhost:3000](http://localhost:3000)
 
 for developers
@@ -65,6 +65,6 @@ Uses `nodeunit` for now.
 There is an assume-it-all-works deployment outline in [./deploy/git-hook](https://github.com/holmwell/circle-blvd/tree/master/deploy/git-hook).
 
 ### License
-BSD, 2-clause. See the LICENSE.txt file for details. 
+BSD, 2-clause. See the LICENSE.txt file for details.
 
 The privacy policy is under a [Creative Commons Sharealike](https://creativecommons.org/licenses/by-sa/2.5/) license.
