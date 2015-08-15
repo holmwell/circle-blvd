@@ -59,8 +59,13 @@ router.get('/tour/plan', render('tour-plan'));
 router.get('/tour/plan/*', render('tour-plan'));
 
 router.get("/privacy", render('privacy'));
-router.get("/sponsor", render('sponsor'));
+router.get("/partner", render('partner'));
 router.get("/donate", render('donate'));
+
+// Deprecated
+router.get("/sponsor", function (req, res, next) {
+    res.redirect('/partner');
+});
 
 router.get("/invite", render('invite'));
 router.get("/invite/:inviteId", function (req, res, next) {
