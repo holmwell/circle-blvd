@@ -1,6 +1,6 @@
 'use strict';
 
-function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $route, errors) {
+function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $route, $rootScope, errors) {
 
 	var circleId = session.activeCircle;
 
@@ -305,6 +305,11 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 			return;
 		}
 
+		// Set page title
+		if ($scope.getActiveCircle) {
+			$rootScope.pageTitle = $scope.getActiveCircle().name;
+		}
+
 		var handleInitError = function (data, status) {
 			console.log('failure');
 			console.log(status);
@@ -379,4 +384,4 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 	init();
 }
 HomeCtrl.$inject = ['lib', 'session', 'hacks', 
-'$scope', '$timeout', '$http', '$routeParams', '$route', 'errors'];
+'$scope', '$timeout', '$http', '$routeParams', '$route', '$rootScope', 'errors'];
