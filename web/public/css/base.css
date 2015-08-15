@@ -279,7 +279,7 @@ button:focus {
 }
 
 
-/* sponsor / profile */
+/* partner / profile */
 .support-circle {
   display: inline-block;
 
@@ -300,7 +300,7 @@ button:focus {
 .donations, .prelude-content {
   padding-top: 2.4em;
 }
-.sponsor .donations {
+.partner .donations {
   padding-top: 0;
 }
 .donations .plans {
@@ -356,7 +356,7 @@ button:focus {
   vertical-align: middle;
 }
 .about .for-glyph,
-.sponsor .for-glyph {
+.partner .for-glyph {
   text-align: center;
   vertical-align: middle;
   margin-top: 3em;
@@ -369,7 +369,7 @@ button:focus {
 }
 .intro .glyphicon,
 .about .glyphicon,
-.sponsor .glyphicon,
+.partner .glyphicon,
 .list-introduction .for-glyph .glyphicon {
   font-size: 36pt;
 }

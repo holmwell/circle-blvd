@@ -1131,7 +1131,7 @@ var configureApp = function() {
         .addJs('ui/controllers/invite.js')
         .addJs('ui/controllers/tour.js')
         .addJs('ui/controllers/contact.js')
-        .addJs('ui/controllers/sponsor.js')
+        .addJs('ui/controllers/partner.js')
         .addJs('ui/controllers/about.js')
         .addJs('ui/controllers/privacy.js')
         .addJs('ui/controllers/donate.js')

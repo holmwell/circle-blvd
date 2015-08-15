@@ -1,10 +1,10 @@
 extends layout-simple
 
 block view
-    .content.prelude-content(ng-controller="SponsorCtrl")
-        .col-sm-offset-2.col-sm-8.sponsor
-            h2 Sponsor Circle Blvd.
-            p Thank you for considering becoming a sponsor.
+    .content.prelude-content(ng-controller="PartnerCtrl")
+        .col-sm-offset-2.col-sm-8.partner
+            h2 Partner with Circle Blvd.
+            p Thank you for considering becoming a development partner.
 
             p The goal of <a href="http://holmwell.com">Holmwell Software</a> and 
              | Circle Blvd is to provide the best organizational tools available to 
@@ -12,13 +12,13 @@ block view
              | can focus on making our towns and cities better places to live. 
 
             p To achieve this goal, all of our work is available to the public free of charge, and 
-             | this is made possible through your generous sponsorship.
+             | this is made possible through our partnerships.
 
             .row
                 .col-xs-4.col-sm-3.for-glyph
                     span.glyphicon.glyphicon-move
                 .col-xs-8.col-sm-9
-                    h4 Following is sponsorship 
+                    h4 Partner by following our news 
                     p There are many opportunities to contribute to the Circle Blvd project. The easiest
                      | is to follow us on Twitter at <a href="http://twitter.com/circleblvd">@circleblvd</a>
                      | and <a href="http://twitter.com/_holmwell">@_holmwell</a>. This helps us know who is 
@@ -28,7 +28,7 @@ block view
                 .col-xs-4.col-sm-3.for-glyph
                     span.glyphicon.glyphicon-wrench
                 .col-xs-8.col-sm-9
-                    h4 Coding is sponsorship 
+                    h4 Partner by coding with us 
                     p The code for this website and our app is available on GitHub, at 
                      | <a href="https://github.com/holmwell">holmwell</a> and
                      | <a href="https://github.com/holmwell/circle-blvd">circle-blvd</a>, and you 
@@ -39,22 +39,22 @@ block view
                 .col-xs-4.col-sm-3.for-glyph
                     span.glyphicon.glyphicon-piggy-bank
                 .col-xs-8.col-sm-9
-                    h4 Funding is sponsorship 
+                    h4 Partner by funding development 
                     p Aside from working directly on the project, this is the most straight-forward
                      | way you or your organization can further development of Circle Blvd and 
                      | its companion products from Holmwell.  
 
             div(ng-show="!isSignedIn() && supportsPayments")
                 p.
-                    To fund Circle Blvd with a monthly contribution, please <a href="/signin/#/sponsor">sign in</a>. 
-                    To make a one-time donation without creating an account, please visit 
+                    To fund Circle Blvd with a monthly contribution, please <a href="/signin/#/partner">sign in</a>. 
+                    To make a one-time contribution without creating an account, please visit 
                     our <a href="/donate">donation</a> page.
 
                 p Thank you.
 
             div(ng-show="isSignedIn() && supportsPayments")
                 p To fund Circle Blvd with a monthly contribution, please choose any of the 
-                 | three options below. To make a one-time donation, please visit 
+                 | three options below. To make a one-time contribution, please visit 
                  | our <a href="/donate">donation</a> page.
 
                 p Thank you.
@@ -79,10 +79,10 @@ block view
                                     .amount {{plan.displayAmount}} per month
 
                         .col-sm-3.checkout
-                            button.btn.btn-default(ng-click="openStripeCheckout($event)") Save sponsorship
+                            button.btn.btn-default(ng-click="openStripeCheckout($event)") Save partnership
 
                         p.col-sm-4.subtle.cancel(ng-show="activePlan.name")
-                            a.jsLink.subtle(ng-click="cancelSubscription()") cancel sponsorship
+                            a.jsLink.subtle(ng-click="cancelSubscription()") cancel partnership
 
 append bottom
     script(src="https://checkout.stripe.com/checkout.js")

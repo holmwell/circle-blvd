@@ -1,6 +1,6 @@
 'use strict';
 
-function SponsorCtrl(session, $scope, $http) {
+function PartnerCtrl(session, $scope, $http) {
 
 	var plans = [];
 	plans.push({
@@ -101,4 +101,4 @@ function SponsorCtrl(session, $scope, $http) {
 
 	updateScope();
 }
-SponsorCtrl.$inject = ['session', '$scope', '$http'];
+PartnerCtrl.$inject = ['session', '$scope', '$http'];

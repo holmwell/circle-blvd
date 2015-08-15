@@ -15,7 +15,7 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 
 		// isPagePublic is defined in TopLevelCtrl, and it is
 		// a bad practice to use scope inheritance like this.
-		if ($scope.isPagePublic(path) && path !== "/sponsor") {
+		if ($scope.isPagePublic(path) && path !== "/partner") {
 			$window.location.href = path;
 		}
 	}

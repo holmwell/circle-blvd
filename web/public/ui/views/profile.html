@@ -77,7 +77,7 @@
 
 	<div class="col-sm-offset-1 row clear">
 		<div class="donations" ng-show="supportsPayments">
-			<h5 class="col-xs-12">Sponsorship level</h5>
+			<h5 class="col-xs-12">Partnership level</h5>
 			<div class="row plans">
 				<div ng-repeat="plan in plans">
 					<div class="col-sm-3 plan" 
@@ -104,11 +104,11 @@
 				</div>
 			</div>
 
-			<div class="col-sm-3 checkout"><button class="btn btn-default" ng-click="openStripeCheckout($event)">Save sponsorship</button></div>
+			<div class="col-sm-3 checkout"><button class="btn btn-default" ng-click="openStripeCheckout($event)">Save partnership</button></div>
 
 			<p ng-show="activePlan.name" 
 			class="col-sm-3 subtle cancel"><a 
-			class="jsLink subtle" ng-click="cancelSubscription()">cancel sponsorship</a></p>
+			class="jsLink subtle" ng-click="cancelSubscription()">cancel partnership</a></p>
 		</div>
 	</div>
 

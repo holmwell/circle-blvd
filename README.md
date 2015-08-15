@@ -13,7 +13,7 @@ Circle Blvd supports:
  * Roadmap planning
  * Archiving
  * Admin management
- * Sponsorship payments from members
+ * Payments from members, partners
  * HTTPS
 
 This software is free, and it runs on Mac, Linux, and Windows. You can install it on your own computer, using instructions below as a guide, or you can create an account on [https://circleblvd.org](https://circleblvd.org), which is also free, supported by donations.

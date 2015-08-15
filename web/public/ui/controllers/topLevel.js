@@ -384,7 +384,7 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 			|| path === '/tips'
 			|| path === '/tour'
 			|| path.indexOf('/tour') === 0
-			|| path === '/sponsor'
+			|| path === '/partner'
 			|| path === '/donate'
 			|| path === '/about'
 			|| path === '/contact'
