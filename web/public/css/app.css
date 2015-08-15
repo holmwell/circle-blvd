@@ -342,6 +342,12 @@
   padding: 0;
 }
 
+.entry-facade-container, 
+.entry {
+  margin-top: 2ex;
+}
+
+
 .show-entry {
   padding: 0.5ex;
   text-align: right;

@@ -83,7 +83,7 @@
   </div>
 
  <div class="navbar navbar-inverse topMenu" role="navigation" ng-cloak>
-  <div class="container-fluid">
+  <div class="container-fluid debug">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-circles">
           <span class="sr-only">Show circles</span>
@@ -127,6 +127,7 @@
 
 <div class="container-fluid main debug no-select">
   <div class="header clearfix debug ng-cloak text-select" ng-if="isSignedIn()" ng-hide="!isHeaderVisible">
+    <!--
     <div class="mindset-container hidden-xs debug">
       <div class="mindset-element mindset-element-detailed debug">
         <span ng-click="setMindset('detailed')" 
@@ -142,12 +143,6 @@
           ng-class="{ 'selected-mindset': isMindset('bump') }"
           class="glyphicon glyphicon-chevron-up right debug"></span>
               
-        <!-- <span ng-click="setMindset('mine')" 
-          ng-class="{ 'selected-mindset': isMindset('mine') }"
-          ng-mouseenter="setMindsetLabel('Status Update')"
-          ng-mouseleave="setMindsetLabel('')"
-          class="glyphicon glyphicon-record right debug"></span> -->
-
         <span ng-click="setMindset('roadmap')"
           ng-class="{ 'selected-mindset': isMindset('roadmap') }" 
           ng-mouseenter="setMindsetLabel('Roadmap')"
@@ -157,39 +152,31 @@
         <div class="label debug">{{mindsetLabel}}</div>
       </div>
     </div>
-    <!--
-    <div class="navbar navbar-default" role="navigation" ng-cloak ng-show="isSignedIn()">
-      <div class="container-fluid">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="/">Circle Blvd</a></li>
-            <li><a href="#/archives">Archives</a></li>
-            <li><a href="#/profile">Profile</a></li>
-            <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
-            
-            <li><a class="jsLink" ng-click="signOut()">Sign out</a></li>
-          </ul>
+-->
+
+<!--     <div>
+      <div class="col-xs-12 menu">
+        <div class="col-xs-2">what</div>
+         <div class="col-xs-8">
+          <div>
+            <ul class="debug">
+              <li><a href="/#/">List</a></li>
+              <li><a href="/#/archives/">Archives</a></li>
+              <li><a href="/#/lists">Checklists</a></li>
+              <li><a href="/#/profile">Profile</a></li>
+              <li class="hidden-xs" ng-show="isAdmin()"><a href="/#/admin">Admin</a></li>
+              
+              <li><a class="jsLink" ng-click="signOut()">Sign&nbsp;out</a></li>
+            </ul>
+          </div>
+        </div> 
       </div>
     </div>
-     -->
-
-    <h2 class="debug hidden-xs title">
+ -->
+<!--     <h2 class="debug hidden-xs title">
       <a href="/#/">{{getActiveCircleName()}}</a>
     </h2>
-    <!-- <ul class="menu col-xs-2 col-md-4" ng-show="!isSignedIn()">
-       <li><a href="#/signin">Sign in</a></li>
-    </ul> -->
-
-    <div class="col-xs-12 debug">
-      <ul class="menu debug">
-        <li><a href="/#/">List</a></li>
-        <li><a href="/#/archives/">Archives</a></li>
-        <li><a href="/#/lists">Checklists</a></li>
-        <li><a href="/#/profile">Profile</a></li>
-        <li class="hidden-xs" ng-show="isAdmin()"><a href="/#/admin">Admin</a></li>
-        
-        <li><a class="jsLink" ng-click="signOut()">Sign&nbsp;out</a></li>
-      </ul>
-    </div> 
+ -->
   </div>
   <div class="view" ng-view></div>
 </div>

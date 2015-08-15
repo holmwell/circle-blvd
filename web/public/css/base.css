@@ -144,8 +144,12 @@ button:focus {
 }
 .topMenu .container-fluid .active a {
   color: #eee;
-  background: #222 !important;
+  background: #1E69B5 !important;
 }
+.topMenu .container-fluid a:hover {
+  background: #2272B8 !important;
+}
+
 
 .jsLink {
   cursor: pointer;
@@ -154,9 +158,8 @@ button:focus {
 
 /* header.jade */
 .header {
-  margin-bottom: 2em;
-  padding-right: 1ex;
-
+/*  margin-bottom: 2em;
+*/
   /*background-color: #666;*/
   /*font-family: 'Headland One', serif;*/
   /*font-size: larger;*/
@@ -170,10 +173,15 @@ button:focus {
 
 .menu {
   padding-left: 0;
+  padding-right: 0;
   list-style: none;
 
+/*  background-color: #1E69B5;
+*/  border: none;
+  border-bottom: solid #1E69B5 3px;
+  color: white;
+
   /*margin: auto;*/
-  margin-top: 1ex;
   margin-bottom: 1.2em;
 
   /*font-size: larger;
@@ -182,16 +190,23 @@ button:focus {
   text-align: center;
 }
 
-.menu > li {
-  display: inline;
+.menu ul {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
-.menu > li:before {
+.menu li {
+  display: inline-block;
+  padding: 1ex;
+}
+
+.menu li:before {
   content: ".";
   padding-right: 0.3em;
 }
 
-.menu > li:nth-child(1):before {
+.menu li:nth-child(1):before {
   content: "";
   padding: 0;
 }
