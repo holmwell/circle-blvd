@@ -307,7 +307,10 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 
 		// Set page title
 		if ($scope.getActiveCircle) {
-			$rootScope.pageTitle = $scope.getActiveCircle().name;
+			var activeCircle = $scope.getActiveCircle();
+			if (activeCircle) {
+				$rootScope.pageTitle = activeCircle.name;
+			}
 		}
 
 		var handleInitError = function (data, status) {
