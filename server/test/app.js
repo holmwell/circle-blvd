@@ -20,6 +20,8 @@ var memberEmail = "member@test";
 var memberPassword = 'Members only!';
 var memberSession = {};
 
+var inviteId = 'unknown';
+
 var finish = function (test) {
 	var fn = function (err) {
 		test.ifError(err);
@@ -161,24 +163,34 @@ test['GET /data/:circleId/groups is 200'] = function (test) {
 	})
 };
 
-// Add member
-test['POST /data/:circleId/member is 200'] = function (test) {
-	// TODO: This API is lame and needs to be redone.
-	var memberships = [];
-	memberships.push({
-		circle: adminSession.circle._id,
-		group: adminSession.group._id,
-		level: "member"
-	});
-
+// Invite member
+test['POST /data/circle/:circleId/invite is 200'] =  function (test) {
 	admin
-	.post('/data/' + adminSession.circle._id + '/member')
+	.post('/data/circle/' + adminSession.circle._id + '/invite')
+	.expect(200)
+	.end(function (err, res) {
+		test.ifError(err);
+		console.log(res.body);
+		inviteId = res.body['_id'];
+		test.done();
+	})
+};
+
+// Accept invitation
+test['POST /data/signup/invite is 200'] = function (test) {
+	member
+	.post('/data/signup/invite')
 	.send({
-		name: "Test member",
-		email: memberEmail,
-		password: memberPassword,
-		memberships: memberships,
-		isReadOnly: false
+		account: {
+			name: "Test member",
+			email: memberEmail,
+			password: memberPassword,
+			isReadOnly: false
+		},
+		invite: {
+			_id: inviteId,
+			circleId: adminSession.circle._id
+		}
 	})
 	.expect(200)
 	.end(finish(test));
