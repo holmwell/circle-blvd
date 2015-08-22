@@ -11,4 +11,16 @@ var start = function () {
     app.startServer();
 };
 
+// Process command-line arguments
+var isDebugging = false;
+for (var index in process.argv) {
+    if (process.argv[index] === '--debug') {
+        isDebugging = true;
+    }
+}
+
+app.init({
+    isDebugging: isDebugging
+});
+
 app.whenReady(start);

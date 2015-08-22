@@ -37,6 +37,7 @@
   },
   "scripts": {
     "start": "node server.js",
+    "debug": "node server.js --debug",
     "test": "nodeunit ./test"
   }
 }

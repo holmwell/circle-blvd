@@ -1063,7 +1063,16 @@ var getCookieSettings = function () {
 };
 
 // configure Express
-var configureApp = function() {
+var configureApp = function (config) {
+    // Default config
+    if (!config) {
+        config = {
+            isDebugging: false
+        }
+    }
+
+    var isDebugging = config.isDebugging || false;
+
     app.set('port', process.env.PORT || 3000);
     app.set('ssl-port', process.env.SSL_PORT || 4000);
     
@@ -1091,7 +1100,7 @@ var configureApp = function() {
         srcPath: staticPath,
         destPath: path.join(staticPath, minJsPath),
         webPath: minJsPath,
-        debug: false
+        debug: isDebugging
     });
 
     compact.addNamespace('lib')
@@ -1233,7 +1242,7 @@ var configureApp = function() {
             initSettingsOk(settings);
         }
     });
-}(); // closure
+}; 
 
 function ready() {
     isReady = true;
@@ -1250,4 +1259,5 @@ exports.whenReady = function (callback) {
 };
 
 exports.express = app;
+exports.init = configureApp;
 exports.startServer = startServer;

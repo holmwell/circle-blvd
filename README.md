@@ -55,6 +55,12 @@ for developers
 If you're making the software or managing deployments, you
 might like to know:
 
+### Running for development
+
+    npm run-script debug
+
+This will turn off JavaScript minification / compression.
+
 ### Testing
 
     npm test
