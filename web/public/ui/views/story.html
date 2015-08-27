@@ -64,8 +64,8 @@
             <i class="active-status" 
                 ng-include="'/img/glyphs/icon-half-circle.svg'"></i>
             <i class="sad-status glyphicon glyphicon-stop"></i>
-            <i class="new-status glyphicon glyphicon-gift"
-            ng-show="(isStoryMine(story) || isMindset('mine'))"></i>
+            <span class="new-status"
+            ng-show="(isStoryMine(story) || isMindset('mine'))">New</span>
         </div>
     </div>
 
@@ -136,18 +136,18 @@
 
                 <div class="status" ng-hide="story.isNextMeeting || story.isDeadline">Task progress?
                     <div class="row">
-                        <div class="col-xs-5 col-sm-3 debug">
+                        <div class="col-xs-5 col-sm-2 wider-left debug">
                             <a ng-class="{ 'btn-active': isStorySad(story) }"
                             ng-click="setStoryStatus(story, 'sad')"
                             class="btn btn-default sad form-control">
                             <i class="btn-icon-status glyphicon glyphicon-stop"></i>
                             <span>Help?</span></a>
                         </div>
-                        <div class="col-xs-3 col-sm-1 wider debug">
+                        <div class="col-xs-3 col-sm-2 debug">
                             <a ng-class="{ 'btn-active': isStoryNew(story) }"
                             ng-click="setStoryStatus(story, '')"
                             class="btn btn-default question neutral form-control">
-                            <span class="txt">?</span></a>
+                            <span class="txt">New</span></a>
                         </div>
                         <div class="col-xs-4 col-sm-2 wider">
                             <a ng-class="{ 'btn-active': isStoryAssigned(story) }"
@@ -276,8 +276,8 @@
                     <i class="active-status" ng-show="isStoryActive(story)"></i>
                     <i class="sad-status glyphicon glyphicon-stop" 
                     ng-show="isStorySad(story)"></i>
-                    <span class="new-status glyphicon glyphicon-gift"
-                    ng-show="(isStoryNew(story) && isStoryMine(story))"></span>
+                    <span class="new-status"
+                    ng-show="(isStoryNew(story) && isStoryMine(story))">New</span>
                 </div>
                 <div class="phone-summary col-xs-8">
                     <sp-story-summary/>

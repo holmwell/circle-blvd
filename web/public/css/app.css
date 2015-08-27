@@ -666,6 +666,9 @@
 .status .wider {
   padding-left: 0;
 }
+.status .wider-left {
+  padding-right: 0;
+}
 .status .btn.question .txt {
   position: relative;
   left: -0.1ex;
@@ -866,6 +869,10 @@
   text-align: right;
   opacity: 0.6;
 }
+.new .backlog-status {
+  color: #999;
+  opacity: 1.0;
+}
 
 .backlog-status .done-status,
 .backlog-status .active-status,
@@ -926,6 +933,15 @@
 .phone-backlog-status .sad-status {
   margin-left: 0.35ex;
 }
+.new-status {
+  margin-left: 0;
+}
+.phone-backlog-status .new-status {
+  color: #222;
+}
+.phone-backlog-status {
+  padding-top: 0;
+}
 
 .icon-status {
   stroke: black;
@@ -976,7 +992,7 @@
 .sad .btn-icon-status {
   font-size: 11px;
   margin-top: 0.1ex;
-  margin-left: -3ex;
+  margin-left: -1.5ex;
 }
 .in-progress .btn-icon-status {
   margin-top: -0.40ex;
