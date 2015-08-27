@@ -21,7 +21,7 @@ var getNotificationRecipients = function (accounts) {
 };
 
 var getNewNotificationMessage = function (story, req) {
-	var message = "Hi. You've been requested to look at a new story on Circle Blvd.\n\n";
+	var message = "Hi. You've been requested to look at a new task on Circle Blvd.\n\n";
 	if (story.summary) {
 		message += "Summary: " + story.summary + "\n\n";
 	}
@@ -106,7 +106,7 @@ var newStory = function (story, sender, req, callback) {
 			sender: sender,
 			recipients: [owner],
 			message: getNewNotificationMessage(story, req),
-			subjectPrefix: "new story: "
+			subjectPrefix: "new task: "
 		};
 
 		sendStoryNotification(params, function (err, response) {
