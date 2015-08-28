@@ -882,7 +882,7 @@
 }
 
 .deadline .backlog-status .done-status-archive {
-  display: inherit;
+  display: inline-block;
 }
 
 .done .backlog-status .done-status,
