@@ -448,7 +448,6 @@
 #backlog .deadline.after-meeting textarea:hover,
 #backlog .deadline.after-meeting textarea:focus  {
   background-color: white;
-  border-color: inherit;
 }
 #backlog .deadline textarea,
 #backlog .deadline input {
@@ -605,6 +604,7 @@
   /* gold is too light, but orange is not quite right */
   border: dotted 2px orange;
 }
+
 
 .story .details-link .subtle {
   color: #999;
