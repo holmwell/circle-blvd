@@ -427,13 +427,44 @@
 #backlog textarea, 
 #backlog input, 
 #backlog select,
-#backlog .status .btn {
+#backlog .status .btn,
+#backlog .deadline.after-meeting textarea,
+#backlog .deadline.after-meeting input {
   background-color: #ddd;
 }
-#backlog textarea:hover, #backlog textarea:focus,
-#backlog input:hover, #backlog input:focus, 
-#backlog select:hover, #backlog select:focus,
-#backlog .status .btn:hover {
+#backlog .deadline.after-meeting textarea,
+#backlog .deadline.after-meeting input {
+  border-color: inherit;
+}
+#backlog textarea:hover, 
+#backlog textarea:focus,
+#backlog input:hover, 
+#backlog input:focus, 
+#backlog select:hover, 
+#backlog select:focus,
+#backlog .status .btn:hover,
+#backlog .deadline.after-meeting input:hover,
+#backlog .deadline.after-meeting input:focus,
+#backlog .deadline.after-meeting textarea:hover,
+#backlog .deadline.after-meeting textarea:focus  {
+  background-color: white;
+  border-color: inherit;
+}
+#backlog .deadline textarea,
+#backlog .deadline input {
+  border-color: #b2960a;
+  background-color: #E5C10D;
+}
+#backlog .deadline input:hover,
+#backlog .deadline input:focus,
+#backlog .deadline textarea:hover,
+#backlog .deadline textarea:focus {
+  background-color: #ffc;
+}
+#backlog .deadline .saveBtn {
+  background-color: #ffc;
+}
+#backlog .deadline.after-meeting .saveBtn {
   background-color: white;
 }
 
@@ -638,6 +669,21 @@
   color: #bbb;
 }
 
+.deadline a, 
+.deadline .deselect a, 
+.deadline .removeBtn {
+  color: #b2960a;
+}
+.deadline.highlighted {
+  border-color: goldenrod;
+}
+
+.after-meeting.deadline a, 
+.after-meeting.deadline .deselect a, 
+.after-meeting.deadline .removeBtn {
+  color: #bbb;
+}
+
 .summary .deselect, .created-by {
   margin-right: 1.5ex;
 }
@@ -704,8 +750,6 @@
   margin-bottom: 0;
   background-color: #ddd;
 }
-
-
 
 .commentArea {
   margin-top: 1ex;
