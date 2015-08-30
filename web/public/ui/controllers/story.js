@@ -218,16 +218,24 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 		highlight(story);
 	};
 
+	// Called on ng-mouseup
+	//
+	// This allows us to open (select) a story by clicking
+	// on it once, when it is highlighted, instead of having
+	// to double-click all over the place.
 	$scope.rememberHighlight = function (story) {
 		if ($scope.mouse.lastMouseUpStory && 
 			$scope.mouse.lastMouseUpStory.id === story.id &&
 			$scope.mouse.lastMouseUpStory.id === $scope.mouse.lastMouseDownStory.id &&
+
 			!isMovingToTop) {
 			$scope.select(story);
 		}
+
 		$scope.mouse.lastMouseUpStory = story;
 	};
 
+	// TODO: This is called N times. Move to list.
 	$scope.$on('mouseUp', function () {
 		$scope.mouse.isHighlighting = false; 
 	});

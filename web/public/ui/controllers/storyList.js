@@ -1841,6 +1841,14 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		return true;
 	};
 
+	// This works in conjunction with the $scope.rememberHighlight
+	// function in StoryCtrl. This probably means we should refactor
+	// into some other service. Go for it.
+	//
+	$scope.$on('storyMoved', function (e, story) {
+		$scope.mouse.lastMouseUpStory = story;
+	});
+
 	var attachToDragEvents = function (Y) {
 		// No longer needed with .grippy
 		//
