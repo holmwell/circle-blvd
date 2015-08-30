@@ -79,9 +79,20 @@ directive('autosize', ['$timeout', function ($timeout) {
 			// gets fired before things are ready to be
 			// resized.
 			$timeout(function () {
+				var isOneRow = attr.rows === "1";
+				// This allows us to have the comments area
+				// stay at 1 row until people click on it.
+				if (isOneRow) {
+					elem.focus(function () {
+						elem.autosize();
+					})
+				}
+
 				// For elements that are initially hidden,
-				// do not run autosize right now.
-				if (!angular.isDefined(attr.showModel)) {
+				// do not run autosize right now. Also do not
+				// run autosize on elements that are meant to be
+				// one row to begin with.
+				if (!angular.isDefined(attr.showModel) && !isOneRow) {
 					elem.autosize();
 				}
 

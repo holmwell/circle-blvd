@@ -700,7 +700,7 @@
 
 .description textarea, .commentArea textarea {
   /*width: 95%;*/
-  height: 6em;
+  height: 4em;
   margin-bottom: 0;
   background-color: #ddd;
 }
@@ -711,7 +711,7 @@
   margin-top: 1ex;
 }
 .commentArea textarea {
-  height: 3em;
+  height: 2.5em;
 }
 .commentArea .btn-wrapper {
   text-align: right;
