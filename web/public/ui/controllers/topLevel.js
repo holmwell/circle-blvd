@@ -148,8 +148,8 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 			$scope.$broadcast('keyActive', e);
 		}
 
-		if (e.keyCode === 191) {
-			// ? (question mark)
+		if (e.keyCode === 191 || e.keyCode === 78) {
+			// ? (question mark) or N
 			$scope.$broadcast('keyClearStatus', e);
 		}
 
