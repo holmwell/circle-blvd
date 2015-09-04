@@ -325,6 +325,15 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 		}
 	};
 
+	$scope.getStoryNoun = function (story) {
+		if (story.isDeadline || story.isNextMeeting) {
+			return 'milepost';
+		}
+		else {
+			return 'task';
+		}
+	}; 
+
 	$scope.isOwnerInCircle = function (owner) {
 		if (!owner) {
 			return false;

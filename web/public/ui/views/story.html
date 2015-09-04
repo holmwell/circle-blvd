@@ -123,7 +123,7 @@
                 <div class="description">
                     <div>What are the details?
                         <div class="created-by pull-right" ng-show="story.createdBy">
-                            story created by {{::story.createdBy.name}}
+                            {{::getStoryNoun(story)}} created by {{::story.createdBy.name}}
                         </div>
                     </div>
                     <div class="textarea-container">
@@ -192,7 +192,7 @@
 
                     <div class="btn-wrapper">
                         <div class="pull-right">
-                            <span class="subtle topLinkToTask"><a href="/#/stories/{{::story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
+                            <span class="subtle topLinkToTask"><a href="/#/stories/{{::story.id}}"><span class="glyphicon glyphicon-link"></span>Link to {{::getStoryNoun(story)}}</a></span>
                             <button class="saveBtn topSaveBtn btn btn-default" type="submit">Save</button>
                         </div>
                         <button class="saveBtn saveCommentBtn topSaveBtn btn pull-left"
@@ -211,10 +211,10 @@
                 </div>
 
                 <div class="action-buttons">
-                    <button ng-if="::!isScreenXs" ng-hide="story.isNextMeeting" class="hidden-xs removeBtn" type="button" ng-click="remove(story)">Remove task</button>
+                    <button ng-if="::!isScreenXs" ng-hide="story.isNextMeeting" class="hidden-xs removeBtn" type="button" ng-click="remove(story)">Remove {{::getStoryNoun(story)}}</button>
 
                     <div class="pull-right" ng-show="story.isNextMeeting || story.isDeadline">
-                        <span class="linkToTask subtle"><a href="/#/stories/{{::story.id}}"><span class="glyphicon glyphicon-link"></span>Link to task</a></span>
+                        <span class="linkToTask subtle"><a href="/#/stories/{{::story.id}}"><span class="glyphicon glyphicon-link"></span>Link to {{::getStoryNoun(story)}}</a></span>
                         <button class="saveBtn btn btn-default" type="submit">Save</button>
                     </div>
                 </div>
