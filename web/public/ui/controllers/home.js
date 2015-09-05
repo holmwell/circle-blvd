@@ -179,6 +179,10 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 	};
 
 	$scope.createMany = function (newMany) {
+		if (!newMany) {
+			return;
+		}
+
 		var input = newMany.txt;
 		var lines = input.split('\n');
 
@@ -188,9 +192,6 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 
 		isCreatingStory = true;
 
-		var lineIndex = lines.length-1;
-		var lastLine = lines[lineIndex];
-
 		var done = function () {
 			$scope.newMany = undefined;
 			isCreatingStory = false;
@@ -199,22 +200,24 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 
 		var createStory = function (line) {
 			if (!line) {
-				return done();
+				return createNext();
 			}
 
 			var story = parseStory(line);
-			insertNewStory(story, function () {
-				lineIndex--;
-				if (lineIndex >= 0) {
-					createStory(lines[lineIndex]);
-				}
-				else {
-					done();
-				}
-			});
+			insertNewStory(story, createNext);
 		};
 
-		createStory(lastLine);
+		function createNext() {
+			if (lines.length === 0) {
+				done();
+				return;
+			}
+
+			var lastLine = lines.pop();
+			createStory(lastLine);
+		}
+
+		createNext();
 	};
 
 	$scope.manyPaste = function (event) {
