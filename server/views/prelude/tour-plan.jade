@@ -57,7 +57,10 @@ block view
 
         <div ng-cloak ng-if="isShowing('tags')">
             <div class="docs col-sm-offset-2 col-sm-8">
-                <p>Use <strong>#hashtags</strong> in task summaries to label them as you see fit, 
+                <div class="embed-container">
+                    <iframe src="//www.youtube-nocookie.com/embed/Ghu2yPJEaqM?rel=0" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <p class="below-video">Use <strong>#hashtags</strong> in task summaries to label them as you see fit, 
                 and then filter on those tags. In this example, two tasks are
                 tagged with #Grocery.</p> 
             </div>
@@ -97,6 +100,12 @@ block view
         </div>
 
         <div ng-cloak ng-if="isShowing('roadmap')">
+            <div class="docs col-sm-offset-2 col-sm-8">
+                <div class="embed-container">
+                    <iframe src="//www.youtube-nocookie.com/embed/NPoVfno85No?rel=0" frameborder="0" allowfullscreen></iframe>
+                </div>
+            </div>
+            <!--
             <div class="hidden-xs">
                 <sp-story-list 
                     data="roadmap"
@@ -110,11 +119,11 @@ block view
             <div class="visible-xs">
                 <p>(The roadmap mindset has a lot going on, and it's only visible on larger screens.)</p>
             </div>
+            -->
 
             <div class="docs col-sm-offset-2 col-sm-8">
                 <p class="after-list">With the <i class="glyphicon glyphicon-road"></i> mindset,
-                you can move tasks great distances within your list very quickly. This is just a
-                small demonstration, but we think you'll get the idea.</p>
+                you can move tasks great distances within your list very quickly.</p>
 
                 <p>Use the <i class="glyphicon glyphicon-move"></i> icon to 
                 move tasks from the left column to the right. With a longer list, selecting the 

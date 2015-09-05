@@ -30,7 +30,6 @@ block view
                     With this site you can share task lists with your group, and it all stays 
                     in sync through the internet.
 
-
                 .row.choice-menu
                     .col-xs-3.choice.plan-choice(ng-class="{active: isShowing('intro')}")
                         a.jsLink(ng-click="show('intro')")
@@ -79,7 +78,10 @@ block view
             div(ng-cloak ng-if="isShowing('list')")
                 .clearfix
                     .docs.col-sm-offset-2.col-sm-8
-                        p.
+                        .embed-container
+                            iframe(src="//www.youtube-nocookie.com/embed/77h9J0wvlxY?rel=0" frameborder="0" allowfullscreen)
+
+                        p.below-video.
                             Circle Blvd is all about managing your group's task list, so that's
                             where we'll start.
 
@@ -174,7 +176,10 @@ block view
                      | for example, "Pick up milk from the store @Phil" will assign this task to Phil.
 
                     h3 Filtering tasks
-                    p Use <i class="glyphicon glyphicon-record"></i> to show only your tasks. 
+                    .embed-container
+                        iframe(src="//www.youtube-nocookie.com/embed/ogJmGaKkUoU?rel=0" frameborder="0" allowfullscreen)
+
+                    p.below-video Use <i class="glyphicon glyphicon-record"></i> to show only your tasks. 
                      | Clicking on a task's owner name will filter your list, showing only tasks owned
                      | by that person. By the way, you can assign tasks to anyone, including people
                      | without Circle Blvd accounts, and filter on those owners as well.
