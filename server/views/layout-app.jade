@@ -6,8 +6,8 @@ html(lang="en" ng-app="myApp" prefix="og: http://opg.me/ns#")
     title(ng-bind="PageTitle") Circle Blvd.
     base(href="/")
 
-    link(href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet")
-    link(href='//fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css')
+    link(href="_offline/bootstrap/css/bootstrap.min.css" rel="stylesheet")
+    //- link(href='//fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css')
     link( href="css/app.css" rel="stylesheet")
 
     meta(name="description" content="Circle Blvd. Streamlined project planning for groups of one to 15. Just the right size for small, important projects in your community. Make things simple, again.")
@@ -32,10 +32,10 @@ html(lang="en" ng-app="myApp" prefix="og: http://opg.me/ns#")
 
     link(rel="icon" sizes="196x196" href="/img/logo-196px.png")
 
-    script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
-    script(src="//code.jquery.com/ui/1.11.1/jquery-ui.js")
+    script(src="_offline/jquery.min.js")
+    script(src="_offline/jquery-ui.js")
     script(src="/lib/jQuery.ui.touch-punch.js")
-    script(src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
+    script(src="_offline/bootstrap/js/bootstrap.min.js")
     script(src="/lib/modernizr/touch.js")
 
     if (analyticsId)
