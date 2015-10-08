@@ -1,0 +1,110 @@
+body {
+  background: black !important;     
+}
+
+
+.navbar {
+    background-color: transparent;
+}
+.navbar-nav li a {
+    color: #ddd !important;
+}
+.navbar-nav li a:hover {
+    color: #fff !important;
+    opacity: 1.0;
+}
+
+.curtain {
+    background-color: #aaa;
+
+    width: 100%;
+    float: left;
+
+    text-align: center;
+}
+
+.main {
+    background: transparent !important;
+}
+.second {
+    margin-top: 5em;
+    padding-top: 3.5em;
+    padding-bottom: 1.5em;
+
+    color: #aaa;
+    background-color: #222;
+}
+.third {
+    padding-top: 2em;
+    margin-top: 1.5em;
+}
+
+.headline, .second, .third {
+    text-align: left;
+}
+
+.curtain .logo {
+    margin-top: 4em;
+    text-align: center;
+}
+.logo img {
+    width: 60%;
+}
+
+.curtain h1 {
+    font-family: 'Roboto Slab';
+    font-size: 36pt;
+    color: #222;
+    margin-top: 1em;
+}
+.second h2 {
+    font-family: 'Roboto Slab';
+    color: #eee;
+    margin-bottom: 1.5em;
+}
+.curtain h4 {
+    text-align: left;
+    font-size: 18pt;
+    color: #444;
+}
+
+.headline p {
+    margin-top: 1.8em;
+}
+.second p {
+    margin-top: 0.5em;
+    margin-bottom: 1.4em;
+}
+p {
+    font-size: 14pt;
+}
+
+.join {
+    margin-top: 1.3em;
+    padding-left: 3ex;
+    padding-right: 3ex;
+}
+
+.second .for-glyph {
+    width: 60%;
+    margin: auto;
+    margin-top: 1.5em;
+}
+.same-idea {
+    fill: #aaa;
+}
+
+.third .below-button {
+    padding-top: 1em;
+}
+
+.footer {
+    padding-top: 4em;
+    padding-bottom: 3em;
+    background-color: black;
+    margin-bottom: 0;
+}
+
+.footer a:hover {
+    color: gold !important;
+}

@@ -36,6 +36,15 @@ router.get("/signin", function (req, res, next) {
     }
 });
 
+router.get("/intro", function (req, res, next) {
+    if (req.isAuthenticated()) {
+        res.redirect('/');
+    }
+    else {
+        res.render('prelude/intro', getDefaultParams(req));
+    }
+});
+
 router.get("/create", function (req, res, next) {
     if (!req.isAuthenticated()) {
         res.redirect('/signin');
@@ -87,7 +96,7 @@ router.get('/', function (req, res, next) {
         res.render("prelude/initialize", getDefaultParams(req));
     }
     else if (!req.isAuthenticated()) {
-        res.render('prelude/signin', getDefaultParams(req));
+        res.render('prelude/intro', getDefaultParams(req));
     }
     else {
         next();
