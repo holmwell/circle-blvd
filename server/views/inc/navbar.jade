@@ -21,7 +21,11 @@
             ng-click="setActiveCircle(circle, true)" ng-bind="circle.name")
 
       ul.nav.navbar-nav.navbar-right
-        li(ng-class="{active: isCurrentPath('/tips')}")
+        li(ng-class="{active: isCurrentPath('/signin')}" ng-if="!isSignedIn()")
+          a(href="/signin"
+            data-toggle="collapse" data-target="#navigation-circles.in") Sign in
+
+        li(ng-class="{active: isCurrentPath('/tips')}" ng-if="isSignedIn()")
           a(href="/tips" data-toggle="collapse" data-target="#navigation-circles")
             span.glyphicon.glyphicon-flash
               
