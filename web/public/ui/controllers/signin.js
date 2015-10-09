@@ -9,6 +9,9 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 	if (hash.indexOf('/') >= 0) {
 		session.lastLocationPath = hash.slice(hash.indexOf('/'));
 
+		// For linking to the sign-in page from the intro page
+		$scope.locationHash = hash;	
+
 		// Redirect to the page if it is public and does not
 		// require a signin.
 		var path = $location.path();

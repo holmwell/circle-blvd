@@ -389,6 +389,8 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 			|| path === '/about'
 			|| path === '/contact'
 			|| path === '/privacy'
+			|| path === '/entrance'
+			|| path === '/intro'
 			|| path === '/invite'
 			|| path.indexOf('/invite') === 0) {
 			return true;
@@ -454,7 +456,9 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 			var locationPath = $window.location.pathname;
 			// Don't save these paths
 			if (locationPath.indexOf('/signin') !== 0 && 
-				locationPath.indexOf('/invite') !== 0) {
+				locationPath.indexOf('/entrance') !== 0 &&
+				locationPath.indexOf('/intro') !== 0 &&
+ 				locationPath.indexOf('/invite') !== 0) {
 				// Save all other paths for redirecting back 
 				// to them after signing in.
 				session.lastLocationPath = locationPath;
@@ -469,7 +473,10 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 				return;
 			}
 			// Don't save /signin or /invite paths
-			if (path.indexOf('/signin') !== 0 && path.indexOf('/invite') !== 0) {
+			if (path.indexOf('/signin') !== 0
+				&& path.indexOf('/entrance') !== 0 
+				&& path.indexOf('/intro') !== 0
+				&& path.indexOf('/invite') !== 0) {
 				session.lastLocationPath = $location.path();
 			}
 
