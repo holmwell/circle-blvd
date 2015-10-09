@@ -10,7 +10,7 @@
       a.navbar-brand(href="/#/")
         span.circle(ng-include="'/img/glyphs/icon-white-circle.svg'")
 
-      ul.nav.navbar-nav.visible-xs(ng-if="!isSignedIn()")
+      ul.nav.navbar-nav.visible-xs.pull-left(ng-if="!isSignedIn()")
         li 
           a(href="signin") Sign in
 
