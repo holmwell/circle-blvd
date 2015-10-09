@@ -45,6 +45,16 @@ router.get("/intro", function (req, res, next) {
     }
 });
 
+router.get("/entrance", function (req, res, next) {
+    if (req.isAuthenticated()) {
+        res.redirect('/');
+    }
+    else {
+        res.render('prelude/entrance', getDefaultParams(req));
+    }
+});
+
+
 router.get("/create", function (req, res, next) {
     if (!req.isAuthenticated()) {
         res.redirect('/signin');
