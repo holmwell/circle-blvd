@@ -104,7 +104,18 @@ p {
     color: gold !important;
 }
 
-.col-xs-12 {
-    padding-left: 2em;
-    padding-right: 2em;
+/* xs-screens only */
+@media (max-width: 757px) {
+    .col-xs-12 {
+        padding-left: 2em;
+        padding-right: 2em;
+    }
+
+    .for-glyph {
+        max-width: 300px;
+    }
+
+    .third .info {
+        margin-top: 1.1em;
+    }
 }
