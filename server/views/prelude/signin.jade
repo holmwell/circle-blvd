@@ -1,13 +1,16 @@
 extends layout-simple
 
+append stylesheets
+    link(href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css')
+    link(href='/css/start.css' rel='stylesheet' type='text/css')
+
 block view
     .signin(ng-controller="SignInCtrl")
-       .welcome
-            h1 Circle&nbsp;Blvd.
+       .welcome.signin-section
             .col-sm-offset-2.col-sm-8
+                h1 Circle&nbsp;Blvd.
                 form
-                    h4 Welcome.
-                    p Sign in here, or create an account at the bottom of this page.
+                    p Welcome back. Sign in here, or <a href="/entrance">create an account</a> at the front entrance.
                     div
                         input.form-control(type="text" ng-model="user.email" placeholder="Email address")
                     div
@@ -24,147 +27,6 @@ block view
                 .clear.message(ng-cloak) {{message}} 
                     span(ng-show="signinFailure && isNotificationEnabled()") <a class="jsLink" ng-click="sendSecret()">Forgot password</a>?
 
-        .intro
-            .col-sm-offset-2.col-sm-8.clear.signin-section
-                h2 Get things done, together
-
-                p Circle Blvd is a streamlined project planner, 
-                 | made for groups of one to 15. We made it for
-                 | your next club event, team project, or community festival. 
-
-                p Circle Blvd is just the
-                 | right size for small, important projects in your community.
-
-                .row
-                    .col-xs-4.col-sm-3.for-glyph
-                        span.glyphicon.glyphicon-globe
-                    .col-xs-8.col-sm-9
-                        h4 For community organizers
-                        p Get your volunteers on the same page.  
-                         | Share your plan, and keep updates in one place.
-                         | Coordinate your next project with ease.
-
-                .row
-                    .col-xs-4.col-sm-3.for-glyph
-                        span.glyphicon.glyphicon-heart-empty
-                    .col-xs-8.col-sm-9
-                        h4 For student and professional clubs
-                        p Simplify your life, and stay organized. 
-                         | Plan ahead, delegate tasks, and hold your team
-                         | accountable with minimal effort. Circle Blvd is 
-                         | best for your executive team.
-
-                .row
-                    .col-xs-4.col-sm-3.for-glyph
-                        span.glyphicon.glyphicon-record
-                    .col-xs-8.col-sm-9
-                        h4 For startups
-                        p Collaborate on product and business development. 
-                         | Outline your path to success, and 
-                         | pivot with ease to grow your business.
-
-        .tour
-            .col-sm-offset-2.col-sm-8.clear.signin-section
-                h2 Make things simple, again
-
-                .row.before-video
-                    .col-xs-8.col-sm-9
-                        p Circle Blvd is for busy people who need to 
-                         | get stuff done, and want to elevate their team.  
-
-                        p Below is a 90-second overview of the site. If
-                         | you're already into project management, 
-                         | skip down to the video tour, the next video 
-                         | down.
-                    .col-xs-4.col-sm-3.for-glyph
-                        span(ng-include="'/img/glyphs/icon-same-idea.svg'")
-
-                .embed-container
-                    iframe(src="//www.youtube-nocookie.com/embed/-a7n_iyqB0A?rel=0" frameborder="0" allowfullscreen)
-
-                h2.below-video Fill your planning needs
-                p See where Circle Blvd fits in with your current project-planning process, with this
-                 | video tour of the site, beginning with a 50-second outline.
-
-                .embed-container
-                    iframe(src="//www.youtube-nocookie.com/embed/r5VjGT8vEFA?list=PLsAlYk7uQNv8Bhmh4tCF55fj4k6cs11rS" frameborder="0" allowfullscreen)
-
-                p.below-video <span class="glyphicon glyphicon-play"></span> 
-                 | Visit <a href="/tour">our tour page</a> to see a text
-                 | outline of the main aspects of the site.
-
-                p This site supports:
-                ul
-                    li Task lists, assignments, status updates, comments
-                    li Drag-and-drop prioritization
-                    li One-line task entry, multiple-task entry
-                    li Email notifications
-                    li Hashtags / label filtering
-                    li Reusable checklists
-                    li Roadmap planning
-                    li Archives
-                    li Admin management
-                    li Secure communication over HTTPS
-                    li Multiple projects
-                    li Unlimited accounts
-
-                h4 Available on iPhone, too.
-                p Our app is free to download on the App Store.
-
-                .row.app-screenshot-container 
-                    .col-xs-offset-2.col-xs-8.col-sm-offset-0.col-sm-4.app-screenshot
-                        img(src="https://raw.githubusercontent.com/holmwell/circle-blvd-assets/master/img/screenshots/iPhone-0.png")
-                    .col-xs-offset-2.col-xs-8.col-sm-offset-0.col-sm-4.app-screenshot
-                        img(src="https://raw.githubusercontent.com/holmwell/circle-blvd-assets/master/img/screenshots/iPhone-1.png")
-                    .col-xs-offset-2.col-xs-8.col-sm-offset-0.col-sm-4.app-screenshot
-                        img(src="https://raw.githubusercontent.com/holmwell/circle-blvd-assets/master/img/screenshots/iPhone-2.png")
-
-                .row.app-download
-                        a(href="https://itunes.apple.com/us/app/circle-blvd./id991896253?mt=8&uo=6&at=&ct=" target="itunes_store" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.png) no-repeat;width:165px;height:40px;@media only screen{background-image:url(https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg);}")
-
-        .free
-            .col-sm-offset-2.col-sm-8.clear.signin-section
-                h2 Circle Blvd is free
-
-                p We made this site to help you grow healthy communities, on 
-                 | your own terms. If you 
-                 | enjoy using the site, you can <a href="/partner">become a development partner</a> 
-                 | to encourage improvements and help share the site with more people.
-
-                p In addition, if you want to change part of the site, you're free to 
-                 | <a href="https://github.com/holmwell/circle-blvd">download it yourself</a>,
-                 | edit it, and run your own copy on your Mac, Linux, or Windows computer.
-
-        .signup#create-account
-            form
-                .col-sm-offset-2.col-sm-8.clear.signin-section
-                    h2 Start today
-                    p To get started, we need a name for your team, a sign-in address,
-                     | and a name that people in your group will recognize you by.
-
-                    label.sr-only(for="signupCircleName") What's the name of your circle?
-                    div
-                        input#signupCircleName.form-control(type="text" ng-model="signup.circle" placeholder="Circle or group name")
-
-                    label(for="signupEmail") How will you be signing in?
-                    div
-                        input#signupEmail.form-control(type="text" ng-model="signup.email" placeholder="Email address")
-                    div
-                        input.form-control(type="password" ng-model="signup.password" placeholder="Password")
-                    
-                    label(for="signupName") What's your name?
-                    div
-                        input#signupName.form-control(type="text" 
-                            ng-model="signup.name" 
-                            placeholder="First name, full name, or nickname")
-                    
-                    button.btn.btn-default.pull-right(
-                        ng-hide="signup.message"
-                        type="submit" 
-                        ng-click="signUp()") Create circle
-
-                .col-sm-offset-2.col-sm-8.clear.ng-cloak(ng-show="signup.message")
-                    .thanks.story.deadline.not-selected {{signup.message}}
 
         .donate
             .col-sm-offset-2.col-sm-8.clear.donate-section
