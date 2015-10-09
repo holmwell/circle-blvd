@@ -105,6 +105,10 @@ p {
     color: gold !important;
 }
 
+.btn-signin {
+    padding-top: 1.25ex !important;
+}
+
 /* xs-screens only */
 @media (max-width: 757px) {
     .col-xs-12 {
