@@ -24,13 +24,14 @@ body {
 .second {
     margin-top: 5em;
     padding-top: 3.5em;
-    padding-bottom: 1.5em;
+    padding-bottom: 5em;
 
     color: #aaa;
     background-color: #222;
 }
 .third {
     padding-top: 2em;
+    padding-bottom: 5em;
     margin-top: 1.5em;
 }
 
@@ -95,7 +96,7 @@ p {
 
 .footer {
     padding-top: 4em;
-    padding-bottom: 3em;
+    padding-bottom: 6em;
     background-color: black;
     margin-bottom: 0;
 }
