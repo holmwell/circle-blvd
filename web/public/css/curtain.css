@@ -16,11 +16,6 @@ body {
 
 .curtain {
     background-color: #aaa;
-
-    width: 100%;
-    float: left;
-
-    text-align: center;
 }
 
 .main {
@@ -107,4 +102,9 @@ p {
 
 .footer a:hover {
     color: gold !important;
+}
+
+.col-xs-12 {
+    padding-left: 2em;
+    padding-right: 2em;
 }

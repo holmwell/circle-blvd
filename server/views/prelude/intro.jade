@@ -10,6 +10,7 @@ block content
         .navbar.navbar-inverse.topMenu(role="navigation" ng-cloak)
           .container-fluid
             .navbar-header
+
               button.navbar-toggle(type="button" data-toggle="collapse" data-target="#navigation-circles")
                 span.sr-only Show circles
                 span.icon-bar
@@ -18,6 +19,10 @@ block content
               
               a.navbar-brand(href="/#/")
                 span.circle(ng-include="'/img/glyphs/icon-white-circle.svg'")
+
+              ul.nav.navbar-nav.visible-xs
+                li 
+                    a(href="signin") Sign in
 
             .collapse.navbar-collapse#navigation-circles
               ul.nav.navbar-nav
@@ -38,45 +43,43 @@ block content
 
 
         .container-fluid.main.debug.first
-            .view(ng-controller="SignInCtrl")
-                    //- .logo
-                    //-     img(src="/img/circle-blvd-basic.png" width="76")
+            .row
+                .col-xs-12.col-sm-6.col-sm-push-6.logo
+                    img(src="img/circle-blvd-basic.png")
 
-                    .row
-                        .col-sm-6.headline
-                            h1 Streamlined<br/> project planning
-                            
-                            p For community organizations, startups,
-                             | and teams of one to 15. Make things simple, again.
+                .col-xs-12.col-sm-6.col-sm-pull-6.headline
+                    h1 Streamlined<br/> project planning
+                    
+                    p For community organizations, startups,
+                     | and teams of one to 15. Make things simple, again.
 
-                            a(href="/start")
-                                button.join.btn.btn-default
-                                    h4 Join Free for 60 Days
-                        .col-sm-6.logo
-                            img(src="img/circle-blvd-basic.png")
+                    a(href="/start")
+                        button.join.btn.btn-default
+                            h4 Join Free for 60 Days
 
         .block.second
             .container-fluid.main.debug
                 .row
-                    .col-sm-4
+                    .col-xs-12.col-sm-8.col-sm-push-4
+                        .embed-container
+                            iframe(src="//www.youtube-nocookie.com/embed/-a7n_iyqB0A?rel=0" frameborder="0" allowfullscreen)
+
+                    .col-xs-12.col-sm-4.col-sm-pull-8
                         p Circle Blvd is just the right size for
                          | small, important projects.
 
                         .for-glyph
                             span(ng-include="'/img/glyphs/icon-same-idea.svg'")
 
-                    .col-sm-8
-                        .embed-container
-                            iframe(src="//www.youtube-nocookie.com/embed/-a7n_iyqB0A?rel=0" frameborder="0" allowfullscreen)
-
+                   
         .block.third
             .container-fluid.main.debug
                 .row
-                    .col-sm-8
+                    .col-xs-12.col-sm-8
                         .embed-container
                             iframe(src="//www.youtube-nocookie.com/embed/77h9J0wvlxY?rel=0" frameborder="0" allowfullscreen)
 
-                    .col-sm-4
+                    .col-xs-12.col-sm-4
                         p Make things simple, again.
 
                         p Circle Blvd helps with planning, 
