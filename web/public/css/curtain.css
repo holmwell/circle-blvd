@@ -76,9 +76,16 @@ p {
 }
 
 .join {
-    margin-top: 1.3em;
+    margin-top: 1.5em;
     padding-left: 3ex;
     padding-right: 3ex;
+
+    -webkit-box-shadow: 1px 1px 5px -1px rgba(88,88,88,1);
+    -moz-box-shadow: 1px 1px 5px -1px rgba(88,88,88,1);
+    box-shadow: 1px 1px 5px -1px rgba(88,88,88,1);
+}
+.nextTo {
+    margin-left: 1.5ex;
 }
 
 .second .for-glyph {
