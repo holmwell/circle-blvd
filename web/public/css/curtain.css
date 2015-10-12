@@ -34,6 +34,15 @@ body {
     padding-bottom: 5em;
     margin-top: 1.5em;
 }
+.fourth {
+    padding-top: 3.5em;
+    padding-bottom: 5em;   
+}
+.fourth h5 {
+    color: #111;
+    line-height: 1.4em;
+    padding-bottom: 2.75em;
+}
 
 .headline, .second, .third {
     text-align: left;
@@ -101,11 +110,16 @@ p {
     padding-top: 1em;
 }
 
+.fourth {
+    background-color: #ddd;
+}
+
 .footer {
     padding-top: 4em;
     padding-bottom: 6em;
     background-color: black;
     margin-bottom: 0;
+    margin-top: 0;
 }
 
 .footer a:hover {
