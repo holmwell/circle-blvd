@@ -43,6 +43,9 @@ body {
     line-height: 1.4em;
     padding-bottom: 2.75em;
 }
+.fifth .entrance {
+    padding-top: 1.3em;
+}
 
 .headline, .second, .third {
     text-align: left;

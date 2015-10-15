@@ -120,12 +120,18 @@ block content
         .block.fifth
             .container-fluid.main.debug
                 div.bottom-header
-                    h4
+                    h4.hidden-xs
                         span.nextTo Make planning simple, again.
                         a(href="/entrance")
                             button.join.btn.btn-default 
                                 h4 Start Free Trial
-                            
+                    
+                    .visible-xs
+                        h4 Make planning simple.
+                        .entrance
+                            a(href="/entrance")
+                                button.join.btn.btn-default 
+                                    h4 Start Free Trial
                 //- .row
                 //-     .col-xs-12.bottom-logo
                 //-         img(src="img/circle-blvd-basic.png")
