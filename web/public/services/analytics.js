@@ -15,6 +15,11 @@ CircleBlvd.Services.analytics = function ($window, $location) {
 				path = $window.location.pathname;
 			}
 
+			var search = $window.location.search;
+			if (search) {
+				path = path + search;
+			}
+
 			$window.ga('send', 'pageview', path);
 		}
 	};
