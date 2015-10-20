@@ -151,6 +151,10 @@ p {
 .btn-signin {
     padding-top: 1.25ex !important;
 }
+.join.btn.primary {
+    background: gold;
+    border-color: gold;
+}
 
 /* xs-screens only */
 @media (max-width: 757px) {
