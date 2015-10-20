@@ -44,17 +44,27 @@ block content
 
         .container-fluid.main.debug.first
             .row
-                .col-xs-12.col-sm-6.col-sm-push-6.logo
+                .col-xs-12.col-sm-6.col-sm-push-6.logo.hidden-xs
                     img(src="img/circle-blvd-basic.png")
 
+                .col-xs-12.visible-xs.title
+                    h1 Circle Blvd.
+
                 .col-xs-12.col-sm-6.col-sm-pull-6.headline
-                    h1 Project planning<br/> made simple.
+                    h1.hidden-xs Project planning<br/> made simple.
+
+                    h4.tagline.visible-xs Project planning made simple.
+
+                    h4.visible-xs 
+                        a(href="/entrance")
+                            button.join.btn.btn-default.primary 
+                                h4 Join Free for a Month
                     
                     p For community organizations, startups,
                      | and teams of one to 15. Make planning simple, again.
 
 
-                    h4 
+                    h4.hidden-xs 
                         a(href="/entrance")
                             button.join.btn.btn-default.primary 
                                 h4 Join Free for a Month

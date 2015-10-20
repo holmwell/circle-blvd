@@ -158,6 +158,21 @@ p {
 
 /* xs-screens only */
 @media (max-width: 757px) {
+    .curtain h1 {
+        font-size: 16pt;
+    }
+    .curtain .title h1 {
+        font-size: 24pt;
+        text-align: left;
+    }
+
+    .curtain h4 {
+        font-size: 12pt;
+    }
+    .curtain h4.tagline {
+        font-size: 14pt;
+    }
+
     .col-xs-12 {
         padding-left: 2em;
         padding-right: 2em;
