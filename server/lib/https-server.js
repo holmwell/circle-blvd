@@ -17,12 +17,25 @@ var getServerOptions = function (callback) {
 		var sslKeyPath = settings['ssl-key-path'] ? settings['ssl-key-path'].value : undefined;
 		var sslCertPath = settings['ssl-cert-path'] ? settings['ssl-cert-path'].value : undefined;
 		var sslCaPath = settings['ssl-ca-path'] ? settings['ssl-ca-path'].value : undefined;
-		
+		var sslCaPathRoot = settings['ssl-ca-path-root'] ? settings['ssl-ca-path-root'].value : undefined;
+
 		var options = undefined;
 
 		try {
-			if (sslKeyPath && sslCertPath) {
-				if (sslCaPath) {
+			if (sslKeyPath && sslCertPath) {	
+				if (sslCaPath && sslCaPathRoot) {
+					// We need this option for Gandi SHA2 certificates
+					// and Chrome for Android
+					options = {
+						key: fs.readFileSync(sslKeyPath),
+						cert: fs.readFileSync(sslCertPath),
+						ca: [
+							fs.readFileSync(sslCaPath),
+							fs.readFileSync(sslCaPathRoot)
+						]
+					};	
+				}
+				else if (sslCaPath) {
 					// TODO: It would be nice to restart the server if we
 					// find ourselves with a new sslCaPath and we're already up.
 					options = {

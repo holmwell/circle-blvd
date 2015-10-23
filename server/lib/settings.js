@@ -78,6 +78,10 @@ module.exports = function () {
 			value: null,
 			visibility: "private"
 		},{
+			name: "ssl-ca-path-root",
+			value: null,
+			visibility: "private"
+		},{
 			name: "ssl-cert-path",
 			value: null,
 			visibility: "private"
