@@ -10,7 +10,7 @@ block content
           .container-fluid
             .navbar-header
 
-              button.navbar-toggle(type="button" data-toggle="collapse" data-target="#navigation-circles")
+              button.navbar-toggle.hidden-xs(type="button" data-toggle="collapse" data-target="#navigation-circles")
                 span.sr-only Show circles
                 span.icon-bar
                 span.icon-bar
@@ -33,13 +33,13 @@ block content
                     a.btn-signin(href="/signin/{{locationHash}}"
                         data-toggle="collapse" data-target="#navigation-circles.in") 
                         button.btn.btn-default Sign in 
-                li
-                  a(href="/partner"
-                    data-toggle="collapse" data-target="#navigation-circles.in") Partner
+                //- li
+                //-   a(href="/partner"
+                //-     data-toggle="collapse" data-target="#navigation-circles.in") Partner
 
-                li
-                  a(href="/tour"
-                    data-toggle="collapse" data-target="#navigation-circles.in") Tour
+                //- li
+                //-   a(href="/tour"
+                //-     data-toggle="collapse" data-target="#navigation-circles.in") Tour
 
 
         .container-fluid.main.debug.first
@@ -60,8 +60,8 @@ block content
                             button.join.btn.btn-default.primary 
                                 h4 Start Free Trial
                     
-                    p As darkness surrounds us on this deathly night,
-                     | where will you be at the end? Plan well. &#x1F383;
+                    p Project management for small teams. The easy way 
+                     | for busy teams to stay on the same page.
 
                     h4.hidden-xs 
                         a(href="/entrance")
@@ -70,19 +70,19 @@ block content
                         //- span.nextTo for 60 days
 
 
-        .block.second
-            .container-fluid.main.debug
-                .row
-                    .col-xs-12.col-sm-8.col-sm-push-4
-                        .embed-container
-                            iframe(src="//www.youtube-nocookie.com/embed/-a7n_iyqB0A?rel=0" frameborder="0" allowfullscreen)
+        //- .block.second
+        //-     .container-fluid.main.debug
+        //-         .row
+        //-             .col-xs-12.col-sm-8.col-sm-push-4
+        //-                 .embed-container
+        //-                     iframe(src="//www.youtube-nocookie.com/embed/-a7n_iyqB0A?rel=0" frameborder="0" allowfullscreen)
 
-                    .col-xs-12.col-sm-4.col-sm-pull-8
-                        p Circle Blvd is just the right size for
-                         | small teams.
+        //-             .col-xs-12.col-sm-4.col-sm-pull-8
+        //-                 p Circle Blvd is just the right size for
+        //-                  | small teams.
 
-                        .for-glyph
-                            span(ng-include="'/img/glyphs/icon-same-idea.svg'")
+        //-                 .for-glyph
+        //-                     span(ng-include="'/img/glyphs/icon-same-idea.svg'")
 
 
         .block.value-prop 
@@ -103,32 +103,31 @@ block content
                             span(ng-include="'https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/glyphs/heart-coin.svg'")
                             p Four projects for $20&nbsp;/&nbsp;month
 
-        .block.third
-            .container-fluid.main.debug
-                .row
-                    .col-xs-12.col-sm-8
-                        .embed-container
-                            iframe(src="//www.youtube-nocookie.com/embed/77h9J0wvlxY?rel=0" frameborder="0" allowfullscreen)
+        //- .block.third
+        //-     .container-fluid.main.debug
+        //-         .row
+        //-             .col-xs-12.col-sm-8
+        //-                 .embed-container
+        //-                     iframe(src="//www.youtube-nocookie.com/embed/77h9J0wvlxY?rel=0" frameborder="0" allowfullscreen)
 
-                    .col-xs-12.col-sm-4.info
-                        p Make planning simple, again.
+        //-             .col-xs-12.col-sm-4.info
+        //-                 p Make planning simple, again.
 
-                        p Circle Blvd helps with planning, 
-                         | delegating, and remembering, all at 
-                         | an affordable price. 
+        //-                 p Circle Blvd helps with planning, 
+        //-                  | delegating, and remembering, all at 
+        //-                  | an affordable price. 
 
-                        a(href="/tour")
-                            button.join.btn.btn-default
-                                h4 Continue Tour
+        //-                 a(href="/tour")
+        //-                     button.join.btn.btn-default
+        //-                         h4 Continue Tour
 
-                        p.below-button or <a href="/entrance">sign up</a> today.
+        //-                 p.below-button or <a href="/entrance">sign up</a> today.
 
         .block.fourth
             .container-fluid.main.debug
                 .row
                     .col-xs-12
-                        p Developed by <a href="http://holmwell.com">Holmwell Software</a> in partnership with the following organizations:
-
+                        h2 Created in partnership with
 
                         .community-logos.logo-wrapper.row
                             .col-sm-3.col-xs-6.logo
@@ -145,24 +144,24 @@ block content
                             .col-sm-3.col-xs-6.logo
                                 <a href="http://advantage.oregonstate.edu/advantage-accelerator"><img src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/partners/osu-aa.png"></a>
 
-        .block.fifth
-            .container-fluid.main.debug
-                div.bottom-header
-                    h4.hidden-xs
-                        span.nextTo Make planning simple, again.
-                        a(href="/entrance")
-                            button.join.btn.btn-default 
-                                h4 Start Free Trial
+        //- .block.fifth
+        //-     .container-fluid.main.debug
+        //-         div.bottom-header
+        //-             h4.hidden-xs
+        //-                 span.nextTo Make planning simple, again.
+        //-                 a(href="/entrance")
+        //-                     button.join.btn.btn-default 
+        //-                         h4 Start Free Trial
                     
-                    .visible-xs
-                        h4 Make planning simple.
-                        .entrance
-                            a(href="/entrance")
-                                button.join.btn.btn-default 
-                                    h4 Start Free Trial
-                //- .row
-                //-     .col-xs-12.bottom-logo
-                //-         img(src="img/circle-blvd-basic.png")
+        //-             .visible-xs
+        //-                 h4 Make planning simple.
+        //-                 .entrance
+        //-                     a(href="/entrance")
+        //-                         button.join.btn.btn-default 
+        //-                             h4 Start Free Trial
+        //-         //- .row
+        //-         //-     .col-xs-12.bottom-logo
+        //-         //-         img(src="img/circle-blvd-basic.png")
 
 
         include ../inc/footer

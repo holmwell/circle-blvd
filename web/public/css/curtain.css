@@ -43,6 +43,9 @@ body {
     padding-top: 3.5em;
     padding-bottom: 5em;   
 }
+.fourth {
+    padding-top: 1.5em;
+}
 .fourth h5 {
     color: #111;
     line-height: 1.4em;
@@ -85,6 +88,9 @@ body {
     text-align: left;
     font-size: 18pt;
     color: #444;
+}
+.fourth h2 {
+    text-align: center;
 }
 .fifth h4 {
     text-align: center;
