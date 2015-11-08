@@ -71,6 +71,7 @@ body {
 }
 .logo img {
     width: 70%;
+    /*width: 50%;*/
 }
 
 .curtain h1 {
@@ -108,7 +109,7 @@ p {
 }
 
 .join {
-    margin-top: 1.5em;
+    margin-top: 2em;
     padding-left: 3ex;
     padding-right: 3ex;
 
