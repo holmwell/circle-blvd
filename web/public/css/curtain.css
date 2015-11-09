@@ -51,6 +51,9 @@ body {
     line-height: 1.4em;
     padding-bottom: 2.75em;
 }
+.fifth .logo {
+    margin-bottom: 1.3em;
+}
 .fifth .entrance {
     padding-top: 1.8em;
 }
@@ -72,10 +75,12 @@ body {
 .logo img {
     width: 60%;
 }
-.first .logo {
+.first .logo, 
+.fifth .logo {
     margin-top: 0;
 }
-.first .logo img {
+.first .logo img,
+.fifth .logo img {
     width: 80%;
 }
 
