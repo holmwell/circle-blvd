@@ -72,8 +72,8 @@ body {
     margin-top: 3em;
     text-align: center;
 }
-.logo img {
-    width: 60%;
+.community-logos .logo img {
+    width: 70%;
 }
 .first .logo, 
 .fifth .logo {
