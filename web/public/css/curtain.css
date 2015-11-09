@@ -70,8 +70,13 @@ body {
     text-align: center;
 }
 .logo img {
-    width: 70%;
-    /*width: 50%;*/
+    width: 60%;
+}
+.first .logo {
+    margin-top: 0;
+}
+.first .logo img {
+    width: 80%;
 }
 
 .curtain h1 {
@@ -200,7 +205,6 @@ p {
     }
     .curtain .title h1 {
         font-size: 24pt;
-        text-align: left;
     }
 
     .curtain h4 {
@@ -208,6 +212,11 @@ p {
     }
     .curtain h4.tagline {
         font-size: 14pt;
+    }
+
+    .first, 
+    .curtain h4  {
+        text-align: center;
     }
 
     .col-xs-12 {
