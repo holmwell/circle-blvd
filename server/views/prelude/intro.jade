@@ -87,17 +87,17 @@ block content
         .block.value-prop 
             .container-fluid.main.debug
                 .row
-                    .col-sm-3.col-sm-offset-1.col-xs-6
+                    .col-xs-6.col-xs-offset-3.col-sm-3.col-sm-offset-1
                         .for-glyph.front-info
                             span(ng-include="'https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/glyphs/checklist.svg'")
-                            p Task management
+                            p Task&nbsp;management
 
-                    .col-sm-3.col-sm-offset-1.col-xs-6
+                    .col-xs-6.col-xs-offset-3.col-sm-3.col-sm-offset-1
                         .for-glyph.front-info
                             span(ng-include="'https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/glyphs/waypoints.svg'")
-                            p Milestone planning
+                            p Milestone&nbsp;planning
 
-                    .col-sm-3.col-sm-offset-1.col-xs-12
+                    .col-xs-6.col-xs-offset-3.col-sm-3.col-sm-offset-1
                         .for-glyph.front-info
                             span(ng-include="'https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/glyphs/heart-coin.svg'")
                             p Four projects for $20&nbsp;/&nbsp;month
@@ -143,24 +143,14 @@ block content
                             .col-sm-3.col-xs-6.logo
                                 <a href="http://advantage.oregonstate.edu/advantage-accelerator"><img src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/partners/osu-aa.png"></a>
 
-        //- .block.fifth
-        //-     .container-fluid.main.debug
-        //-         div.bottom-header
-        //-             h4.hidden-xs
-        //-                 span.nextTo Make planning simple, again.
-        //-                 a(href="/entrance")
-        //-                     button.join.btn.btn-default 
-        //-                         h4 Start Free Trial
-                    
-        //-             .visible-xs
-        //-                 h4 Make planning simple.
-        //-                 .entrance
-        //-                     a(href="/entrance")
-        //-                         button.join.btn.btn-default 
-        //-                             h4 Start Free Trial
-        //-         //- .row
-        //-         //-     .col-xs-12.bottom-logo
-        //-         //-         img(src="img/circle-blvd-basic.png")
+        .block.fifth.visible-xs
+            .container-fluid.main.debug
+                div.bottom-header 
+                    h4.tagline Project management for small&nbsp;teams.
+                    .entrance
+                        a(href="/entrance")
+                            button.join.btn.btn-default 
+                                h4 Start Free Trial
 
 
         include ../inc/footer

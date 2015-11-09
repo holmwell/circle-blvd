@@ -52,7 +52,7 @@ body {
     padding-bottom: 2.75em;
 }
 .fifth .entrance {
-    padding-top: 1.3em;
+    padding-top: 1.8em;
 }
 
 .headline, .second, .third {
@@ -227,8 +227,23 @@ p {
     .for-glyph {
         max-width: 300px;
     }
+    .value-prop {
+        padding-top: 0;
+    }
+    .value-prop .for-glyph {
+        margin-top: 3em;
+    }
 
     .third .info {
         margin-top: 1.1em;
+    }
+
+    .fourth h2 {
+        font-size: 18pt;
+    }
+
+    .fifth p {
+        margin-top: 1.5em;
+        font-size: 12pt
     }
 }
