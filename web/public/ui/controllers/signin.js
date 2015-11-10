@@ -155,14 +155,25 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 				message = data;
 			}
 			$scope.signup.message = message;
+			$scope.signup.once = false;
 		};
 
 		var data = {
-			circle: $scope.signup.circle,
-			name: $scope.signup.name,
+			circle: $scope.signup.circle || "First circle",
+			name: $scope.signup.name || "Guest",
 			email: $scope.signup.email,
 			password: $scope.signup.password
 		};
+
+		if (!data.email) {
+			failure("Please enter your email address, above, to continue.", 400);
+			return;
+		}
+
+		if (!data.password) {
+			failure("Please enter a password, above, to continue.", 400);
+			return;
+		}
 
 		$http.post('/data/signup/now', data)
 		.success(success)
@@ -216,8 +227,15 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 		$scope.signinFailure = undefined;
 	};
 
+	var signupInfoChanged = function () {
+		$scope.signup.message = undefined;
+	};
+
 	$scope.$watch('user.email', signinInfoChanged);
 	$scope.$watch('user.password', signinInfoChanged);
+
+	$scope.$watch('signup.email', signupInfoChanged);
+	$scope.$watch('signup.password', signupInfoChanged);
 
 	var init = function () {
 		// Redirect to home if we're already signed in.
