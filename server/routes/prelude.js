@@ -54,6 +54,10 @@ router.get("/entrance", function (req, res, next) {
     }
 });
 
+router.get("/entrance/old", function (req, res, next) {
+    res.render('prelude/entrance-old', getDefaultParams(req));
+});
+
 
 router.get("/create", function (req, res, next) {
     if (!req.isAuthenticated()) {
