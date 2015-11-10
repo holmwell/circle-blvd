@@ -6,51 +6,17 @@ append stylesheets
 
 block content
     .curtain(ng-controller="SignInCtrl")
-        .navbar.navbar-inverse.topMenu(role="navigation" ng-cloak)
-          .container-fluid
-            .navbar-header
-
-              button.navbar-toggle.hidden-xs(type="button" data-toggle="collapse" data-target="#navigation-circles")
-                span.sr-only Show circles
-                span.icon-bar
-                span.icon-bar
-                span.icon-bar
-              
-              a.navbar-brand(href="/#/")
-                span.circle(ng-include="'/img/glyphs/icon-white-circle.svg'")
-
-              ul.nav.navbar-nav.visible-xs.pull-left
-                li 
-                    a(href="/signin") Sign in
-
-            .collapse.navbar-collapse#navigation-circles
-              ul.nav.navbar-nav
-                li
-                    a.name(href="/") Circle Blvd.
-
-              ul.nav.navbar-nav.navbar-right
-                li
-                    a.btn-signin(href="/signin/{{locationHash}}"
-                        data-toggle="collapse" data-target="#navigation-circles.in") 
-                        button.btn.btn-default Sign in 
-                //- li
-                //-   a(href="/partner"
-                //-     data-toggle="collapse" data-target="#navigation-circles.in") Partner
-
-                //- li
-                //-   a(href="/tour"
-                //-     data-toggle="collapse" data-target="#navigation-circles.in") Tour
-
+        include ../inc/navbar-curtain
 
         .container-fluid.main.debug.first
             .row
                 .col-xs-6.col-xs-offset-3.col-sm-offset-0.col-sm-4.col-sm-push-8.logo
                     img(src="img/glyphs/icon-same-idea.svg")
 
-                .col-xs-12.visible-xs.title
+                .col-xs-12.gutter-xs.visible-xs.title
                     h1 Circle Blvd.
 
-                .col-xs-12.col-sm-8.col-sm-pull-4.headline
+                .col-xs-12.gutter-xs.col-sm-8.col-sm-pull-4.headline
                     h1.hidden-xs Small teams, big ideas.
 
                     h4.tagline.visible-xs Project management for small&nbsp;teams.
@@ -125,7 +91,7 @@ block content
         .block.fourth
             .container-fluid.main.debug
                 .row
-                    .col-xs-12
+                    .col-xs-12.gutter-xs
                         h2 Created in partnership with
 
                         .community-logos.logo-wrapper.row

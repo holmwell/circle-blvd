@@ -3,46 +3,74 @@ extends layout-simple
 append stylesheets
     link(href='https://fonts.googleapis.com/css?family=Roboto+Slab' rel='stylesheet' type='text/css')
     link(href='/css/start.css' rel='stylesheet' type='text/css')
+    link(href='/css/curtain.css' rel='stylesheet' type='text/css')
+    link(href='/css/entrance.css' rel='stylesheet' type='text/css')
 
-block view
-    .signin.start(ng-controller="SignInCtrl")
-        .signup#create-account
-            form
-                .col-sm-offset-1.col-sm-10.clear.top-header
-                    h1 Welcome&nbsp;to Circle&nbsp;Blvd.
+block content
+    .curtain(ng-controller="SignInCtrl")
+        include ../inc/navbar-curtain
 
-                .col-sm-offset-2.col-sm-8.clear.signin-section
-                    p Welcome! To get started with your first project, 
-                     | or "circle" as we call them, please enter a few things:
+        .block.first
+            .container-fluid.main
+                .row
+                    .col-xs-12.col-sm-offset-1.col-sm-2
+                        .step-wrapper
+                            .step &nbsp;
+                            //- img(src="img/circle-blvd-basic.png")
 
-                    label(for="signupCircleName") 
-                        h2 1. Circle name
-                    p Name your first circle after your group or project. You'll be able to 
-                     | change this later. And, you'll be able to create more circles later.
-                    div
-                        input#signupCircleName.form-control(type="text" ng-model="signup.circle" placeholder="Circle or project name")
+                    .question.col-xs-offset-1.col-xs-10.col-sm-offset-0.col-sm-6.title
+                        h1 Welcome to Circle&nbsp;Blvd.
+                        h4 Project management for small&nbsp;teams.
+                        h4.info Please make your first circle by answering three questions,&nbsp;below.
+        .block.second
+            .container-fluid.main
+                .row
+                    .col-xs-12.col-sm-2.col-sm-offset-1
+                        .step-wrapper
+                            .step i
+                    .question.col-xs-offset-1.col-xs-10.col-sm-offset-0.col-sm-6
+                        .heading What's your first name?
+                        .explaination
+                        input#signupName.entry.form-control(type="text" ng-model="signup.name" placeholder="First name, full name, or nickname")
 
-                    label(for="signupEmail") 
-                        h2 2. Your email address 
-                    p This is how you'll be signing in to the Circle Blvd website and app.
-                    div
-                        input#signupEmail.form-control(type="text" ng-model="signup.email" placeholder="Email address")
-                    div
+
+        .block.third 
+            .container-fluid.main
+                .row
+                    .col-xs-12.col-sm-offset-1.col-sm-2
+                        .step-wrapper
+                            .step ii
+                    .question.col-xs-offset-1.col-xs-10.col-sm-offset-0.col-sm-6
+                        .heading What's the name of your team?
+                        .explaination 
+                        input#signupCircleName.entry.form-control(type="text" ng-model="signup.circle" placeholder="Team or project name")
+
+        .block.fourth
+            .container-fluid.main
+                .row
+                    .col-xs-12.col-sm-offset-1.col-sm-2
+                        .step-wrapper
+                            .step iii
+                    .question.col-xs-offset-1.col-xs-10.col-sm-offset-0.col-sm-6    
+                        .heading What's your email address?
+                        .explaination How you'll be signing in.
+                        input.entry.form-control(type="text" ng-model="signup.email" placeholder="Email address")
                         input.form-control(type="password" ng-model="signup.password" placeholder="Password")
-                    
-                    label(for="signupName") 
-                        h2 3. Your first name
-                    p This can be any name that people in your circle will recognize 
-                     | you by. We suggest using first names only.
-                    div
-                        input#signupName.form-control(type="text" 
-                            ng-model="signup.name" 
-                            placeholder="First name, full name, or nickname")
-                    
-                    button.btn.btn-default.pull-right(
-                        ng-hide="signup.message"
-                        type="submit" 
-                        ng-click="signUp()") Create circle
 
-                .col-sm-offset-2.col-sm-8.clear.ng-cloak(ng-show="signup.message")
-                    .thanks.story.deadline.not-selected {{signup.message}}
+        .block.fifth
+            .container-fluid.main
+                .row
+                    .col-xs-12.col-sm-offset-1.col-sm-2
+                        .step-wrapper
+                            .step &nbsp;
+                    .col-xs-12.col-sm-offset-0.col-sm-6.join-wrapper.question
+                            button.join.btn.btn-default.primary(
+                                ng-hide="signup.message"
+                                type="submit" 
+                                ng-click="signUp()") 
+                                h4 Create circle
+
+                            div.ng-cloak(ng-show="signup.message")
+                                {{signup.message}}
+
+        include ../inc/footer

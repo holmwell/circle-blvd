@@ -1,0 +1,34 @@
+.navbar.navbar-inverse.topMenu(role="navigation" ng-cloak)
+  .container-fluid
+    .navbar-header
+
+      button.navbar-toggle.hidden-xs(type="button" data-toggle="collapse" data-target="#navigation-circles")
+        span.sr-only Show circles
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      
+      a.navbar-brand(href="/#/")
+        span.circle(ng-include="'/img/glyphs/icon-white-circle.svg'")
+
+      ul.nav.navbar-nav.visible-xs.pull-left
+        li 
+            a(href="/signin") Sign in
+
+    .collapse.navbar-collapse#navigation-circles
+      ul.nav.navbar-nav
+        li
+            a.name(href="/") Circle Blvd.
+
+      ul.nav.navbar-nav.navbar-right
+        li
+            a.btn-signin(href="/signin/{{locationHash}}"
+                data-toggle="collapse" data-target="#navigation-circles.in") 
+                button.btn.btn-default Sign in 
+        //- li
+        //-   a(href="/partner"
+        //-     data-toggle="collapse" data-target="#navigation-circles.in") Partner
+
+        //- li
+        //-   a(href="/tour"
+        //-     data-toggle="collapse" data-target="#navigation-circles.in") Tour
