@@ -9,7 +9,8 @@
 	background-color: #006688;
 	color: #e5e5e5;
 }
-h1 {
+.first h1 {
+	color: white;
 	text-align: left;
 }
 .first h1 {
