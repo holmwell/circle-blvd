@@ -1092,6 +1092,16 @@ var configureApp = function (config) {
     
     app.use(compression());
 
+    // Use CORS on port 8100 for local dev / debug runs
+    // This is the default port for Ionic
+    if (isDebugging) {
+        app.use(function (req, res, next) {
+            res.header("Access-Control-Allow-Origin", "http://localhost:8100");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });        
+    }
+
     var staticPath = path.join(__dirname, '../web/public');
     var minJsPath = '/_js';
 
