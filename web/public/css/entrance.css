@@ -19,7 +19,7 @@
 .first h4 {
 	font-size: 12pt;
 	font-weight: normal;
-	color: goldenrod;
+	color: gold;
 }
 h4.info {
 	color: #bbb;
@@ -87,6 +87,13 @@ h4.info {
 
 	box-shadow: 2px 2px 4px #666;
 }
+
+.first .check {
+	width: 120px;
+	margin-left: -13px;
+	margin-top: -13px;
+}
+
 .third .step-wrapper {
 	border-color: #eee;
 	color: #eee;
@@ -139,12 +146,6 @@ h4.info {
 .block {
 	padding-bottom: 3.5em;
 }
-.step-wrapper img {
-	width: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-}
 
 /* xs-screens only */
 @media (max-width: 757px) {
@@ -161,6 +162,7 @@ h4.info {
 	.first .title {
 		text-align: left;
 	}
+
 	.fourth .step-wrapper {
 		margin-top: 0;
 	}
