@@ -259,7 +259,7 @@
             ng-class="{mine: isStoryMine(story)}"
             ng-hide="story.isSelected" 
             id="story-{{$index}}">
-                <div class="col-xs-11 paddy">
+            <div class="col-xs-11 paddy">
                 <div class="phone-backlog-status col-xs-2 debug no-select">
                     <i class="done-status" 
                         ng-show="story.isDeadline && !story.isAfterNextMeeting" 
@@ -277,12 +277,8 @@
                     <span class="new-status"
                     ng-show="(isStoryNew(story) && isStoryMine(story))">New</span>
                 </div>
-                <div class="phone-summary col-xs-8">
+                <div class="phone-summary col-xs-10">
                     <sp-story-summary/>
-                </div>
-                <div class="col-xs-2 details-link" ng-show="story.isHighlighted">
-                    <a class="subtle jsLink" ng-click="select(story)">
-                        <!-- <span class="glyphicon glyphicon-arrow-right"></span> -->details</a>
                 </div>
             </div>
             

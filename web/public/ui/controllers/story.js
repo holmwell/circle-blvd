@@ -245,7 +245,7 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 	});
 
 	$scope.handleSingleClicks = function (story) {
-		if ($scope.keyboard.isShiftDown) {
+		if ($scope.keyboard.isShiftDown || $scope.isScreenXs) {
 			$scope.select(story);
 			return;
 		}
