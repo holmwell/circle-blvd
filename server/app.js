@@ -1113,7 +1113,9 @@ var configureApp = function (config) {
         srcPath: staticPath,
         destPath: path.join(staticPath, minJsPath),
         webPath: minJsPath,
-        debug: isDebugging
+        debug: isDebugging,
+        // Rudimentary cache handling
+        version: Date.now().toString()
     });
 
     compact.addNamespace('lib')
