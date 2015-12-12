@@ -1113,9 +1113,7 @@ var configureApp = function (config) {
         srcPath: staticPath,
         destPath: path.join(staticPath, minJsPath),
         webPath: minJsPath,
-        debug: isDebugging,
-        // Rudimentary cache handling
-        version: Date.now().toString()
+        debug: isDebugging
     });
 
     compact.addNamespace('lib')
@@ -1169,6 +1167,10 @@ var configureApp = function (config) {
         .addJs('main/filters.js')
         .addJs('main/directives.js')
 
+    // Rudimentary cache handling
+    var version = Date.now().toString();
+    compact.addNamespace(version);
+
     app.use(serveStatic(staticPath));
 
     app.use(compact.middleware([
@@ -1176,7 +1178,8 @@ var configureApp = function (config) {
         'app', 
         'services', 
         'controllers', 
-        'main'
+        'main',
+        version
     ]));
     app.use(logger('dev'));
     app.use(cookieParser()); // TODO: Signed cookies?
