@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var version = require('circle-blvd/version');
 
 var secretSessionMaker = require('../../lib/secret-session-maker.js');
 var authLib = require('../../lib/auth.js');
@@ -24,24 +23,6 @@ var init = function (auth, app) {
             console.log('auth: no params')
             return res.status(404).send();
         }
-
-        // TODO: Consolidate with the code in prelude.js routes
-        var getDefaultParams = function (req) {
-            var analyticsId = false;
-            var settings = app.get('settings');
-            if (settings && settings['google-analytics']) {
-                analyticsId = settings['google-analytics'].value;
-            }
-
-            var params = {
-                host: req.get('Host'),
-                version: version,
-                analyticsId: analyticsId,
-                angularModuleName: 'cbPrelude'
-            };
-
-            return params;
-        };
 
         secretSessionMaker.find(docId, guard(res, function (session) {
             var sorryMessage = "Sorry, we don't know what you're looking for.";
