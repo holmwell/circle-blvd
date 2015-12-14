@@ -1,4 +1,4 @@
-var version = require('../../lib/version');
+var version = require('circle-blvd/version');
 
 exports.index = function renderIndex(req, res, app) {
 	var analyticsId = false;

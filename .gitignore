@@ -22,8 +22,6 @@ logs
 results
 
 typings
-
-node_modules
 npm-debug.log
 
 server/front-end/public/_js
