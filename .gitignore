@@ -21,6 +21,8 @@ pids
 logs
 results
 
+typings
+
 node_modules
 npm-debug.log
 
