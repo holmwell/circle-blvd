@@ -1,4 +1,4 @@
-var db = require('../lib/dataAccess.js').instance();
+var db = require('../../lib/dataAccess.js').instance();
 
 /*
  * GET user info

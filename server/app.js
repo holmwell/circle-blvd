@@ -30,15 +30,15 @@ var settings  = require('./lib/settings.js');
 var contact   = require('./lib/contact-emailer.js');
 
 // Routes
-var usersRoutes = require('./routes/users');
-var userRoutes  = require('./routes/user');
-var initRoutes  = require('./routes/init');
+var usersRoutes = require('./back-end/routes/users');
+var userRoutes  = require('./back-end/routes/user');
+var initRoutes  = require('./back-end/routes/init');
 
 // Express 4.x routes
 var archives = require('./front-end/routes/archives');
 var prelude = require('./front-end/routes/prelude');
 var authRoutes = require('./routes/auth');
-var metrics = require('./routes/metrics');
+var metrics = require('./back-end/routes/metrics');
 
 var couchSessionStore = require('./lib/couch-session-store.js');
 

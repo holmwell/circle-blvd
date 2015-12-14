@@ -1,8 +1,8 @@
 var async = require('async');
 
-var db        = require('../lib/dataAccess.js').instance();
-var sslServer = require('../lib/https-server.js');
-var settings  = require('../lib/settings.js');
+var db        = require('../../lib/dataAccess.js').instance();
+var sslServer = require('../../lib/https-server.js');
+var settings  = require('../../lib/settings.js');
 
 exports.init = function (req, res, app) {
 	var data = req.body;
