@@ -26,4 +26,4 @@ typings
 node_modules
 npm-debug.log
 
-web/public/_js
+server/front-end/public/_js

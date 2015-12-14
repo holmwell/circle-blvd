@@ -16,8 +16,6 @@ rm -r ${DEPLOY_DIR}/*
 # Move dotfiles, too
 shopt -s dotglob nullglob
 
-mkdir -p ${DEPLOY_DIR}/web/public
 mkdir -p ${DEPLOY_DIR}/server
 
 mv ${WORK_DIR}/server/* ${DEPLOY_DIR}/server
-mv ${WORK_DIR}/web/public/* ${DEPLOY_DIR}/web/public

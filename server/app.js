@@ -1105,7 +1105,7 @@ var configureApp = function (config) {
         });        
     }
 
-    var staticPath = path.join(__dirname, '../web/public');
+    var staticPath = path.join(__dirname, './front-end/public');
     var minJsPath = '/_js';
 
     // for minifying JavaScript

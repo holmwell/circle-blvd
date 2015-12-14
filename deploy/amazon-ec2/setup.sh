@@ -28,7 +28,5 @@ sudo npm install --production
 
 # put the app in the deploy folder
 cd 
-mkdir -p apps/circle-blvd/web/public
 mkdir -p apps/circle-blvd/server
 cp -R repos/circle-blvd/server/* apps/circle-blvd/server
-cp -R repos/circle-blvd/web/public/* apps/circle-blvd/web/public
