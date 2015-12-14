@@ -1,6 +1,6 @@
 // test/auth-ensure.js
 
-var unit = require('../lib/auth-ensure.js');
+var unit = require('circle-blvd/auth-ensure');
 var mocks = require('./lib/mocks.js');
 var request = require('supertest');
 

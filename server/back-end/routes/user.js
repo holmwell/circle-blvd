@@ -1,4 +1,4 @@
-var db = require('../../lib/dataAccess.js').instance();
+var db = require('circle-blvd/dataAccess').instance();
 
 /*
  * GET user info

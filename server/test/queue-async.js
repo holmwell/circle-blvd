@@ -13,7 +13,7 @@ var init = function () {
 }(); // closure
 
 test.setUp = function (done) {
-	unit = require('../lib/queue-async.js');
+	unit = require('circle-blvd/queue-async');
 	// build a queue with a size of 'itemCount'
 	// that is like this [1, 2, ..., itemCount]
 	var enqueueCount = 0;

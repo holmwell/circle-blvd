@@ -1,6 +1,6 @@
 // test/encrypt.js
 
-var unit = require('../lib/encrypt.js');
+var unit = require('circle-blvd/encrypt');
 var test = {};
 
 test['salt is unique (100 times)'] = function (test) {

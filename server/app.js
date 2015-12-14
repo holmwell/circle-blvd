@@ -17,17 +17,17 @@ var expressSession = require('express-session');
 
 var compactModule = require('compact-exclsr');
 
-var auth   = require('./lib/auth-local.js');
-var ensure = require('./lib/auth-ensure.js');
-var limits = require('./lib/limits.js');
-var errors = require('./lib/errors.js');
-var db     = require('./lib/dataAccess.js').instance();
-var notify = require('./lib/notify.js');
+var auth   = require('circle-blvd/auth-local');
+var ensure = require('circle-blvd/auth-ensure');
+var limits = require('circle-blvd/limits');
+var errors = require('circle-blvd/errors');
+var db     = require('circle-blvd/dataAccess').instance();
+var notify = require('circle-blvd/notify');
 
-var sslServer = require('./lib/https-server.js');
-var payment   = require('./lib/payment.js')();
-var settings  = require('./lib/settings.js');
-var contact   = require('./lib/contact-emailer.js');
+var sslServer = require('circle-blvd/https-server');
+var payment   = require('circle-blvd/payment')();
+var settings  = require('circle-blvd/settings');
+var contact   = require('circle-blvd/contact-emailer');
 
 // Routes
 var usersRoutes = require('./back-end/routes/users');
@@ -40,7 +40,7 @@ var prelude = require('./front-end/routes/prelude');
 var authRoutes = require('./back-end/routes/auth');
 var metrics = require('./back-end/routes/metrics');
 
-var couchSessionStore = require('./lib/couch-session-store.js');
+var couchSessionStore = require('circle-blvd/couch-session-store');
 
 var ee = new events.EventEmitter();
 var isReady = false;

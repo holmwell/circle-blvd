@@ -9,7 +9,7 @@ var rewire  = require('rewire');
 var mocks   = require('./lib/mocks.js');
 var request = require('supertest');
 
-var unit   = rewire('../lib/auth-local.js');
+var unit   = rewire('circle-blvd/auth-local');
 var test   = {};
 
 var dbMock = function () {
