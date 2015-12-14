@@ -1076,7 +1076,7 @@ var configureApp = function (config) {
     app.set('port', process.env.PORT || 3000);
     app.set('ssl-port', process.env.SSL_PORT || 4000);
     
-    app.set('views', __dirname + '/views');
+    app.set('views', __dirname + '/front-end/views');
     app.set('view engine', 'jade');
 
     app.engine('ejs', require('ejs').__express);
