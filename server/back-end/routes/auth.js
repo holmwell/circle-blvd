@@ -1,12 +1,12 @@
 var express = require('express');
 var router = express.Router();
-var version = require('../lib/version');
+var version = require('../../lib/version');
 
-var secretSessionMaker = require('../lib/secret-session-maker.js');
-var authLib = require('../lib/auth.js');
-var errors = require('../lib/errors.js');
-var notify = require('../lib/notify.js');
-var members = require('../lib/data/users.js');
+var secretSessionMaker = require('../../lib/secret-session-maker.js');
+var authLib = require('../../lib/auth.js');
+var errors = require('../../lib/errors.js');
+var notify = require('../../lib/notify.js');
+var members = require('../../lib/data/users.js');
 
 var guard = errors.guard;
 

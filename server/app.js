@@ -37,7 +37,7 @@ var initRoutes  = require('./back-end/routes/init');
 // Express 4.x routes
 var archives = require('./front-end/routes/archives');
 var prelude = require('./front-end/routes/prelude');
-var authRoutes = require('./routes/auth');
+var authRoutes = require('./back-end/routes/auth');
 var metrics = require('./back-end/routes/metrics');
 
 var couchSessionStore = require('./lib/couch-session-store.js');
