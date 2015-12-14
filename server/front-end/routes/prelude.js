@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var version = require('../lib/version');
+var version = require('../../lib/version');
 
 var app;
 

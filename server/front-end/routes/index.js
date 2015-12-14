@@ -1,4 +1,4 @@
-var version = require('../lib/version');
+var version = require('../../lib/version');
 
 exports.index = function renderIndex(req, res, app) {
 	var analyticsId = false;

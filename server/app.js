@@ -3,7 +3,7 @@ var express = require('express');
 var events  = require('events');
 var http    = require('http');
 var path    = require('path');
-var routes  = require('./routes');
+var routes  = require('./front-end/routes');
 var io      = require('socket.io')();
 
 // express middleware
@@ -35,8 +35,8 @@ var userRoutes  = require('./routes/user');
 var initRoutes  = require('./routes/init');
 
 // Express 4.x routes
-var archives = require('./routes/archives');
-var prelude = require('./routes/prelude');
+var archives = require('./front-end/routes/archives');
+var prelude = require('./front-end/routes/prelude');
 var authRoutes = require('./routes/auth');
 var metrics = require('./routes/metrics');
 
