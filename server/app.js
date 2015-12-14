@@ -1147,6 +1147,7 @@ var configureApp = function (config) {
         .addJs('ui/controllers/home.js')
         .addJs('ui/controllers/welcome.js')
         .addJs('ui/controllers/signin.js')
+        .addJs('ui/controllers/forgot.js')
         .addJs('ui/controllers/archive.js')
         .addJs('ui/controllers/lists.js')
         .addJs('ui/controllers/profile.js')

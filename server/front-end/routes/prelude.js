@@ -68,6 +68,16 @@ router.get("/create", function (req, res, next) {
     }
 });
 
+
+router.get("/auth-forgot/signin/:docId/:secret", function (req, res, next) {
+    var params = getDefaultParams(req);
+    params.auth = {
+        docId: req.params.docId,
+        secret: req.params.secret
+    }; 
+    res.render('auth/forgot', params);
+});             
+
 router.get("/about", render('about'));
 
 router.get('/tips', render('tips'));

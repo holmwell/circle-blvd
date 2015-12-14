@@ -52,7 +52,7 @@ var getForgotPasswordMessage = function (session, req) {
 	message += "To do so, please go here: ";
 
 	var protocol = req.protocol || "http";
-	message += protocol + "://" + req.get('Host') + "/auth/forgot/" + 
+	message += protocol + "://" + req.get('Host') + "/auth-forgot/signin/" + 
 		session._id + "/" + session.secret;
 	
 	message += "\n\n";

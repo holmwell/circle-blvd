@@ -1,11 +1,23 @@
 extends ../prelude/layout-simple
 
+append bottom
+    script.
+        CircleBlvd.Prelude.value("auth", !{JSON.stringify(auth)});
+
 block view
-    .content.prelude-content
+    .content.prelude-content(ng-controller="ForgotCtrl")
         .col-sm-offset-2.col-sm-8.contact
-            h2 Welcome back
+            div(ng-if="status === 'pending'")
+                p One moment, please ...
 
-            p You are now signed in. To change your password, please 
-             | visit <a href="/#/profile">your profile page</a>.
+            div(ng-if="status === 'ok'" ng-cloak)
+                h2 Welcome back
 
-            p Thank you.
+                p You are now signed in. To change your password, please 
+                 | visit <a href="/#/profile">your profile page</a>.
+
+                p Thank you.
+
+            div(ng-if="status === 'failed'" ng-cloak)
+                h2 Circle Blvd.
+                p Sorry, we don't know what you're looking for.

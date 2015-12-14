@@ -1,6 +1,3 @@
-// TODO: This code combines front-end (render) and back-end
-// functionality, and should be edited to split them apart.
-
 var express = require('express');
 var router = express.Router();
 var version = require('../lib/version');
@@ -58,10 +55,7 @@ var init = function (auth, app) {
             }
             members.findById(session.user, guard(res, function (member) {
                 authLib.forceSignin(member, req, guard(res, function () {
-                    // TODO: This should be split out to a different place,
-                    // so we can put the front end and back end on different
-                    // servers.
-                    res.render('auth/forgot', getDefaultParams(req));
+                    res.status(200).send();
                 }));
             }));
         }));
