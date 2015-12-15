@@ -21,6 +21,7 @@ var ensure = require('circle-blvd/auth-ensure');
 var limits = require('circle-blvd/limits');
 var errors = require('circle-blvd/errors');
 var handle = require('circle-blvd/handle');
+var send   = require('circle-blvd/send');
 var db     = require('circle-blvd/dataAccess').instance();
 
 var socketSetup = require('circle-blvd/socket-setup');
@@ -35,12 +36,13 @@ var usersRoutes = require('./back-end/routes/users');
 var userRoutes  = require('./back-end/routes/user');
 var initRoutes  = require('./back-end/routes/init');
 
-var authRoutes    = require('./back-end/routes/auth');
-var metrics       = require('./back-end/routes/metrics');
-var paymentRoutes = require('./back-end/routes/payment');
-var signupRoutes  = require('./back-end/routes/signup');
-var circleRoutes  = require('./back-end/routes/circle');
-var storyRoutes   = require('./back-end/routes/story');
+var authRoutes     = require('./back-end/routes/auth');
+var metrics        = require('./back-end/routes/metrics');
+var settingsRoutes = require('./back-end/routes/settings');
+var paymentRoutes  = require('./back-end/routes/payment');
+var signupRoutes   = require('./back-end/routes/signup');
+var circleRoutes   = require('./back-end/routes/circle');
+var storyRoutes    = require('./back-end/routes/story');
 
 var routes   = require('./front-end/routes');
 var archives = require('./front-end/routes/archives');
@@ -55,14 +57,6 @@ var app = express();
 
 // Middleware for data access
 var guard = errors.guard;
-
-var send = function (fn) {
-    var middleware = function (req, res, next) {
-        fn(handle(res));
-    };
-
-    return middleware;
-};
 
 var data = function (fn) {
     // A generic guard for callbacks. Call the
@@ -82,16 +76,6 @@ var data = function (fn) {
 
     return middleware;
 };
-
-// caching middleware
-var cache = function (ms) {
-    var fn = function (req, res, next) {
-        res.setHeader("Cache-Control", "max-age=" + ms);
-        next();
-    };
-    return fn;
-};
-var sixMinutes = 5 * 60;
 
 var tryToCreateHttpsServer = function (callback) {
     sslServer.create(app, callback);
@@ -164,15 +148,11 @@ var defineRoutes = function () {
     app.put("/data/initialize", initRoutes.init);
 
     // Settings!
-    app.get("/data/settings", cache(sixMinutes), send(db.settings.get)); // public
+    app.use("/data/settings", settingsRoutes.router(app));
 
-    // TODO: This is not used. Assess.
-    app.get("/data/settings/private", 
-        ensure.mainframe, send(db.settings.getPrivate)); 
-
-    app.get("/data/settings/authorized", 
-        ensure.mainframe, send(db.settings.getAuthorized));
-
+    // TODO: This function has a lot of dependencies. 
+    // Clean up this mess, so we can get it out of this
+    // file.
     app.put("/data/setting", ensure.mainframe, function (req, res) {
         var data = req.body;
 
