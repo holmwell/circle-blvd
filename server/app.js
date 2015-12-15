@@ -36,13 +36,14 @@ var usersRoutes = require('./back-end/routes/users');
 var userRoutes  = require('./back-end/routes/user');
 var initRoutes  = require('./back-end/routes/init');
 
-var authRoutes     = require('./back-end/routes/auth');
-var metrics        = require('./back-end/routes/metrics');
-var settingsRoutes = require('./back-end/routes/settings');
-var paymentRoutes  = require('./back-end/routes/payment');
-var signupRoutes   = require('./back-end/routes/signup');
-var circleRoutes   = require('./back-end/routes/circle');
-var storyRoutes    = require('./back-end/routes/story');
+var authRoutes       = require('./back-end/routes/auth');
+var metrics          = require('./back-end/routes/metrics');
+var settingsRoutes   = require('./back-end/routes/settings');
+var paymentRoutes    = require('./back-end/routes/payment');
+var signupRoutes     = require('./back-end/routes/signup');
+var circleRoutes     = require('./back-end/routes/circle');
+var baseCircleRoutes = require('./back-end/routes/base-circle');
+var storyRoutes      = require('./back-end/routes/story');
 
 var routes   = require('./front-end/routes');
 var archives = require('./front-end/routes/archives');
@@ -190,8 +191,7 @@ var defineRoutes = function () {
         db.circles.findByUser(req.user, handle(res));
     });
 
-    app.get("/data/circles/all", 
-        ensure.mainframe, 
+    app.get("/data/circles/all", ensure.mainframe, 
         send(db.circles.getAll));
 
     app.use('/data/circle', circleRoutes.router(app));
@@ -242,76 +242,9 @@ var defineRoutes = function () {
     //  );
     // });
 
-
-    // TODO: These 'list' URLs need to be rewritten
-    // to allow us to put them in their own module.
-    // Story routes
-    app.get("/data/:circleId/stories", ensure.circle, function (req, res) {
-        var circleId = req.params.circleId;
-        db.stories.findByListId(circleId, handle(res));
-    });
-
-    // TODO: combine this with /stories to return one object with 
-    // both the story list and the first story (in two different things)
-    app.get("/data/:circleId/first-story", ensure.circle, function (req, res) {
-        var circleId = req.params.circleId;
-        db.stories.getFirstByProjectId(circleId, handle(res));
-    });
-
-    app.get("/data/:circleId/archives", ensure.circle, function (req, res) {
-        var circleId = req.params.circleId;
-        var query = req.query;
-        var defaultLimit = 251; // TODO: Settings
-
-        var limit = query.limit || defaultLimit;
-        var startkey = query.startkey;
-        var params = {
-            limit: limit,
-            startkey: startkey
-        };
-
-        db.archives.findByCircleId(circleId, params, handle(res));
-    });
-
-    app.get("/data/:circleId/archives/count", ensure.circle, function (req, res) {
-        var circleId = req.params.circleId;
-        db.archives.countByCircleId(circleId, guard(res, function (count) {
-            res.status(200).send(count.toString());
-        }));
-    });
-
-
-    // Checklists!
-    // TODO: The checklist URLs need to be rewritten
-    // to allow us to put them in their own module.
-    app.post("/data/:circleId/list", ensure.circle, function (req, res) {
-        var list = {
-            name: req.body.name,
-            description: req.body.description,
-            circleId: req.params.circleId
-        };
-
-        limits.lists(list.circleId, guard(res, function () {
-            db.lists.add(list, handle(res));    
-        }));
-    });
-
-    app.get("/data/:circleId/lists", ensure.circle, function (req, res) {
-        var circleId = req.params.circleId;
-        db.lists.byCircleId(circleId, handle(res));
-    });
-
-    app.get("/data/:circleId/:listId/stories", ensure.circle, function (req, res) {
-        var circleId = req.params.circleId;
-        var listId = req.params.listId;
-        db.stories.findByListId(listId, handle(res));
-    });
-
-    app.get("/data/:circleId/:listId/first-story", ensure.circle, function (req, res) {
-        var listId = req.params.listId;
-        db.stories.getFirstByProjectId(listId, handle(res));
-    });
-
+    // Fundamental operations, like stories in a circle.
+    app.use('/data', baseCircleRoutes.router(app));
+ 
     // Stories!
     app.use('/data/story', storyRoutes.router(app));;
 
