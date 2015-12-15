@@ -21,6 +21,7 @@ var auth   = require('circle-blvd/auth-local');
 var ensure = require('circle-blvd/auth-ensure');
 var limits = require('circle-blvd/limits');
 var errors = require('circle-blvd/errors');
+var handle = require('circle-blvd/handle');
 var db     = require('circle-blvd/dataAccess').instance();
 var notify = require('circle-blvd/notify');
 
@@ -37,8 +38,10 @@ var initRoutes  = require('./back-end/routes/init');
 // Express 4.x routes
 var archives = require('./front-end/routes/archives');
 var prelude = require('./front-end/routes/prelude');
+
 var authRoutes = require('./back-end/routes/auth');
 var metrics = require('./back-end/routes/metrics');
+var paymentRoutes = require('./back-end/routes/payment');
 
 var couchSessionStore = require('circle-blvd/couch-session-store');
 
@@ -50,16 +53,6 @@ var app = express();
 
 // Middleware for data access
 var guard = errors.guard;
-
-var handle = function (res) {
-    var fn = guard(res, function (data) {
-        if (!data) {
-            return res.status(204).send(); // no content
-        }
-        res.status(200).send(data);
-    }); 
-    return fn;
-};
 
 var send = function (fn) {
     var middleware = function (req, res, next) {
@@ -692,32 +685,7 @@ var defineRoutes = function () {
         var nextMeeting = db.stories.getNextMeetingByProjectId(projectId, handleNextMeeting);
     });
 
-    app.post('/payment/donate', function (req, res) {
-        var data = req.body;
-        var stripeTokenId = data.stripeTokenId;
-        var amount = data.stripeAmount
-
-        payment.donate(stripeTokenId, amount, handle(res));
-    });
-
-    app.post('/payment/subscribe', ensure.auth, function (req, res) {
-        var data = req.body;
-
-        var user = req.user;
-        var stripeTokenId = data.stripeTokenId;
-        var planName = data.planName;
-
-        payment.subscribe(user, stripeTokenId, planName, handle(res));
-    });
-
-    app.put('/payment/subscribe/cancel', ensure.auth, function (req, res) {
-        var user = req.user;
-        if (!user.subscription) {
-            return res.status(204).send();
-        }
-
-        payment.unsubscribe(user, handle(res));
-    });
+    app.use('/payment', paymentRoutes.router(app));
 
     var createUser = function (proposedAccount, callback) {
         var addSuccess = function (newAccount) {
