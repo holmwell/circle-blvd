@@ -20,6 +20,7 @@ var auth   = require('circle-blvd/auth-local');
 var ensure = require('circle-blvd/auth-ensure');
 var limits = require('circle-blvd/limits');
 var errors = require('circle-blvd/errors');
+var guard  = errors.guard;
 var handle = require('circle-blvd/handle');
 var send   = require('circle-blvd/send');
 var db     = require('circle-blvd/dataAccess').instance();
@@ -57,27 +58,6 @@ var isReady = false;
 
 var app = express();
 
-// Middleware for data access
-var guard = errors.guard;
-
-var data = function (fn) {
-    // A generic guard for callbacks. Call the
-    // fn parameter. If there is an error, pass
-    // it up to the error handler. Otherwise
-    // append the result to the request object,
-    // for the next middleware in line.
-    var middleware = function (req, res, next) {
-        fn(guard(res, function (data) {
-            if (req.data) {
-                // TODO: programmer error
-            }
-            req.data = data;
-            next();
-        }));
-    };
-
-    return middleware;
-};
 
 var tryToCreateHttpsServer = function (callback) {
     sslServer.create(app, callback);
