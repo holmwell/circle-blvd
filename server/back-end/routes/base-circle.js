@@ -13,7 +13,6 @@ var handle = require('circle-blvd/handle');
 var limits = require('circle-blvd/limits');
 
 
-
 // Story routes
 router.get("/:circleId/stories", ensure.circle, function (req, res) {
     var circleId = req.params.circleId;
@@ -84,6 +83,13 @@ router.get("/:circleId/:listId/stories", ensure.circle, function (req, res) {
 router.get("/:circleId/:listId/first-story", ensure.circle, function (req, res) {
     var listId = req.params.listId;
     db.stories.getFirstByProjectId(listId, handle(res));
+});
+
+
+// Groups!
+router.get("/:circleId/groups", ensure.circle, function (req, res) {
+    var circleId = req.params.circleId;
+    db.groups.findByProjectId(circleId, handle(res));
 });
 
 module.exports = function () {

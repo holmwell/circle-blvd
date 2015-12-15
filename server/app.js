@@ -42,6 +42,7 @@ var settingsRoutes   = require('./back-end/routes/settings');
 var paymentRoutes    = require('./back-end/routes/payment');
 var signupRoutes     = require('./back-end/routes/signup');
 var circleRoutes     = require('./back-end/routes/circle');
+var groupRoutes      = require('./back-end/routes/group');
 var baseCircleRoutes = require('./back-end/routes/base-circle');
 var storyRoutes      = require('./back-end/routes/story');
 
@@ -146,10 +147,7 @@ var defineRoutes = function () {
     app.get("/data/circles", ensure.auth, function (req, res) {
         db.circles.findByUser(req.user, handle(res));
     });
-
-    app.get("/data/circles/all", ensure.mainframe, 
-        send(db.circles.getAll));
-
+    app.get("/data/circles/all", ensure.mainframe, send(db.circles.getAll));
     app.use('/data/circle', circleRoutes.router(app));
 
     app.get("/data/invite/:inviteId", function (req, res) {
@@ -158,45 +156,7 @@ var defineRoutes = function () {
     });
 
     // Groups!
-    app.get("/data/:circleId/groups", ensure.circle, function (req, res) {
-        var circleId = req.params.circleId;
-        db.groups.findByProjectId(circleId, handle(res));
-    });
-
-    // TODO: We'll turn groups on at a later time, as we
-    // transition toward hosting larger groups, but in the 
-    // mean time this is just a security hole.
-    //
-    // TODO: Ensure circle access
-    // app.post("/data/group", ensureAdministrator, function (req, res) {
-    //  var data = req.body;
-
-    //  var group = {}; 
-    //  group.projectId = data.projectId;
-    //  group.name = data.name;
-
-    //  db.groups.add(group, handle(res));
-    // });
-
-    // // TODO: Ensure circle access
-    app.get("/data/group/:groupId", ensure.auth, function (req, res) {
-        var groupId = req.params.groupId;
-        db.groups.findById(groupId, handle(res));
-    });
-
-    // // TODO: Ensure circle access
-    // app.put("/data/group/remove", ensureAdministrator, function (req, res) {
-    //  var group = req.body;
-
-    //  db.groups.remove(group, 
-    //      function () {
-    //          res.status(200).send();
-    //      },
-    //      function (err) {
-    //          errors.handle(err, res);
-    //      }
-    //  );
-    // });
+    app.use('/data/group', groupRoutes.router(app));
 
     // Fundamental operations, like stories in a circle.
     app.use('/data', baseCircleRoutes.router(app));
