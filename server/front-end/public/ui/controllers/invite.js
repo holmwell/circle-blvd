@@ -117,7 +117,7 @@ function InviteCtrl(inviteId, lib, session, $scope, $http, $window, errors) {
                 return;
             }
 
-            $http.post('/data/invite/accept', data)
+            $http.post('/data/signup/invite/accept', data)
             .success(function (data) {
                 startSession(user);
             })

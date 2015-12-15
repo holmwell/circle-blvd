@@ -42,6 +42,7 @@ var prelude = require('./front-end/routes/prelude');
 var authRoutes = require('./back-end/routes/auth');
 var metrics = require('./back-end/routes/metrics');
 var paymentRoutes = require('./back-end/routes/payment');
+var signupRoutes = require('./back-end/routes/signup');
 
 var couchSessionStore = require('circle-blvd/couch-session-store');
 
@@ -686,135 +687,7 @@ var defineRoutes = function () {
     });
 
     app.use('/payment', paymentRoutes.router(app));
-
-    var createUser = function (proposedAccount, callback) {
-        var addSuccess = function (newAccount) {
-            callback(null, newAccount);
-        };
-
-        var addError = function (err) {
-            callback(err);
-        };
-
-        db.users.findByEmail(proposedAccount.email, function (err, accountExists) {
-            if (err) {
-                return callback(err);
-            }
-            if (accountExists) {
-                var error = new Error("That email address is already being used. Maybe try signing in?");
-                error.status = 400;
-                return callback(error);
-            }
-
-            var isReadOnly = false;
-            db.users.add(
-                proposedAccount.name,
-                proposedAccount.email, 
-                proposedAccount.password,
-                [], // no memberships at first
-                isReadOnly,
-                addSuccess, 
-                addError);
-        });
-    };
-
-    var createAccount = function (proposedAccount, circle, callback) {
-        var userAccountCreated = function (newAccount) {
-            db.circles.createFirst(circle.name, newAccount.email, callback);
-        };
-
-        createUser(proposedAccount, function (err, newAccount) {
-            if (err) {
-                callback(err);
-                return;
-            }
-            userAccountCreated(newAccount);
-        });
-    };
-
-    var acceptInvitation = function (res, invite, callback) {
-        db.groups.findImpliedByCircleId(invite.circleId, guard(res, function (group) {
-            if (!group) {
-                res.status(400).send("Could not find implied group for invite.");
-                return;
-            }
-            db.invites.get(invite._id, guard(res, function (dbInvite) {
-                if (!dbInvite) {
-                    res.status(404).send();
-                    return;
-                }
-                if (dbInvite.count <= 0) {
-                    res.status(403).send();
-                    return;
-                }
-                db.invites.accept(dbInvite, guard(res, function () {
-                    callback(dbInvite, group);
-                }));
-            }));    
-        }));
-    };
-
-    var addGroupToAccount = function (account, group, circleId, callback) {
-        var newMembership = {
-            circle: circleId,
-            group: group.id,
-            level: "member"
-        };
-        account.memberships.push(newMembership);
-        db.users.addMembership(account, circleId, callback);
-    };
-
-    app.post("/data/signup/invite", limits.users.total, function (req, res) {
-        var data = req.body;
-        var proposedAccount = data.account;
-        var invite = data.invite;
-
-        var inviteAccepted = function (dbInvite, group) {
-            createUser(proposedAccount, guard(res, function (account) {
-                addGroupToAccount(account, group, dbInvite.circleId, handle(res));
-            }));
-        };
-
-        acceptInvitation(res, invite, inviteAccepted);
-    });
-
-    app.post("/data/invite/accept", function (req, res) {
-        var data = req.body;
-        var account = data.account;
-        var invite = data.invite;
-        account.memberships = [];
-
-        var inviteAccepted = function(dbInvite, group) {
-            addGroupToAccount(account, group, dbInvite.circleId, handle(res));
-        };
-
-        acceptInvitation(res, invite, inviteAccepted);
-    });
-
-
-    app.post("/data/signup/now", limits.circle, limits.users.total, function (req, res) {
-        var data = req.body;
-        var proposedAccount = {
-            name: data.name,
-            email: data.email,
-            password: data.password
-        };
-        var proposedCircle = {
-            name: data.circle
-        };
-        createAccount(proposedAccount, proposedCircle, handle(res));
-    });
-
-    app.post("/data/signup/waitlist", function (req, res) {
-        var data = req.body;
-        var request = {
-            circle: data.circle,
-            things: data.things,
-            email: data.email
-        };
-
-        db.waitlist.add(request, handle(res));
-    });
+    app.use('/data/signup', signupRoutes.router(app));
 
     app.get("/data/waitlist", ensure.mainframe, send(db.waitlist.get));
 
