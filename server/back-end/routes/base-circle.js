@@ -12,6 +12,8 @@ var guard = errors.guard;
 var handle = require('circle-blvd/handle');
 var limits = require('circle-blvd/limits');
 
+
+
 // Story routes
 router.get("/:circleId/stories", ensure.circle, function (req, res) {
     var circleId = req.params.circleId;
@@ -45,6 +47,13 @@ router.get("/:circleId/archives/count", ensure.circle, function (req, res) {
     db.archives.countByCircleId(circleId, guard(res, function (count) {
         res.status(200).send(count.toString());
     }));
+});
+
+
+// Circle members (task owners)
+router.get("/:circleId/members/names", ensure.circle, function (req, res) {
+    var circleId = req.params.circleId;
+    db.users.findNamesByCircleId(circleId, handle(res));
 });
 
 

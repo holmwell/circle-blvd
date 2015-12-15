@@ -113,6 +113,39 @@ router.post("/:circleId/invite", ensure.circleAdmin, function (req, res) {
     }));
 });
 
+// Who has been invited to join the circle
+router.get("/:circleId/invites", ensure.circleAdmin, function (req, res) {
+    var circleId = req.params.circleId;
+    db.invites.findByCircleId(circleId, handle(res));
+});
+
+// Member list, with all details
+router.get("/:circleId/members", ensure.circleAdmin, function (req, res) {
+    var circleId = req.params.circleId;
+    db.users.findByCircleId(circleId, handle(res));
+});
+
+// Remove a member from the circle
+router.put("/:circleId/member/remove", ensure.circleAdmin, function (req, res) {
+    var circleId = req.params.circleId;
+    var reqUser = req.body;
+    db.users.removeMembership(reqUser, circleId, handle(res));
+});
+
+// Update the groups of a member in the circle
+router.put("/:circleId/member/groups", ensure.circleAdmin, function (req, res) {
+    var circleId = req.params.circleId;
+    var member = req.body;
+    if (!member.groups) {
+        res.status(400).send();
+        return;
+    }
+
+    var groups = member.groups;
+    db.users.updateGroups(member, circleId, groups, handle(res));
+});
+
+
 
 module.exports = function () {
     return {

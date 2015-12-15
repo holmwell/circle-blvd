@@ -109,7 +109,7 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 	$scope.removeMember = function (member) {
 		var data = member;
 
-		$http.put('/data/' + activeCircle + '/member/remove', data)
+		$http.put('/data/circle/' + activeCircle + '/member/remove', data)
 		.success(function() {
 			getLatestMemberData();
 		})
@@ -120,7 +120,7 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 
 	$scope.saveGroups = function (member) {
 		var data = member;
-		$http.put('/data/' + activeCircle + '/member/groups', data)
+		$http.put('/data/circle/' + activeCircle + '/member/groups', data)
 		.success(function () {
 			getLatestMemberData();
 			selectedMember = undefined;
@@ -193,7 +193,7 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 
 
 	var getLatestMemberData = function() {
-		$http.get('/data/' + activeCircle + '/members')
+		$http.get('/data/circle/' + activeCircle + '/members')
 		.success(getMembersSuccess)
 		.error(getMembersFailure);
 	};
@@ -220,7 +220,7 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 
 
 	var getLatestInviteData = function () {
-		$http.get('/data/' + activeCircle + '/invites')
+		$http.get('/data/circle/' + activeCircle + '/invites')
 		.success(getInvitesSuccess)
 		.error(errors.log);
 	};

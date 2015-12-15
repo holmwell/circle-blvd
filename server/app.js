@@ -90,50 +90,16 @@ var defineRoutes = function () {
 
     // Search engine things
     app.get('/sitemap.txt', routes.sitemap);
-
+    
+    // Email form
     app.post("/data/contact", ensure.auth, contact.handler);
 
-    // User routes (account actions. requires login access)
+    // User routes (account actions)
     app.get("/data/user", ensure.auth, userRoutes.user);
     app.put("/data/user/name", ensure.auth, userRoutes.updateName);
     app.put("/data/user/email", ensure.auth, userRoutes.updateEmail);
     app.put("/data/user/notificationEmail", ensure.auth, userRoutes.updateNotificationEmail)
     app.put("/data/user/password", ensure.auth, userRoutes.updatePassword);
-
-
-    // User routes (circle actions. requires admin access)
-    app.get("/data/:circleId/invites", ensure.circleAdmin, function (req, res) {
-        var circleId = req.params.circleId;
-        db.invites.findByCircleId(circleId, handle(res));
-    });
-
-    app.get("/data/:circleId/members", ensure.circleAdmin, function (req, res) {
-        var circleId = req.params.circleId;
-        db.users.findByCircleId(circleId, handle(res));
-    });
-
-    app.put("/data/:circleId/member/remove", ensure.circleAdmin, function (req, res) {
-        var circleId = req.params.circleId;
-        var reqUser = req.body;
-        db.users.removeMembership(reqUser, circleId, handle(res));
-    });
-
-    app.put("/data/:circleId/member/groups", ensure.circleAdmin, function (req, res) {
-        var circleId = req.params.circleId;
-        var member = req.body;
-        if (!member.groups) {
-            res.status(400).send();
-            return;
-        }
-
-        var groups = member.groups;
-        db.users.updateGroups(member, circleId, groups, handle(res));
-    });
-
-    app.get("/data/:circleId/members/names", ensure.circle, function (req, res) {
-        var circleId = req.params.circleId;
-        db.users.findNamesByCircleId(circleId, handle(res));
-    });
 
     // Init routes
     app.put("/data/initialize", initRoutes.init);
