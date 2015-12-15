@@ -3,7 +3,6 @@ var express = require('express');
 var events  = require('events');
 var http    = require('http');
 var path    = require('path');
-var routes  = require('./front-end/routes');
 var io      = require('socket.io')();
 
 // express middleware
@@ -23,7 +22,8 @@ var limits = require('circle-blvd/limits');
 var errors = require('circle-blvd/errors');
 var handle = require('circle-blvd/handle');
 var db     = require('circle-blvd/dataAccess').instance();
-var notify = require('circle-blvd/notify');
+
+var socketSetup = require('circle-blvd/socket-setup');
 
 var sslServer = require('circle-blvd/https-server');
 var payment   = require('circle-blvd/payment')();
@@ -35,10 +35,6 @@ var usersRoutes = require('./back-end/routes/users');
 var userRoutes  = require('./back-end/routes/user');
 var initRoutes  = require('./back-end/routes/init');
 
-// Express 4.x routes
-var archives = require('./front-end/routes/archives');
-var prelude  = require('./front-end/routes/prelude');
-
 var authRoutes    = require('./back-end/routes/auth');
 var metrics       = require('./back-end/routes/metrics');
 var paymentRoutes = require('./back-end/routes/payment');
@@ -46,13 +42,16 @@ var signupRoutes  = require('./back-end/routes/signup');
 var circleRoutes  = require('./back-end/routes/circle');
 var storyRoutes   = require('./back-end/routes/story');
 
+var routes   = require('./front-end/routes');
+var archives = require('./front-end/routes/archives');
+var prelude  = require('./front-end/routes/prelude');
+
 var couchSessionStore = require('circle-blvd/couch-session-store');
 
 var ee = new events.EventEmitter();
 var isReady = false;
 
 var app = express();
-
 
 // Middleware for data access
 var guard = errors.guard;
@@ -102,7 +101,6 @@ var defineRoutes = function () {
     app.use('/', prelude.router(app));
     app.use('/archives', archives.router(app));
     app.use('/auth', authRoutes.router(auth, app));
-
     app.use('/data/metrics', metrics.router(app));
 
     // Search engine things
@@ -164,7 +162,6 @@ var defineRoutes = function () {
 
     // Init routes
     app.put("/data/initialize", initRoutes.init);
-
 
     // Settings!
     app.get("/data/settings", cache(sixMinutes), send(db.settings.get)); // public
@@ -265,6 +262,9 @@ var defineRoutes = function () {
     //  );
     // });
 
+
+    // TODO: These 'list' URLs need to be rewritten
+    // to allow us to put them in their own module.
     // Story routes
     app.get("/data/:circleId/stories", ensure.circle, function (req, res) {
         var circleId = req.params.circleId;
@@ -302,6 +302,8 @@ var defineRoutes = function () {
 
 
     // Checklists!
+    // TODO: The checklist URLs need to be rewritten
+    // to allow us to put them in their own module.
     app.post("/data/:circleId/list", ensure.circle, function (req, res) {
         var list = {
             name: req.body.name,
@@ -330,7 +332,7 @@ var defineRoutes = function () {
         db.stories.getFirstByProjectId(listId, handle(res));
     });
 
-
+    // Stories!
     app.use('/data/story', storyRoutes.router(app));;
 
     // TODO: Where should this be on the client?
@@ -372,104 +374,6 @@ var defineRoutes = function () {
     });
 };
 
-var initSocketIO = function (sessionMiddleware) {
-    io.use(function (socket, next) {
-        sessionMiddleware(socket.request, {}, next);
-    });
-
-    io.use(function (socket, next) {
-        // Add our user to the request, if we can.
-        if (socket && 
-            socket.request && 
-            socket.request.session && 
-            socket.request.session.passport && 
-            socket.request.session.passport.user) {
-            var user = socket.request.session.passport.user;
-            auth.findUser(user, function (err, user) {
-                if (err) {
-                    return next(err);
-                }
-                socket.request.user = user;
-                next();
-            });
-        }
-        else {
-            next();
-        }
-    });
-
-    function hasAccessToCircle(user, circleId) {
-        var hasAccess = false;
-
-        // Only allow access circle events if
-        // we're members of some sort.
-        if (user && user.memberships) {
-            var groups = user.memberships;
-            for (var groupKey in groups) {
-                if (groups[groupKey].circle === circleId) {
-                    hasAccess = true;
-                }
-            }
-        }
-
-        return hasAccess;
-    }
-
-    io.on('connection', function (socket) {
-        socket.on('join-circle', function (data) {
-            if (!data.circle) {
-                // No circle specified
-                return;
-            }
-
-            if (hasAccessToCircle(socket.request.user, data.circle)) {
-                socket.join(data.circle);
-            }
-            else {
-                socket.join(data.circle + "-guest");
-            }
-        });
-
-        socket.on('story-highlighted', function (data) {
-            var user = socket.request.user;
-            var circleId = data.circle;
-            var storyId = data.storyId;
-            
-            if (hasAccessToCircle(user, circleId)) {
-                io.to(circleId).emit('story-highlighted', {
-                    data: {
-                        storyId: storyId
-                    },
-                    user: user.name
-                });
-            }
-        });
-    });
-
-    app.use(function (req, res, next){
-        res.on('finish', function(){
-            if (res.circleBlvd && res.circleBlvd.notifyCircle) {
-                var circleId = res.circleBlvd.notifyCircle;
-                if (res.circleBlvd.notifyType) {
-                    var payload = {};
-                    // Attached the signed in user to the payload
-                    if (req.user) {
-                        payload.user = req.user.name;
-                    }
-                    payload.data = res.circleBlvd.notifyData;
-                    io.to(circleId).emit(res.circleBlvd.notifyType, payload);
-                }
-
-                // Always emit a ping to guest listeners.
-                // This is basically a workaround for mobile
-                // clients until we develop a more proper solution.
-                var circleGuests = circleId + "-guest";
-                io.to(circleGuests).emit('o');
-            }
-        });
-        next();
-    });
-};
 
 var startServer = function () {
     var httpServer = http.createServer(app);
@@ -740,7 +644,7 @@ var configureApp = function (config) {
         });
 
         // Real-time engine
-        initSocketIO(sessionMiddleware);
+        socketSetup.init(io, app, sessionMiddleware);
 
         // Routes
         defineRoutes();
