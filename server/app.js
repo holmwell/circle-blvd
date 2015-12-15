@@ -91,17 +91,7 @@ var defineRoutes = function () {
     // Search engine things
     app.get('/sitemap.txt', routes.sitemap);
 
-    app.post("/data/contact", ensure.auth, function (req, res) {
-        var envelope = req.body;
-        var user = req.user;
-        if (user.notifications && user.notifications.email) {
-            envelope.from = user.notifications.email;
-        }
-        else {
-            envelope.from = email;
-        }
-        contact.sendEmail(envelope, handle(res)); 
-    });
+    app.post("/data/contact", ensure.auth, contact.handler);
 
     // User routes (account actions. requires login access)
     app.get("/data/user", ensure.auth, userRoutes.user);
