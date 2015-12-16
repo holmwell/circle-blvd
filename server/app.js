@@ -411,7 +411,11 @@ var configureApp = function (config) {
         var sessionMiddleware = expressSession({ 
             store: new SessionStore(),
             secret: sessionSecret,
-            cookie: cookieSettings
+            cookie: cookieSettings,
+            // TODO: We might want resave to be false
+            // More info: https://github.com/expressjs/session#options
+            resave: true,
+            saveUninitialized: true
         });
         app.use(sessionMiddleware);
 
