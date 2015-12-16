@@ -649,7 +649,7 @@ test["Remove member is 204"] = function (test) {
 	function removeMember(err) {
 		test.ifError(err);
 		admin
-		.put('/data/' + adminSession.circle._id + '/member/remove')
+		.put('/data/circle/' + adminSession.circle._id + '/member/remove')
 		.send(memberToRemove)
 		.expect(204)
 		.end(getStoriesAfter);
