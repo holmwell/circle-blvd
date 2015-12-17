@@ -2,7 +2,7 @@ var async = require('async');
 var nano = require('nano')('http://localhost:5984');
 var request = require('supertest');
 
-var databaseName = 'a-tmp-db-for-circle-blvd-testing';
+var databaseName = 'a-tmp-db-for-circle-blvd-testing-app';
 var sessionsDatabaseName = databaseName + '-sessions';
 process.env.DATABASE_NAME = databaseName;
 
