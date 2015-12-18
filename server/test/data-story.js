@@ -194,8 +194,6 @@ test['Can create 50 stories quickly.'] = function (test) {
 test['Can move stories from bottom to top (block size of 2)'] = function (test) {
     var blockSize = 2;
     var totalStories = Math.floor((sharedStories.length-1) / blockSize);
-    // var randomMoveCount = 100;
-    // totalStories += randomMoveCount;
 
     var completedStories = 0;
 
@@ -269,36 +267,86 @@ test['Can move stories from bottom to top (block size of 2)'] = function (test) 
         }
     };
 
-    // var moveRandomStories = function () {
-    //     for (var i=0; i < randomMoveCount; i++) {
-
-    //         var endIndex = Math.floor(Math.random() * testStories.length); 
-    //         var startIndex = Math.floor(Math.random() * testStories.length); 
-    //         var nextIndex = Math.floor(Math.random() * testStories.length); 
-
-    //         if (!testStories[nextIndex]) {
-    //             continue;
-    //         }
-
-    //         var data = {
-    //             startStory: testStories[startIndex],
-    //             endStory: testStories[startIndex],
-    //             newNextId: testStories[nextIndex].id
-    //         };
-
-    //         admin
-    //         .put('/data/story/move-block')
-    //         .send(data)
-    //         .expect(200)
-    //         .end(function (err, res) {
-    //             // Regardless of error
-    //             maybeDone();
-    //         });
-    //     }
-    // };
-
     moveStories();
-    //moveRandomStories();
+};
+
+// top to mid
+// top to bottom
+
+// mid to mid (up)
+// mid to mid (down)
+// mid to top
+// mid to bottom 
+
+// bottom to mid
+// bottom to top
+
+test['Move first to mid'] = function (test) {
+
+    var stories = {};
+    var firstStory = undefined;
+    var secondStory = undefined;
+    var destination = undefined;
+
+    admin.get('/data/' + adminSession.circle._id + '/stories')
+    .expect(200)
+    .expect(setVars)
+    .end(moveStory);
+
+    function setVars(res) {
+        stories = res.body;
+        for (var key in stories) {
+            if (stories[key].isFirstStory) {
+                firstStory = stories[key];
+            }
+        }
+
+        secondStory = stories[firstStory.nextId];
+        destination = stories[secondStory.nextId];
+    }
+
+    function moveStory() {
+        var data = {
+            startStory: firstStory,
+            endStory: firstStory,
+            newNextId: destination.id 
+        };
+
+        admin.put('/data/story/move-block')
+        .send(data)
+        .expect(200)
+        .end(checkOrder);
+    }
+
+    function checkOrder() {
+        admin.get('/data/' + adminSession.circle._id + '/stories')
+        .expect(200)
+        .expect(function (res) {
+            var result = {
+                stories: res.body,
+                firstStory: undefined,
+                secondStory: undefined,
+                firstStoryCount: 0
+            };
+
+            for (var key in stories) {
+                if (result.stories[key].isFirstStory) {
+                    result.firstStoryCount++
+                    result.firstStory = result.stories[key];
+
+                    result.secondStory = result.stories[result.firstStory.nextId];
+                }
+            }
+
+            test.equal(1, result.firstStoryCount, "Not one first story");
+
+            test.equal(result.firstStory.id, secondStory.id, "First story not properly set");
+            test.equal(result.firstStory.nextId, firstStory.id, "First story out of order");
+
+            test.equal(result.secondStory.nextId, destination.id, "Destination did not happen");
+        })
+        .end(finish(test));
+    }
 };
 
 test['database tear down'] = function (test) {
