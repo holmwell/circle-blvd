@@ -215,7 +215,7 @@ var forceHttps = function(req, res, next) {
 
     if(req.secure 
         || req.headers['x-forwarded-proto'] === 'https' 
-        || req.host === "localhost") {
+        || req.hostname === "localhost") {
         return next();  
     }
     res.redirect('https://' + req.get('Host') + req.url);
@@ -248,14 +248,14 @@ var canonicalDomain = function (req, res, next) {
         domainName = settings['domain-name'].value.trim();
     }
 
-    if (!domainName || req.host === domainName) {
+    if (!domainName || req.hostname === domainName) {
         return next();
     }
 
     var hostAndPort = req.get('Host');
     var redirectToHost = domainName;
     if (hostAndPort) {
-        redirectToHost = hostAndPort.replace(req.host, domainName);
+        redirectToHost = hostAndPort.replace(req.hostname, domainName);
     }
 
     var url = req.protocol + "://" + redirectToHost + req.originalUrl;
