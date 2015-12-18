@@ -107,10 +107,13 @@ test['POST /data/story/ is 200'] = function (test) {
     });
 };
 
-test['Can create 25 stories quickly.'] = function (test) {
+var sharedStories = undefined;
 
-    var totalStories = 25;
+test['Can create 50 stories quickly.'] = function (test) {
+
+    var totalStories = 50;
     var completedStories = 0;
+
     var maybeDone = function () {
         completedStories++;
         if (completedStories === totalStories) {
@@ -121,12 +124,16 @@ test['Can create 25 stories quickly.'] = function (test) {
                 adminSession.stories = stories;
                 var storyCountInDb = 0;
                 var firstStory = undefined;
+                var firstStoryCount = 0;
                 for (var key in stories) {
                     storyCountInDb++;
                     if (stories[key].isFirstStory) {
                         firstStory = stories[key];
+                        firstStoryCount++;
                     }
                 }
+
+                test.equal(1, firstStoryCount, "Add: first story count off")
 
                 var expectedCount = totalStories + initialStoryCount;
                 test.equal(expectedCount, storyCountInDb, "All stories not added");
@@ -139,6 +146,8 @@ test['Can create 25 stories quickly.'] = function (test) {
                 }
 
                 storyCountInDb = storyList.length;
+                sharedStories = storyList;
+
                 expectedCount = totalStories + initialStoryCount;
                 test.equal(expectedCount, storyCountInDb, "isFirstStory not correct");
             })
@@ -170,16 +179,126 @@ test['Can create 25 stories quickly.'] = function (test) {
 
     // Get initial story count before running test.
     admin.get('/data/' + adminSession.circle._id + '/stories')
-        .expect(200)
-        .expect(function (res) {
-            var stories = res.body;
-            var storyCount = 0;
-            for (var key in stories) {
-                storyCount++;
-            }
-            initialStoryCount = storyCount;
-        })
-        .end(addStories);
+    .expect(200)
+    .expect(function (res) {
+        var stories = res.body;
+        var storyCount = 0;
+        for (var key in stories) {
+            storyCount++;
+        }
+        initialStoryCount = storyCount;
+    })
+    .end(addStories);
+};
+
+test['Can move stories from bottom to top (block size of 2)'] = function (test) {
+    var blockSize = 2;
+    var totalStories = Math.floor((sharedStories.length-1) / blockSize);
+    // var randomMoveCount = 100;
+    // totalStories += randomMoveCount;
+
+    var completedStories = 0;
+
+    var maybeDone = function () {
+        completedStories++;
+        if (completedStories === totalStories) {
+
+            admin.get('/data/' + adminSession.circle._id + '/stories')
+            .expect(200)
+            .expect(function (res) {
+                var stories = res.body;
+
+                var storyCountInDb = 0;
+                var firstStory = undefined;
+                var firstStoryCount = 0;
+
+                // Make sure we only have one 'first story'
+                for (var key in stories) {
+                    storyCountInDb++;
+                    if (stories[key].isFirstStory) {
+                        firstStory = stories[key];
+                        firstStoryCount++;
+                    }
+                }
+                test.equal(1, firstStoryCount, "Move: First story count off");
+
+                // Make sure we didn't lose any stories overall (albeit unlikely)
+                var expectedCount = sharedStories.length;
+                test.equal(expectedCount, storyCountInDb, "Missing stories after move");
+
+                // Make sure we didn't lose any stories in the story chain.s
+                var orderedList = [];
+                var currentStory = firstStory;
+                while (currentStory) {
+                    orderedList.push(currentStory);
+                    currentStory = stories[currentStory.nextId];    
+                }
+
+                storyCountInDb = orderedList.length;
+                test.equal(expectedCount, storyCountInDb, "isFirstStory not correct");
+            })
+            .end(finish(test));
+        }
+    };
+
+    var moveStories = function () {
+        var firstStoryIndex = 0;
+
+        for (var i=0; i < sharedStories.length-blockSize; i+=blockSize) {
+
+            var offset = 1;
+            var endIndex = (sharedStories.length-offset) - i;
+            var startIndex = endIndex - (blockSize-1);
+
+            var data = {
+                startStory: sharedStories[startIndex],
+                endStory: sharedStories[endIndex],
+                newNextId: sharedStories[firstStoryIndex].id
+            };
+
+            firstStoryIndex = startIndex;
+
+            admin
+            .put('/data/story/move-block')
+            .send(data)
+            .expect(200)
+            .end(function (err, res) {
+                // Regardless of error
+                maybeDone();
+            });
+        }
+    };
+
+    // var moveRandomStories = function () {
+    //     for (var i=0; i < randomMoveCount; i++) {
+
+    //         var endIndex = Math.floor(Math.random() * testStories.length); 
+    //         var startIndex = Math.floor(Math.random() * testStories.length); 
+    //         var nextIndex = Math.floor(Math.random() * testStories.length); 
+
+    //         if (!testStories[nextIndex]) {
+    //             continue;
+    //         }
+
+    //         var data = {
+    //             startStory: testStories[startIndex],
+    //             endStory: testStories[startIndex],
+    //             newNextId: testStories[nextIndex].id
+    //         };
+
+    //         admin
+    //         .put('/data/story/move-block')
+    //         .send(data)
+    //         .expect(200)
+    //         .end(function (err, res) {
+    //             // Regardless of error
+    //             maybeDone();
+    //         });
+    //     }
+    // };
+
+    moveStories();
+    //moveRandomStories();
 };
 
 test['database tear down'] = function (test) {
