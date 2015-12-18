@@ -349,6 +349,82 @@ test['Move first to mid'] = function (test) {
     }
 };
 
+test['Move first to bottom'] = function (test) {
+
+    var stories = {};
+    var firstStory = undefined;
+    var secondStory = undefined;
+    var destination = undefined;
+    var lastId = undefined;
+
+    admin.get('/data/' + adminSession.circle._id + '/stories')
+    .expect(200)
+    .expect(setVars)
+    .end(moveStory);
+
+    function setVars(res) {
+        stories = res.body;
+        for (var key in stories) {
+            if (stories[key].isFirstStory) {
+                firstStory = stories[key];
+            }
+
+            if (!stories[stories[key].nextId]) {
+                lastStory = stories[key];
+            }
+        }
+
+        secondStory = stories[firstStory.nextId];
+        lastId = "last-" + (firstStory.listId || firstStory.projectId);
+    }
+
+    function moveStory() {
+        var data = {
+            startStory: firstStory,
+            endStory: firstStory,
+            newNextId: lastId 
+        };
+
+        admin.put('/data/story/move-block')
+        .send(data)
+        .expect(200)
+        .end(checkOrder);
+    }
+
+    function checkOrder() {
+        admin.get('/data/' + adminSession.circle._id + '/stories')
+        .expect(200)
+        .expect(function (res) {
+            var result = {
+                stories: res.body,
+                firstStoryCount: 0,
+                lastStoryCount: 0
+            };
+
+            for (var key in stories) {
+                if (result.stories[key].isFirstStory) {
+                    result.firstStoryCount++
+                    result.firstStory = result.stories[key];
+                    result.secondStory = result.stories[result.firstStory.nextId];
+                }
+
+                if (result.stories[key].nextId === lastId) {
+                    result.lastStoryCount++;
+                    result.lastStory = result.stories[key];
+                }
+            }
+
+            test.equal(1, result.firstStoryCount, "Not one first story");
+            test.equal(result.firstStory.id, secondStory.id, "First story not properly set");
+
+            test.equal(1, result.lastStoryCount, "Not one last story: " + result.lastStoryCount);
+            test.equal(result.lastStory.id, firstStory.id, "Destination did not happen");
+        })
+        .end(finish(test));
+    }
+};
+
+
 test['database tear down'] = function (test) {
     var destroyTestDatabase = function (callback) {
         nano.db.destroy(databaseName, callback);
