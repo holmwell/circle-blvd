@@ -13,6 +13,7 @@ var cookieParser   = require('cookie-parser');
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 var expressSession = require('express-session');
+var uidSafe        = require('uid-safe');
 
 var compactModule = require('compact-exclsr');
 
@@ -404,6 +405,7 @@ var configureApp = function (config) {
     app.use(bodyParser.json());
     app.use(methodOverride()); // TODO: What do we use this for?
 
+
     var initSettingsOk = function (settings) {
         var sessionSecret = settings['session-secret'].value;
         var SessionStore = couchSessionStore(expressSession);
@@ -415,7 +417,19 @@ var configureApp = function (config) {
             // TODO: We might want resave to be false
             // More info: https://github.com/expressjs/session#options
             resave: true,
-            saveUninitialized: true
+            saveUninitialized: true,
+            // Do not allow session IDs to start with an underscore. 
+            // CouchDB does not allow us to use document IDs that start with _.
+            genid: function (req) {
+                var id = undefined;
+                while (!id) {
+                    id = uidSafe.sync(24);
+                    if (id[0] === "_") {
+                        id = undefined;
+                    }
+                }
+                return id;
+            }
         });
         app.use(sessionMiddleware);
 
