@@ -185,11 +185,14 @@ p {
 
 
 .footer {
-    padding-top: 4em;
+    padding-top: 1.6em;
     padding-bottom: 6em;
     background-color: black;
     margin-bottom: 0;
     margin-top: 0;
+}
+.footer .container-fluid {
+    padding-top: 2em;
 }
 
 .footer a:hover {

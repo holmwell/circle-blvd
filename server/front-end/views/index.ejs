@@ -194,22 +194,50 @@
   <div class="view" ng-view></div>
 </div>
 
-<div class="footer hidden-xs">
-  <div>
-    a <a href="http://holmwell.com">holmwell</a> project: circle boulevard . 
-    v<span><%= version %></span> .
-    <a href="/about">about</a> .
-    <a href="/privacy">privacy</a> .
-    <a href="/contact">contact</a> .
-    <a href="https://twitter.com/circleblvd">follow</a> .
-    <a href="/partner">partner</a>
+<div class="footer desktop-view hidden-xs">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="col-sm-6">
+          <div>
+            <img src="/img/logo-35.png"/>
+            <h5><a href="/">Circle Blvd.</a></h5>
+            <ul class="product">
+              <li>by <a href="http://holmwell.com">Holmwell Software</a></li>
+              <li><%= version %></li>
+            </ul>
+          </div>
+          <div class="notice">
+            <div><span>some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a></span></div>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="col-sm-6">
+            <h5><a href="/about">Information</a></h5>
+            <ul>
+              <li><a href="/about">About</a></li>
+              <li><a href="/contact">Contact us</a></li>
+              <li><a href="https://facebook.com/circleblvd">Facebook page</a></li>
+              <li><a href="/privacy">Privacy policy</a></li>
+              <li><a href="https://github.com/holmwell/circle-blvd">Source code</a></li>
+            </ul>
+          </div>
+          <div class="col-sm-6">
+            <h5><a href="/tour">Tour</a></h5>
+            <ul>
+              <li><a href="/tour/start/list">List overview</a></li>
+              <li><a href="/tour/work/mileposts">Mileposts</a></li>
+              <li><a href="/tour/start/app">Mobile app</a></li>
+            </ul>
+          </div>
+        </div>
+      </div> 
+    </div>
   </div>
-  <div><a href="https://github.com/holmwell/circle-blvd">source code</a> on GitHub .
-  <span>some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a></span></div>
 </div>
 
 <div class="footer visible-xs">
-  <div>circle boulevard . v<span><%= version %></span></div>
+  <div>Circle Blvd. <span><%= version %></span></div>
   <div><span>some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a></span></div>
   <div>
     <a href="https://github.com/holmwell/circle-blvd">source code</a> on GitHub

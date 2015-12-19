@@ -96,11 +96,14 @@ button:focus {
   border: solid 1px red !important;
 }
 
-.container-fluid.main {
+.container-fluid.main, .footer .container-fluid {
   background: white;
   padding-left: 0;
   padding-right: 0;
   max-width: 850px;  
+}
+.footer .container-fluid {
+  background: inherit;
 }
 
 
@@ -263,15 +266,52 @@ button:focus {
 .footer {
   color: #555;
   text-align: center;
-  margin-top: 1.4em;
+  padding-top: 1.6em;
   margin-bottom: 1.8em;
+}
+.footer.desktop-view {
+  padding-left: 9ex;
+  text-align: left;
+}
+
+.footer.desktop-view img {
+  float: left;
+  margin-left: 5px;
+  margin-right: 25px;
+
+  /* 8a8a8a */
+  opacity: 0.6;
+  filter: grayscale(100%);
+  -webkit-filter: grayscale(1);
+}
+.footer .notice { 
+  padding-top: 2.15em;
+  text-align: left;
+}
+.footer ul {
+  padding-top: 0.25ex;
+  padding-left: 3.5ex;
+  list-style: circle;
+}
+.footer ul.product {
+  padding-left: 0;
+  list-style: none;
 }
 
 .footer a {
   color: #666;
 }
 .footer a:hover {
-  color: #888;
+  color: #aaa;
+}
+.footer h5, .footer h5 a {
+  padding: 0;
+  margin: 0;
+  font-weight: normal;
+  color: #aaa;
+}
+.footer-logo {
+  margin-bottom: 1em;
 }
 
 .form-control {

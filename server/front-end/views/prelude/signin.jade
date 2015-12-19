@@ -26,15 +26,3 @@ block view
             .col-sm-offset-2.col-sm-8
                 .clear.message(ng-cloak) {{message}} 
                     span(ng-show="signinFailure && isNotificationEnabled()") <a class="jsLink" ng-click="sendSecret()">Forgot password</a>?
-
-
-        .donate
-            .col-sm-offset-2.col-sm-8.clear.donate-section
-                img(src="/img/logo-on-black-76px.png")
-                .links
-                    span <a href="/tour">tour</a>
-                     | . 
-                    span <a href="/about">about</a>
-                     | . 
-                    span(ng-show="isPaymentEnabled()") <a href="/partner">partner</a> . 
-                    span a <a href="http://holmwell.com">holmwell</a> project
