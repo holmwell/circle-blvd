@@ -111,18 +111,25 @@ button:focus {
   border: solid 1px red !important;
 }
 
-.container-fluid.main, .footer .container-fluid {
+.container-fluid.main, 
+.container-fluid.header-inner,
+.footer .container-fluid {
   background: white;
   padding-left: 0;
   padding-right: 0;
   max-width: 850px;  
 }
-.main {
-
+.container-fluid.header-inner {
+  background: inherit;
 }
 .footer .container-fluid {
   background: inherit;
 }
+
+.main-wrapper {
+  background: white;
+}
+
 
 
 /* navbar.jade */
@@ -190,7 +197,7 @@ button:focus {
 .title {
   font-family: 'Roboto Slab';
   margin-bottom: 0;
-  margin-left: 3ex;
+  margin-left: 2.15ex;
   text-align: left;
 }
 

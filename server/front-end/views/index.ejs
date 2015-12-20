@@ -133,72 +133,73 @@
   </div> 
  </div>
 
+<div class="main-wrapper">
+    <div class="header clearfix debug ng-cloak text-select" ng-if="isSignedIn()" ng-hide="!isHeaderVisible">
+      <div class="container-fluid debug header-inner">
+        <div class="col-sm-6 debug hidden-xs">
+              <h2 class="debug title">
+                <a href="/#/"
+                ng-click="setMindset('detailed')">{{getActiveCircleName()}}</a>
+              </h2>
+        </div>
+        <div class="col-sm-6 col-xs-12 debug header-menu">
+          <div>
+            <a href="/#/archives" class="glyph">
+              <div class="glyphicon-time glyphicon"></div>
+              <div>Archives</div>
+            </a>
 
-<div class="container-fluid main debug no-select">
-  <div class="header clearfix debug ng-cloak text-select" ng-if="isSignedIn()" ng-hide="!isHeaderVisible">
-    <div class="row debug header-inner">
-      <div class="col-sm-6 debug hidden-xs">
-            <h2 class="debug title">
-              <a href="/#/"
-              ng-click="setMindset('detailed')">{{getActiveCircleName()}}</a>
-            </h2>
-      </div>
-      <div class="col-sm-6 col-xs-12 debug header-menu">
-        <div>
-          <a href="/#/archives" class="glyph">
-            <div class="glyphicon-time glyphicon"></div>
-            <div>Archives</div>
-          </a>
+            <a href="/#/lists" class="glyph" ng-click="setMindset('detailed')">
+              <div class="glyphicon-list glyphicon"></div>
+              <div>Checklists</div>
+            </a>
 
-          <a href="/#/lists" class="glyph" ng-click="setMindset('detailed')">
-            <div class="glyphicon-list glyphicon"></div>
-            <div>Checklists</div>
-          </a>
+            <a class="jsLink glyph hidden-xs" href="/#/" ng-click="setMindset('roadmap')">
+              <div class="glyphicon-road glyphicon"></div>
+              <div>Roadmap</div>
+            </a>
 
-          <a class="jsLink glyph hidden-xs" href="/#/" ng-click="setMindset('roadmap')">
-            <div class="glyphicon-road glyphicon"></div>
-            <div>Roadmap</div>
-          </a>
-
-          <a class="glyph jsLink hidden-xs" href="/#/admin" ng-show="isAdmin()">
-            <div class="glyphicon-cog glyphicon"></div>
-            <div>Admin</div>
-          </a>
+            <a class="glyph jsLink hidden-xs" href="/#/admin" ng-show="isAdmin()">
+              <div class="glyphicon-cog glyphicon"></div>
+              <div>Admin</div>
+            </a>
+          </div>
         </div>
       </div>
     </div>
+
+  <div class="container-fluid main debug no-select">
+  <!--     <div class="col-xs-12 menu-proto" style="background-color: gold">
+  &nbsp;
+      </div> -->
+
+      <!-- <div class="mindset-container hidden-xs debug">
+        <div class="mindset-element mindset-element-detailed debug">
+          <span ng-click="setMindset('detailed')" 
+            ng-class="{ 'selected-mindset': isMindset('detailed') }"
+            ng-mouseenter="setMindsetLabel('')"
+            class="glyphicon glyphicon-move debug"></span>
+        </div>
+
+        <div class="mindset-element debug">
+          <span ng-click="setMindset('bump')" 
+            ng-mouseenter="setMindsetLabel('What\'s Next')"
+            ng-mouseleave="setMindsetLabel('')"
+            ng-class="{ 'selected-mindset': isMindset('bump') }"
+            class="glyphicon glyphicon-chevron-up right debug"></span>
+                
+          <span ng-click="setMindset('roadmap')"
+            ng-class="{ 'selected-mindset': isMindset('roadmap') }" 
+            ng-mouseenter="setMindsetLabel('Roadmap')"
+            ng-mouseleave="setMindsetLabel('')"
+            class="glyphicon glyphicon-road right debug"></span>
+
+          <div class="label debug">{{mindsetLabel}}</div>
+        </div>
+      </div> -->
+
+    <div class="view" ng-view></div>
   </div>
-
-<!--     <div class="col-xs-12 menu-proto" style="background-color: gold">
-&nbsp;
-    </div> -->
-
-    <!-- <div class="mindset-container hidden-xs debug">
-      <div class="mindset-element mindset-element-detailed debug">
-        <span ng-click="setMindset('detailed')" 
-          ng-class="{ 'selected-mindset': isMindset('detailed') }"
-          ng-mouseenter="setMindsetLabel('')"
-          class="glyphicon glyphicon-move debug"></span>
-      </div>
-
-      <div class="mindset-element debug">
-        <span ng-click="setMindset('bump')" 
-          ng-mouseenter="setMindsetLabel('What\'s Next')"
-          ng-mouseleave="setMindsetLabel('')"
-          ng-class="{ 'selected-mindset': isMindset('bump') }"
-          class="glyphicon glyphicon-chevron-up right debug"></span>
-              
-        <span ng-click="setMindset('roadmap')"
-          ng-class="{ 'selected-mindset': isMindset('roadmap') }" 
-          ng-mouseenter="setMindsetLabel('Roadmap')"
-          ng-mouseleave="setMindsetLabel('')"
-          class="glyphicon glyphicon-road right debug"></span>
-
-        <div class="label debug">{{mindsetLabel}}</div>
-      </div>
-    </div> -->
-
-  <div class="view" ng-view></div>
 </div>
 
 <div class="footer desktop-view hidden-xs">
