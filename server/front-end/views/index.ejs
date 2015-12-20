@@ -105,20 +105,29 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        <li ng-class="{active: isCurrentPath('/tips')}")><a 
-          href="/tips" 
-          data-toggle="collapse" data-target="#navigation-circles"><span 
-          class="glyphicon glyphicon-flash"></span></a></li>
         <li ng-show="hasMainframeAccess()"
           ng-class="{active: isCurrentPath('/mainframe')}"><a 
           data-toggle="collapse" data-target="#navigation-circles.in"
           href="#/mainframe">Mainframe access</a></li>
-        <li ng-class="{active: isCurrentPath('/partner')}"><a 
-          data-toggle="collapse" data-target="#navigation-circles.in"
-          href="/partner">Partner</a></li> 
+
+        <li ng-class="{active: isCurrentPath('/tips')}")><a 
+          href="/tips" 
+          data-toggle="collapse" data-target="#navigation-circles"><span 
+          class="glyphicon glyphicon-flash"></span></a></li>
+
         <li ng-class="{active: isCurrentPath('/tour')}"><a 
           data-toggle="collapse" data-target="#navigation-circles.in"
           href="/tour">Tour</a></li> 
+
+        <li ng-show="isSignedIn()"
+          ng-class="{active: isCurrentPath('/profile')}"><a 
+          data-toggle="collapse" data-target="#navigation-circles.in"
+          href="/#/profile">Profile</a></li> 
+
+        <li ng-show="isSignedIn()"><a class="jsLink"
+          ng-click="signOut()"
+          data-toggle="collapse" 
+          data-target="#navigation-circles.in">Sign out</a></li> 
       </ul>
     </div>
   </div> 
@@ -127,7 +136,44 @@
 
 <div class="container-fluid main debug no-select">
   <div class="header clearfix debug ng-cloak text-select" ng-if="isSignedIn()" ng-hide="!isHeaderVisible">
-    <div class="mindset-container hidden-xs debug">
+    <div class="row debug header-inner">
+      <div class="col-sm-6 debug hidden-xs">
+            <h2 class="debug title">
+              <a href="/#/"
+              ng-click="setMindset('detailed')">{{getActiveCircleName()}}</a>
+            </h2>
+      </div>
+      <div class="col-sm-6 col-xs-12 debug header-menu">
+        <div>
+          <a href="/#/archives" class="glyph">
+            <div class="glyphicon-time glyphicon"></div>
+            <div>Archives</div>
+          </a>
+
+          <a href="/#/lists" class="glyph" ng-click="setMindset('detailed')">
+            <div class="glyphicon-list glyphicon"></div>
+            <div>Checklists</div>
+          </a>
+
+          <a class="jsLink glyph hidden-xs" href="/#/" ng-click="setMindset('roadmap')">
+            <div class="glyphicon-road glyphicon"></div>
+            <div>Roadmap</div>
+          </a>
+
+          <a class="glyph jsLink hidden-xs" href="/#/admin" ng-show="isAdmin()">
+            <div class="glyphicon-cog glyphicon"></div>
+            <div>Admin</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!--     <div class="col-xs-12 menu-proto" style="background-color: gold">
+&nbsp;
+    </div> -->
+
+    <!-- <div class="mindset-container hidden-xs debug">
       <div class="mindset-element mindset-element-detailed debug">
         <span ng-click="setMindset('detailed')" 
           ng-class="{ 'selected-mindset': isMindset('detailed') }"
@@ -142,12 +188,6 @@
           ng-class="{ 'selected-mindset': isMindset('bump') }"
           class="glyphicon glyphicon-chevron-up right debug"></span>
               
-        <!-- <span ng-click="setMindset('mine')" 
-          ng-class="{ 'selected-mindset': isMindset('mine') }"
-          ng-mouseenter="setMindsetLabel('Status Update')"
-          ng-mouseleave="setMindsetLabel('')"
-          class="glyphicon glyphicon-record right debug"></span> -->
-
         <span ng-click="setMindset('roadmap')"
           ng-class="{ 'selected-mindset': isMindset('roadmap') }" 
           ng-mouseenter="setMindsetLabel('Roadmap')"
@@ -156,41 +196,8 @@
 
         <div class="label debug">{{mindsetLabel}}</div>
       </div>
-    </div>
-    <!--
-    <div class="navbar navbar-default" role="navigation" ng-cloak ng-show="isSignedIn()">
-      <div class="container-fluid">
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="/">Circle Blvd</a></li>
-            <li><a href="#/archives">Archives</a></li>
-            <li><a href="#/profile">Profile</a></li>
-            <li ng-show="isAdmin()"><a href="#/admin">Admin</a></li>
-            
-            <li><a class="jsLink" ng-click="signOut()">Sign out</a></li>
-          </ul>
-      </div>
-    </div>
-     -->
+    </div> -->
 
-    <h2 class="debug hidden-xs title">
-      <a href="/#/">{{getActiveCircleName()}}</a>
-    </h2>
-    <!-- <ul class="menu col-xs-2 col-md-4" ng-show="!isSignedIn()">
-       <li><a href="#/signin">Sign in</a></li>
-    </ul> -->
-
-    <div class="col-xs-12 debug">
-      <ul class="menu debug">
-        <li><a href="/#/">List</a></li>
-        <li><a href="/#/archives/">Archives</a></li>
-        <li><a href="/#/lists">Checklists</a></li>
-        <li><a href="/#/profile">Profile</a></li>
-        <li class="hidden-xs" ng-show="isAdmin()"><a href="/#/admin">Admin</a></li>
-        
-        <li><a class="jsLink" ng-click="signOut()">Sign&nbsp;out</a></li>
-      </ul>
-    </div> 
-  </div>
   <div class="view" ng-view></div>
 </div>
 

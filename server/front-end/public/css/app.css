@@ -327,10 +327,12 @@
 
 .search .new-story {
   background-color: #1E69B5;
+  background-color: #006688;
   /*background-color: transparent;*/
 }
 .search .new-story:hover {
   background-color: #2272B8;
+  background-color: #006a8c;
 }
 
 .entry-facade-container {
@@ -539,11 +541,13 @@
 
 .filter, .paste-destination, .paste-destination:hover {
   background-color: #1E69B5;
+  background-color: #006688;
   color: white;
   padding-left: 3ex;
 }
 .filter:hover {
   background-color: #2272B8;
+  background-color: #006a8c;
   color: white;
   cursor: default;
 }
@@ -593,12 +597,17 @@
 .story.mine {
   border-left: dotted 2px #3994d0;
   border-right: dotted 2px #3994d0;
+  border-color: #006688;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
 }
 .story.highlighted {
   border: solid 2px #3994d0;
+  border: solid 2px #006688;
 }
 .story.team-highlighted {
   border: dotted 2px #3994d0;
+  border: dotted 2px #006688;
 }
 .highlighted.team-highlighted {
   /* gold is too light, but orange is not quite right */
@@ -643,6 +652,7 @@
 .story-label {
   /*background-color: gold;*/
   color: #1E69B5;
+  color: #006688;
 }
 .deadline .story-label {
   color: #996D09;

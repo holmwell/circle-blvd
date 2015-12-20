@@ -26,22 +26,27 @@
             ng-click="setActiveCircle(circle, true)" ng-bind="circle.name")
 
       ul.nav.navbar-nav.navbar-right
-        li(ng-class="{active: isCurrentPath('/signin')}" ng-if="!isSignedIn()")
-          a(href="/signin"
-            data-toggle="collapse" data-target="#navigation-circles.in") Sign in
+        li(ng-show="hasMainframeAccess()" ng-class="{active: isCurrentPath('/mainframe')}")
+          a(href="/#/mainframe" 
+            data-toggle="collapse" data-target="#navigation-circles.in") Mainframe access
 
         li(ng-class="{active: isCurrentPath('/tips')}" ng-if="isSignedIn()")
           a(href="/tips" data-toggle="collapse" data-target="#navigation-circles")
             span.glyphicon.glyphicon-flash
               
-        li(ng-show="hasMainframeAccess()" ng-class="{active: isCurrentPath('/mainframe')}")
-          a(href="/#/mainframe" 
-            data-toggle="collapse" data-target="#navigation-circles.in") Mainframe access
-
-        li(ng-class="{active: isCurrentPath('/partner')}")
-          a(href="/partner"
-            data-toggle="collapse" data-target="#navigation-circles.in") Partner
-
         li(ng-class="{active: isCurrentPath('/tour')}")
           a(href="/tour"
             data-toggle="collapse" data-target="#navigation-circles.in") Tour
+
+        li(ng-show="isSignedIn()"
+          ng-class="{active: isCurrentPath('/profile')}")
+          a(href="/#/profile"
+            data-toggle="collapse" data-target="#navigation-circles.in") Profile
+
+        li(ng-show="isSignedIn()")
+          a.jsLink(ng-click="signOut()"
+            data-toggle="collapse" data-target="#navigation-circles.in") Sign out 
+
+        li(ng-class="{active: isCurrentPath('/signin')}" ng-if="!isSignedIn()")
+          a(href="/signin"
+            data-toggle="collapse" data-target="#navigation-circles.in") Sign in

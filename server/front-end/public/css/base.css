@@ -7,6 +7,18 @@ body {
   background: #222 !important;     
 }
 
+a, 
+a:focus, 
+a:hover, 
+a:link, 
+a:visited {
+  color: #006688;
+}
+.nav-pills>li.active>a,
+.nav-pills>li.active>a:hover {
+  background-color: #006688;
+}
+ 
 h1, h2, h3 {
   color: #222;
   /*font-family: 'Headland One', serif;*/
@@ -17,6 +29,9 @@ h2 {
 }
 h1 a, h2 a {
   color: #222;
+}
+.header h2 a {
+  color: #eee;
 }
 h4, h5 {
   font-weight: bold;
@@ -102,12 +117,20 @@ button:focus {
   padding-right: 0;
   max-width: 850px;  
 }
+.main {
+
+}
 .footer .container-fluid {
   background: inherit;
 }
 
 
 /* navbar.jade */
+.navbar-inverse {
+  border-color: #222;
+  background-color: #222;
+}
+
 .navbar-title {
   color: #f6f6f6;
   text-align: center;
@@ -147,7 +170,7 @@ button:focus {
 }
 .topMenu .container-fluid .active a {
   color: #eee;
-  background: #222 !important;
+  background: transparent !important;
 }
 
 .jsLink {
@@ -157,57 +180,64 @@ button:focus {
 
 /* header.jade */
 .header {
-  margin-bottom: 2em;
-  padding-right: 1ex;
-
   /*background-color: #666;*/
   /*font-family: 'Headland One', serif;*/
   /*font-size: larger;*/
 
   position: relative;
 }
+
 .title {
+  font-family: 'Roboto Slab';
   margin-bottom: 0;
+  margin-left: 3ex;
+  text-align: left;
+}
+
+.home {
+  margin-top: 3em;
+}
+
+.header {
+  background-color: #006688;
+  padding-bottom: 2ex;
+}
+
+.header .glyph {
+  margin-top: 1.25em;
+  margin-right: 3ex;
   text-align: center;
+  color: #eee;
+  display: inline-block;
+  opacity: 0.25;
+}
+.header .glyph .glyphicon {
+  font-size: 18pt;
+}
+.header .glyph a {
+  color: #eee;
+}
+.header .glyph:hover {
+  opacity: 1;
+}
+.header a.glyph:hover {
+  color: gold;
+  color: #eee;
 }
 
-.menu {
-  padding-left: 0;
-  list-style: none;
-
-  /*margin: auto;*/
-  margin-top: 1ex;
-  margin-bottom: 1.2em;
-
-  /*font-size: larger;
-  width: 100%;*/
-
-  text-align: center;
+.header-inner {
+  padding-top: 1.1em;
+  padding-bottom: 1.2em;
+}
+.header-menu {
+  text-align: right;
+  padding-right: 7.5ex;
 }
 
-.menu > li {
-  display: inline;
+.menu-proto {
+  padding-bottom: 2em;
+  margin-bottom: 1.6em;
 }
-
-.menu > li:before {
-  content: ".";
-  padding-right: 0.3em;
-}
-
-.menu > li:nth-child(1):before {
-  content: "";
-  padding: 0;
-}
-
-/*.menu {
-  color: white;
-}
-.menu a {
-  color: white;
-}
-.menu a:hover {
-  color: #fafa00;
-}*/
 
 .mindset-container {
   position: absolute;
