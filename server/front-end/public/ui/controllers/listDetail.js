@@ -35,6 +35,12 @@ function ListDetailCtrl(lib, session, $scope, $http, $routeParams, $filter, $tim
                     listId: list._id
                 };
 
+                $scope.isListEmpty = function () {
+                    if (!$scope.listData.firstStory) {
+                        return true;
+                    }
+                };
+
                 $timeout(makeStoriesDraggable, 0);
             })
             .error(errors.log);
@@ -64,6 +70,10 @@ function ListDetailCtrl(lib, session, $scope, $http, $routeParams, $filter, $tim
             isCreatingStory = true;
             var newStory = parseStory(line);
             insertNewStory(newStory, function () {
+                $scope.isListEmpty = function () {
+                    return false;
+                };
+
                 $scope.newStory = undefined;
                 isCreatingStory = false;
                 $timeout(makeStoriesDraggable, 0);
