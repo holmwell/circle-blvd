@@ -38,6 +38,10 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 		$scope.mindsetLabel = text;
 	};
 
+	$scope.resetMindset = function () {
+		$scope.setMindset('detailed');
+	};
+
 	$scope.mousedown = function (e) {
 		$scope.mouse.isButtonDown = true;
 		$scope.mouse.isButtonUp = false;

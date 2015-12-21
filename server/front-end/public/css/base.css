@@ -237,7 +237,13 @@ button:focus {
   color: #eee;
   display: inline-block;
   opacity: 0.25;
+  text-decoration: none;
 }
+.header .glyph.active {
+  color: gold;
+  opacity: 1;
+}
+
 .header .glyph .glyphicon {
   font-size: 18pt;
 }

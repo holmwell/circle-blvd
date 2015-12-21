@@ -120,6 +120,7 @@
           href="/tour">Tour</a></li> 
 
         <li ng-show="isSignedIn()"
+          ng-click="resetMindset()"
           ng-class="{active: isCurrentPath('/profile')}"><a 
           data-toggle="collapse" data-target="#navigation-circles.in"
           href="/#/profile">Profile</a></li> 
@@ -144,22 +145,31 @@
         </div>
         <div class="col-sm-6 col-xs-12 debug header-menu">
           <div>
-            <a href="/#/archives" class="glyph">
+            <a href="/#/archives" class="glyph"
+              ng-click="resetMindset()"
+              ng-class="{active: isCurrentPath('/archives')}">
               <div class="glyphicon-time glyphicon"></div>
               <div>Archives</div>
             </a>
 
-            <a href="/#/lists" class="glyph" ng-click="setMindset('detailed')">
+            <a href="/#/lists" class="glyph" 
+              ng-click="resetMindset()"
+              ng-class="{active: isCurrentPath('/lists')}">
               <div class="glyphicon-list glyphicon"></div>
               <div>Checklists</div>
             </a>
 
-            <a class="jsLink glyph hidden-xs" href="/#/" ng-click="setMindset('roadmap')">
+            <a class="jsLink glyph hidden-xs" href="/#/" 
+              ng-class="{active: isMindset('roadmap')}"
+              ng-click="setMindset('roadmap')">
               <div class="glyphicon-road glyphicon"></div>
               <div>Roadmap</div>
             </a>
 
-            <a class="glyph jsLink hidden-xs" href="/#/admin" ng-show="isAdmin()">
+            <a class="glyph jsLink hidden-xs" href="/#/admin" 
+              ng-class="{active: isCurrentPath('/admin')}"
+              ng-click="resetMindset()"
+              ng-show="isAdmin()">
               <div class="glyphicon-cog glyphicon"></div>
               <div>Admin</div>
             </a>
