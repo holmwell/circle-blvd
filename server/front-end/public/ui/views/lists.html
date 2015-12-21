@@ -1,7 +1,21 @@
 <div class="content checklists">
 
-<div class="entry-facade no-select" ng-hide="isAddingNew">
-    <div class="row entry-facade-container">
+<div class="col-xs-12 page-message col-sm-offset-2 col-sm-8 debug">
+    <div>
+        <p>Do you have a set of tasks that repeat a lot? 
+            Save this as a checklist!</p>
+
+        <p>Then, add checklists to your <a href="/#/">main list</a> by 
+            selecting the checklist option on the entry panel.</p>
+    </div>
+</div>
+
+<!-- <div class="col-xs-12">
+    <h3 class="checklist-title">Checklists</h3>
+</div> -->
+
+<div class="entry-facade no-select debug" ng-hide="isAddingNew">
+    <div class="entry-facade-container row debug">
         <div class="col-xs-12 col-sm-offset-2 col-sm-8 debug show-entry alignWithStoryList">
         + <a ng-click="showEntry()" class="jsLink text-select">Add checklist</a>
         </div>
@@ -9,42 +23,32 @@
 </div>
 
 <div class="entry" ng-show="isAddingNew">
-    <div class="row">
-        <div class="col-xs-12 col-sm-offset-2 col-sm-8 debug">
-            <ul class="entry-nav nav nav-pills row alignWithStoryList">
-                <li class="pull-right">
-                    <a ng-click="hideEntry()" class="jsLink subtle">Hide entry</a>
-                </li>
-            </ul>
+    <div class="col-xs-12 col-sm-offset-2 col-sm-8 debug">
+        <ul class="entry-nav nav nav-pills row alignWithStoryList">
+            <li class="pull-right">
+                <a ng-click="hideEntry()" class="jsLink subtle">Hide entry</a>
+            </li>
+        </ul>
 
-            <div class="debug row new-story after-meeting list alignWithStoryList">
-                <form>
-                    <input id="listName" class="form-control" ng-model="newList.name" placeholder="List name" />
-                    <textarea id="listDescription" autosize class="form-control" 
-                    ng-model="newList.description" placeholder="Description ..." />
-                    <button class="btn btn-default pull-right" ng-click="createList(newList)">Add list</button>
-                </form>
-            </div>
+        <div class="debug row new-story list alignWithStoryList">
+            <form>
+                <input id="listName" class="form-control" ng-model="newList.name" placeholder="List name" />
+                <textarea id="listDescription" autosize class="form-control" 
+                ng-model="newList.description" placeholder="Description ..." />
+                <button class="btn btn-default pull-right" ng-click="createList(newList)">Add checklist</button>
+            </form>
         </div>
     </div>
 </div>
 
-
-<div class="col-xs-12 page-message col-sm-8 debug">
-    <div>
-        <p>Do you have a set of tasks that repeat a lot? Save this as a checklist!</p>
-
-        <p>Then, add checklists to your main list by using the standard entry panel, 
-        and selecting the checklist option.</p>
-    </div>
-
+<div class="col-xs-12 col-sm-offset-2 col-sm-8">
     <div ng-show="lists && lists.length !== 0">
-        <p>Select a checklist to edit:</p>
-        <ul>
-            <li ng-repeat="list in lists">
-                <a class="jsLink" ng-click="showList(list)">{{list.name}}</a>
-            </li>
-        </ul>
+        <div>
+            <div class="archive" ng-click="showList(list)"
+                ng-repeat="list in lists">
+                <a class="jsLink">{{list.name}}</a>
+            </div>
+        </div>
     </div>
 </div>
 

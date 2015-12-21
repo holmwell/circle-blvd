@@ -1110,6 +1110,28 @@
   margin-top: 1em;
 }
 
+.checklists .entry-facade,
+.checklists .entry-nav {
+  padding-right: 1.5ex;
+  padding-bottom: 1.5ex;
+}
+.checklists .entry-nav {
+  padding-bottom: 0;
+}
+
+.checklists .new-story {
+  background: none;
+}
+
+.checklists .archive:hover {
+  border-style: solid;
+  background-color: #ddd;
+}
+
+.checklist-title {
+  text-align: center;
+}
+
 
 /* archive */
 .archives {
