@@ -1128,6 +1128,10 @@
   background-color: #ddd;
 }
 
+.checklists {
+  padding-bottom: 2.5em;
+}
+
 .checklist-title {
   text-align: center;
 }
@@ -1136,6 +1140,7 @@
 /* archive */
 .archives {
   margin-top: 2em;
+  margin-bottom: 2.5em;
 }
 
 .archive {
