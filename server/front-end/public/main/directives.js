@@ -102,8 +102,19 @@ directive('autosize', ['$timeout', function ($timeout) {
 					if (!newVal) {
 						elem.trigger('autosize.resize');
 					}
+					// TODO: Maybe just always trigger a resize
+					// event when the model changes. That would
+					// need to be tested, though, and maybe at
+					// that point we should just switch libraries.
+					//  
+					// The lib we are using is relatively old.
 				});
 
+				// For special occasions
+				scope.$on('autosize-manual-resize', function () {
+					elem.trigger('autosize.resize');
+				});
+ 
 				// showModel is a variable that is set to true when
 				// the textarea is to be shown. We need this if we 
 				// want to resize elements that are initially hidden.

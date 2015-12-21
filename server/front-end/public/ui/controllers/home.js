@@ -315,6 +315,11 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 			pasteText + 
 			startText.slice(textarea.selectionEnd);
 
+		// Update our autosizing textarea.
+		$timeout(function () {
+			$scope.$broadcast('autosize-manual-resize');
+		}, 0);
+		
 		event.preventDefault();
 		event.stopPropagation();
 	};
