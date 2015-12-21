@@ -117,6 +117,10 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		}).error(errors.log);
 	};
 
+	$scope.deselectChecklist = function () {
+		$scope.displayChecklist = undefined;
+	};
+
 	$scope.isSelectedChecklist = function (list) {
 		if (!selectedChecklist) {
 			return false;

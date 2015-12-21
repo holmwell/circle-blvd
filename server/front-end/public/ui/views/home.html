@@ -181,24 +181,38 @@
 				</form>
 			</div>
 
-			<div ng-show="isAdding['checklist']" class="debug row new-story after-meeting many alignWithStoryList">
+			<div ng-show="isAdding['checklist']" 
+				class="debug row new-story after-meeting many alignWithStoryList">
 				<form>
 					<div ng-show="checklists.length === 0">
 						There aren't any checklists in this circle, yet. To 
 						make one, please go to the <a href="/#/lists">checklists page</a>.
 					</div>
 					<div ng-hide="checklists.length === 0">
-						<p>Select a checklist to add to your task list:</p>
-						<ul>
-							<li ng-repeat="checklist in checklists">
-								<a class="jsLink" ng-click="selectChecklist(checklist)"
-								ng-class="{
-									isSelectedChecklist: isSelectedChecklist(checklist)
-								}">{{checklist.name}}</a>
-							</li>
-						</ul>
+						<div ng-hide="displayChecklist">
+							<p>Select a checklist to add:</p>
+							<ul>
+								<li ng-repeat="checklist in checklists">
+									<a class="jsLink" ng-click="selectChecklist(checklist)"
+									ng-class="{
+										isSelectedChecklist: isSelectedChecklist(checklist)
+									}">{{checklist.name}}</a>
+								</li>
+							</ul>
+						</div>
+
 						<div ng-show="displayChecklist">
-							<p>Stories in the selected checklist:</p>
+							<p><a class="jsLink" 
+								ng-click="deselectChecklist()">
+								<span class="glyphicon glyphicon-chevron-left"></span></a>
+								<a class="jsLink" 
+								ng-click="deselectChecklist()">
+								Back to checklist selection</a></p>
+
+							<p>Tasks in the selected checklist:</p>
+							<p ng-if="displayChecklist.length === 0">(This checklist
+								is empty.)</p>
+
 							<ul class="displayListStories">
 								<li ng-repeat="story in displayChecklist">
 									{{story.summary}}
