@@ -1,6 +1,6 @@
 circle blvd.
 ===============
-Circle Blvd 1.4 is a task management tool, made for teams of 1-12 people. 
+Circle Blvd 1.5 is a task management tool, made for teams of 1-12 people. 
 
 Circle Blvd supports:
  * Multiple projects
