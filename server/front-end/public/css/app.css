@@ -1106,7 +1106,8 @@
 
 
 /* checklists */
-.checklists p, .checklist-detail p {
+.checklists p, 
+.checklist-detail p {
   margin-top: 1em;
 }
 
@@ -1135,8 +1136,6 @@
 .checklist-title {
   text-align: center;
 }
-
-.
 
 /* archive */
 .archives {
