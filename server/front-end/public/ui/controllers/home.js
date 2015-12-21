@@ -290,6 +290,14 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 			line += "\n";
 
 			pasteText += line;
+
+			if (task.description) {
+				var descriptionLines = task.description.split('\n');
+				angular.forEach(descriptionLines, function (descriptionLine) {
+					pasteText += ">" + descriptionLine;
+					pasteText += "\n";
+				});
+			}
 		});
 
 		pasteText = pasteText.trim();
