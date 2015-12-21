@@ -14,6 +14,9 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 			message = options.message;
 			url = options.url;
 		}
+		else if (options) {
+			message = options;
+		}
 		
 		if (message) {
 			$scope.backBarText = message;
