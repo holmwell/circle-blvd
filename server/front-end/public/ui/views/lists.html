@@ -31,14 +31,14 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-offset-2 col-sm-8 debug">
-        <div ng-cloak ng-show="lists.length === 0">
+        <div>
             <p>Do you have a set of tasks that repeat a lot? Save this as a checklist!</p>
 
             <p>Then, add checklists to your main list by using the standard entry panel, 
             and selecting the checklist option.</p>
         </div>
 
-        <div ng-show="lists">
+        <div ng-show="lists && lists.length !== 0">
             <p>Select a checklist to edit:</p>
             <ul>
                 <li ng-repeat="list in lists">
