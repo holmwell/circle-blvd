@@ -239,6 +239,10 @@ button:focus {
   opacity: 0.25;
   text-decoration: none;
 }
+.header .glyph.right-most {
+  margin-right: 0;
+}
+
 .header .glyph.active {
   color: gold;
   opacity: 1;
