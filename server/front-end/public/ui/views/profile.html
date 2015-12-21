@@ -5,7 +5,7 @@
 </div>
 
 <div ng-show="isSignedIn()" class="profile">
-	<div class="col-sm-offset-1 row clear basics">
+	<div class="row clear basics page-message">
 		<div class="col-sm-6 clear">
 			<div class="form-group has-{{feedback.name}}"
 				ng-class="{
@@ -51,7 +51,7 @@
 		</div>
 	</div>
 		
-	<div class="col-sm-offset-1 row clear">
+	<div class="row clear page-message">
 		<form class="circles">
 			<h5 class="col-xs-12">Circles</h5>
 			<div class="clear">
@@ -75,7 +75,7 @@
 		</form>
 	</div>
 
-	<div class="col-sm-offset-1 row clear">
+	<div class="row clear page-message">
 		<div class="donations" ng-show="supportsPayments">
 			<h5 class="col-xs-12">Partnership level</h5>
 			<div class="row plans">
@@ -112,7 +112,7 @@
 		</div>
 	</div>
 
-	<div class="col-sm-offset-1 row password clear">
+	<div class="row password clear page-message">
 		<h5 class="col-xs-12">Change password</h5>
 		<div class="col-sm-6 clear"><input ng-model="pass1" type="password" placeholder="New password" class="form-control"></div>
 		<div class="col-sm-6 clear"><input ng-model="pass2" type="password" placeholder="Again" class="form-control"></div>

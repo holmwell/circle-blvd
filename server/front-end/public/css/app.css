@@ -1167,6 +1167,10 @@
 }
 
 /* profile */
+.profile {
+  margin-top: 2em;
+}
+
 .profile .basics .btn, .profile .password .btn {
   margin-top: 1.2em;
 }
@@ -1188,6 +1192,11 @@
 
 
 /* admin */
+.admin {
+  margin-left: 5.5ex;
+  margin-top: 2em;
+}
+
 .admin h4 {
   padding-top: 1.1em;
 }
