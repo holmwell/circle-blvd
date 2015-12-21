@@ -4,7 +4,7 @@
 
 /* global */
 body {
-  background: #222 !important;     
+  background-color: #222 !important;     
 }
 
 a, 
@@ -120,16 +120,34 @@ button:focus {
   max-width: 850px;  
 }
 .container-fluid.header-inner {
-  background: inherit;
+  background: #006688;
 }
 .footer .container-fluid {
-  background: inherit;
+  padding-left: 5ex;
+  background: #222;
+}
+.footer .container-fluid,
+.footer.visible-xs {
+  padding-top: 1.6em;
+  padding-bottom: 1.8em;
 }
 
 .main-wrapper {
   background: white;
 }
 
+.main-wrapper,
+.header {
+  background-image: -webkit-linear-gradient(left, 
+    rgba(0,0,0,0.08) 0%,
+    rgba(0,0,0,0.08) 100%);
+}
+.footer-inner,
+.footer {
+  background-image: -webkit-linear-gradient(left, 
+    rgba(0,0,0,0.05) 0%,
+    rgba(0,0,0,0.05) 100%); 
+}
 
 
 /* navbar.jade */
@@ -207,7 +225,6 @@ button:focus {
 
 .header {
   background-color: #006688;
-  padding-bottom: 2ex;
 }
 
 .header .glyph {
@@ -234,7 +251,7 @@ button:focus {
 
 .header-inner {
   padding-top: 1.1em;
-  padding-bottom: 1.2em;
+  padding-bottom: 4ex;
 }
 .header-menu {
   text-align: right;
@@ -303,11 +320,8 @@ button:focus {
 .footer {
   color: #555;
   text-align: center;
-  padding-top: 1.6em;
-  margin-bottom: 1.8em;
 }
 .footer.desktop-view {
-  padding-left: 9ex;
   text-align: left;
 }
 

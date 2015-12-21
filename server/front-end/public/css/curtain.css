@@ -190,6 +190,7 @@ p {
     background-color: black;
     margin-bottom: 0;
     margin-top: 0;
+    background: #222;
 }
 .footer .container-fluid {
     padding-top: 2em;
