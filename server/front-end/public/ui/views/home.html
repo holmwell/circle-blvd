@@ -183,25 +183,31 @@
 
 			<div ng-show="isAdding['checklist']" class="debug row new-story after-meeting many alignWithStoryList">
 				<form>
-					<p>Select a checklist to add to your task list:</p>
-					<ul>
-						<li ng-repeat="checklist in checklists">
-							<a class="jsLink" ng-click="selectChecklist(checklist)"
-							ng-class="{
-								isSelectedChecklist: isSelectedChecklist(checklist)
-							}">{{checklist.name}}</a>
-						</li>
-					</ul>
-					<div ng-show="displayChecklist">
-						<p>Stories in the selected checklist:</p>
-						<ul class="displayListStories">
-							<li ng-repeat="story in displayChecklist">
-								{{story.summary}}
+					<div ng-show="checklists.length === 0">
+						There aren't any checklists in this circle, yet. To 
+						make one, please go to the <a href="/#/lists">checklists page</a>.
+					</div>
+					<div ng-hide="checklists.length === 0">
+						<p>Select a checklist to add to your task list:</p>
+						<ul>
+							<li ng-repeat="checklist in checklists">
+								<a class="jsLink" ng-click="selectChecklist(checklist)"
+								ng-class="{
+									isSelectedChecklist: isSelectedChecklist(checklist)
+								}">{{checklist.name}}</a>
 							</li>
 						</ul>
-					</div>
+						<div ng-show="displayChecklist">
+							<p>Stories in the selected checklist:</p>
+							<ul class="displayListStories">
+								<li ng-repeat="story in displayChecklist">
+									{{story.summary}}
+								</li>
+							</ul>
+						</div>
 
-					<button class="btn btn-default pull-right" ng-click="addSelectedChecklist()">Add checklist</button>
+						<button class="btn btn-default pull-right" ng-click="addSelectedChecklist()">Add checklist</button>
+					</div>
 				</form>
 			</div>
 
