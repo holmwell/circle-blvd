@@ -208,29 +208,61 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 
 		isCreatingStory = true;
 
+		var protoTasks = [];
+		var currentProtoTask = undefined;
+
+		// Run through the lines again, to capture
+		// all of the lines that start with '>',
+		// which denote descriptions
+		angular.forEach(lines, function (line) {
+			if (line.trim().length === 0) {
+				// Ignore empty lines.
+			}
+			else if (line[0] === '>') {
+				if (currentProtoTask.description) {
+					// Re-insert newlines in multi-line descriptions
+					currentProtoTask.description += '\n';
+				} 
+				currentProtoTask.description += line.substring(1).trim();
+			}
+			else {
+				if (currentProtoTask) {
+					protoTasks.push(currentProtoTask);
+				}
+				currentProtoTask = {};
+				currentProtoTask.line = line;
+				currentProtoTask.description = '';
+			}
+		});
+		if (currentProtoTask) {
+			protoTasks.push(currentProtoTask);
+		}
+
 		var done = function () {
 			$scope.newMany = undefined;
 			isCreatingStory = false;
 			$timeout(makeStoriesDraggable, 0);
 		};
 
-		var createStory = function (line) {
-			if (!line) {
+		var createStory = function (protoTask) {
+			if (!protoTask.line) {
 				return createNext();
 			}
 
-			var story = parseStory(line);
+			var story = parseStory(protoTask.line);
+			story.description = protoTask.description;
+
 			insertNewStory(story, createNext);
 		};
 
 		function createNext() {
-			if (lines.length === 0) {
+			if (protoTasks.length === 0) {
 				done();
 				return;
 			}
 
-			var lastLine = lines.pop();
-			createStory(lastLine);
+			var lastTask = protoTasks.pop();
+			createStory(lastTask);
 		}
 
 		createNext();
