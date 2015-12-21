@@ -29,25 +29,25 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-xs-12 col-sm-offset-2 col-sm-8 debug">
-        <div>
-            <p>Do you have a set of tasks that repeat a lot? Save this as a checklist!</p>
 
-            <p>Then, add checklists to your main list by using the standard entry panel, 
-            and selecting the checklist option.</p>
-        </div>
+<div class="col-xs-12 page-message col-sm-8 debug">
+    <div>
+        <p>Do you have a set of tasks that repeat a lot? Save this as a checklist!</p>
 
-        <div ng-show="lists && lists.length !== 0">
-            <p>Select a checklist to edit:</p>
-            <ul>
-                <li ng-repeat="list in lists">
-                    <a class="jsLink" ng-click="showList(list)">{{list.name}}</a>
-                </li>
-            </ul>
-        </div>
+        <p>Then, add checklists to your main list by using the standard entry panel, 
+        and selecting the checklist option.</p>
+    </div>
+
+    <div ng-show="lists && lists.length !== 0">
+        <p>Select a checklist to edit:</p>
+        <ul>
+            <li ng-repeat="list in lists">
+                <a class="jsLink" ng-click="showList(list)">{{list.name}}</a>
+            </li>
+        </ul>
     </div>
 </div>
+
 
 <div class="entry" ng-hide="isHidingEntry">
     <div class="row">

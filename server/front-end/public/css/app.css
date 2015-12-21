@@ -1119,7 +1119,9 @@
 .archive {
   cursor: pointer;
   border: dotted 1px #1E69B5;
+  border-color: #006688;
   padding: 1ex;
+  padding-left: 2ex;
   color: black;
   background-color: white;
 }
@@ -1128,6 +1130,7 @@
 }
 .archive.deadline {
   background-color: #1E69B5;
+  background-color: #006688;
   color: white;
 }
 

@@ -277,6 +277,12 @@ button:focus {
   padding-bottom: 1em;
 }
 
+.page-message {
+  margin-top: 1.6em;
+  padding-left: 5.5ex;
+}
+
+
 .menu-proto {
   padding-bottom: 2em;
   margin-bottom: 1.6em;
