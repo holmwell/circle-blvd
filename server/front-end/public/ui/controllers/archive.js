@@ -6,6 +6,16 @@ function ArchivesCtrl(session, $scope, $http, $filter, errors) {
 	var perPageLimit = 251;
 	var totalArchivesCount = 0;
 
+	$scope.isArchivesEmpty = function () {
+		if (!$scope.archives) {
+			return;
+		}
+		if ($scope.archives.length > 0) {
+			return false;
+		}
+		return true;
+	};
+
 	$scope.select = function (archive) {
 		if (archive.justDeselected) {
 			// HACK: So right now whenever we call deselect,
