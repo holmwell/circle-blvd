@@ -180,7 +180,7 @@
       <div class="back-bar" ng-if="isBackBarVisible">
         <div class="container-fluid">
           <a href="/#/" ng-click="setMindset('detailed')"><div class="glyphicon-chevron-left glyphicon"></div></a>
-          <a href="/#/" ng-click="setMindset('detailed')">{{backBarText || 'Back to task list'}}</a>
+          <a href="{{backBarUrl || '/#/'}}" ng-click="setMindset('detailed')">{{backBarText || 'Back to task list'}}</a>
         </div>
       </div>
 

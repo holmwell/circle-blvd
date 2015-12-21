@@ -1,0 +1,32 @@
+<div class="content checklist-detail">
+
+<div class="entry" ng-hide="isHidingEntry">
+    <div class="row">
+        <div class="col-xs-12 col-sm-offset-2 col-sm-8 debug">
+            <h3>{{listName}}</h3>
+            <div ng-show="listDescription">{{listDescription}}</div>
+            <div class="debug new-story row alignWithStoryList">
+                <form>
+                    <div class="input-group">
+                        <input id="storyEntry" type="text" class="form-control" ng-model="newStory" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-default pull-right" ng-click="create(newStory)">Add task</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div ng-if="lists && lists.length !== 0">
+    <sp-story-list 
+        data="listData" 
+        owners="owners" 
+        keyboard="keyboard"
+        mouse="mouse"
+        is-checklist="isChecklist" />
+</div>
+
+</div>

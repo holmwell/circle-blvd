@@ -6,13 +6,29 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 	$scope.keyboard = {};
 	$scope.mouse = {};
 
-	$scope.showBackBar = function (message) {
+	$scope.showBackBar = function (options) {
+		var message = undefined;
+		var url = undefined;
+
+		if (typeof options === 'object') {
+			message = options.message;
+			url = options.url;
+		}
+		
 		if (message) {
 			$scope.backBarText = message;
 		}
 		else {
 			$scope.backBarText = undefined;
 		}
+
+		if (url) {
+			$scope.backBarUrl = url;
+		}
+		else {
+			$scope.backBarUrl = undefined;
+		}
+
 		$scope.isBackBarVisible = true;
 	};
 

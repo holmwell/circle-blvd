@@ -3,7 +3,7 @@
 <div class="col-xs-12 page-message col-sm-offset-2 col-sm-8 debug">
     <div>
         <p>Do you have a set of tasks that repeat a lot? 
-            Save this as a checklist!</p>
+            Save it as a checklist!</p>
 
         <p>Then, add checklists to your <a href="/#/">main list</a> by 
             selecting the checklist option on the entry panel.</p>
@@ -52,31 +52,4 @@
     </div>
 </div>
 
-
-<div class="entry" ng-hide="isHidingEntry">
-    <div class="row">
-        <div class="col-xs-12 col-sm-offset-2 col-sm-8 debug">
-            <h3>{{listName}}</h3>
-            <div class="debug new-story row alignWithStoryList">
-                <form>
-                    <div class="input-group">
-                        <input id="storyEntry" type="text" class="form-control" ng-model="newStory" />
-                        <span class="input-group-btn">
-                            <button class="btn btn-default pull-right" ng-click="create(newStory)">Add task</button>
-                        </span>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div ng-if="lists && lists.length !== 0">
-    <sp-story-list 
-        data="listData" 
-        owners="owners" 
-        keyboard="keyboard"
-        mouse="mouse"
-        is-checklist="isChecklist" />
 </div>

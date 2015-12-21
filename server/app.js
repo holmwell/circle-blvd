@@ -367,6 +367,7 @@ var configureApp = function (config) {
         .addJs('ui/controllers/forgot.js')
         .addJs('ui/controllers/archive.js')
         .addJs('ui/controllers/lists.js')
+        .addJs('ui/controllers/listDetail.js')
         .addJs('ui/controllers/profile.js')
         .addJs('ui/controllers/invite.js')
         .addJs('ui/controllers/tour.js')

@@ -49,7 +49,10 @@ angular.module('myApp', [
         $routeProvider.when('/stories/:storyId', homePage);
         $routeProvider.when('/stories', homePage);
         $routeProvider.when('/welcome', {templateUrl: 'ui/views/welcome.html', controller: WelcomeCtrl});
+
+        $routeProvider.when('/lists/:listId', {templateUrl: 'ui/views/list-detail.html', controller: ListDetailCtrl});
         $routeProvider.when('/lists', {templateUrl: 'ui/views/lists.html', controller: ListsCtrl});
+        
         $routeProvider.when('/archives', {templateUrl: 'ui/views/archives.html', controller: ArchivesCtrl});
         $routeProvider.when('/profile', {templateUrl: 'ui/views/profile.html', controller: ProfileCtrl});
         $routeProvider.when('/admin', {templateUrl: 'ui/views/admin.html', controller: AdminCtrl});
