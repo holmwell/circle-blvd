@@ -13,6 +13,22 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		$scope.isBacklogBroken = true;
 	});
 
+	var updateBackBar = function () {
+		if (!$scope.isMindset('detailed')) {
+			$scope.showBackBar('Back to standard view');
+		}
+		else if ($scope.hideBackBar) {
+			$scope.hideBackBar();
+		}		
+	};
+
+	// Update now, listen for mindset events
+	updateBackBar();
+
+	$scope.$on('mindsetChanged', function () {
+		updateBackBar();
+	});
+
 	var entryPanel = function () {
 		$scope.isAdding = [];
 		$scope.isAdding['story'] = false;

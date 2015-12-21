@@ -10,6 +10,10 @@ function ProfileCtrl(session, $scope, $http, errors) {
 	$scope.supportsPayments = false;
 	$scope.activePlan = {};
 
+	if ($scope.showBackBar) {
+		$scope.showBackBar();
+	}
+
 	var plans = [];
 	plans.push({
 		name: "Supporter",

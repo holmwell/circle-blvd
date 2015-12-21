@@ -6,6 +6,10 @@ function ArchivesCtrl(session, $scope, $http, $filter, errors) {
 	var perPageLimit = 251;
 	var totalArchivesCount = 0;
 
+	if ($scope.showBackBar) {
+		$scope.showBackBar();
+	}
+
 	$scope.isArchivesEmpty = function () {
 		if (!$scope.archives) {
 			return;

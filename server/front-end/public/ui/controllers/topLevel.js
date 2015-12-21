@@ -6,6 +6,20 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 	$scope.keyboard = {};
 	$scope.mouse = {};
 
+	$scope.showBackBar = function (message) {
+		if (message) {
+			$scope.backBarText = message;
+		}
+		else {
+			$scope.backBarText = undefined;
+		}
+		$scope.isBackBarVisible = true;
+	};
+
+	$scope.hideBackBar = function () {
+		$scope.isBackBarVisible = false;
+	}
+
 	// If children want to hide the top header.
 	$scope.hideHeader = function () {
 		$scope.isHeaderVisible = false;

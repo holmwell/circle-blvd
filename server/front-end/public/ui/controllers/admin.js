@@ -7,6 +7,10 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 	var successes = {};
 	$scope.messages = {};
 
+	if ($scope.showBackBar) {
+		$scope.showBackBar();
+	}
+
 	var getBaseUrl = function () {
 		var location = $window.location;
 		return location.protocol + '//' + location.host;

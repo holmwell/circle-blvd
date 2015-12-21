@@ -7,6 +7,10 @@ function ListsCtrl(lib, session, $scope, $http, $filter, $timeout, errors) {
 
     $scope.profileName = session.user.name || '';
 
+    if ($scope.showBackBar) {
+        $scope.showBackBar();
+    }
+
     $scope.showEntry = function () {
         $scope.isAddingNew = true;
     };
