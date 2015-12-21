@@ -71,9 +71,12 @@
     </div>
 </div>
 
-<sp-story-list 
-    data="listData" 
-    owners="owners" 
-    keyboard="keyboard"
-    mouse="mouse"
-    is-checklist="isChecklist" />
+
+<div ng-if="lists && lists.length !== 0">
+    <sp-story-list 
+        data="listData" 
+        owners="owners" 
+        keyboard="keyboard"
+        mouse="mouse"
+        is-checklist="isChecklist" />
+</div>
