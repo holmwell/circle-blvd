@@ -14,6 +14,10 @@ a:link,
 a:visited {
   color: #006688;
 }
+a:focus {
+  text-decoration: none;
+}
+
 .nav-pills>li.active>a,
 .nav-pills>li.active>a:hover {
   background-color: #006688;
@@ -25,7 +29,7 @@ h1, h2, h3 {
   font-family: "Roboto",Merriweather,"Open Sans","Helvetica Neue",Helvetica,Arial,"Nimbus L",sans-serif;
 }
 h2 {
-  font-size: 28pt;
+  font-size: 24pt;
 }
 h1 a, h2 a {
   color: #222;
@@ -232,7 +236,8 @@ button:focus {
 
 .header .glyph {
   margin-top: 1.25em;
-  margin-right: 3ex;
+  margin-right: 2.75ex;
+  margin-right: 2.3ex;
   text-align: center;
   color: #eee;
   display: inline-block;

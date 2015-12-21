@@ -159,8 +159,18 @@
               <div>Checklists</div>
             </a>
 
+            <a class="jsLink glyph hidden-xs hidden-sm" href="/#/" 
+              ng-class="{active: isMindset('bump')}"
+              ng-click="setMindset('bump')">
+              <div class="glyphicon-chevron-up glyphicon"></div>
+              <div>Next up</div>
+            </a>
+
             <a class="jsLink glyph hidden-xs" href="/#/" 
-              ng-class="{active: isMindset('roadmap')}"
+              ng-class="{
+                active: isMindset('roadmap'),
+                'right-most': !isAdmin()
+              }"
               ng-click="setMindset('roadmap')">
               <div class="glyphicon-road glyphicon"></div>
               <div>Roadmap</div>
