@@ -1133,6 +1133,16 @@
   text-align: center;
 }
 
+.many-input-wrapper {
+  padding-left: 0;
+}
+.many-input-wrapper-left {
+  padding-right: 1ex;
+}
+.new-story .many-input {
+  margin-bottom: 1ex;
+}
+
 /* archive */
 .archives {
   margin-top: 2em;

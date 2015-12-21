@@ -267,8 +267,28 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 			}
 
 			var story = parseStory(protoTask.line);
-			story.description = protoTask.description;
+			// TODO: Refactor out the $scope.<newMany || newChecklist>
+			var prefix = '';
+			var suffix = '';
+			if (elementName && elementName === 'checklist') {
+				prefix = $scope.newChecklist.prefix || '';
+				suffix = $scope.newChecklist.suffix || '';
+			}
+			else {
+				prefix = $scope.newMany.prefix || '';
+				suffix = $scope.newMany.suffix || '';	
+			}
 
+			if (prefix) {
+				prefix = prefix.trim() + ' ';	
+			}
+			if (suffix) {
+				suffix = ' ' + suffix.trim();
+			}
+
+			story.summary = prefix + story.summary + suffix;
+			
+			story.description = protoTask.description;
 			insertNewStory(story, createNext);
 		};
 

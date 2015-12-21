@@ -217,6 +217,22 @@
 							ng-model="newChecklist.txt"
 							ng-paste="checklistPaste($event)"/>
 
+							<p>If you want to insert text before or after
+								each task summary (e.g. #event-name), you 
+								can do so with the following:</p>
+							<div class="row">
+								<div class="col-xs-6 many-input-wrapper-left">
+									<input ng-model="newChecklist.prefix" 
+									class="form-control many-input"
+									placeholder="Text before each line?"/>
+								</div>
+								<div class="col-xs-6 many-input-wrapper">
+									<input ng-model="newChecklist.suffix" 
+									class="form-control many-input"
+									placeholder="Text after each line?"/>
+								</div>
+							</div>
+
 							<button class="btn btn-default pull-right" 
 							ng-click="createMany(newChecklist, 'checklist')">Add checklist</button>
 						</div>
@@ -230,6 +246,23 @@
 					<textarea id="manyEntry" autosize class="form-control" 
 						ng-model="newMany.txt"
 						ng-paste="manyPaste($event)"/>
+
+					<p>If you want to insert text before or after
+						each task summary (e.g. #event-name), you 
+						can do so with the following:</p>
+					<div class="row">
+						<div class="col-xs-6 many-input-wrapper-left">
+							<input ng-model="newMany.prefix" 
+							class="form-control many-input"
+							placeholder="Text before each line?"/>
+						</div>
+						<div class="col-xs-6 many-input-wrapper">
+							<input ng-model="newMany.suffix" 
+							class="form-control many-input"
+							placeholder="Text after each line?"/>
+						</div>
+					</div>
+
 					<button class="btn btn-default pull-right" ng-click="createMany(newMany)">Add many</button>
 				</form>
 			</div>
