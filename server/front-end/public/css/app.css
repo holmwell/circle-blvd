@@ -389,10 +389,6 @@
   font-weight: bold;
 }
 
-.displayListStories {
-  list-style: circle;
-}
-
 .list textarea {
     height: 3em;
 }

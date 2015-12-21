@@ -213,14 +213,13 @@
 							<p ng-if="displayChecklist.length === 0">(This checklist
 								is empty.)</p>
 
-							<ul class="displayListStories">
-								<li ng-repeat="story in displayChecklist">
-									{{story.summary}}
-								</li>
-							</ul>
-						</div>
+							<textarea id="checklistEntry" autosize class="form-control" 
+							ng-model="newChecklist.txt"
+							ng-paste="checklistPaste($event)"/>
 
-						<button class="btn btn-default pull-right" ng-click="addSelectedChecklist()">Add checklist</button>
+							<button class="btn btn-default pull-right" 
+							ng-click="createMany(newChecklist, 'checklist')">Add checklist</button>
+						</div>
 					</div>
 				</form>
 			</div>

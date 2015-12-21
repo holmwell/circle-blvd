@@ -113,6 +113,13 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 
 				$scope.displayChecklist = checklistToAdd;
 
+				var checklistText = getTaskListText(checklistToAdd);
+				$scope.newChecklist = {};
+				$scope.newChecklist.txt = checklistText;
+				$timeout(function () {
+					$scope.$broadcast('autosize-manual-resize');
+				}, 0);
+
 			}).error(errors.log);
 		}).error(errors.log);
 	};
@@ -198,7 +205,7 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		}
 	};
 
-	$scope.createMany = function (newMany) {
+	$scope.createMany = function (newMany, elementName) {
 		if (!newMany) {
 			return;
 		}
@@ -243,7 +250,13 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		}
 
 		var done = function () {
-			$scope.newMany = undefined;
+			if (elementName && elementName === 'checklist') {
+				$scope.newChecklist = undefined;
+				$scope.deselectChecklist();
+			}
+			else {
+				$scope.newMany = undefined;	
+			}
 			isCreatingStory = false;
 			$timeout(makeStoriesDraggable, 0);
 		};
@@ -272,12 +285,9 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		createNext();
 	};
 
-	$scope.manyPaste = function (event) {
-		var startText = "";
-		var textarea = event.target;
+	function getTaskListText(tasks) {
 		var pasteText = "";
 
-		var tasks = lib.getCopiedTasks();
 		if (tasks.length === 0) {
 			return;
 		}
@@ -305,16 +315,28 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		});
 
 		pasteText = pasteText.trim();
+		return pasteText;
+	}
 
-		if ($scope.newMany && $scope.newMany.txt) {
-			startText = $scope.newMany.txt;
+	var pasteTasksToTextarea = function (event, element) {
+		var startText = "";
+		var textarea = event.target;
+		var pasteText = "";
+
+		if (!element) {
+			console.log("pasteTasksToTextarea: No element specified.")
+			return;
 		}
-		else {
-			$scope.newMany = {};	
+
+		var tasks = lib.getCopiedTasks();
+		pasteText = getTaskListText(tasks);
+
+		if (element && element.txt) {
+			startText = element.txt;
 		}
 
 		var index = textarea.selectionStart;
-		$scope.newMany.txt = 
+		element.txt = 
 			startText.slice(0, textarea.selectionStart) + 
 			pasteText + 
 			startText.slice(textarea.selectionEnd);
@@ -326,6 +348,20 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 		
 		event.preventDefault();
 		event.stopPropagation();
+	};
+
+	$scope.checklistPaste = function (event, element) {
+		if (!$scope.newChecklist) {
+			$scope.newChecklist = {};
+		}
+		pasteTasksToTextarea(event, $scope.newChecklist);
+	};
+
+	$scope.manyPaste = function (event, element) {
+		if (!$scope.newMany) {
+			$scope.newMany = {};
+		}
+		pasteTasksToTextarea(event, $scope.newMany);
 	};
 
 	var scrollToStorySpecifiedByUrl = function () {
