@@ -3,7 +3,6 @@
 function ListsCtrl(lib, session, $scope, $http, $location, $filter, $timeout, errors) {
 
     var circleId = session.activeCircle;
-    var selectedList = undefined;
 
     $scope.profileName = session.user.name || '';
 
@@ -26,7 +25,6 @@ function ListsCtrl(lib, session, $scope, $http, $location, $filter, $timeout, er
         };
         $http.post('/data/' + circleId + '/list', data)
         .success(function (data, status) {
-            $scope.hideEntry();
             $scope.newList = undefined;
             updateView();
         })
@@ -41,14 +39,18 @@ function ListsCtrl(lib, session, $scope, $http, $location, $filter, $timeout, er
     function updateView() {
         $http.get('/data/' + circleId + '/lists')
         .success(function (data) {
-            $scope.isHidingEntry = (data.length === 0);
-
             // Sort by name ...
             data.sort(function compare (a, b) {
                 return a.name.localeCompare(b.name);
             });
 
             $scope.lists = data;
+
+            // Show the entry panel if we don't have
+            // any lists yet.
+            if ($scope.lists.length === 0) {
+               $scope.showEntry();
+            }
         })
         .error(errors.log);
     }; 
