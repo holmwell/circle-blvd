@@ -219,7 +219,7 @@ button:focus {
   position: relative;
 }
 
-.title {
+.home .title {
   font-family: 'Roboto Slab';
   margin-bottom: 0;
   margin-left: 2.15ex;
