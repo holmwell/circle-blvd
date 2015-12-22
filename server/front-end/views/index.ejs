@@ -63,7 +63,7 @@
   ng-mouseleave="mouseleave($event)"
   ng-keydown="keydown($event)" 
   ng-keyup="keyup($event)">
-<div id="topLevel">
+<div id="topLevel" class="home-page">
   <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" 
     aria-labelledby="errorTitle" aria-hidden="true">
     <div class="modal-dialog">
@@ -141,7 +141,7 @@
 <div class="main-wrapper">
     <div class="header clearfix debug ng-cloak text-select" ng-if="isSignedIn()" ng-hide="!isHeaderVisible">
       <div class="container-fluid debug header-inner">
-        <div class="col-sm-6 debug hidden-xs">
+        <div class="col-sm-6 debug hidden-xs title-wrapper">
               <h2 class="debug title">
                 <a href="/#/"
                 ng-click="setMindset('detailed')">{{getActiveCircleName()}}</a>
