@@ -1406,24 +1406,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 	});
 
 	var updateUI = function () {
-		// HACK: So, yeah, we'll let future self
-		// worry about how to do this well ...
-		$(function () {
-			if (circle) {
-				var colors = circle.colors;
-				if (colors && colors.mileposts) {				
-					var mileposts = $('.deadline');
-					if (colors.mileposts.foreground) {
-						mileposts.css('color', colors.mileposts.foreground);
-						mileposts.addClass('has-custom-color');
-					}
-					if (colors.mileposts.background) {
-						mileposts.css('backgroundColor', colors.mileposts.background);
-						mileposts.addClass('has-custom-color');
-					}
-				}
-			}
-		});
+		// Do nothing.
 	};
 
 	// Tmp for development:

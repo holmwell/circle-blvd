@@ -2,6 +2,8 @@
 // /data/circle
 
 var express = require('express');
+var stylus = require('stylus');
+var Color  = require('color');
 var router = express.Router();
 
 var db = require('circle-blvd/dataAccess').instance();
@@ -65,6 +67,70 @@ router.put("/:circleId/archive", ensure.circleAdmin, function (req, res) {
     db.circles.get(circleId, guard(res, function (circle) {
         circle.isArchived = isArchived;
         db.circles.update(circle, handle(res));
+    }));
+});
+
+router.get("/:circleId/custom.css", ensure.circle, function (req, res) {
+    // TODO: This is problematic. Should this be on the front end?
+    // We need data access, though.
+    var circleId = req.params.circleId;
+    db.circles.get(circleId, guard(res, function (circle) {
+        
+        var cssFile = "" +
+        ".deadline," +
+        ".deadline:hover," +
+        ".deadline.after-meeting," +
+        ".deadline.after-meeting:hover {" +
+        "    color: deadlineColor;" +
+        "    background-color: deadlineBackground;" +
+        "}";
+
+        // TODO: Future styles
+        // ".header," +
+        // ".container-fluid.header-inner {" +
+        // "    background-color: #ccc" +
+        // "}";
+
+        // TODO: The 'has-custom-color' class was added
+        // to story elements with custom colors, in our
+        // jQuery solution.
+        //
+        // So, we'll want to make these dynamic, maybe.
+        // 
+        // .has-custom-color .story-label {
+        //   color: inherit !important; 
+        // }
+        // .has-custom-color .story-label:before {
+        //   content: "#";
+        // }
+
+        var deadlineColor = 'none';
+        var deadlineBackground = 'none';
+
+        try {
+            if (circle 
+             && circle.colors 
+             && circle.colors.mileposts) {
+                if (circle.colors.mileposts.foreground) {
+                    deadlineColor = Color(circle.colors.mileposts.foreground).hexString();
+                }
+                if (circle.colors.mileposts.background) {
+                    deadlineBackground = Color(circle.colors.mileposts.background).hexString();
+                }
+            }            
+        } 
+        catch (e) {
+            // Don't care.
+        }
+
+        stylus(cssFile)
+        .set('filename', '/data/circle/' + circleId + '/custom.css')
+        .define('deadlineColor', new stylus.nodes.Literal(deadlineColor))
+        .define('deadlineBackground', new stylus.nodes.Literal(deadlineBackground))
+        .render(guard(res, function (css) {
+            res.setHeader('Content-Type', 'text/css');
+            res.status(200).send(css);
+        }));
     }));
 });
 

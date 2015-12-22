@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" ng-app="myApp" prefix="og: http://opg.me/ns#">
+<html lang="en" ng-app="myApp" ng-controller="TopLevelCtrl" 
+  prefix="og: http://opg.me/ns#">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,6 +10,9 @@
   <link href='//fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/app.css">
+
+  <link rel="stylesheet" 
+    ng-href="/data/circle/{{getActiveCircle()._id}}/custom.css">
 
   <meta name="description" content="Circle Blvd. Project management for small teams. Just
   the right size for small, important projects in your community. Make things simple, again.">
@@ -52,7 +56,7 @@
   </script>
   <% } %>
 </head>
-<body ng-controller="TopLevelCtrl" 
+<body
   ng-mouseup="mouseup($event)"
   ng-mousedown="mousedown($event)"
   ng-mousemove="mousemove($event)"
