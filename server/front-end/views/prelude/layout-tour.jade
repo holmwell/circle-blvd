@@ -4,6 +4,7 @@ block stylesheets
     link(href="css/base.css" rel="stylesheet")
     link(href="css/prelude.css" rel="stylesheet")
     link(href="css/app.css" rel="stylesheet")
+    link(href="css/tour.css" rel="stylesheet")
 
 block scripts
     script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
@@ -15,11 +16,16 @@ block scripts
 block content
   include ../inc/error-modal
   include ../inc/navbar
+  //- include ../mixins/tour-header
 
-  .main-wrapper.tour
-    .container-fluid.main.debug
-      include ../inc/header
+  .tour-page
+    .main-wrapper.tour
+      .header
+          .container-fluid.header-inner
+            h2.title
+              block title
+
       .view
         block view
 
-  include ../inc/footer
+    include ../inc/footer
