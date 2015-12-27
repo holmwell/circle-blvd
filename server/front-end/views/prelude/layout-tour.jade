@@ -22,8 +22,35 @@ block content
     .main-wrapper.tour
       .header
           .container-fluid.header-inner
-            h2.title
-              block title
+              .col-sm-6.col-xs-12
+                h2.title
+                  block title
+              .col-sm-6.col-xs-12.debug.header-menu
+                div
+                  a.glyph(href="/tour-proto" 
+                    ng-class="{active: isCurrentPath('/tour-proto/overview')}")
+                    div.glyphicon.glyphicon-play-circle
+                    div Overview
+
+                  a.glyph(href="/tour-proto/basics" 
+                    ng-class="{active: isCurrentPath('/tour-proto/basics')}")
+                    div.glyphicon.glyphicon-sort-by-attributes-alt
+                    div Basics
+
+                  a.glyph(href="/tour-proto/organizers"
+                    ng-class="{active: isCurrentPath('/tour-proto/organizers')}")
+                    div.glyphicon.glyphicon-bullhorn
+                    div Organizers
+
+                  a.glyph(href="/tour-proto/workflow"
+                    ng-class="{active: isCurrentPath('/tour-proto/workflow')}")
+                    div.glyphicon.glyphicon-refresh
+                    div Workflow
+
+                  //- a.glyph(href="/tour-proto/videos"
+                  //-   ng-class="{active: isCurrentPath('/tour-proto/videos')}")
+                  //-   div.glyphicon.glyphicon-film
+                  //-   div Reference
 
       .view
         block view

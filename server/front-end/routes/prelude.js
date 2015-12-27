@@ -81,7 +81,10 @@ router.get("/auth-forgot/signin/:docId/:secret", function (req, res, next) {
 router.get("/about", render('about'));
 
 router.get('/tips', render('tips'));
+
 router.get('/tour-proto', render('tour-proto'));
+router.get('/tour-proto/basics', render('tour-basics'));
+
 router.get('/tour', render('tour'));
 router.get('/tour/start', render('tour'));
 router.get('/tour/start/*', render('tour'));

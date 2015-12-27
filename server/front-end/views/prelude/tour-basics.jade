@@ -1,0 +1,106 @@
+extends layout-tour
+
+block title 
+    span Tour: Basics
+
+block view
+    .big-ideas
+        .container-fluid.main
+            .row
+                .col-sm-9
+                    p At the heart of Circle Blvd is a shared task list.
+
+                    p This list helps your team remember what the group
+                     | is doing, who is doing what, and when tasks 
+                     | need to be completed. All the changes made to the list are synced 
+                     | through the internet, so everyone on the
+                     | team sees the same thing.
+
+                    p We suggest that everyone on your team read this
+                     | part of the tour, or that its concepts are explained
+                     | in a coversation. 
+                .col-sm-3
+                    img(src="/img/glyphs/icon-same-idea.svg" width="75%")
+    .framework
+        .container-fluid.main
+            .row
+                .col-sm-4
+                    h3.right-now What do we need to do right&nbsp;now? 
+                    h3.next-meeting Next planning meeting
+                    h3.everything-else Everything else
+                //- TODO: This is duplicated on the home page
+                .col-sm-8.list-introduction.
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-3 for-glyph">
+                            <span class="glyphicon glyphicon-triangle-top"></span>
+                        </div>
+                        <div class="col-xs-8 col-sm-9">
+                            <h4>Highest priority tasks at the top</h4>
+                            <p>In Circle Blvd, the tasks at the top
+                            are what your team is currently working on. Typically, these tasks are expected to be finished within a week.</p>
+                         </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-3 for-glyph">
+                            <span class="glyphicon glyphicon-sort"></span>
+                        </div>
+                        <div class="col-xs-8 col-sm-9">
+                            <h4>The next planning meeting</h4>
+                            <p>Every project has this special milestone. Use it as a cut line for what your team is doing and not doing
+                                before your next planning meeting.</p>
+                         </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-3 for-glyph">
+                            <span class="glyphicon glyphicon-triangle-bottom"></span>
+                        </div>
+                        <div class="col-xs-8 col-sm-9">
+                            <h4>All other tasks below</h4>
+                            <p>Keep all other tasks here. Have an idea? Add it to the list, and talk about it later with your team.</p>
+                         </div>
+                    </div>
+            .row 
+                .col-sm-12.list-introduction-video
+                    .embed-container
+                        iframe(src="//www.youtube-nocookie.com/embed/77h9J0wvlxY?rel=0" frameborder="0" allowfullscreen)
+
+                    p.below-video.
+
+    .big-ideas.mileposts
+        .container-fluid.main
+            .row
+                .col-sm-12
+                    h2 Mileposts: Dates &amp; deadlines
+
+            .row
+                .col-sm-offset-2.col-sm-8
+                    p Use “mileposts” to keep track of deadlines, dates, and events.
+
+                    p If a task needs to be done before a particular date: Add a milepost to your list, put the date in the 
+                     | milepost's summary, and move the task above it.
+
+            .row.section
+                .col-sm-12
+                    .embed-container
+                        iframe(src="//www.youtube-nocookie.com/embed/o2DroaniZ00?rel=0" frameborder="0" allowfullscreen)
+
+    .for-communities
+        .container-fluid.main
+            .row
+                .col-sm-12.center
+                    h2 Filters: Finding tasks you care about
+
+            .row
+                .col-sm-offset-2.col-sm-8
+                    p Clicking on a task's owner name will filter your list, showing only tasks owned
+                     | by that person. Use the <i class="glyphicon glyphicon-record"></i> icon to show only your tasks. 
+
+                    p By the way, you can assign tasks to anyone, including people
+                     | without Circle Blvd accounts, and filter on those owners as well.
+
+            .row.section
+                .col-sm-12
+                    .embed-container
+                        iframe(src="//www.youtube-nocookie.com/embed/ogJmGaKkUoU?rel=0" frameborder="0" allowfullscreen)
