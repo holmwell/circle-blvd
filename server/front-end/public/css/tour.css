@@ -1,6 +1,7 @@
 .header h2,
 .big-ideas h2,
-.for-communities h2 {
+.for-communities h2,
+.simple h2 {
     color: #eee;
     font-size: 36px;
     font-family: 'Roboto Slab';
@@ -140,7 +141,8 @@
 }
 
 .for-communities,
-.big-ideas {
+.big-ideas,
+.simple {
     padding-top: 2.6em;
     padding-bottom: 2.6em;
 }
@@ -170,7 +172,8 @@
     background-color: #aaa;
 }
 
-.big-ideas h2 {
+.big-ideas h2,
+.simple h2 {
     margin-top: 0;
     color: #222;
 }
@@ -199,7 +202,8 @@
 }
 
 .for-communities h2,
-.mileposts h2 {
+.mileposts h2,
+.simple h2 {
     text-align: center;
     margin-bottom: 1.1em;
 }
