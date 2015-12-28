@@ -1,12 +1,15 @@
 extends layout-simple
 
+append stylesheets
+    link(href="css/header.css" rel="stylesheet")
+
 block content
     include ../inc/navbar
 
     .main-wrapper
         .header
             .container-fluid.header-inner
-                .col-sm-6.col-xs-12
+                .col-sm-12.col-xs-12
                     h2.title 
                         block header
         .view

@@ -34,9 +34,6 @@ h2 {
 h1 a, h2 a {
   color: #222;
 }
-.header h2 a {
-  color: #eee;
-}
 h4, h5 {
   font-weight: bold;
 }
@@ -124,9 +121,6 @@ button:focus {
   padding-right: 0;
   max-width: 850px;  
 }
-.container-fluid.header-inner {
-  background: #006688;
-}
 
 .footer .container-fluid {
   padding-left: 5ex;
@@ -213,88 +207,8 @@ button:focus {
   cursor: pointer;
 }
 
-
-/* header.jade */
-.header {
-  /*background-color: #666;*/
-  /*font-family: 'Headland One', serif;*/
-  /*font-size: larger;*/
-
-  position: relative;
-}
-
-.header-inner {
-  display: flex;
-  flow-direction: row;
-  justify-content: left;
-  align-items: center;
-
-  /* min-height breaks IE 11 */
-  padding-top: 2ex;
-  padding-bottom: 2ex;
-  min-height: 110px;
-}
-.header-title,
-.header-menu {
-
-}
-
-.header .title {
-  font-family: 'Roboto Slab';
-  margin-top: 0;
-  margin-bottom: 0;
-}
-.header .title-wrapper {
-  padding-right: 0;
-}
-
 .home {
   margin-top: 2em;
-}
-
-.header {
-  background-color: #006688;
-}
-
-.header .glyph {
-  margin-right: 2.75ex;
-  margin-right: 2.3ex;
-  text-align: center;
-  color: #eee;
-  display: inline-block;
-  opacity: 0.25;
-  text-decoration: none;
-}
-.header .glyph.right-most {
-  margin-right: 0;
-}
-
-.header .glyph.active {
-  color: gold;
-  opacity: 1;
-}
-
-.header .glyph .glyphicon {
-  font-size: 18pt;
-}
-.header .glyph a {
-  color: #eee;
-}
-.header .glyph:hover {
-  opacity: 1;
-}
-.header a.glyph:hover {
-  color: gold;
-  color: #eee;
-}
-
-.header-inner {
-
-}
-.header-menu {
-  text-align: center;
-  padding-left: 0;
-  padding-right: 0;
 }
 
 .back-bar,
