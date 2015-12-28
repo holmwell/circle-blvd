@@ -1,0 +1,217 @@
+extends layout-tour
+
+block title 
+    span Tour: Getting started
+
+block view
+    .content.doc-page.clearfix.prelude-content(ng-controller="TourCtrl")
+        .clearfix
+            .docs.col-sm-offset-2.col-sm-8
+
+                p.before-video.
+                    Welcome to Circle Blvd, project management for small teams.
+
+                .row.choice-menu
+                    .col-xs-4.choice.active
+                        .circle-menu
+                            .text Start
+
+                    .col-xs-4.choice
+                        a(href="/tour/work")
+                            .circle-menu
+                                .text Work
+
+                    .col-xs-4.choice
+                        a(href="/tour/plan")
+                            .circle-menu
+                                .text Plan
+
+                p.
+                    With this site you can share task lists with your group, and it all stays 
+                    in sync through the internet.
+
+                .row.choice-menu
+                    .col-xs-3.choice.plan-choice(ng-class="{active: isShowing('intro')}")
+                        a.jsLink(ng-click="show('intro')")
+                            .plan-menu
+                                i.glyphicon.glyphicon-film
+                                .text Intro
+
+                    .col-xs-3.choice.plan-choice(ng-class="{active: isShowing('list')}")
+                        a.jsLink(ng-click="show('list')")
+                            .plan-menu
+                                i.glyphicon.glyphicon-sort-by-attributes-alt
+                                .text The List
+
+                    .col-xs-3.choice.plan-choice(ng-class="{active: isShowing('team')}")
+                        a.jsLink(ng-click="show('team')")
+                            .plan-menu
+                                i.glyphicon.glyphicon-user
+                                i.glyphicon.glyphicon-user.team
+                                i.glyphicon.glyphicon-user.team.third
+                                .text Team
+
+                    .col-xs-3.choice.plan-choice(ng-class="{active: isShowing('app')}")
+                        a.jsLink(ng-click="show('app')")
+                            .plan-menu
+                                i.glyphicon.glyphicon-phone
+                                .text Mobile app
+
+
+                div(ng-cloak ng-if="isShowing('intro')")
+                    .embed-container
+                        iframe(src="//www.youtube-nocookie.com/embed/-a7n_iyqB0A?rel=0" frameborder="0" allowfullscreen)
+
+                    p.below-video.
+                        For more context, below is video tour of the site, beginning with a
+                        50-second outline of where Circle Blvd
+                        was designed to fit in your project overall.
+
+                    .embed-container
+                        iframe(src="//www.youtube-nocookie.com/embed/r5VjGT8vEFA?list=PLsAlYk7uQNv8Bhmh4tCF55fj4k6cs11rS" frameborder="0" allowfullscreen)
+
+                    p.below-video.
+                        You can <a href="/signin">make a new account</a> on the sign-in page, or <a href="/#/profile">start a new circle</a> on the profile&nbsp;page.
+
+
+
+            div(ng-cloak ng-if="isShowing('list')")
+                .clearfix
+                    .docs.col-sm-offset-2.col-sm-8
+                        .embed-container
+                            iframe(src="//www.youtube-nocookie.com/embed/77h9J0wvlxY?rel=0" frameborder="0" allowfullscreen)
+
+                        p.below-video.
+                            Circle Blvd is all about managing your group's task list, so that's
+                            where we'll start.
+
+                        p.
+                            Below is an example list with five items in it, outlining
+                            a hypothetical road trip. The list is interactive, meaning it
+                            will react the same way as a list in a real account.
+
+
+                sp-story-list(data="demo" account-name="whoami" 
+                        owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
+                        keyboard="keyboard" mouse="mouse" is-facade="isFacade")
+
+                //- TODO: This is duplicated on the home page
+                .docs.col-sm-offset-2.col-sm-8.list-introduction.
+                    <p class="after-list">The list has three parts:</p>
+
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-3 for-glyph">
+                            <span class="glyphicon glyphicon-triangle-top"></span>
+                        </div>
+                        <div class="col-xs-8 col-sm-9">
+                            <h4>Tasks above the next meeting</h4>
+                            <p>This section is what your team is
+                                actively focusing on. Typically, these tasks are expected to be finished 
+                                within a week.</p>
+                         </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-3 for-glyph">
+                            <span class="glyphicon glyphicon-sort"></span>
+                        </div>
+                        <div class="col-xs-8 col-sm-9">
+                            <h4>The next planning meeting</h4>
+                            <p>This is a special task that every project 
+                                has. Use it as a cut line for what your team is doing and not doing
+                                before your next planning meeting.</p>
+                         </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-3 for-glyph">
+                            <span class="glyphicon glyphicon-triangle-bottom"></span>
+                        </div>
+                        <div class="col-xs-8 col-sm-9">
+                            <h4>Tasks below</h4>
+                            <p>Tasks to be accomplished someday, maybe. Use these tasks
+                                for future reference and short- and long-term planning.</p>
+                         </div>
+                    </div>
+
+                .docs.col-sm-offset-2.col-sm-8
+                    h3 Moving tasks
+                    .embed-container
+                        iframe(src="//www.youtube-nocookie.com/embed/apSHrj3_WQs?rel=0" frameborder="0" allowfullscreen)
+
+                    p.below-video.
+                        Circle Blvd helps you prioritize tasks by dragging and dropping them
+                        with your mouse. Move tasks up and down by dragging (clicking and holding) the 
+                        <i class="glyphicon glyphicon-move"></i> icon, 
+                        on the right side.
+
+                    p All the tasks can be moved &ndash; we just use that square 
+                     | placeholder to make the list easier on the eyes.
+
+                    h3 Mileposts
+                    .embed-container
+                        iframe(src="//www.youtube-nocookie.com/embed/o2DroaniZ00?rel=0" frameborder="0" allowfullscreen)
+
+                    p.below-video The last task in the above list is a <a href="/tour/work/mileposts">milepost</a>.
+                     | Use them to prioritize tasks relative to due dates or special events. They're covered in more
+                     | detail later in the tour.
+
+
+
+            div(ng-cloak ng-if="isShowing('team')")
+                .docs.col-sm-offset-2.col-sm-8
+                    h3.first Expectations
+                    p First, we feel it is important to understand the dynamics behind 
+                     | small-team behavior. If your team is composed of part-time volunteers, 
+                     | they probably won't use Circle Blvd often. This can be frustrating if it's not
+                     | expected. 
+
+                    p We want you to know that's ok, and we have your back. We designed Circle Blvd 
+                     | to help you keep track of your entire team's tasks, not just your own. 
+
+                    h3 Adding team members
+                    p Project creators can add team members using the admin page. We'll
+                     | email invitations to your team, or give you invitation links if you'd
+                     | prefer to contact them another way.
+
+                    h3 Assigning tasks
+                    p Each task in Circle Blvd has an optional owner, and assignments can be made 
+                     | in the standard <a href="/tour/work">detail view</a>. Assignments can
+                     | also be made during task
+                     | entry, using the @ symbol at the end of the line &ndash;  
+                     | for example, "Pick up milk from the store @Phil" will assign this task to Phil.
+
+                    h3 Filtering tasks
+                    .embed-container
+                        iframe(src="//www.youtube-nocookie.com/embed/ogJmGaKkUoU?rel=0" frameborder="0" allowfullscreen)
+
+                    p.below-video Use <i class="glyphicon glyphicon-record"></i> to show only your tasks. 
+                     | Clicking on a task's owner name will filter your list, showing only tasks owned
+                     | by that person. By the way, you can assign tasks to anyone, including people
+                     | without Circle Blvd accounts, and filter on those owners as well.
+
+                    h3 Bulk actions
+                    p Select multiple tasks at once with the mouse and use <a href="/tips">keyboard shortcuts</a>
+                     | to quickly keep tasks up to date.
+
+
+            div(ng-cloak ng-if="isShowing('app')")
+                .docs.col-sm-offset-2.col-sm-8
+                    p Our iPhone app is best for
+                     | quick status updates, adding small tasks on the go, and 
+                     | remembering your personal assignments. 
+                     | The website is where to go for heavy organization.
+
+                    .row.app-screenshot-container 
+                        .col-xs-offset-2.col-xs-8.col-sm-offset-0.col-sm-4.app-screenshot
+                            img(src="https://raw.githubusercontent.com/holmwell/circle-blvd-assets/master/img/screenshots/iPhone-0.png")
+                        .col-xs-offset-2.col-xs-8.col-sm-offset-0.col-sm-4.app-screenshot
+                            img(src="https://raw.githubusercontent.com/holmwell/circle-blvd-assets/master/img/screenshots/iPhone-1.png")
+                        .col-xs-offset-2.col-xs-8.col-sm-offset-0.col-sm-4.app-screenshot
+                            img(src="https://raw.githubusercontent.com/holmwell/circle-blvd-assets/master/img/screenshots/iPhone-2.png")
+
+                    .row.app-download
+                        a(href="https://itunes.apple.com/us/app/circle-blvd./id991896253?mt=8&uo=6&at=&ct=" target="itunes_store" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.png) no-repeat;width:165px;height:40px;@media only screen{background-image:url(https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg);}")
+
+
+

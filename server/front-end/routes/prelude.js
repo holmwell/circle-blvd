@@ -82,14 +82,16 @@ router.get("/about", render('about'));
 
 router.get('/tips', render('tips'));
 
-router.get('/tour-proto', render('tour-proto'));
+router.get('/tour', render('tour'));
 router.get('/tour/basics', render('tour-basics'));
 router.get('/tour/organizers', render('tour-organizers'));
 router.get('/tour/workflow', render('tour-workflow'));
+router.get('/tour/more', render('tour-more'));
 
-router.get('/tour', render('tour'));
-router.get('/tour/start', render('tour'));
-router.get('/tour/start/*', render('tour'));
+
+router.get('/tour/old', render('tour-old'));
+router.get('/tour/start', render('tour-old'));
+router.get('/tour/start/*', render('tour-old'));
 
 router.get('/tour/work', render('tour-work'));
 router.get('/tour/work/*', render('tour-work'));

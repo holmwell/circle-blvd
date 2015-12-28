@@ -1,215 +1,173 @@
 extends layout-tour
 
+block title 
+    span What is Circle Blvd?
+
 block view
-    .content.doc-page.clearfix.prelude-content(ng-controller="TourCtrl")
-        .clearfix
-            .docs.col-sm-offset-2.col-sm-8
-                h2 Tour: Getting started
+    .three-things
+        .container-fluid.main
+            .row
+                .col-sm-7.col-xs-12
+                    .thing
+                        .step-wrapper
+                            .step i
+                        h3 tasks
 
-                p.before-video.
-                    Welcome to Circle Blvd, project management for small teams.
+                    .thing
+                        .step-wrapper
+                            .step ii
+                        h3 people
 
-                .row.choice-menu
-                    .col-xs-4.choice.active
-                        .circle-menu
-                            .text Start
+                    .thing
+                        .step-wrapper
+                            .step iii
+                        h3 deadlines, events
 
-                    .col-xs-4.choice
-                        a(href="/tour/work")
-                            .circle-menu
-                                .text Work
+                .col-sm-5.col-xs-12.intro
+                    p Circle Blvd is <em>project management for small teams.</em> It's for managing three things: 
 
-                    .col-xs-4.choice
-                        a(href="/tour/plan")
-                            .circle-menu
-                                .text Plan
+                    ol 
+                        li Tasks: What is being done.
+                        li People: Who is doing what.
+                        li Deadlines: When things need to be done.
 
-                p.
-                    With this site you can share task lists with your group, and it all stays 
-                    in sync through the internet.
-
-                .row.choice-menu
-                    .col-xs-3.choice.plan-choice(ng-class="{active: isShowing('intro')}")
-                        a.jsLink(ng-click="show('intro')")
-                            .plan-menu
-                                i.glyphicon.glyphicon-film
-                                .text Intro
-
-                    .col-xs-3.choice.plan-choice(ng-class="{active: isShowing('list')}")
-                        a.jsLink(ng-click="show('list')")
-                            .plan-menu
-                                i.glyphicon.glyphicon-sort-by-attributes-alt
-                                .text The List
-
-                    .col-xs-3.choice.plan-choice(ng-class="{active: isShowing('team')}")
-                        a.jsLink(ng-click="show('team')")
-                            .plan-menu
-                                i.glyphicon.glyphicon-user
-                                i.glyphicon.glyphicon-user.team
-                                i.glyphicon.glyphicon-user.team.third
-                                .text Team
-
-                    .col-xs-3.choice.plan-choice(ng-class="{active: isShowing('app')}")
-                        a.jsLink(ng-click="show('app')")
-                            .plan-menu
-                                i.glyphicon.glyphicon-phone
-                                .text Mobile app
+                    p Everything in Circle Blvd makes it easier for your
+                     | team to get on the same page regarding tasks,
+                     | people, and deadlines.
 
 
-                div(ng-cloak ng-if="isShowing('intro')")
-                    .embed-container
-                        iframe(src="//www.youtube-nocookie.com/embed/-a7n_iyqB0A?rel=0" frameborder="0" allowfullscreen)
+    .framework
+        .container-fluid.main
+            .row 
+                .col-sm-5
+                    p Circle Blvd is for small teams with a plan.
 
-                    p.below-video.
-                        For more context, below is video tour of the site, beginning with a
-                        50-second outline of where Circle Blvd
-                        was designed to fit in your project overall.
+                    p Right now, your team is busy working on what
+                     | needs to be done.
 
-                    .embed-container
-                        iframe(src="//www.youtube-nocookie.com/embed/r5VjGT8vEFA?list=PLsAlYk7uQNv8Bhmh4tCF55fj4k6cs11rS" frameborder="0" allowfullscreen)
+                    p Everything else? That's for a later time.
 
-                    p.below-video.
-                        You can <a href="/signin">make a new account</a> on the sign-in page, or <a href="/#/profile">start a new circle</a> on the profile&nbsp;page.
+                    p In between now and later, teams re-group and decide
+                     | what to work on next, in the form of 
+                     | regular planning meetings.
 
+                    p Circle Blvd fits within this "work, plan, work"
+                     | rhythm, helping your team stay flexible and
+                     | effective over time.
 
-
-            div(ng-cloak ng-if="isShowing('list')")
-                .clearfix
-                    .docs.col-sm-offset-2.col-sm-8
-                        .embed-container
-                            iframe(src="//www.youtube-nocookie.com/embed/77h9J0wvlxY?rel=0" frameborder="0" allowfullscreen)
-
-                        p.below-video.
-                            Circle Blvd is all about managing your group's task list, so that's
-                            where we'll start.
-
-                        p.
-                            Below is an example list with five items in it, outlining
-                            a hypothetical road trip. The list is interactive, meaning it
-                            will react the same way as a list in a real account.
+                .col-sm-7
+                    h3.right-now What do we need to do right&nbsp;now? 
+                    h3.next-meeting Next planning meeting
+                    h3.everything-else Everything else
+                    h4.caption How most teams work, starting at the top.
 
 
-                sp-story-list(data="demo" account-name="whoami" 
-                        owners="['Alaina', 'Nicholas', 'Phil', whoami]" 
-                        keyboard="keyboard" mouse="mouse" is-facade="isFacade")
+    .for-communities
+        .container-fluid.main
+            .row 
+                .col-sm-7
+                    img(src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/photos/swing-weekend-2015-sized.jpg" width="100%")
+                    p.caption.left Photo credit: <a href="http://rabscuttle.com">Martin 
+                     | &amp; Renee Norred</a> 
+                .col-sm-5
+                    p Circle Blvd was created to meet the needs of the Corvallis 
+                     | Swing Dance Society, a successful volunteer organization 
+                     | in Oregon.
 
-                //- TODO: This is duplicated on the home page
-                .docs.col-sm-offset-2.col-sm-8.list-introduction.
-                    <p class="after-list">The list has three parts:</p>
+                    p Nobody wants to use computers, and the organizers at 
+                     | Corvallis Swing are no different.
 
-                    <div class="row">
-                        <div class="col-xs-4 col-sm-3 for-glyph">
-                            <span class="glyphicon glyphicon-triangle-top"></span>
-                        </div>
-                        <div class="col-xs-8 col-sm-9">
-                            <h4>Tasks above the next meeting</h4>
-                            <p>This section is what your team is
-                                actively focusing on. Typically, these tasks are expected to be finished 
-                                within a week.</p>
-                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-4 col-sm-3 for-glyph">
-                            <span class="glyphicon glyphicon-sort"></span>
-                        </div>
-                        <div class="col-xs-8 col-sm-9">
-                            <h4>The next planning meeting</h4>
-                            <p>This is a special task that every project 
-                                has. Use it as a cut line for what your team is doing and not doing
-                                before your next planning meeting.</p>
-                         </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-xs-4 col-sm-3 for-glyph">
-                            <span class="glyphicon glyphicon-triangle-bottom"></span>
-                        </div>
-                        <div class="col-xs-8 col-sm-9">
-                            <h4>Tasks below</h4>
-                            <p>Tasks to be accomplished someday, maybe. Use these tasks
-                                for future reference and short- and long-term planning.</p>
-                         </div>
-                    </div>
-
-                .docs.col-sm-offset-2.col-sm-8
-                    h3 Moving tasks
-                    .embed-container
-                        iframe(src="//www.youtube-nocookie.com/embed/apSHrj3_WQs?rel=0" frameborder="0" allowfullscreen)
-
-                    p.below-video.
-                        Circle Blvd helps you prioritize tasks by dragging and dropping them
-                        with your mouse. Move tasks up and down by dragging (clicking and holding) the 
-                        <i class="glyphicon glyphicon-move"></i> icon, 
-                        on the right side.
-
-                    p All the tasks can be moved &ndash; we just use that square 
-                     | placeholder to make the list easier on the eyes.
-
-                    h3 Mileposts
-                    .embed-container
-                        iframe(src="//www.youtube-nocookie.com/embed/o2DroaniZ00?rel=0" frameborder="0" allowfullscreen)
-
-                    p.below-video The last task in the above list is a <a href="/tour/work/mileposts">milepost</a>.
-                     | Use them to prioritize tasks relative to due dates or special events. They're covered in more
-                     | detail later in the tour.
+                    p Circle Blvd is approachable.
 
 
+            .row.section
+                .col-sm-5
+                    p The volunteers of Corvallis Swing 
+                     | work full-time jobs elsewhere, and they 
+                     | only have so much time they can offer to 
+                     | organizing events. 
 
-            div(ng-cloak ng-if="isShowing('team')")
-                .docs.col-sm-offset-2.col-sm-8
-                    h3.first Expectations
-                    p First, we feel it is important to understand the dynamics behind 
-                     | small-team behavior. If your team is composed of part-time volunteers, 
-                     | they probably won't use Circle Blvd often. This can be frustrating if it's not
-                     | expected. 
+                    p Their situation is not unique: In the United 
+                     | States, volunteers dedicate, on average,
+                     | an hour of work each week. 
 
-                    p We want you to know that's ok, and we have your back. We designed Circle Blvd 
-                     | to help you keep track of your entire team's tasks, not just your own. 
+                    p Circle Blvd needs to be efficient, and capable of doing 
+                     | a lot in a short amount of time.
+                .col-sm-7
+                    img(src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/photos/gordon-webster-portland-sized.jpg" width="100%")
+                    p.caption Photo credit: <a href="http://rabscuttle.com">Martin 
+                     | &amp; Renee Norred</a> 
 
-                    h3 Adding team members
-                    p Project creators can add team members using the admin page. We'll
-                     | email invitations to your team, or give you invitation links if you'd
-                     | prefer to contact them another way.
+            .row.section
+                .col-sm-7
+                    img(src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/photos/swingout-charleston-sized.jpg" width="100%")
+                    p.caption.left Photo credit: <a href="http://rabscuttle.com">Martin 
+                     | &amp; Renee Norred</a> 
+                .col-sm-5
+                    p The schedules of Corvallis Swing volunteers
+                     | are rarely fixed. The amount of time people 
+                     | can put in varies from week to week and month 
+                     | to month.
+                    
+                    p Circle Blvd is flexible, and makes it easy to
+                     | rearrange plans as situations change.
 
-                    h3 Assigning tasks
-                    p Each task in Circle Blvd has an optional owner, and assignments can be made 
-                     | in the standard <a href="/tour/work">detail view</a>. Assignments can
-                     | also be made during task
-                     | entry, using the @ symbol at the end of the line &ndash;  
-                     | for example, "Pick up milk from the store @Phil" will assign this task to Phil.
+    .big-ideas
+        .container-fluid.main
+            .row 
+                .col-sm-8
+                    h2 Small teams, big ideas
+                    p Circle Blvd is not only for 
+                     | volunteer organizations. It is great for all 
+                     | small teams &ndash; especially those with
+                     | big ideas, those who need a plan.
 
-                    h3 Filtering tasks
-                    .embed-container
-                        iframe(src="//www.youtube-nocookie.com/embed/ogJmGaKkUoU?rel=0" frameborder="0" allowfullscreen)
+                    p In fact, Circle Blvd is the only project management
+                     | site made exclusively for small teams.
 
-                    p.below-video Use <i class="glyphicon glyphicon-record"></i> to show only your tasks. 
-                     | Clicking on a task's owner name will filter your list, showing only tasks owned
-                     | by that person. By the way, you can assign tasks to anyone, including people
-                     | without Circle Blvd accounts, and filter on those owners as well.
+                    p Our competition makes well-regarded software for
+                     | large enterprises &ndash; Fortune 500 companies.
+                     | We're happy for them, but we need something that's
+                     | the right size for small teams.
+                                          
+                .col-sm-4
+                    img(src="/img/glyphs/icon-same-idea.svg" width="75%")
 
-                    h3 Bulk actions
-                    p Select multiple tasks at once with the mouse and use <a href="/tips">keyboard shortcuts</a>
-                     | to quickly keep tasks up to date.
+            .row.section
+                    //- .col-sm-4.col-xs-6.logo
+                        //- <a href="http://corvallisswing.com"><img src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/partners/corvallis-swing.png"></a>
+                        //- h5 Corvallis Swing<br/>Dance Society
+                .col-sm-4
+                    .col-sm-12.col-xs-6.logo
+                        <a href="http://swsdt.com"><img src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/partners/smith-williamson.png"></a>
+                        h5 Smith &amp; Williamson LLC
 
+                    .col-sm-12.col-xs-6.logo
+                        <a href="http://advantage.oregonstate.edu/advantage-accelerator"><img src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/partners/osu-aa.png"></a>
+                .col-sm-8
+                    p In addition to the Corvallis Swing Dance Society, our key 
+                     | development partners are:
 
-            div(ng-cloak ng-if="isShowing('app')")
-                .docs.col-sm-offset-2.col-sm-8
-                    p Our iPhone app is best for
-                     | quick status updates, adding small tasks on the go, and 
-                     | remembering your personal assignments. 
-                     | The website is where to go for heavy organization.
+                    p <a href="https://swsdt.com/">Smith &amp; Williamson LLC</a>, an
+                     | engineering firm specialized in developing custom
+                     | prototypes for atmosphere and oceanographic exploration. 
 
-                    .row.app-screenshot-container 
-                        .col-xs-offset-2.col-xs-8.col-sm-offset-0.col-sm-4.app-screenshot
-                            img(src="https://raw.githubusercontent.com/holmwell/circle-blvd-assets/master/img/screenshots/iPhone-0.png")
-                        .col-xs-offset-2.col-xs-8.col-sm-offset-0.col-sm-4.app-screenshot
-                            img(src="https://raw.githubusercontent.com/holmwell/circle-blvd-assets/master/img/screenshots/iPhone-1.png")
-                        .col-xs-offset-2.col-xs-8.col-sm-offset-0.col-sm-4.app-screenshot
-                            img(src="https://raw.githubusercontent.com/holmwell/circle-blvd-assets/master/img/screenshots/iPhone-2.png")
+                    p The Oregon State University 
+                     | <a href="http://advantage.oregonstate.edu/">Advantage Accelerator</a>, 
+                     | a business development organization with a focus on startups and 
+                     | early-stage companies.
 
-                    .row.app-download
-                        a(href="https://itunes.apple.com/us/app/circle-blvd./id991896253?mt=8&uo=6&at=&ct=" target="itunes_store" style="display:inline-block;overflow:hidden;background:url(https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.png) no-repeat;width:165px;height:40px;@media only screen{background-image:url(https://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg);}")
+                    p We work closely with these partners, to stay in touch
+                     | with our small-team roots.
 
+    .easy-way
+        .container-fluid.main
+            .row 
+                .col-md-6
+                    p Welcome to Circle Blvd, project management for small
+                     | teams. 
 
-
+                .col-md-6
+                    .quote “For a small group, this is the easiest way you can 
+                        | possibly go.”
+                    .attribution &mdash; Smith &amp; Williamson

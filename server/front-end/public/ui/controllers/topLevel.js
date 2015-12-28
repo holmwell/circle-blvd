@@ -278,6 +278,14 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 		return path === val || (path.indexOf(val) === 0);
 	};
 
+	$scope.isCurrentPathExactly = function (val) {
+		var pathname = $window.location.pathname;
+		if (pathname === val) {
+			return true;
+		}
+		return false;
+	};
+
 	var getActiveCircle = function () {
 		var activeCircle = undefined;
 		angular.forEach(session.circleList, function (circle) {
