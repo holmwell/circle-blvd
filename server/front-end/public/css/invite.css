@@ -3,6 +3,23 @@
     margin-right: 0;
 }*/
 
+.first {
+    background-color: #999;
+    padding-top: 2.6em;
+}
+
+.useCurrentForm {
+    padding-top: 1.6em;
+}
+
+.logo {
+    margin-top: 3em;
+    text-align: center;
+}
+.last {
+    padding-right: 0;
+}
+
 .footer img,
 .footer.desktop-view img {
     opacity: 1;

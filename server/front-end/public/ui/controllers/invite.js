@@ -2,9 +2,8 @@
 
 function InviteCtrl(inviteId, lib, session, $scope, $http, $window, errors) {
 
-    $scope.hideHeader(); // defined in TopLevelCtrl
-
     $scope.useExisting = false;
+    $scope.useCurrent = false;
     $scope.createNew = false;
 
     var isLoading = true;
@@ -24,13 +23,24 @@ function InviteCtrl(inviteId, lib, session, $scope, $http, $window, errors) {
         isLoading = false;
     });
 
-    $scope.showUseExisting = function () {
-        $scope.useExisting = true;
+    var hideAllOptions = function () {
+        $scope.useExisting = false;
+        $scope.useCurrent = false;
         $scope.createNew = false;
     };
 
+    $scope.showUseExisting = function () {
+        hideAllOptions();
+        $scope.useExisting = true;
+    };
+
+    $scope.showUseCurrent = function () {
+        hideAllOptions();
+        $scope.useCurrent = true;
+    };
+
     $scope.showCreateNew = function () {
-        $scope.useExisting = false;
+        hideAllOptions();
         $scope.createNew = true;
     };
 
@@ -123,6 +133,18 @@ function InviteCtrl(inviteId, lib, session, $scope, $http, $window, errors) {
             })
             .error(handleInviteError);
         });
+    };
+
+    $scope.useCurrentAccount = function () {
+        var data = {};
+        data.account = session.user;
+        data.invite = invite;
+
+        $http.post('/data/signup/invite/accept', data)
+        .success(function (data) {
+            startSession(session.user);
+        })
+        .error(handleInviteError);
     };
 }
 InviteCtrl.$inject = ['inviteId', 'lib', 'session', '$scope', '$http', '$window', 'errors'];
