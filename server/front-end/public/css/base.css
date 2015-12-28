@@ -234,6 +234,10 @@ button:focus {
   padding-bottom: 2ex;
   min-height: 110px;
 }
+.header-title,
+.header-menu {
+
+}
 
 .header .title {
   font-family: 'Roboto Slab';
@@ -289,6 +293,8 @@ button:focus {
 }
 .header-menu {
   text-align: center;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .back-bar,

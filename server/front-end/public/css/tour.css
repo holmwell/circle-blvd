@@ -1,3 +1,11 @@
+.row {
+    margin-left: 0;
+    margin-right: 0;
+}
+p {
+    line-height: normal;
+}
+
 .header h2,
 .big-ideas h2,
 .for-communities h2,
@@ -27,7 +35,7 @@
 }
 
 .tour .intro {
-    padding-top: 1.5em;
+    /*padding-top: 1.5em;*/
 }
 
 .easy-way,
@@ -95,6 +103,9 @@
     font-weight: normal;
     margin-top: 1.1em;
 }
+.framework .caption {
+    text-align: center;
+}
 
 .three-things {
     padding-top: 1.6em;
@@ -133,6 +144,7 @@
 }
 .workflow .thing {
     margin-bottom: 0;
+    text-align: center;
 }
 .workflow .big-ideas .thing h3 {
     color: #333;
@@ -150,11 +162,23 @@
     padding-left: 8px;
 }
 
-.thing h3 {
+.thing h3,
+.point h3 {
     margin-left: 2ex;
     display: inline-block;
     font-size: 36px;
     font-family: 'Roboto Slab';
+    color: #eee;
+}
+.point h3 {
+    margin-left: 0;
+    display: inline-block;
+    color: #333;
+    vertical-align: middle; 
+    padding-left: 0; 
+    margin-top: 1.5ex;
+}
+.three-things .point h3 {
     color: #eee;
 }
 
@@ -188,6 +212,10 @@
 .big-ideas,
 .big-ideas .container-fluid.main {
     background-color: #aaa;
+}
+
+.big-ideas .same-idea {
+    text-align: center;
 }
 
 .big-ideas h2,

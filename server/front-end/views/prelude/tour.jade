@@ -7,7 +7,7 @@ block view
     .three-things
         .container-fluid.main
             .row
-                .col-sm-7.col-xs-12
+                .col-sm-7.col-xs-12.hidden-xs
                     .thing
                         .step-wrapper
                             .step i
@@ -38,8 +38,8 @@ block view
 
     .framework
         .container-fluid.main
-            .row 
-                .col-sm-5
+            .row
+                .col-sm-5.col-xs-12
                     p Circle Blvd is for small teams with a plan.
 
                     p Right now, your team is busy working on what
@@ -55,7 +55,7 @@ block view
                      | rhythm, helping your team stay flexible and
                      | effective over time.
 
-                .col-sm-7
+                .col-sm-7.hidden-xs
                     h3.right-now What do we need to do right&nbsp;now? 
                     h3.next-meeting Next planning meeting
                     h3.everything-else Everything else
@@ -67,7 +67,7 @@ block view
             .row 
                 .col-sm-7
                     img(src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/photos/swing-weekend-2015-sized.jpg" width="100%")
-                    p.caption.left Photo credit: <a href="http://rabscuttle.com">Martin 
+                    p.caption.left.hidden-xs Photo credit: <a href="http://rabscuttle.com">Martin 
                      | &amp; Renee Norred</a> 
                 .col-sm-5
                     p Circle Blvd was created to meet the needs of the Corvallis 
@@ -81,7 +81,11 @@ block view
 
 
             .row.section
-                .col-sm-5
+                .col-sm-7.col-sm-push-5
+                    img(src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/photos/gordon-webster-portland-sized.jpg" width="100%")
+                    p.caption.hidden-xs Photo credit: <a href="http://rabscuttle.com">Martin 
+                     | &amp; Renee Norred</a> 
+                .col-sm-5.col-sm-pull-7
                     p The volunteers of Corvallis Swing 
                      | work full-time jobs elsewhere, and they 
                      | only have so much time they can offer to 
@@ -93,15 +97,12 @@ block view
 
                     p Circle Blvd needs to be efficient, and capable of doing 
                      | a lot in a short amount of time.
-                .col-sm-7
-                    img(src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/photos/gordon-webster-portland-sized.jpg" width="100%")
-                    p.caption Photo credit: <a href="http://rabscuttle.com">Martin 
-                     | &amp; Renee Norred</a> 
+
 
             .row.section
                 .col-sm-7
                     img(src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/photos/swingout-charleston-sized.jpg" width="100%")
-                    p.caption.left Photo credit: <a href="http://rabscuttle.com">Martin 
+                    p.caption.left.hidden-xs Photo credit: <a href="http://rabscuttle.com">Martin 
                      | &amp; Renee Norred</a> 
                 .col-sm-5
                     p The schedules of Corvallis Swing volunteers
@@ -111,6 +112,9 @@ block view
                     
                     p Circle Blvd is flexible, and makes it easy to
                      | rearrange plans as situations change.
+
+                    p.visible-xs Photo credit: <a href="http://rabscuttle.com">Martin 
+                     | &amp; Renee Norred</a> 
 
     .big-ideas
         .container-fluid.main
@@ -130,14 +134,14 @@ block view
                      | We're happy for them, but we need something that's
                      | the right size for small teams.
                                           
-                .col-sm-4
+                .col-sm-4.same-idea
                     img(src="/img/glyphs/icon-same-idea.svg" width="75%")
 
             .row.section
                     //- .col-sm-4.col-xs-6.logo
                         //- <a href="http://corvallisswing.com"><img src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/partners/corvallis-swing.png"></a>
                         //- h5 Corvallis Swing<br/>Dance Society
-                .col-sm-4
+                .col-sm-4.col-xs-12.hidden-xs
                     .col-sm-12.col-xs-6.logo
                         <a href="http://swsdt.com"><img src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/partners/smith-williamson.png"></a>
                         h5 Smith &amp; Williamson LLC
@@ -145,7 +149,7 @@ block view
                     .col-sm-12.col-xs-6.logo
                         <a href="http://advantage.oregonstate.edu/advantage-accelerator"><img src="https://raw.githubusercontent.com/holmwell/proprietary-assets/master/circle-blvd/partners/osu-aa.png"></a>
                 .col-sm-8
-                    p In addition to the Corvallis Swing Dance Society, our key 
+                    p.clearfix In addition to the Corvallis Swing Dance Society, our key 
                      | development partners are:
 
                     p <a href="https://swsdt.com/">Smith &amp; Williamson LLC</a>, an
@@ -167,7 +171,7 @@ block view
                     p Welcome to Circle Blvd, project management for small
                      | teams. 
 
-                .col-md-6
+                .col-md-6.hidden-xs
                     .quote “For a small group, this is the easiest way you can 
                         | possibly go.”
                     .attribution &mdash; Smith &amp; Williamson

@@ -21,36 +21,36 @@ block content
   .tour-page
     .main-wrapper.tour
       .header
-          .container-fluid.header-inner
-              .col-sm-6.col-xs-12
-                h2.title
-                  block title
-              .col-sm-6.col-xs-12.debug.header-menu
-                div
-                  a.glyph(href="/tour" 
-                    ng-class="{active: isCurrentPathExactly('/tour')}")
-                    div.glyphicon.glyphicon-play
-                    div Overview
+        .container-fluid.header-inner
+          .col-sm-6.col-xs-12.header-title.hidden-xs
+            h2.title
+              block title
+          .col-sm-6.col-xs-12.debug.header-menu
+            div
+              a.glyph(href="/tour" 
+                ng-class="{active: isCurrentPathExactly('/tour')}")
+                div.glyphicon.glyphicon-play
+                div Overview
 
-                  a.glyph(href="/tour/basics" 
-                    ng-class="{active: isCurrentPath('/tour/basics')}")
-                    div.glyphicon.glyphicon-sort-by-attributes-alt
-                    div Basics
+              a.glyph(href="/tour/basics" 
+                ng-class="{active: isCurrentPath('/tour/basics')}")
+                div.glyphicon.glyphicon-sort-by-attributes-alt
+                div Basics
 
-                  a.glyph(href="/tour/organizers"
-                    ng-class="{active: isCurrentPath('/tour/organizers')}")
-                    div.glyphicon.glyphicon-bullhorn
-                    div Organizers
+              a.glyph(href="/tour/organizers"
+                ng-class="{active: isCurrentPath('/tour/organizers')}")
+                div.glyphicon.glyphicon-bullhorn
+                div Organizers
 
-                  a.glyph(href="/tour/workflow"
-                    ng-class="{active: isCurrentPath('/tour/workflow')}")
-                    div.glyphicon.glyphicon-refresh
-                    div Workflow
+              a.glyph.right-most(href="/tour/workflow"
+                ng-class="{active: isCurrentPath('/tour/workflow')}")
+                div.glyphicon.glyphicon-refresh
+                div Workflow
 
-                  //- a.glyph(href="/tour/more"
-                  //-   ng-class="{active: isCurrentPath('/tour/more')}")
-                  //-   div.glyphicon.glyphicon-option-horizontal
-                  //-   div More
+              //- a.glyph(href="/tour/more"
+              //-   ng-class="{active: isCurrentPath('/tour/more')}")
+              //-   div.glyphicon.glyphicon-option-horizontal
+              //-   div More
 
       .view
         block view
