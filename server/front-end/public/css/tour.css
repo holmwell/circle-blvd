@@ -131,6 +131,24 @@
 .thing {
     margin-bottom: 2.6em;
 }
+.workflow .thing {
+    margin-bottom: 0;
+}
+.workflow .big-ideas .thing h3 {
+    color: #333;
+}
+.workflow .big-ideas .thing .step-wrapper,
+.workflow .big-ideas .thing .step-wrapper .step {
+    border-color: #666;
+    color: #333;
+} 
+.workflow .three-things {
+    padding-bottom: 2.6em;
+}
+
+.workflow p {
+    margin-left: -8px;
+}
 
 .thing h3 {
     margin-left: 2ex;

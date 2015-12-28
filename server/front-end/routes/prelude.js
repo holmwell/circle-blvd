@@ -85,6 +85,7 @@ router.get('/tips', render('tips'));
 router.get('/tour-proto', render('tour-proto'));
 router.get('/tour/basics', render('tour-basics'));
 router.get('/tour/organizers', render('tour-organizers'));
+router.get('/tour/workflow', render('tour-workflow'));
 
 router.get('/tour', render('tour'));
 router.get('/tour/start', render('tour'));
