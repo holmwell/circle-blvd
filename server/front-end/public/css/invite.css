@@ -1,32 +1,92 @@
-/*.content .row {
-    margin-left: 0;
-    margin-right: 0;
-}*/
+.invitation {
+  background-color: #eee;
+}
+
+/* invite */
+.invite.content {
+  padding-top: 3em;
+  padding-bottom: 3em;
+}
+.invite label {
+  font-weight: normal;
+}
+
+.invite .choice {
+  padding-top: 2em;
+  padding-bottom: 1em;
+  text-align: left;
+}
+.choice h2 {
+  display: inline-block;
+  margin-top: 2ex;
+  color: #006688;
+}
+.choice:hover h2,
+.choice h2:hover {
+  text-decoration: underline;
+}
+.choice .glyph {
+  text-align: center;
+}
+
+.invite .choice-row {
+  
+}
+
+.invite .message {
+  margin-top: 1em;
+  padding: 1ex;
+  padding-left: 1.5ex;
+  background-color: #1E69B5;
+  color: white;
+}
+
+.step-wrapper.new-account {
+  border-color: transparent;
+}
+
+.invite .glyphicon {
+  margin-top: 0.75ex;
+  color: #006688;
+}
+
+.invite h3 {
+  margin-top: 1em;
+}
+
 
 .first {
-    background-color: #999;
-    padding-top: 2.6em;
+  background-color: #999;
+  color: #333;
+  padding-top: 2.6em;
+}
+.first h1 {
+  background-color: inherit;
+  color: inherit;
 }
 
 .useCurrentForm {
-    padding-top: 1.6em;
+  padding-top: 1.6em;
 }
 
 .logo {
-    margin-top: 3em;
-    text-align: center;
+  margin-top: 3em;
+  text-align: center;
 }
 .last {
-    padding-right: 0;
+  padding-right: 0;
+}
+.fourth {
+  background-color: #ccc;
 }
 
 .footer img,
 .footer.desktop-view img {
-    opacity: 1;
-    filter: grayscale(0%);
-    -webkit-filter: grayscale(0);
+  opacity: 1;
+  filter: grayscale(0%);
+  -webkit-filter: grayscale(0);
 }
 
 .footer .container-fluid {
-    padding-left: 0;
+  padding-left: 0;
 }

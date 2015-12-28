@@ -2,97 +2,110 @@ extends layout-header
 
 append stylesheets
     link(href='css/curtain.css' rel='stylesheet' type='text/css')
+    link(href='css/entrance.css' rel='stylesheet' type='text/css')
     link(href="css/invite.css" rel="stylesheet")
 
 block header
     span(ng-controller="InviteCtrl" ng-cloak) Invitation to join {{invite.circleName}} 
 
 block view
-    .content.invite.container-fluid.main(ng-controller="InviteCtrl")
-        .col-xs-12
-            div(ng-hide="!isInviteAvailable()" ng-cloak)
-                .row
-                    .col-md-8.col-md-offset-2
-                        p You've been invited to join {{invite.circleName}}
-                         | on Circle Blvd.
+    .content.invite.invitation
+        .container-fluid.main(ng-controller="InviteCtrl")
+            .col-xs-12
+                div(ng-hide="!isInviteAvailable()" ng-cloak)
+                        .row
+                            .col-md-8
+                                p You've been invited to join {{invite.circleName}}
+                                 | on Circle Blvd.
 
-                        p Would you like to join using 
-                         | <span ng-show="!isSignedIn()" ng-cloak>an existing</span>
-                         | <span ng-show="isSignedIn()" ng-cloak>your current</span> 
-                         | Circle Blvd account, or would you like to create a new account?
+                                p Would you like to join using 
+                                 | <span ng-show="!isSignedIn()" ng-cloak>an existing</span>
+                                 | <span ng-show="isSignedIn()" ng-cloak>your current</span> 
+                                 | Circle Blvd account, or would you like to create a new account?
 
-                .row.choice-row
-                    .col-xs-12.choice(ng-if="isSignedIn()" ng-click="showUseCurrent()")
-                        span.support-circle
-                        a.jsLink Use current account
+                        .row.choice-row(ng-if="isShowingChoice")
+                            .col-xs-12.choice(ng-if="isSignedIn()" ng-click="showUseCurrent()")
+                                .col-xs-12.col-sm-offset-1.col-sm-2.glyph
+                                    .step-wrapper.jsLink
+                                .question.col-xs-12.col-sm-offset-0.col-sm-6.title
+                                    h2.jsLink Use current <span class="hidden-xs">account</span>
 
-                    .col-xs-12.choice(ng-if="!isSignedIn()" ng-click="showUseExisting()")
-                        span.support-circle
-                        a.jsLink Use existing account
+                            .col-xs-12.choice(ng-if="!isSignedIn()" ng-click="showUseExisting()")
+                                .col-xs-12.col-sm-offset-1.col-sm-2.glyph
+                                    .step-wrapper.jsLink
+                                .question.col-xs-12.col-sm-offset-0.col-sm-6.title
+                                    h2.jsLink Use existing <span class="hidden-xs">account</span>
 
-                    .col-xs-12.choice(ng-click="showCreateNew()")
-                        span.glyphicon.glyphicon-gift
-                        a.jsLink Create new account
+                            .col-xs-12.choice(ng-click="showCreateNew()")
+                                .col-xs-12.col-sm-offset-1.col-sm-2.glyph
+                                    .step-wrapper.jsLink.new-account
+                                        .step 
+                                            span.glyphicon.glyphicon-gift
+                                .question.col-xs-12.col-sm-offset-0.col-sm-6.title
+                                    h2.jsLink Create new <span class="hidden-xs">account</span>
 
-                .row
-                    .col-md-8.col-md-offset-2
-                        div(ng-show="useCurrent")
-                            h3 Please confirm by pressing this button
-                            form.useCurrentForm
-                                button.btn.btn-default(type="submit"
-                                    ng-click="useCurrentAccount()") Ok!
-
-
-                        div(ng-show="useExisting")
-                            h3 Use existing account
-                            form
-                                .row
-                                    .col-sm-8
-                                        input.form-control(type="text" 
-                                            ng-model="account.email" placeholder="Email")
-                                        input.form-control(type="password" 
-                                            ng-model="account.password" placeholder="Password")
-                                        button.btn.btn-default(type="submit" 
-                                            ng-click="useAccount(account)") Join circle
+                        .row
+                            .col-md-8
+                                div(ng-show="useCurrent")
+                                    h3 Please confirm to use this account by pressing this button (or <a class="jsLink" ng-click="undoChoice()">undo</a>)
+                                    form.useCurrentForm
+                                        button.join.btn.btn-default.primary(type="submit"
+                                            ng-click="useCurrentAccount()") 
+                                            h4 Join circle
 
 
-                        div(ng-show="createNew")
-                            h3 Create new account
-                            form
-                                label(for="signupEmail") How will you be signing in?
-                                .row
-                                    .col-sm-8
-                                        input.form-control(id="signupEmail" type="text"
-                                            ng-model="signup.email" placeholder="Email address")
-                                        input.form-control(type="password"
-                                            ng-model="signup.password" placeholder="Password")
-
-                                
-                                label(for="signupName") What's your first name?
-                                .row
-                                    .col-sm-8
-                                        input.form-control(id="signupName" type="text"
-                                            ng-model="signup.name"
-                                            placeholder="First name, full name, or nickname")
-                                        button.btn.btn-default(type="submit" 
-                                            ng-click="createAccount(signup)") Join circle 
+                                div(ng-show="useExisting")
+                                    h3 Use existing account (or <a class="jsLink" ng-click="undoChoice()">undo</a>)
+                                    form
+                                        .row
+                                            .col-sm-8
+                                                input.form-control(type="text" 
+                                                    ng-model="account.email" placeholder="Email")
+                                                input.form-control(type="password" 
+                                                    ng-model="account.password" placeholder="Password")
+                                                button.join.btn.btn-default.primary(type="submit" 
+                                                    ng-click="useAccount(account)") 
+                                                    h4 Join circle
 
 
-                        .message(ng-show="message") {{message}}
+                                div(ng-show="createNew")
+                                    h3 Create new account (or <a class="jsLink" ng-click="undoChoice()">undo</a>)
+                                    form
+                                        label(for="signupEmail") How will you be signing in?
+                                        .row
+                                            .col-sm-8
+                                                input.form-control(id="signupEmail" type="text"
+                                                    ng-model="signup.email" placeholder="Email address")
+                                                input.form-control(type="password"
+                                                    ng-model="signup.password" placeholder="Password")
 
-            div(ng-cloak ng-show="isInviteAccepted()")
-                h3 Invite accepted
+                                        
+                                        label(for="signupName") What's your first name?
+                                        .row
+                                            .col-sm-8
+                                                input.form-control(id="signupName" type="text"
+                                                    ng-model="signup.name"
+                                                    placeholder="First name, full name, or nickname")
+                                                button.join.btn.btn-default.primary(type="submit" 
+                                                    ng-click="createAccount(signup)") 
+                                                    h4 Join circle 
 
-            div(ng-cloak ng-hide="isLoading() || isInviteAvailable() || isInviteAccepted()")
-                h3 Invite not available
-                p The invitation at this address is no more. It has ceased to be.
 
-            div(ng-cloak ng-show="!isInviteAvailable()")
-                p More invitations can be created by a circle owner or administrator,
-                 | using the invite section of the Admin page. Each invitation can only be
-                 | accepted once, and invites expire after 5 days.
+                                .message(ng-show="message") {{message}}
 
-                a(href="/") Continue to Circle Blvd.
+                div(ng-cloak ng-show="isInviteAccepted()")
+                    h3 Invite accepted
+
+                div(ng-cloak ng-hide="isLoading() || isInviteAvailable() || isInviteAccepted()")
+                    h3 Invite not available
+                    p The invitation at this address is no more. It has ceased to be.
+
+                div(ng-cloak ng-show="!isInviteAvailable()")
+                    p More invitations can be created by a circle owner or administrator,
+                     | using the invite section of the Admin page. Each invitation can only be
+                     | accepted once, and invites expire after 5 days.
+
+                    a(href="/") Continue to Circle Blvd.
 
     .first.curtain
         .container-fluid.main

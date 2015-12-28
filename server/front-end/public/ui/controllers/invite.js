@@ -2,9 +2,12 @@
 
 function InviteCtrl(inviteId, lib, session, $scope, $http, $window, errors) {
 
+    $scope.isShowingChoice = true;
+
     $scope.useExisting = false;
     $scope.useCurrent = false;
     $scope.createNew = false;
+
 
     var isLoading = true;
     var invite = undefined;
@@ -29,18 +32,26 @@ function InviteCtrl(inviteId, lib, session, $scope, $http, $window, errors) {
         $scope.createNew = false;
     };
 
+    $scope.undoChoice = function () {
+        hideAllOptions();
+        $scope.isShowingChoice = true;
+    };
+
     $scope.showUseExisting = function () {
         hideAllOptions();
+        $scope.isShowingChoice = false;
         $scope.useExisting = true;
     };
 
     $scope.showUseCurrent = function () {
         hideAllOptions();
+        $scope.isShowingChoice = false;
         $scope.useCurrent = true;
     };
 
     $scope.showCreateNew = function () {
         hideAllOptions();
+        $scope.isShowingChoice = false;
         $scope.createNew = true;
     };
 

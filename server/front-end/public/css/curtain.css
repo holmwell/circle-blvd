@@ -22,7 +22,7 @@ body {
 }
 
 .main {
-    background: transparent !important;
+    background: inherit;
 }
 .first {
     padding-bottom: 3em;
