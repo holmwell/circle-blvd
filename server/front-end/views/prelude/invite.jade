@@ -11,9 +11,9 @@ block header
 block view
     .content.invite.invitation
         .container-fluid.main(ng-controller="InviteCtrl")
-            .col-xs-12
+            .col-xs-12.col-md-offset-1
                 div(ng-hide="!isInviteAvailable()" ng-cloak)
-                        .row
+                        .row(ng-if="isShowingChoice")
                             .col-md-8
                                 p You've been invited to join {{invite.circleName}}
                                  | on Circle Blvd.
@@ -25,23 +25,23 @@ block view
 
                         .row.choice-row(ng-if="isShowingChoice")
                             .col-xs-12.choice(ng-if="isSignedIn()" ng-click="showUseCurrent()")
-                                .col-xs-12.col-sm-offset-1.col-sm-2.glyph
+                                .col-xs-12.col-sm-2.glyph
                                     .step-wrapper.jsLink
-                                .question.col-xs-12.col-sm-offset-0.col-sm-6.title
+                                .col-xs-12.col-sm-offset-0.col-sm-6.title
                                     h2.jsLink Use current <span class="hidden-xs">account</span>
 
                             .col-xs-12.choice(ng-if="!isSignedIn()" ng-click="showUseExisting()")
-                                .col-xs-12.col-sm-offset-1.col-sm-2.glyph
+                                .col-xs-12.col-sm-2.glyph
                                     .step-wrapper.jsLink
-                                .question.col-xs-12.col-sm-offset-0.col-sm-6.title
+                                .col-xs-12.col-sm-offset-0.col-sm-6.title
                                     h2.jsLink Use existing <span class="hidden-xs">account</span>
 
                             .col-xs-12.choice(ng-click="showCreateNew()")
-                                .col-xs-12.col-sm-offset-1.col-sm-2.glyph
+                                .col-xs-12.col-sm-2.glyph
                                     .step-wrapper.jsLink.new-account
                                         .step 
-                                            span.glyphicon.glyphicon-gift
-                                .question.col-xs-12.col-sm-offset-0.col-sm-6.title
+                                            span.glyphicon.glyphicon-plus
+                                .col-xs-12.col-sm-offset-0.col-sm-6.title
                                     h2.jsLink Create new <span class="hidden-xs">account</span>
 
                         .row
@@ -107,20 +107,20 @@ block view
 
                     a(href="/") Continue to Circle Blvd.
 
-    .first.curtain
-        .container-fluid.main
-            .col-xs-6.col-xs-offset-3.col-sm-offset-0.col-sm-4.col-sm-push-8.logo
-                img(src="img/glyphs/icon-same-idea.svg")
+    //- .first.curtain
+    //-     .container-fluid.main
+    //-         .col-xs-6.col-xs-offset-3.col-sm-offset-0.col-sm-4.col-sm-push-8.logo
+    //-             img(src="img/glyphs/icon-same-idea.svg")
 
-            .col-xs-12.gutter-xs.visible-xs.title
-                h1 Circle Blvd.
+    //-         .col-xs-12.gutter-xs.visible-xs.title
+    //-             h1 Circle Blvd.
 
-            .col-xs-12.gutter-xs.col-sm-8.col-sm-pull-4.headline
-                h1.hidden-xs Small teams, big ideas.
+    //-         .col-xs-12.gutter-xs.col-sm-8.col-sm-pull-4.headline
+    //-             h1.hidden-xs Welcome to Circle Blvd.
 
-                h4.tagline.visible-xs Project management for small&nbsp;teams.
+    //-             h4.tagline.visible-xs Project management for small&nbsp;teams.
                 
-                p <span class="hidden-xs">Project management for small&nbsp;teams.</span> 
+    //-             p <span class="hidden-xs">Project management for small&nbsp;teams.</span> 
 
     include ../inc/value-prop
 block bottom
