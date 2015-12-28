@@ -1,0 +1,15 @@
+/*.content .row {
+    margin-left: 0;
+    margin-right: 0;
+}*/
+
+.footer img,
+.footer.desktop-view img {
+    opacity: 1;
+    filter: grayscale(0%);
+    -webkit-filter: grayscale(0);
+}
+
+.footer .container-fluid {
+    padding-left: 0;
+}
