@@ -1,3 +1,6 @@
+.container-fluid.main {
+  background-color: inherit;
+}
 .invitation {
   background-color: white;
 }

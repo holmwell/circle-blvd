@@ -1,3 +1,7 @@
+.container-fluid.main {
+  background-color: inherit;
+}
+
 .btn-signin {
 	display: none !important;
 }

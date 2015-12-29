@@ -1,3 +1,8 @@
+.prelude-content,
+.container-fluid.main {
+  background-color: white;
+}
+
 
 /* signin.jade */
 .signin {

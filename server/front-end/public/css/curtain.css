@@ -1,6 +1,9 @@
 body {
   background: black !important;     
 }
+.container-fluid.main {
+  background-color: inherit;
+}
 
 
 .navbar {
