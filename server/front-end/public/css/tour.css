@@ -19,8 +19,40 @@ p {
 .header,
 .container-fluid.header-inner,
 .header h2 {
+/*
+    Color explorations:
     background-color: #006688;
+    background-color: #44005B;
+    background-color: #FDDC03;
+    background-color: black;
+    background-color: #018181;
+    background-color: #009900;
+    background-color: #006747;
+    background-color: #005522;
+    background-color: #32213A;
+    background-color: #26532B;*/
+    background-color: #5D3A24;
     color: #eee;
+}
+
+.header .glyph {
+  color: #222;
+  color: #eee;
+  opacity: 0.25;
+}
+.header .glyph.active {
+  color: gold;
+  color: #eee;
+  opacity: 1;
+}
+.header .glyph a {
+  color: #eee;
+  color: #0088aa;
+}
+.header .glyph a,
+.header a.glyph:hover {
+  color: gold;
+  color: #eee;
 }
 
 .tour p, 
