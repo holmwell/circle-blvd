@@ -129,9 +129,18 @@
   padding-left: 1ex;
   position: static;
 }
-.story, .archive {
+.story, 
+.archive {
   color: #222;
   background-color: #ddd;
+/*  background-color: #00BFFF;
+  background-color: #D3BAC1;
+  background-color: #6B5E62; color: #eee;
+  background-color: #DBF6FF; color: #222;
+  background-color: #dd7; color: #222;
+  background-color: #E2A89C;
+  background-color: #392F5A; color: #eee;*/
+
   padding: 0.5ex;
   padding-left: 1.5ex;
   margin-bottom: 0.5em;
@@ -144,8 +153,11 @@
 .selected {
   cursor: default;
 }
-.story:hover, .selected {
+.story:hover, 
+.selected {
   background-color: #eee;
+/*  background-color: #6B5E62;
+  background-color: #B7A1A8;*/
 }
 .placeholder-story {
   opacity: 0.25;
@@ -1266,6 +1278,9 @@
 .hide-introduction,
 .welcome {
   padding-bottom: 2.6em;
+}
+.welcome {
+  padding-top: 2.6em;
 }
 .hide-introduction {
   text-align: center;
