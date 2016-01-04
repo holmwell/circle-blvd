@@ -495,6 +495,9 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 			$http.get('/data/circle/' + circleId + '/standing')
 			.success(function (standing) {
 				console.log(standing);
+
+				$scope.circleSponsorName = standing.sponsorName;
+				
 				if (standing.state === 'good') {
 					$scope.isCircleInGoodStanding = true;	
 				}

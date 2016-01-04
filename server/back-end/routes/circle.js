@@ -68,6 +68,10 @@ router.get("/:circleId/standing", ensure.circle, function (req, res) {
             sponsor = circle.sponsoredBy || circle.createdBy;
         }
 
+        if (sponsor && sponsor.name) {
+            standing.sponsorName = sponsor.name;
+        }
+
         db.docs.get(sponsor.id, guard(res, function (member) {
             if (member && member.subscription && member.subscription.created) {
                 standing.state = 'good';
@@ -78,7 +82,7 @@ router.get("/:circleId/standing", ensure.circle, function (req, res) {
                 standing.state = 'unpaid';
             }
 
-            return res.status(200).send(standing);   
+            return res.status(200).send(standing);
         }));
     }));
 });
