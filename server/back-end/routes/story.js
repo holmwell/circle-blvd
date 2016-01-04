@@ -75,12 +75,17 @@ router.post("/", ensure.auth, function (req, res) {
     ensure.isCircle(circleId, req, res, function() {
         // Add the story if we're under the server limit.
         limits.users.story(circleId, guard(res, function () {
-
-            var story = copyStory(data);
-            story.createdBy = getCreatedBy(req);
-            // console.log("STORY: ");
-            // console.log(story);
-            addStory(story, res);
+            // Add the story if the circle is paid for.
+            db.circles.isCircleInGoodStanding(circleId, guard(res, function (isCircleInGoodStanding) {
+                if (isCircleInGoodStanding) {
+                    var story = copyStory(data);
+                    story.createdBy = getCreatedBy(req);
+                    addStory(story, res);
+                }
+                else {
+                    res.status(402).send("Subscription required.");
+                }
+            }));
         }));
     });
 });

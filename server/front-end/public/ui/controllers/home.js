@@ -8,6 +8,7 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 	var checklistToAdd = undefined;
 
 	$scope.profileName = session.user.name || '';
+	$scope.isCircleInGoodStanding = true;
 
 	$scope.$on('storyListBroken', function () {
 		$scope.isBacklogBroken = true;
@@ -36,6 +37,14 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 
 		$scope.showEntry = function (panelName) {
 			$scope.hideSearch();
+
+			if (!$scope.isCircleInGoodStanding) {
+				// Do not show any specific entry 
+				// if the circle does not have a sponsor.
+				$scope.isAddingNew = true;
+				return;
+			}
+
 			if (!panelName) {
 				$scope.isAddingNew = true;
 				$scope.showEntry('story');
@@ -480,6 +489,18 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 				});
 
 				$scope.checklists = data;
+			})
+			.error(handleInitError);
+
+			$http.get('/data/circle/' + circleId + '/standing')
+			.success(function (standing) {
+				console.log(standing);
+				if (standing.state === 'good') {
+					$scope.isCircleInGoodStanding = true;	
+				}
+				else {
+					$scope.isCircleInGoodStanding = false;
+				}
 			})
 			.error(handleInitError);
 

@@ -314,6 +314,10 @@
 .entry-nav {
 
 }
+.require-payment {
+  padding-left: 1.5ex;
+  padding-right: 1.5ex;
+}
 
 .new-story form {
   margin: 0;

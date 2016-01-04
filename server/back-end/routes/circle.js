@@ -52,6 +52,37 @@ router.get("/:circleId", ensure.circle, function (req, res) {
     db.circles.get(circleId, handle(res));
 });
 
+router.get("/:circleId/standing", ensure.circle, function (req, res) {
+    var circleId = req.params.circleId;
+    var standing = {};
+    db.circles.get(circleId, guard(res, function (circle) {
+        var sponsor = null;
+        if (!circle.createdBy) {
+            // Early adopters get a free pass, unofficially.
+            sponsor = 'early-adopter';
+            // standing.sponsor = sponsor; // yes / no?
+            standing.state = 'good';
+            return res.status(200).send(standing);
+        }
+        else {
+            sponsor = circle.sponsoredBy || circle.createdBy;
+        }
+
+        db.docs.get(sponsor.id, guard(res, function (member) {
+            if (member && member.subscription && member.subscription.created) {
+                standing.state = 'good';
+            }
+            else {
+                // TODO: Check free trial period
+                // TODO: Always be in good standing if payment is disabled.
+                standing.state = 'unpaid';
+            }
+
+            return res.status(200).send(standing);   
+        }));
+    }));
+});
+
 router.put("/:circleId/name", ensure.circleAdmin, function (req, res) {
     var data = req.body;
     var circleId = req.params.circleId;
