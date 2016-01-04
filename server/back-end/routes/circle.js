@@ -53,8 +53,21 @@ router.get("/:circleId", ensure.circle, function (req, res) {
 });
 
 router.get("/:circleId/standing", ensure.circle, function (req, res) {
-    var circleId = req.params.circleId;
-    var standing = {};
+    var circleId      = req.params.circleId;
+    var standing      = {};
+    var settings      = app.get('settings');
+    var freeTrialDays = 0;
+
+    if (!settings["stripe-public-key"]) {
+        // Payment is disabled; everyone is in good standing.
+        standing.state = 'good';
+        return res.status(200).send(standing);
+    }
+
+    if (settings["free-trial-days"]) {
+        freeTrialDays = settings["free-trial-days"].value;
+    }
+
     db.circles.get(circleId, guard(res, function (circle) {
         var sponsor = null;
         if (!circle.createdBy) {
@@ -77,9 +90,18 @@ router.get("/:circleId/standing", ensure.circle, function (req, res) {
                 standing.state = 'good';
             }
             else {
-                // TODO: Check free trial period
-                // TODO: Always be in good standing if payment is disabled.
-                standing.state = 'unpaid';
+                var joinDate = member.joinDate || "2015-01-01T00:00:00.000Z";
+                var joinDateInMs = Date.parse(joinDate);
+
+                var nowInMs = Date.now();
+                var freeTrialMs = freeTrialDays * 1000 * 60 * 60 * 24;
+
+                if (joinDateInMs + freeTrialMs > nowInMs) {
+                    standing.state = 'good';
+                }
+                else {
+                    standing.state = 'unpaid';                    
+                }
             }
 
             return res.status(200).send(standing);
@@ -139,6 +161,7 @@ router.get("/:circleId/custom.css", ensure.circle, function (req, res) {
         //   content: "#";
         // }
 
+        // These are invalid colors and that's what we want.
         var deadlineColor = 'none';
         var deadlineBackground = 'none';
 
