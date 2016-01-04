@@ -110,7 +110,7 @@ CircleBlvd.Services.stories = function ($http) {
 	var addStory = function (story, callback) {
 		var onSuccess = function (newStory) {
 			s[newStory.id] = newStory;
-			callback(newStory);
+			callback(null, newStory);
 		};
 
 		if (isFacade) {
@@ -140,7 +140,12 @@ CircleBlvd.Services.stories = function ($http) {
 				};
 				s[id] = facade;
 			}
-			callback(facade);
+
+			var err = {
+				status: status,
+				data: data
+			};
+			callback(err, facade);
 		});
 	};
 
@@ -161,7 +166,18 @@ CircleBlvd.Services.stories = function ($http) {
 		story.listId = listId;
 		story.type = "story";
 
-		addStory(story, function (newStory) {
+		var finish = function (err, newStory) {
+			if (callback) {
+				return callback(err, newStory);
+			}
+			return;
+		};
+
+		addStory(story, function (err, newStory) {
+			if (err) {
+				return finish(err, newStory);
+			}
+
 			if (newStory) {
 				var serverStory = getStory(newStory.id);
 				if (newStory.isFirstStory) {
@@ -172,12 +188,10 @@ CircleBlvd.Services.stories = function ($http) {
 					// from the server, because some crazy things are
 					// happening!
 				}
-				if (callback) {
-					callback(serverStory);
-				}	
+				return finish(null, serverStory);
 			}
-			else if (callback) {
-				callback();
+			else {
+				return finish();
 			}
 		});
 	};
@@ -274,7 +288,12 @@ CircleBlvd.Services.stories = function ($http) {
 			local: {
 				add: addStoryLocally
 			},
-			add: addStory,
+			// Pretty sure 'add' isn't used anywhere.
+			// We don't know because I suck. Anyway,
+			// eventually we do want 'add' to be public,
+			// so we can insert tasks at arbitrary 
+			// places in the task list.
+			// add: addStory,
 			insertFirst: insertFirstStory,
 			move: function (story, newNextStory, callback) {
 				moveBlock(story, story, newNextStory, callback);

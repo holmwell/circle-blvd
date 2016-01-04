@@ -889,7 +889,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 	// Called when the entry panel receives a new story.
 	$scope.$on('insertNewStory', function (e, newStory, callback) {
 		storyBeingInserted = newStory;
-		stories.insertFirst(newStory, circleId, listId, function (serverStory) {
+		stories.insertFirst(newStory, circleId, listId, function (err, serverStory) {
 			insertNewStoryIntoViewModel(serverStory);
 			if (callback) {
 				callback(serverStory);

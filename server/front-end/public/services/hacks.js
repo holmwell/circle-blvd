@@ -29,42 +29,42 @@ CircleBlvd.Services.hacks = function ($timeout) {
    			"projectId": "1"
 		}];
 
-		stories.insertFirst(s[0], projectId, function (story) {
+		stories.insertFirst(s[0], projectId, function (err, story) {
 			console.log("0");
 			console.log(story);
 		});
 
-		stories.insertFirst(s[1], projectId, function (story) {
+		stories.insertFirst(s[1], projectId, function (err, story) {
 			console.log("1");
 			console.log(story);
 		});
 
-		stories.insertFirst(s[2], projectId, function (story) {
+		stories.insertFirst(s[2], projectId, function (err, story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		stories.insertFirst(s[2], projectId, function (story) {
+		stories.insertFirst(s[2], projectId, function (err, story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		stories.insertFirst(s[2], projectId, function (story) {
+		stories.insertFirst(s[2], projectId, function (err, story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		stories.insertFirst(s[2], projectId, function (story) {
+		stories.insertFirst(s[2], projectId, function (err, story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		stories.insertFirst(s[2], projectId, function (story) {
+		stories.insertFirst(s[2], projectId, function (err, story) {
 			console.log("2");
 			console.log(story);
 		});
 
-		stories.insertFirst(s[2], projectId, function (story) {
+		stories.insertFirst(s[2], projectId, function (err, story) {
 			console.log("2");
 			console.log(story);
 		});

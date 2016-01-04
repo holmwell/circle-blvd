@@ -45,7 +45,7 @@ function WelcomeCtrl(lib, session, hacks, $scope, $http, $location, errors) {
 					var line = initialTaskLines[index];
 					var story = parseStory(line);
 
-					stories.insertFirst(story, circleId, function (newStory) {
+					stories.insertFirst(story, circleId, function (err, newStory) {
 						tasksAdded.push(newStory);
 						stories.move(newStory, stories.get(nextMeetingId), function () {
 							index++;
@@ -93,7 +93,7 @@ function WelcomeCtrl(lib, session, hacks, $scope, $http, $location, errors) {
 						id: getLastStoryId() 
 					};
 
-					stories.insertFirst(milepost, circleId, function (newMilepost) {
+					stories.insertFirst(milepost, circleId, function (err, newMilepost) {
 						stories.move(newMilepost, lastStory, function () {
 							callback();
 						});
