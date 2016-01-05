@@ -71,13 +71,14 @@ var getCreatedBy = function (req) {
 router.post("/", ensure.auth, function (req, res) {
     var data = req.body;
     var circleId = data.projectId;
+    var settings = app.get('settings');
 
     ensure.isCircle(circleId, req, res, function() {
         // Add the story if we're under the server limit.
         limits.users.story(circleId, guard(res, function () {
             // Add the story if the circle is paid for.
-            db.circles.isCircleInGoodStanding(circleId, guard(res, function (isCircleInGoodStanding) {
-                if (isCircleInGoodStanding) {
+            db.circles.getStanding(circleId, settings, guard(res, function (standing) {
+                if (standing && standing.state === 'good') {
                     var story = copyStory(data);
                     story.createdBy = getCreatedBy(req);
                     addStory(story, res);

@@ -53,60 +53,9 @@ router.get("/:circleId", ensure.circle, function (req, res) {
 });
 
 router.get("/:circleId/standing", ensure.circle, function (req, res) {
-    var circleId      = req.params.circleId;
-    var standing      = {};
-    var settings      = app.get('settings');
-    var freeTrialDays = 0;
-
-    if (!settings["stripe-public-key"]) {
-        // Payment is disabled; everyone is in good standing.
-        standing.state = 'good';
-        return res.status(200).send(standing);
-    }
-
-    if (settings["free-trial-days"]) {
-        freeTrialDays = settings["free-trial-days"].value;
-    }
-
-    db.circles.get(circleId, guard(res, function (circle) {
-        var sponsor = null;
-        if (!circle.createdBy) {
-            // Early adopters get a free pass, unofficially.
-            sponsor = 'early-adopter';
-            // standing.sponsor = sponsor; // yes / no?
-            standing.state = 'good';
-            return res.status(200).send(standing);
-        }
-        else {
-            sponsor = circle.sponsoredBy || circle.createdBy;
-        }
-
-        if (sponsor && sponsor.name) {
-            standing.sponsorName = sponsor.name;
-        }
-
-        db.docs.get(sponsor.id, guard(res, function (member) {
-            if (member && member.subscription && member.subscription.created) {
-                standing.state = 'good';
-            }
-            else {
-                var joinDate = member.joinDate || "2015-01-01T00:00:00.000Z";
-                var joinDateInMs = Date.parse(joinDate);
-
-                var nowInMs = Date.now();
-                var freeTrialMs = freeTrialDays * 1000 * 60 * 60 * 24;
-
-                if (joinDateInMs + freeTrialMs > nowInMs) {
-                    standing.state = 'good';
-                }
-                else {
-                    standing.state = 'unpaid';                    
-                }
-            }
-
-            return res.status(200).send(standing);
-        }));
-    }));
+    var circleId = req.params.circleId;
+    var settings = app.get('settings');
+    db.circles.getStanding(circleId, settings, handle(res));
 });
 
 router.put("/:circleId/name", ensure.circleAdmin, function (req, res) {
