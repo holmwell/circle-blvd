@@ -529,6 +529,13 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 
 	$scope.$on('circleChanged', function () {
 		circleId = session.activeCircle;
+
+		// Reset entry panel
+		$scope.isAddingNew = false;
+		for (var pName in $scope.isAdding) {
+			$scope.isAdding[pName] = false;
+		}
+		
 		init();
 	});
 
