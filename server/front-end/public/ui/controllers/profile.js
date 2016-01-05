@@ -15,11 +15,19 @@ function ProfileCtrl(session, $scope, $http, errors) {
 	}
 
 	var plans = [];
-	plans.push({
-		name: "Supporter",
-		displayAmount: "$5",
-		stripeAmount: 500
-	});
+
+	// Only show the $5 option to members who already have it.
+	if (session.user && session.user.subscription) {
+		var savedPlanName = session.user.subscription.planName;
+		if (savedPlanName === 'Supporter') {
+			plans.push({
+				name: "Supporter",
+				displayAmount: "$5",
+				stripeAmount: 500
+			});
+		}
+	}
+		
 	plans.push({
 		name: "Organizer",
 		displayAmount: "$20",
@@ -63,6 +71,7 @@ function ProfileCtrl(session, $scope, $http, errors) {
 			// Load the saved subscription if there is one
 			if (session.user.subscription) {
 				var savedPlanName = session.user.subscription.planName;
+
 				angular.forEach(plans, function (plan) {
 					if (plan.name === savedPlanName) {
 						$scope.activePlan = plan;
