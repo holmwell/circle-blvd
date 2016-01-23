@@ -16,6 +16,9 @@ body {
     color: #fff !important;
     opacity: 1.0;
 }
+.navbar-header .navbar-right {
+    padding-right: 2ex;
+}
 
 .curtain {
     background-color: #999;

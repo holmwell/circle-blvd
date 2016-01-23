@@ -15,12 +15,18 @@
         li 
             a(href="/signin") Sign in
 
+      ul.nav.navbar-nav.visible-xs.pull-right.navbar-right
+        li 
+            a(href="/tour") Tour
+
     .collapse.navbar-collapse#navigation-circles
       ul.nav.navbar-nav
         li
             a.name(href="/") Circle Blvd.
 
       ul.nav.navbar-nav.navbar-right
+        li
+            a(href="/tour") Tour
         li
             a.btn-signin(href="/signin/{{locationHash}}"
                 data-toggle="collapse" data-target="#navigation-circles.in") 
