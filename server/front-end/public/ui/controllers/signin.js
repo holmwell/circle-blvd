@@ -238,12 +238,6 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 	$scope.$watch('signup.password', signupInfoChanged);
 
 	var init = function () {
-		// Redirect to home if we're already signed in.
-		if ($scope.isSignedIn() && $window.location.pathname !== "/") {
-			$window.location.href = "/";
-			return;
-		}
-
 		lib.mindset.set('detailed');
 		$scope.user = {};
 
