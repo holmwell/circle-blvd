@@ -5,7 +5,6 @@
 // config for the app.
 // 
 // 
-var app = require('./app.js');
 
 // Process command-line arguments
 var isDebugging = false;
@@ -28,6 +27,10 @@ process.env.DATABASE_NAME = 'circle-blvd';
 var config = {
     isDebugging: isDebugging
 };
+
+
+// This line must be after the env variables are set.
+var app = require('./app.js');
 
 // Start the app.
 app.init(config);
