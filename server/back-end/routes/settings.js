@@ -24,11 +24,4 @@ router.get("/authorized", ensure.mainframe, send(db.settings.getAuthorized));
 // TODO: This is not used. Assess.
 router.get("/private", ensure.mainframe, send(db.settings.getPrivate)); 
 
-module.exports = function () {
-    return {
-        router: function (a) {
-            app = a;
-            return router;
-        }
-    }
-}(); // closure
+module.exports.router = router;

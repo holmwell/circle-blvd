@@ -11,7 +11,7 @@ var guard = errors.guard;
 
 
 // Requires an auth object like the one in circle-blvd/auth-local
-var init = function (auth, app) {
+var init = function (auth) {
     router.post('/signin', auth.signin);
     router.get('/signout', auth.signout);
 
@@ -76,8 +76,8 @@ var init = function (auth, app) {
 
 module.exports = function () {
     return {
-        router: function (auth, app) {
-            init(auth, app);
+        router: function (auth) {
+            init(auth);
             return router;
         }
     }

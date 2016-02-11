@@ -69,8 +69,8 @@ var tryToCreateHttpsServer = function (callback) {
 var defineRoutes = function () {
     app.use('/', prelude.router);
     app.use('/archives', archives.router);
-    app.use('/auth', authRoutes.router(auth, app));
-    app.use('/data/metrics', metrics.router(app));
+    app.use('/auth', authRoutes.router(auth));
+    app.use('/data/metrics', metrics.router);
 
     // Search engine things
     app.get('/sitemap.txt', routes.sitemap);
@@ -89,7 +89,7 @@ var defineRoutes = function () {
     app.put("/data/initialize", initRoutes.init);
 
     // Settings!
-    app.use("/data/settings", settingsRoutes.router(app));
+    app.use("/data/settings", settingsRoutes.router);
 
     // TODO: This function has a lot of dependencies. 
     // Clean up this mess, so we can get it out of this
@@ -135,10 +135,10 @@ var defineRoutes = function () {
     });
 
     // Groups!
-    app.use('/data/group', groupRoutes.router(app));
+    app.use('/data/group', groupRoutes.router);
 
     // Fundamental operations, like stories in a circle.
-    app.use('/data', baseCircleRoutes.router(app));
+    app.use('/data', baseCircleRoutes.router);
  
     // Stories!
     app.use('/data/story', storyRoutes.router);
@@ -167,8 +167,8 @@ var defineRoutes = function () {
         var nextMeeting = db.stories.getNextMeetingByProjectId(projectId, handleNextMeeting);
     });
 
-    app.use('/payment', paymentRoutes.router(app));
-    app.use('/data/signup', signupRoutes.router(app));
+    app.use('/payment', paymentRoutes.router);
+    app.use('/data/signup', signupRoutes.router);
 
     app.get("/data/waitlist", ensure.mainframe, send(db.waitlist.get));
 

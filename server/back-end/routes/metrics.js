@@ -23,11 +23,4 @@ router.get("/circles/stats", ensure.mainframe, function (req, res) {
     }));
 });
 
-module.exports = function () {
-    return {
-        router: function (a) {
-            app = a;
-            return router;
-        }
-    }
-}(); // closure
+module.exports.router = router;

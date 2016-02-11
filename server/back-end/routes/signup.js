@@ -142,11 +142,4 @@ router.post("/waitlist", function (req, res) {
     db.waitlist.add(request, handle(res));
 });
 
-module.exports = function () {
-    return {
-        router: function (a) {
-            app = a;
-            return router;
-        }
-    }
-}(); // closure
+module.exports.router = router;

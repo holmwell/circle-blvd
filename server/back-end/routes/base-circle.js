@@ -92,11 +92,4 @@ router.get("/:circleId/groups", ensure.circle, function (req, res) {
     db.groups.findByProjectId(circleId, handle(res));
 });
 
-module.exports = function () {
-    return {
-        router: function (a) {
-            app = a;
-            return router;
-        }
-    }
-}(); // closure
+module.exports.router = router;
