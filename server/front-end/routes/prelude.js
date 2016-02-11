@@ -2,11 +2,10 @@ var express = require('express');
 var router = express.Router();
 var version = require('circle-blvd/version');
 
-var app;
 
 var getDefaultParams = function (req) {
     var analyticsId = false;
-    var settings = app.get('settings');
+    var settings = req.app.get('settings');
     if (settings && settings['google-analytics']) {
         analyticsId = settings['google-analytics'].value;
     }
@@ -124,7 +123,7 @@ router.get("/contact", render('contact'));
 
 router.get('/', function (req, res, next) {
     // Redirect to 'initialize' on first-time use.
-    if (app.isInitializing) {
+    if (req.app.isInitializing) {
         res.render("prelude/initialize", getDefaultParams(req));
     }
     else if (!req.isAuthenticated()) {
@@ -135,11 +134,4 @@ router.get('/', function (req, res, next) {
     }
 });
 
-module.exports = function () {
-    return {
-        router: function (a) {
-            app = a;
-            return router;
-        }
-    }
-}(); // closure
+module.exports.router = router;

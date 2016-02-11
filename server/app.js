@@ -67,8 +67,8 @@ var tryToCreateHttpsServer = function (callback) {
 };
 
 var defineRoutes = function () {
-    app.use('/', prelude.router(app));
-    app.use('/archives', archives.router(app));
+    app.use('/', prelude.router);
+    app.use('/archives', archives.router);
     app.use('/auth', authRoutes.router(auth, app));
     app.use('/data/metrics', metrics.router(app));
 
@@ -97,10 +97,6 @@ var defineRoutes = function () {
     app.put("/data/setting", ensure.mainframe, function (req, res) {
         var data = req.body;
 
-        var invalidateSettingsCache = function () {
-            app.set('settings', null);
-        };
-
         var onSettingsUpdate = function (setting) {
             if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
                 // TODO: Tell the client if we started the server?
@@ -118,7 +114,7 @@ var defineRoutes = function () {
                 payment.setApiKey(setting.value);
             }
 
-            invalidateSettingsCache();
+            settings.invalidateCache();
             res.status(200).send();
         };
 
@@ -131,7 +127,7 @@ var defineRoutes = function () {
         db.circles.findByUser(req.user, handle(res));
     });
     app.get("/data/circles/all", ensure.mainframe, send(db.circles.getAll));
-    app.use('/data/circle', circleRoutes.router(app));
+    app.use('/data/circle', circleRoutes.router);
 
     app.get("/data/invite/:inviteId", function (req, res) {
         var inviteId = req.params.inviteId;
@@ -145,7 +141,7 @@ var defineRoutes = function () {
     app.use('/data', baseCircleRoutes.router(app));
  
     // Stories!
-    app.use('/data/story', storyRoutes.router(app));;
+    app.use('/data/story', storyRoutes.router);
 
     // TODO: Where should this be on the client?
     app.put("/data/:circleId/settings/show-next-meeting", ensure.circleAdmin, function (req, res) {
@@ -223,45 +219,40 @@ var forceHttps = function(req, res, next) {
     res.redirect('https://' + req.get('Host') + req.url);
 };
 
-var appSettings = function (req, res, next) {
-    if (!app.get('settings')) {
-        db.settings.getAll(function (err, settings) {
-            if (err) {
-                errors.log(err);
-                return next();
-            }
-            app.set('settings', settings);
-            next();
-        });
-    }
-    else {
-        next();
-    }
-};
 
 var canonicalDomain = function (req, res, next) {
-    var settings = app.get('settings');
     if (!settings) {
         return next();
     }
 
-    var domainName = undefined;
-    if (settings['domain-name'] && settings['domain-name'].value) {
-        domainName = settings['domain-name'].value.trim();
-    }
+    settings.get(function (err, settingsTable) {
+        if (err) {
+            return next(err);
+        }
+        if (!settingsTable) {
+            return next();
+        }
 
-    if (!domainName || req.hostname === domainName) {
-        return next();
-    }
+        var domainName = undefined;
+        if (settingsTable['domain-name'] && settingsTable['domain-name'].value) {
+            domainName = settingsTable['domain-name'].value.trim();
+        }
 
-    var hostAndPort = req.get('Host');
-    var redirectToHost = domainName;
-    if (hostAndPort) {
-        redirectToHost = hostAndPort.replace(req.hostname, domainName);
-    }
+        if (!domainName || req.hostname === domainName) {
+            return next();
+        }
 
-    var url = req.protocol + "://" + redirectToHost + req.originalUrl;
-    res.redirect(307, url);
+        var hostAndPort = req.get('Host');
+        var redirectToHost = domainName;
+        if (hostAndPort) {
+            redirectToHost = hostAndPort.replace(req.hostname, domainName);
+        }
+
+        var url = req.protocol + "://" + redirectToHost + req.originalUrl;
+        res.redirect(307, url);
+
+    });
+   
 };
 
 var getCookieSettings = function () {
@@ -409,8 +400,8 @@ var configureApp = function (config) {
     app.use(methodOverride()); // TODO: What do we use this for?
 
 
-    var initSettingsOk = function (settings) {
-        var sessionSecret = settings['session-secret'].value;
+    var initSettingsOk = function (settingsTable) {
+        var sessionSecret = settingsTable['session-secret'].value;
         var SessionStore = couchSessionStore(expressSession);
         var cookieSettings = getCookieSettings();
         var sessionMiddleware = expressSession({ 
@@ -436,7 +427,7 @@ var configureApp = function (config) {
         });
         app.use(sessionMiddleware);
 
-        var stripeApiKey = settings['stripe-secret-key'];
+        var stripeApiKey = settingsTable['stripe-secret-key'];
         if (stripeApiKey) {
             payment.setApiKey(stripeApiKey.value);
         }
@@ -445,7 +436,7 @@ var configureApp = function (config) {
         auth.attach(app);
         
         // Set settings
-        app.use(appSettings);
+        app.use(settings.middleware);
 
         app.use(function (req, res, next) {
             // Is this our first run? 
@@ -490,12 +481,12 @@ var configureApp = function (config) {
         ready();
     };
 
-    settings.init(defaultSettings, function (err, settings) {
+    settings.init(defaultSettings, function (err, settingsTable) {
         if (err) {
             console.log(err);
         }
         else {
-            initSettingsOk(settings);
+            initSettingsOk(settingsTable);
         }
     });
 }; 

@@ -54,7 +54,7 @@ router.get("/:circleId", ensure.circle, function (req, res) {
 
 router.get("/:circleId/standing", ensure.circle, function (req, res) {
     var circleId = req.params.circleId;
-    var settings = app.get('settings');
+    var settings = req.app.get('settings');
     db.circles.getStanding(circleId, settings, handle(res));
 });
 
@@ -218,13 +218,4 @@ router.put("/:circleId/member/groups", ensure.circleAdmin, function (req, res) {
     db.users.updateGroups(member, circleId, groups, handle(res));
 });
 
-
-
-module.exports = function () {
-    return {
-        router: function (a) {
-            app = a;
-            return router;
-        }
-    }
-}(); // closure
+module.exports.router = router;

@@ -2,11 +2,9 @@ var express = require('express');
 var router = express.Router();
 var version = require('circle-blvd/version');
 
-var app;
-
 router.get("/", function (req, res, next) {
     var analyticsId = false;
-    var settings = app.get('settings');
+    var settings = req.app.get('settings');
     if (settings && settings['google-analytics']) {
         analyticsId = settings['google-analytics'].value;
     }
@@ -20,11 +18,4 @@ router.get("/", function (req, res, next) {
     res.render('archives', params);
 });
 
-module.exports = function () {
-    return {
-        router: function (a) {
-            app = a;
-            return router;
-        }
-    }
-}(); // closure
+module.exports.router = router; 

@@ -71,7 +71,7 @@ var getCreatedBy = function (req) {
 router.post("/", ensure.auth, function (req, res) {
     var data = req.body;
     var circleId = data.projectId;
-    var settings = app.get('settings');
+    var settings = req.app.get('settings');
 
     ensure.isCircle(circleId, req, res, function() {
         // Add the story if we're under the server limit.
@@ -265,10 +265,7 @@ router.post("/notify/new", ensure.auth, function (req, res) {
 
 module.exports = function () {
     return {
-        router: function (a) {
-            app = a;
-            return router;
-        },
+        router: router,
         // addStory and removeStory are used by the 
         // setting that adds / removes the next meeting,
         // but that's it.
