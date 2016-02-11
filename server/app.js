@@ -33,6 +33,8 @@ var payment   = require('circle-blvd/payment')();
 var settings  = require('circle-blvd/settings');
 var contact   = require('circle-blvd/contact-emailer');
 
+var defaultSettings = require('./back-end/settings');
+
 // Routes
 var usersRoutes = require('./back-end/routes/users');
 var userRoutes  = require('./back-end/routes/user');
@@ -488,7 +490,7 @@ var configureApp = function (config) {
         ready();
     };
 
-    settings.init(function (err, settings) {
+    settings.init(defaultSettings, function (err, settings) {
         if (err) {
             console.log(err);
         }
