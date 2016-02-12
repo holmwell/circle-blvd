@@ -5,6 +5,9 @@ var http    = require('http');
 var path    = require('path');
 var io      = require('socket.io')();
 
+// routes
+var router = require('./router.js');
+
 // express middleware
 var compression    = require('compression');
 var serveStatic    = require('serve-static');
@@ -18,12 +21,8 @@ var uidSafe        = require('uid-safe');
 var compactModule = require('compact-exclsr');
 
 var auth   = require('circle-blvd/auth-local');
-var ensure = require('circle-blvd/auth-ensure');
-var limits = require('circle-blvd/limits');
 var errors = require('circle-blvd/errors');
 var guard  = errors.guard;
-var handle = require('circle-blvd/handle');
-var send   = require('circle-blvd/send');
 var db     = require('circle-blvd/dataAccess').instance();
 
 var socketSetup = require('circle-blvd/socket-setup');
@@ -32,29 +31,9 @@ var sslServer  = require('circle-blvd/https-server');
 var forceHttps = require('circle-blvd/force-https')(sslServer);
 var payment    = require('circle-blvd/payment')();
 var settings   = require('circle-blvd/settings');
-var contact    = require('circle-blvd/contact-emailer');
 
 var canonicalDomain = require('circle-blvd/canonical-domain')(settings);
 var defaultSettings = require('./back-end/settings');
-
-// Routes
-var usersRoutes = require('./back-end/routes/users');
-var userRoutes  = require('./back-end/routes/user');
-var initRoutes  = require('./back-end/routes/init');
-
-var authRoutes       = require('./back-end/routes/auth');
-var metrics          = require('./back-end/routes/metrics');
-var settingsRoutes   = require('./back-end/routes/settings');
-var paymentRoutes    = require('./back-end/routes/payment');
-var signupRoutes     = require('./back-end/routes/signup');
-var circleRoutes     = require('./back-end/routes/circle');
-var groupRoutes      = require('./back-end/routes/group');
-var baseCircleRoutes = require('./back-end/routes/base-circle');
-var storyRoutes      = require('./back-end/routes/story');
-
-var routes   = require('./front-end/routes');
-var archives = require('./front-end/routes/archives');
-var prelude  = require('./front-end/routes/prelude');
 
 var couchSessionStore = require('circle-blvd/couch-session-store');
 
@@ -62,107 +41,6 @@ var ee = new events.EventEmitter();
 var isReady = false;
 
 var app = express();
-
-
-var defineRoutes = function () {
-    app.use('/', prelude.router);
-    app.use('/archives', archives.router);
-    app.use('/auth', authRoutes.router(auth));
-    app.use('/data/metrics', metrics.router);
-
-    // Search engine things
-    app.get('/sitemap.txt', routes.sitemap);
-    
-    // Email form
-    app.post("/data/contact", ensure.auth, contact.handler);
-
-    // User routes (account actions)
-    app.get("/data/user", ensure.auth, userRoutes.user);
-    app.put("/data/user/name", ensure.auth, userRoutes.updateName);
-    app.put("/data/user/email", ensure.auth, userRoutes.updateEmail);
-    app.put("/data/user/notificationEmail", ensure.auth, userRoutes.updateNotificationEmail)
-    app.put("/data/user/password", ensure.auth, userRoutes.updatePassword);
-
-    // Init routes
-    app.put("/data/initialize", initRoutes.init);
-
-    // Settings!
-    app.use("/data/settings", settingsRoutes.router);
-
-    // TODO: This function has a lot of dependencies. 
-    // Clean up this mess, so we can get it out of this
-    // file.
-    app.put("/data/setting", ensure.mainframe, function (req, res) {
-        var data = req.body;
-
-        var onSettingsUpdate = function (setting) {
-            settings.handleUpdate(setting);
-            res.status(200).send();
-        };
-
-        db.settings.update(data, guard(res, onSettingsUpdate));
-    });
-
-
-    // Circles!
-    app.get("/data/circles", ensure.auth, function (req, res) {
-        db.circles.findByUser(req.user, handle(res));
-    });
-    app.get("/data/circles/all", ensure.mainframe, send(db.circles.getAll));
-    app.use('/data/circle', circleRoutes.router);
-
-    app.get("/data/invite/:inviteId", function (req, res) {
-        var inviteId = req.params.inviteId;
-        db.invites.get(inviteId, handle(res));
-    });
-
-    // Groups!
-    app.use('/data/group', groupRoutes.router);
-
-    // Fundamental operations, like stories in a circle.
-    app.use('/data', baseCircleRoutes.router);
- 
-    // Stories!
-    app.use('/data/story', storyRoutes.router);
-
-    // TODO: Where should this be on the client?
-    app.put("/data/:circleId/settings/show-next-meeting", ensure.circleAdmin, function (req, res) {
-        var showNextMeeting = req.body.showNextMeeting;
-        var projectId = req.params.circleId;
-
-        var handleNextMeeting = guard(res, function (nextMeeting) {
-            if (showNextMeeting) {
-                // TODO: Should probably be in the data access layer.
-                // TODO: Consider passing in the summary from the client,
-                // as 'meeting' should be a configurable word.
-                var story = {};
-                story.summary = "Next";
-                story.isNextMeeting = true;
-
-                storyRoutes.addStory(story, res);
-            }
-            else {
-                storyRoutes.removeStory(nextMeeting, res);
-            }
-        });
-
-        var nextMeeting = db.stories.getNextMeetingByProjectId(projectId, handleNextMeeting);
-    });
-
-    app.use('/payment', paymentRoutes.router);
-    app.use('/data/signup', signupRoutes.router);
-
-    app.get("/data/waitlist", ensure.mainframe, send(db.waitlist.get));
-
-    // The secret to bridging Angular and Express in a 
-    // way that allows us to pass any path to the client.
-    // 
-    // Also, this depends on the static middleware being
-    // near the top of the stack.
-    app.get('*', function (req, res) {
-        routes.index(req, res, app);
-    });
-};
 
 
 var tryToCreateHttpsServer = function (callback) {
@@ -411,7 +289,7 @@ var configureApp = function (config) {
         socketSetup.init(io, app, sessionMiddleware);
 
         // Routes
-        defineRoutes();
+        app.use("/", router);
 
         // Catch errors
         app.use(function (err, req, res, next) {
