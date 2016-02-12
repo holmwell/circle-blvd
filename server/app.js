@@ -34,6 +34,7 @@ var payment    = require('circle-blvd/payment')();
 var settings   = require('circle-blvd/settings');
 var contact    = require('circle-blvd/contact-emailer');
 
+var canonicalDomain = require('circle-blvd/canonical-domain')(settings);
 var defaultSettings = require('./back-end/settings');
 
 // Routes
@@ -195,40 +196,6 @@ var startServer = function () {
 
     // Run an https server if we can.
     tryToCreateHttpsServer();
-};
-
-var canonicalDomain = function (req, res, next) {
-    if (!settings) {
-        return next();
-    }
-
-    settings.get(function (err, settingsTable) {
-        if (err) {
-            return next(err);
-        }
-        if (!settingsTable) {
-            return next();
-        }
-
-        var domainName = undefined;
-        if (settingsTable['domain-name'] && settingsTable['domain-name'].value) {
-            domainName = settingsTable['domain-name'].value.trim();
-        }
-
-        if (!domainName || req.hostname === domainName) {
-            return next();
-        }
-
-        var hostAndPort = req.get('Host');
-        var redirectToHost = domainName;
-        if (hostAndPort) {
-            redirectToHost = hostAndPort.replace(req.hostname, domainName);
-        }
-
-        var url = req.protocol + "://" + redirectToHost + req.originalUrl;
-        res.redirect(307, url);
-
-    });
 };
 
 var getCookieSettings = function () {
