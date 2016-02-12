@@ -28,10 +28,11 @@ var db     = require('circle-blvd/dataAccess').instance();
 
 var socketSetup = require('circle-blvd/socket-setup');
 
-var sslServer = require('circle-blvd/https-server');
-var payment   = require('circle-blvd/payment')();
-var settings  = require('circle-blvd/settings');
-var contact   = require('circle-blvd/contact-emailer');
+var sslServer  = require('circle-blvd/https-server');
+var forceHttps = require('circle-blvd/force-https')(sslServer);
+var payment    = require('circle-blvd/payment')();
+var settings   = require('circle-blvd/settings');
+var contact    = require('circle-blvd/contact-emailer');
 
 var defaultSettings = require('./back-end/settings');
 
@@ -194,20 +195,6 @@ var startServer = function () {
 
     // Run an https server if we can.
     tryToCreateHttpsServer();
-};
-
-var forceHttps = function(req, res, next) {
-    if (!sslServer.isRunning()) {
-        // Don't do anything if we can't do anything.
-        return next();
-    }
-
-    if(req.secure 
-        || req.headers['x-forwarded-proto'] === 'https' 
-        || req.hostname === "localhost") {
-        return next();  
-    }
-    res.redirect('https://' + req.get('Host') + req.url);
 };
 
 var canonicalDomain = function (req, res, next) {
