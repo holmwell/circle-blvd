@@ -98,27 +98,11 @@ var defineRoutes = function () {
         var data = req.body;
 
         var onSettingsUpdate = function (setting) {
-            if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
-                // TODO: Tell the client if we started the server?
-                tryToCreateHttpsServer(function (err) {
-                    if (err) {
-                        console.log(err);
-                        return;
-                    }
-                    if (sslServer.isRunning()) {
-                        io.attach(sslServer.getServer());
-                    }
-                });
-            }
-            if (setting.name === 'stripe-secret-key') {
-                payment.setApiKey(setting.value);
-            }
-
-            settings.invalidateCache();
+            settings.handleUpdate(setting);
             res.status(200).send();
         };
 
-        db.settings.update(data, guard(res, onSettingsUpdate));;
+        db.settings.update(data, guard(res, onSettingsUpdate));
     });
 
 
@@ -480,6 +464,27 @@ var configureApp = function (config) {
         
         ready();
     };
+
+    var onSettingsUpdate = function (setting) {
+        if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
+            // TODO: Tell the client if we started the server?
+            tryToCreateHttpsServer(function (err) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if (sslServer.isRunning()) {
+                    io.attach(sslServer.getServer());
+                }
+            });
+        }
+
+        if (setting.name === 'stripe-secret-key') {
+            payment.setApiKey(setting.value);
+        }
+    };
+
+    settings.addListener(onSettingsUpdate);
 
     settings.init(defaultSettings, function (err, settingsTable) {
         if (err) {
