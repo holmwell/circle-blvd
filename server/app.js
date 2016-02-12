@@ -62,10 +62,6 @@ var isReady = false;
 var app = express();
 
 
-var tryToCreateHttpsServer = function (callback) {
-    sslServer.create(app, callback);
-};
-
 var defineRoutes = function () {
     app.use('/', prelude.router);
     app.use('/archives', archives.router);
@@ -167,6 +163,27 @@ var defineRoutes = function () {
 };
 
 
+var tryToCreateHttpsServer = function (callback) {
+    sslServer.create(app, function (err, success) {
+        if (err) {
+            console.log(err);
+            if (callback) {
+                callback(err);                
+            }
+            return;
+        }
+        
+        console.log(success);
+        if (sslServer.isRunning()) {
+            io.attach(sslServer.getServer());
+        }
+
+        if (callback) {
+            callback();
+        }
+    });
+};
+
 var startServer = function () {
     var httpServer = http.createServer(app);
 
@@ -176,17 +193,7 @@ var startServer = function () {
     });
 
     // Run an https server if we can.
-    tryToCreateHttpsServer(function (err, success) {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            console.log(success);
-            if (sslServer.isRunning()) {
-                io.attach(sslServer.getServer());
-            }
-        }
-    });
+    tryToCreateHttpsServer();
 };
 
 var forceHttps = function(req, res, next) {
@@ -202,7 +209,6 @@ var forceHttps = function(req, res, next) {
     }
     res.redirect('https://' + req.get('Host') + req.url);
 };
-
 
 var canonicalDomain = function (req, res, next) {
     if (!settings) {
@@ -236,7 +242,6 @@ var canonicalDomain = function (req, res, next) {
         res.redirect(307, url);
 
     });
-   
 };
 
 var getCookieSettings = function () {
@@ -467,16 +472,7 @@ var configureApp = function (config) {
 
     var onSettingsUpdate = function (setting) {
         if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
-            // TODO: Tell the client if we started the server?
-            tryToCreateHttpsServer(function (err) {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                if (sslServer.isRunning()) {
-                    io.attach(sslServer.getServer());
-                }
-            });
+            tryToCreateHttpsServer();
         }
 
         if (setting.name === 'stripe-secret-key') {
