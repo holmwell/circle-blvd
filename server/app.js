@@ -15,8 +15,6 @@ var logger         = require('morgan');
 var cookieParser   = require('cookie-parser');
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
-var expressSession = require('express-session');
-var uidSafe        = require('uid-safe');
 
 var compactModule = require('compact-exclsr');
 
@@ -27,6 +25,7 @@ var db     = require('circle-blvd/dataAccess').instance();
 
 var socketSetup = require('circle-blvd/socket-setup');
 
+var session    = require('circle-blvd/session');
 var sslServer  = require('circle-blvd/https-server');
 var forceHttps = require('circle-blvd/force-https')(sslServer);
 var payment    = require('circle-blvd/payment')();
@@ -34,8 +33,6 @@ var settings   = require('circle-blvd/settings');
 
 var canonicalDomain = require('circle-blvd/canonical-domain')(settings);
 var defaultSettings = require('./back-end/settings');
-
-var couchSessionStore = require('circle-blvd/couch-session-store');
 
 var ee = new events.EventEmitter();
 var isReady = false;
@@ -74,23 +71,6 @@ var startServer = function () {
 
     // Run an https server if we can.
     tryToCreateHttpsServer();
-};
-
-var getCookieSettings = function () {
-    // TODO: Check settings to guess if https is running.
-    // Or actually figure out if https is running, and if so
-    // use secure cookies
-    var oneHour = 3600000;
-    var oneWeek = 7 * 24 * oneHour;
-    var sixWeeks = 6 * oneWeek;
-    var cookieSettings = {
-        path: '/',
-        httpOnly: true,
-        secure: false,
-        maxAge: sixWeeks
-    };
-
-    return cookieSettings;
 };
 
 // configure Express
@@ -133,7 +113,7 @@ var configureApp = function (config) {
             // Further, to allow cookies over CORS, we need:
             res.header("Access-Control-Allow-Credentials", "true");
             next();
-        });        
+        });
     }
 
     var staticPath = path.join(__dirname, './front-end/public');
@@ -223,29 +203,8 @@ var configureApp = function (config) {
 
     var initSettingsOk = function (settingsTable) {
         var sessionSecret = settingsTable['session-secret'].value;
-        var SessionStore = couchSessionStore(expressSession);
-        var cookieSettings = getCookieSettings();
-        var sessionMiddleware = expressSession({ 
-            store: new SessionStore(),
-            secret: sessionSecret,
-            cookie: cookieSettings,
-            // TODO: We might want resave to be false
-            // More info: https://github.com/expressjs/session#options
-            resave: true,
-            saveUninitialized: true,
-            // Do not allow session IDs to start with an underscore. 
-            // CouchDB does not allow us to use document IDs that start with _.
-            genid: function (req) {
-                var id = undefined;
-                while (!id) {
-                    id = uidSafe.sync(24);
-                    if (id[0] === "_") {
-                        id = undefined;
-                    }
-                }
-                return id;
-            }
-        });
+        
+        var sessionMiddleware = session.middleware(sessionSecret);
         app.use(sessionMiddleware);
 
         var stripeApiKey = settingsTable['stripe-secret-key'];
