@@ -20,12 +20,12 @@ for (var index in process.argv) {
 // config situation, and get out of messing
 // with process.env so that we can have a 
 // healthy test environment.
-process.env.PORT = process.env.PORT || 3000;
-process.env.SSL_PORT = process.env.SSL_PORT || 4000;
 process.env.DATABASE_NAME = 'circle-blvd';
 
 var config = {
-    isDebugging: isDebugging
+    isDebugging: isDebugging,
+    httpPort: process.env.PORT || 3000,
+    httpsPort: process.env.SSL_PORT || 4000
 };
 
 

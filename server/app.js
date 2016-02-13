@@ -78,14 +78,16 @@ var configureApp = function (config) {
     // Default config
     if (!config) {
         config = {
-            isDebugging: false
+            isDebugging: false,
+            httpPort: 3000,
+            httpsPort: 4000
         }
     }
 
     var isDebugging = config.isDebugging || false;
 
-    app.set('port', process.env.PORT || 3000);
-    app.set('ssl-port', process.env.SSL_PORT || 4000);
+    app.set('port', config.httpPort || 3000);
+    app.set('ssl-port', config.httpsPort || 4000);
     
     app.set('views', __dirname + '/front-end/views');
     app.set('view engine', 'jade');
