@@ -251,12 +251,7 @@ var configureApp = function (config) {
         app.use("/", router);
 
         // Catch errors
-        app.use(function (err, req, res, next) {
-            if (err) {
-                return errors.handle(err, res);
-            }
-            // TODO: Should not get here.
-        });
+        app.use(errors.middleware);
         
         ready();
     };
