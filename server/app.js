@@ -1,6 +1,5 @@
 // app.js
 var express = require('express');
-var events  = require('events');
 var http    = require('http');
 var path    = require('path');
 var io      = require('socket.io')();
@@ -33,9 +32,6 @@ var settings   = require('circle-blvd/settings');
 
 var canonicalDomain = require('circle-blvd/canonical-domain')(settings);
 var defaultSettings = require('./back-end/settings');
-
-var ee = new events.EventEmitter();
-var isReady = false;
 
 var app = express();
 
@@ -74,7 +70,7 @@ var startServer = function () {
 };
 
 // configure Express
-var configureApp = function (config) {
+var configureApp = function (config, callback) {
     // Default config
     if (!config) {
         config = {
@@ -196,6 +192,7 @@ var configureApp = function (config) {
         'main',
         version
     ]));
+
     app.use(logger('dev'));
     app.use(cookieParser()); // TODO: Signed cookies?
     app.use(bodyParser.urlencoded({ extended: false }));
@@ -254,8 +251,6 @@ var configureApp = function (config) {
 
         // Catch errors
         app.use(errors.middleware);
-        
-        ready();
     };
 
     var onSettingsUpdate = function (setting) {
@@ -272,27 +267,18 @@ var configureApp = function (config) {
 
     settings.init(defaultSettings, function (err, settingsTable) {
         if (err) {
-            console.log(err);
+            if (callback) {
+                callback(err);                
+            }
+            return;
         }
-        else {
-            initSettingsOk(settingsTable);
+
+        initSettingsOk(settingsTable);
+        if (callback) {
+            callback();
         }
     });
 }; 
-
-function ready() {
-    isReady = true;
-    ee.emit('circle-blvd-app-is-ready');
-}
-
-exports.whenReady = function (callback) {
-    if (isReady) {
-        return callback();
-    }
-    ee.once('circle-blvd-app-is-ready', function () {
-        callback();
-    });
-};
 
 exports.express = app;
 exports.init = configureApp;

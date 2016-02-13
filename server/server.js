@@ -33,11 +33,6 @@ var config = {
 var app = require('./app.js');
 
 // Start the app.
-app.init(config);
-
-// Wait for the database and such to initialize
-app.whenReady(start);
-
-function start () {
+app.init(config, function () {
     app.startServer();
-}
+});

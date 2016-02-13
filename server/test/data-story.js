@@ -35,8 +35,7 @@ test['database setup'] = function (test) {
     // called. So, work around that until we can
     // fix it.
     var halfSecond = 500;
-    app.init();
-    app.whenReady(function () {
+    app.init(null, function () {
         setTimeout(function () {
             test.done();
         }, halfSecond); 
