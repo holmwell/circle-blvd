@@ -25,6 +25,7 @@ var settings   = require('circle-blvd/settings');
 
 var canonicalDomain = require('circle-blvd/canonical-domain')(settings);
 var defaultSettings = require('./back-end/settings');
+var corsIonic       = require('circle-blvd/cors-ionic');
 
 var app        = express();
 var io         = require('socket.io')();
@@ -68,17 +69,8 @@ var init = function (config, callback) {
     
     app.use(compression());
 
-    // Use CORS on port 8100 for local dev / debug runs
-    // This is the default port for Ionic
     if (isDebugging) {
-        app.use(function (req, res, next) {
-            res.header("Access-Control-Allow-Origin", "http://localhost:8100");
-            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-            res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
-            // Further, to allow cookies over CORS, we need:
-            res.header("Access-Control-Allow-Credentials", "true");
-            next();
-        });
+        app.use(corsIonic);
     }
 
     app.use(staticRouter(isDebugging));
