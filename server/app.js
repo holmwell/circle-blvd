@@ -44,8 +44,8 @@ var init = function (config, callback) {
 
     var isDebugging = config.isDebugging || false;
 
-    app.set('port', config.httpPort || 3000);
-    app.set('ssl-port', config.httpsPort || 4000);
+    webServer.setPort(config.httpPort || 3000);
+    webServer.https.setPort(config.httpsPort || 4000);
     
     app.set('views', __dirname + '/front-end/views');
     app.set('view engine', 'jade');

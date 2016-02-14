@@ -1,14 +1,16 @@
 // web-server.js
 // 
-// 
 var http       = require('http');
 var sslServer  = require('circle-blvd/https-server');
 
 var app = undefined;
 var io  = undefined;
 
+var httpPort  = 3000;
+var httpsPort = 4000;
+
 var tryToCreateHttpsServer = function (callback) {
-    sslServer.create(app, function (err, success) {
+    sslServer.create(app, httpsPort, function (err, success) {
         if (err) {
             console.log(err);
             if (callback) {
@@ -31,8 +33,8 @@ var tryToCreateHttpsServer = function (callback) {
 var startServer = function () {
     var httpServer = http.createServer(app);
 
-    httpServer.listen(app.get('port'), function () {
-        console.log("Express http server listening on port " + app.get('port'));
+    httpServer.listen(httpPort, function () {
+        console.log("Express http server listening on port " + httpPort);
         io.attach(httpServer);
     });
 
@@ -48,15 +50,25 @@ var restartHttps = function (callback) {
     tryToCreateHttpsServer(callback);
 };
 
-module.exports = function (app, io) {
-    app = app;
-    io = io;
+var setHttpsPort = function (port) {
+    httpsPort = port;
+};
+
+var setHttpPort = function (port) {
+    httpPort = port;
+};
+
+module.exports = function (expressApp, ioModule) {
+    app = expressApp;
+    io = ioModule;
 
     return {
         https: {
             restart: restartHttps,
-            isRunning: isHttpsRunning
-        }
+            isRunning: isHttpsRunning,
+            setPort: setHttpsPort
+        },
+        setPort: setHttpPort,
         start: startServer
     };
 };
