@@ -20,8 +20,8 @@ var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 
 // routes
-var router       = require('./router.js');
-var staticRouter = require('./static.js');
+var routes      = require('./routes.js');
+var staticFiles = require('./static-files.js');
 
 // circle-blvd modules
 var auth    = require('circle-blvd/auth-local');
@@ -101,7 +101,7 @@ var init = function (config, callback) {
         }
 
         // HTML, CSS, JavaScript files
-        app.use(staticRouter(isDebugging));
+        app.use(staticFiles(isDebugging));
 
         // Logging
         app.use(logger('dev'));
@@ -129,7 +129,7 @@ var init = function (config, callback) {
         app.use(socketSetup(io, sessionMiddleware));
 
         // Routes
-        app.use("/", router);
+        app.use("/", routes);
 
         // Catch errors
         app.use(errors.middleware);
