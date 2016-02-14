@@ -1,7 +1,5 @@
 // app.js
 var express = require('express');
-var http    = require('http');
-var io      = require('socket.io')();
 
 // routes
 var router       = require('./router.js');
@@ -20,54 +18,21 @@ var guard  = errors.guard;
 var db     = require('circle-blvd/dataAccess').instance();
 
 var socketSetup = require('circle-blvd/socket-setup');
+var session     = require('circle-blvd/session');
 
-var session    = require('circle-blvd/session');
-var sslServer  = require('circle-blvd/https-server');
-var forceHttps = require('circle-blvd/force-https')(sslServer);
 var payment    = require('circle-blvd/payment')();
 var settings   = require('circle-blvd/settings');
 
 var canonicalDomain = require('circle-blvd/canonical-domain')(settings);
 var defaultSettings = require('./back-end/settings');
 
-var app = express();
-
-
-var tryToCreateHttpsServer = function (callback) {
-    sslServer.create(app, function (err, success) {
-        if (err) {
-            console.log(err);
-            if (callback) {
-                callback(err);                
-            }
-            return;
-        }
-        
-        console.log(success);
-        if (sslServer.isRunning()) {
-            io.attach(sslServer.getServer());
-        }
-
-        if (callback) {
-            callback();
-        }
-    });
-};
-
-var startServer = function () {
-    var httpServer = http.createServer(app);
-
-    httpServer.listen(app.get('port'), function () {
-        console.log("Express http server listening on port " + app.get('port'));
-        io.attach(httpServer);
-    });
-
-    // Run an https server if we can.
-    tryToCreateHttpsServer();
-};
+var app        = express();
+var io         = require('socket.io')();
+var webServer  = require('./web-server.js')(app, io);
+var forceHttps = require('circle-blvd/force-https')(webServer.https);
 
 // configure Express
-var configureApp = function (config, callback) {
+var init = function (config, callback) {
     // Default config
     if (!config) {
         config = {
@@ -175,7 +140,7 @@ var configureApp = function (config, callback) {
 
     var onSettingsUpdate = function (setting) {
         if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
-            tryToCreateHttpsServer();
+            webServer.https.restart();
         }
 
         if (setting.name === 'stripe-secret-key') {
@@ -201,5 +166,5 @@ var configureApp = function (config, callback) {
 }; 
 
 exports.express = app;
-exports.init = configureApp;
-exports.startServer = startServer;
+exports.init = init;
+exports.startServer = webServer.start;
