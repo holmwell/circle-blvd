@@ -47,9 +47,11 @@ var init = function (config, callback) {
     webServer.setPort(config.httpPort || 3000);
     webServer.https.setPort(config.httpsPort || 4000);
     
+    // Views and view engines
     app.set('views', __dirname + '/front-end/views');
     app.set('view engine', 'jade');
 
+    // For index.ejs. On its way out.
     app.engine('ejs', require('ejs').__express);
     
     // TODO: canonicalDomain will not work for the first request
@@ -86,20 +88,21 @@ var init = function (config, callback) {
 
 
     var initSettingsOk = function (settingsTable) {
-        var sessionSecret = settingsTable['session-secret'].value;
-        
-        var sessionMiddleware = session.middleware(sessionSecret);
-        app.use(sessionMiddleware);
 
         var stripeApiKey = settingsTable['stripe-secret-key'];
         if (stripeApiKey) {
             payment.setApiKey(stripeApiKey.value);
         }
 
-        // Init authentication
-        auth.attach(app);
+        // Sessions
+        var sessionSecret     = settingsTable['session-secret'].value;
+        var sessionMiddleware = session.middleware(sessionSecret);
+        app.use(sessionMiddleware);
+
+        // Authentication
+        app.use(auth.middleware);
         
-        // Set settings
+        // Settings cache
         app.use(settings.middleware);
 
         app.use(function (req, res, next) {
