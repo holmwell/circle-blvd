@@ -50,53 +50,56 @@ var init = function (config, callback) {
     // For index.ejs. On its way out.
     app.engine('ejs', require('ejs').__express);
     
-    // Middleware stack
-    //
-    // TODO: canonicalDomain will not work for the first request
-    // after the settings are changed.
-    //
-    // Canonical domain needs to be before https, otherwise 
-    // a browser will try to use the canonical https certificate
-    // to connect to the non-canonical domain
-    app.use(canonicalDomain);
-    app.use(forceHttps);
-
-    app.use(compression());
-
-    if (isDebugging) {
-        app.use(corsIonic);
-    }
-
-    // HTML, CSS, JavaScript files
-    app.use(staticRouter(isDebugging));
-
-    app.use(logger('dev'));
-    app.use(cookieParser()); // TODO: Signed cookies?
-    app.use(bodyParser.urlencoded({ extended: false }));
-    app.use(bodyParser.json());
-    app.use(methodOverride()); // TODO: What do we use this for?
-
     settings.addListener(onSettingsUpdate);
+    settings.init(defaultSettings, processSettings);
 
-    settings.init(defaultSettings, function (err, settingsTable) {
+    function processSettings (err, settingsTable) {
         if (err) {
             callback(err);                
             return;
         }
 
-        processSettings(settingsTable);
-        callback();
-    });
-
-    function processSettings (settingsTable) {
-
+        // Payment
         var stripeApiKey = settingsTable['stripe-secret-key'];
         if (stripeApiKey) {
             payment.setApiKey(stripeApiKey.value);
         }
 
+        // Set up the app with our session secret
+        var sessionSecret = settingsTable['session-secret'].value;
+        setupApp(sessionSecret);
+        
+        callback();
+    }
+
+    function setupApp (sessionSecret) {
+        // Middleware stack
+        //
+        // Canonical domain needs to be before https, otherwise 
+        // a browser will try to use the canonical https certificate
+        // to connect to the non-canonical domain
+        app.use(canonicalDomain);
+        app.use(forceHttps);
+
+        app.use(compression());
+
+        if (isDebugging) {
+            app.use(corsIonic);
+        }
+
+        // HTML, CSS, JavaScript files
+        app.use(staticRouter(isDebugging));
+
+        // Logging
+        app.use(logger('dev'));
+
+        // Cookies / HTTP body parser
+        app.use(cookieParser()); // TODO: Signed cookies?
+        app.use(bodyParser.urlencoded({ extended: false }));
+        app.use(bodyParser.json());
+        app.use(methodOverride()); // TODO: What do we use this for?
+
         // Sessions
-        var sessionSecret     = settingsTable['session-secret'].value;
         var sessionMiddleware = session.middleware(sessionSecret);
         app.use(sessionMiddleware);
 
