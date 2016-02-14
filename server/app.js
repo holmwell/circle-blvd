@@ -146,7 +146,7 @@ var init = function (config, callback) {
         });
 
         // Real-time engine
-        socketSetup.init(io, app, sessionMiddleware);
+        app.use(socketSetup(io, sessionMiddleware));
 
         // Routes
         app.use("/", router);
