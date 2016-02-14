@@ -1,10 +1,6 @@
 // app.js
 var express = require('express');
 
-// routes
-var router       = require('./router.js');
-var staticRouter = require('./static.js');
-
 // express middleware
 var compression    = require('compression');
 var logger         = require('morgan');
@@ -12,11 +8,15 @@ var cookieParser   = require('cookie-parser');
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 
+// routes
+var router       = require('./router.js');
+var staticRouter = require('./static.js');
+
+// circle-blvd modules
 var auth   = require('circle-blvd/auth-local');
 var errors = require('circle-blvd/errors');
-var guard  = errors.guard;
-var db     = require('circle-blvd/dataAccess').instance();
 
+var firstRun    = require('circle-blvd/first-run');
 var socketSetup = require('circle-blvd/socket-setup');
 var session     = require('circle-blvd/session');
 
@@ -119,31 +119,8 @@ var init = function (config, callback) {
         // Settings cache
         app.use(settings.middleware);
 
-        app.use(function (req, res, next) {
-            // Is this our first run? 
-            // TODO: We really only need to call this once.
-            // It doesn't need to be a middleware. The main
-            // thing is that app.isInitializing should be
-            // correct all the time.
-            var usersExist = function (callback) {
-                db.users.count(function (err, count) {
-                    if (err) {
-                        return callback(err);
-                    }
-                    callback(null, count > 0);
-                });
-            };
-    
-            usersExist(guard(res, function (exist) {
-                if (!exist) {
-                    app.isInitializing = true;
-                }
-                else {
-                    app.isInitializing = false;
-                }
-                next();
-            }));
-        });
+        // Is this the first run of the system?
+        app.use(firstRun);
 
         // Real-time engine
         app.use(socketSetup(io, sessionMiddleware));

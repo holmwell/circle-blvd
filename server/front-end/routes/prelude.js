@@ -123,6 +123,9 @@ router.get("/contact", render('contact'));
 
 router.get('/', function (req, res, next) {
     // Redirect to 'initialize' on first-time use.
+    //
+    // TODO: This should probably be in the back-end side of things,
+    // for when the time comes to do a hard split.
     if (req.app.isInitializing) {
         res.render("prelude/initialize", getDefaultParams(req));
     }
