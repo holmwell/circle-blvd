@@ -40,7 +40,7 @@ var corsIonic       = require('circle-blvd/cors-ionic');
 
 var app        = express();
 var io         = require('socket.io')();
-var webServer  = require('./web-server.js')(app, io);
+var webServer  = require('circle-blvd/web-server')(app, io);
 var forceHttps = require('circle-blvd/force-https')(webServer.https);
 
 
