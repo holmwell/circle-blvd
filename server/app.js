@@ -41,6 +41,9 @@ var init = function (config, callback) {
             httpsPort: 4000
         }
     }
+    if (!callback) {
+        callback = function () {};
+    }
 
     var isDebugging = config.isDebugging || false;
 
@@ -86,8 +89,19 @@ var init = function (config, callback) {
     app.use(bodyParser.json());
     app.use(methodOverride()); // TODO: What do we use this for?
 
+    settings.addListener(onSettingsUpdate);
 
-    var initSettingsOk = function (settingsTable) {
+    settings.init(defaultSettings, function (err, settingsTable) {
+        if (err) {
+            callback(err);                
+            return;
+        }
+
+        processSettings(settingsTable);
+        callback();
+    });
+
+    function processSettings (settingsTable) {
 
         var stripeApiKey = settingsTable['stripe-secret-key'];
         if (stripeApiKey) {
@@ -140,33 +154,17 @@ var init = function (config, callback) {
         // Catch errors
         app.use(errors.middleware);
     };
-
-    var onSettingsUpdate = function (setting) {
-        if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
-            webServer.https.restart();
-        }
-
-        if (setting.name === 'stripe-secret-key') {
-            payment.setApiKey(setting.value);
-        }
-    };
-
-    settings.addListener(onSettingsUpdate);
-
-    settings.init(defaultSettings, function (err, settingsTable) {
-        if (err) {
-            if (callback) {
-                callback(err);                
-            }
-            return;
-        }
-
-        initSettingsOk(settingsTable);
-        if (callback) {
-            callback();
-        }
-    });
 }; 
+
+function onSettingsUpdate (setting) {
+    if (setting.name === 'ssl-key-path' || setting.name === 'ssl-cert-path') {
+        webServer.https.restart();
+    }
+
+    if (setting.name === 'stripe-secret-key') {
+        payment.setApiKey(setting.value);
+    }
+};
 
 exports.express = app;
 exports.init = init;
