@@ -1,4 +1,15 @@
 // app.js
+// 
+// The Express app that listens via
+// an http server.
+//
+// To run, do something like this:
+//
+// var app = require('app.js');
+// app.init(config, function () {
+//     app.startServer();
+// });
+//
 var express = require('express');
 
 // express middleware
