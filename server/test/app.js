@@ -38,14 +38,14 @@ test['database setup'] = function (test) {
 	// fix it.
 	var halfSecond = 500;
 	app.init(null, function () {
+		// for a persistent session
+		admin = request.agent(unit);
+		member = request.agent(unit);
+
 		setTimeout(function () {
 			test.done();
 		}, halfSecond);	
 	});
-
-	// for a persistent session
-	admin = request.agent(unit);
-	member = request.agent(unit);
 };
 
 // Initialize
