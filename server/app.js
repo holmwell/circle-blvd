@@ -32,24 +32,16 @@ var io         = require('socket.io')();
 var webServer  = require('./web-server.js')(app, io);
 var forceHttps = require('circle-blvd/force-https')(webServer.https);
 
+
 // configure Express
 var init = function (config, callback) {
-    // Default config
-    if (!config) {
-        config = {
-            isDebugging: false,
-            httpPort: 3000,
-            httpsPort: 4000
-        }
-    }
-    if (!callback) {
-        callback = function () {};
-    }
+    config = ensureConfig(config);
+    callback = ensureCallback(callback);
 
-    var isDebugging = config.isDebugging || false;
+    var isDebugging = config.isDebugging;
 
-    webServer.setPort(config.httpPort || 3000);
-    webServer.https.setPort(config.httpsPort || 4000);
+    webServer.setPort(config.httpPort);
+    webServer.https.setPort(config.httpsPort);
     
     // Views and view engines
     app.set('views', __dirname + '/front-end/views');
@@ -58,6 +50,8 @@ var init = function (config, callback) {
     // For index.ejs. On its way out.
     app.engine('ejs', require('ejs').__express);
     
+    // Middleware stack
+    //
     // TODO: canonicalDomain will not work for the first request
     // after the settings are changed.
     //
@@ -66,13 +60,14 @@ var init = function (config, callback) {
     // to connect to the non-canonical domain
     app.use(canonicalDomain);
     app.use(forceHttps);
-    
+
     app.use(compression());
 
     if (isDebugging) {
         app.use(corsIonic);
     }
 
+    // HTML, CSS, JavaScript files
     app.use(staticRouter(isDebugging));
 
     app.use(logger('dev'));
@@ -134,6 +129,29 @@ function onSettingsUpdate (setting) {
         payment.setApiKey(setting.value);
     }
 };
+
+function ensureConfig (config) {
+    var defaults = {
+        isDebugging: false,
+        httpPort: 3000,
+        httpsPort: 4000
+    };
+
+    config = config || defaults;
+
+    config.isDebugging = config.isDebugging || defaults.isDebugging;
+    config.httpPort    = config.httpPort || defaults.httpPort;
+    config.httpsPort   = config.httpsPort || defaults.httpsPort;
+
+    return config;
+}
+
+function ensureCallback (callback) {
+    if (!callback) {
+        return function() {};
+    }
+    return callback;
+}
 
 exports.express = app;
 exports.init = init;
