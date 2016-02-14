@@ -24,24 +24,26 @@ var router       = require('./router.js');
 var staticRouter = require('./static.js');
 
 // circle-blvd modules
-var auth   = require('circle-blvd/auth-local');
-var errors = require('circle-blvd/errors');
+var auth    = require('circle-blvd/auth-local');
+var errors  = require('circle-blvd/errors');
+var session = require('circle-blvd/session');
 
-var firstRun    = require('circle-blvd/first-run');
-var socketSetup = require('circle-blvd/socket-setup');
-var session     = require('circle-blvd/session');
-
-var payment    = require('circle-blvd/payment')();
-var settings   = require('circle-blvd/settings');
-
-var canonicalDomain = require('circle-blvd/canonical-domain')(settings);
-var defaultSettings = require('./back-end/settings');
-var corsIonic       = require('circle-blvd/cors-ionic');
+var payment  = require('circle-blvd/payment')();
+var settings = require('circle-blvd/settings');
 
 var app        = express();
 var io         = require('socket.io')();
 var webServer  = require('circle-blvd/web-server')(app, io);
-var forceHttps = require('circle-blvd/force-https')(webServer.https);
+
+// circle-blvd middleware
+var forceHttps  = require('circle-blvd/middleware/force-https')(webServer.https);
+var firstRun    = require('circle-blvd/middleware/first-run');
+var socketSetup = require('circle-blvd/middleware/socket-setup');
+
+var canonicalDomain = require('circle-blvd/middleware/canonical-domain')(settings);
+var corsIonic       = require('circle-blvd/middleware/cors-ionic');
+
+var defaultSettings = require('./back-end/settings');
 
 
 // configure Express
