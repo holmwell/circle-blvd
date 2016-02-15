@@ -21,10 +21,7 @@ var createUser = function (proposedAccount, callback) {
         callback(err);
     };
 
-    db.users.findByEmail(proposedAccount.email, function (err, accountExists) {
-        if (err) {
-            return callback(err);
-        }
+    db.users.findByEmail(proposedAccount.email, guard(callback, function (accountExists) {
         if (accountExists) {
             var error = new Error("That email address is already being used. Maybe try signing in?");
             error.status = 400;
@@ -40,21 +37,14 @@ var createUser = function (proposedAccount, callback) {
             isReadOnly,
             addSuccess, 
             addError);
-    });
+    }));
 };
 
 var createAccount = function (proposedAccount, circle, callback) {
     var userAccountCreated = function (newAccount) {
         db.circles.createFirst(circle.name, newAccount.email, callback);
     };
-
-    createUser(proposedAccount, function (err, newAccount) {
-        if (err) {
-            callback(err);
-            return;
-        }
-        userAccountCreated(newAccount);
-    });
+    createUser(proposedAccount, guard(callback, userAccountCreated));
 };
 
 var acceptInvitation = function (res, invite, callback) {

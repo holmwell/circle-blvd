@@ -3,6 +3,7 @@ var async = require('async');
 var db        = require('circle-blvd/dataAccess').instance();
 var sslServer = require('circle-blvd/https-server');
 var settings  = require('circle-blvd/settings');
+var guard     = require('circle-blvd/errors').guard;
 
 exports.init = function (req, res, app) {
 	var data = req.body;
@@ -17,10 +18,7 @@ exports.init = function (req, res, app) {
 
 	var handleOptionalSettings = function (fnCallback) {
 		var tasks = [];
-		settings.get(function (err, defaultSettings) {
-			if (err) {
-				return fnCallback(err);
-			}
+		settings.get(guard(fnCallback, function (defaultSettings) {
 
 			if (ssl && ssl.certPath && ssl.certKey) {
 				var sslSettings = [];
@@ -42,15 +40,12 @@ exports.init = function (req, res, app) {
 				}
 				
 				tasks.push(function (callback) {
-					settings.set(sslSettings, function (err) {
-						if (err) {
-							return callback(err);
-						}
+					settings.set(sslSettings, guard(callback, function () {
 						sslServer.create(app, function (err) {
-							console.log(err);
+							errors.log(err);
 							return callback("The HTTPS server could not be started.");
 						});
-					});
+					}));
 				});
 			}
 
@@ -123,7 +118,7 @@ exports.init = function (req, res, app) {
 			else {
 				fnCallback();
 			}
-		});
+		}));
 	};
 
 	var handleOptionalError = function (err) {
@@ -159,12 +154,9 @@ exports.init = function (req, res, app) {
 		story.summary = "Next";
 		story.isNextMeeting = true;
 
-		db.stories.add(story, function (err, body) {
-			if (err) {
-				return onError(err);
-			}
+		db.stories.add(story, guard(onError, function (body) {
 			return handleOptionalSettings(handleOptionsCallback);
-		});
+		}));
 	};
 
 	var adminMemberships = [];
@@ -196,10 +188,7 @@ exports.init = function (req, res, app) {
 		name: "Circle Blvd"
 	};
 
-	db.circles.add(firstCircle, function (err, newCircle) {
-		if (err) {
-			return onError(err);
-		}
+	db.circles.add(firstCircle, guard(onError, function (newCircle) {
 		defaultCircleId = newCircle._id;
 		db.groups.add(mainframeGroup, function (rootGroup) {
 			var adminGroup = {
@@ -228,5 +217,5 @@ exports.init = function (req, res, app) {
 					db.groups.add(adminGroup, addAdminUser, onError);
 				}, onError);
 		}, onError);
-	});
+	}));
 };
