@@ -94,7 +94,7 @@ function MainframeCtrl(session, $scope, $http, errors) {
 
 
 	$scope.updateSetting = function (setting) {
-		$http.put('/data/setting', setting)
+		$http.put('/data/settings/setting', setting)
 		.success(function() {
 			// TODO: Show a fading smiley face or something
 			// to indicate success.

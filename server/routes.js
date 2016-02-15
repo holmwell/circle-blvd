@@ -10,8 +10,7 @@ var guard  = errors.guard;
 var handle = require('circle-blvd/handle');
 var send   = require('circle-blvd/send');
 
-var db       = require('circle-blvd/dataAccess').instance();
-var settings = require('circle-blvd/settings');
+var db = require('circle-blvd/dataAccess').instance();
 
 // Routes
 var usersRoutes = require('./back-end/routes/users');
@@ -57,21 +56,6 @@ router.put("/data/initialize", initRoutes.init);
 
 // Settings!
 router.use("/data/settings", settingsRoutes.router);
-
-// TODO: This function has a lot of dependencies. 
-// Clean up this mess, so we can get it out of this
-// file.
-router.put("/data/setting", ensure.mainframe, function (req, res) {
-    var data = req.body;
-
-    var onSettingsUpdate = function (setting) {
-        settings.handleUpdate(setting);
-        res.status(200).send();
-    };
-
-    db.settings.update(data, guard(res, onSettingsUpdate));
-});
-
 
 // Circles!
 router.get("/data/circles", ensure.auth, function (req, res) {
