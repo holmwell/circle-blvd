@@ -18,17 +18,17 @@ var cache = function (ms) {
     };
     return fn;
 };
+
+// TODO: Is this really six minutes?
 var sixMinutes = 5 * 60;
 
-router.get("/", cache(sixMinutes), send(db.settings.get)); // public
+// Get public settings
+router.get("/", cache(sixMinutes), send(db.settings.get)); 
+
+// Get settings that can be edited by mainframe admins
 router.get("/authorized", ensure.mainframe, send(db.settings.getAuthorized));
 
-// TODO: This is not used. Assess.
-router.get("/private", ensure.mainframe, send(db.settings.getPrivate)); 
-
-// TODO: This function has a lot of dependencies. 
-// Clean up this mess, so we can get it out of this
-// file.
+// Save a setting
 router.put("/setting", ensure.mainframe, function (req, res) {
     var data = req.body;
 
@@ -37,8 +37,10 @@ router.put("/setting", ensure.mainframe, function (req, res) {
         res.status(200).send();
     };
 
-    db.settings.update(data, errors.guard(res, onSettingsUpdate));
+    settings.update(data, errors.guard(res, onSettingsUpdate));
 });
 
+// TODO: This is not used. Assess.
+router.get("/private", ensure.mainframe, send(db.settings.getPrivate)); 
 
 module.exports.router = router;

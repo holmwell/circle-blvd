@@ -17,7 +17,7 @@ exports.init = function (req, res, app) {
 
 	var handleOptionalSettings = function (fnCallback) {
 		var tasks = [];
-		db.settings.getAll(function (err, defaultSettings) {
+		settings.get(function (err, defaultSettings) {
 			if (err) {
 				return fnCallback(err);
 			}
