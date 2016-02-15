@@ -40,7 +40,7 @@ var forceHttps  = require('circle-blvd/middleware/force-https')(webServer.https)
 var firstRun    = require('circle-blvd/middleware/first-run');
 var socketSetup = require('circle-blvd/middleware/socket-setup');
 
-var canonicalDomain = require('circle-blvd/middleware/canonical-domain')(settings);
+var canonicalDomain = require('circle-blvd/middleware/canonical-domain');
 var corsIonic       = require('circle-blvd/middleware/cors-ionic');
 
 var defaultSettings = require('./back-end/settings');
@@ -91,7 +91,7 @@ var init = function (config, callback) {
         // Canonical domain needs to be before https, otherwise 
         // a browser will try to use the canonical https certificate
         // to connect to the non-canonical domain
-        app.use(canonicalDomain);
+        app.use(canonicalDomain(settings.lazy('domain-name')));
         app.use(forceHttps);
 
         app.use(compression());
