@@ -12,6 +12,11 @@
 //
 var express = require('express');
 
+// server foundation
+var app        = express();
+var io         = require('socket.io')();
+var webServer  = require('circle-blvd/web-server')(app, io);
+
 // express middleware
 var compression    = require('compression');
 var logger         = require('morgan');
@@ -31,12 +36,8 @@ var session = require('circle-blvd/session');
 var payment  = require('circle-blvd/payment')();
 var settings = require('circle-blvd/settings');
 
-var app        = express();
-var io         = require('socket.io')();
-var webServer  = require('circle-blvd/web-server')(app, io);
-
 // circle-blvd middleware
-var forceHttps  = require('circle-blvd/middleware/force-https')(webServer.https);
+var forceHttps  = require('circle-blvd/middleware/force-https');
 var firstRun    = require('circle-blvd/middleware/first-run');
 var socketSetup = require('circle-blvd/middleware/socket-setup');
 
@@ -92,7 +93,7 @@ var init = function (config, callback) {
         // a browser will try to use the canonical https certificate
         // to connect to the non-canonical domain
         app.use(canonicalDomain(settings.lazy('domain-name')));
-        app.use(forceHttps);
+        app.use(forceHttps(webServer.https));
 
         app.use(compression());
 
