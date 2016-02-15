@@ -820,7 +820,7 @@ test['Save settings is 200'] = function (test) {
 		}
 		settingToSave.value = data.value;
 
-		admin.put('/data/setting')
+		admin.put('/data/settings/setting')
 		.send(settingToSave)
 		.expect(200)
 		.end(checkSetting);
