@@ -66,20 +66,20 @@ var init = function (config, callback) {
     settings.addListener(onSettingsUpdate);
     settings.init(defaultSettings, processSettings);
 
-    function processSettings (err, settingsTable) {
+    function processSettings (err) {
         if (err) {
             callback(err);                
             return;
         }
 
         // Payment
-        var stripeApiKey = settingsTable['stripe-secret-key'];
+        var stripeApiKey = settings.value('stripe-secret-key');
         if (stripeApiKey) {
-            payment.setApiKey(stripeApiKey.value);
+            payment.setApiKey(stripeApiKey);
         }
 
         // Set up the app with our session secret
-        var sessionSecret = settingsTable['session-secret'].value;
+        var sessionSecret = settings.value('session-secret');
         setupApp(sessionSecret);
         
         callback();
