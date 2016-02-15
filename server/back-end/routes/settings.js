@@ -8,7 +8,7 @@ var settings = require('circle-blvd/settings');
 var ensure   = require('circle-blvd/auth-ensure');
 
 var send   = require('circle-blvd/send');
-var errors = require('circle-blvd/errors');
+var handle = require('circle-blvd/handle');
 
 // caching middleware
 var cache = function (ms) {
@@ -31,13 +31,7 @@ router.get("/authorized", ensure.mainframe, send(db.settings.getAuthorized));
 // Save a setting
 router.put("/setting", ensure.mainframe, function (req, res) {
     var data = req.body;
-
-    var onSettingsUpdate = function (setting) {
-        settings.handleUpdate(setting);
-        res.status(200).send();
-    };
-
-    settings.update(data, errors.guard(res, onSettingsUpdate));
+    settings.update(data, handle(res));
 });
 
 // TODO: This is not used. Assess.
