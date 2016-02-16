@@ -56,13 +56,17 @@ var init = function (config, callback) {
 
     webServer.setPort(config.httpPort);
     webServer.https.setPort(config.httpsPort);
-    
+
     // Views and view engines
-    app.set('views', __dirname + '/front-end/views');
+    var path = require('path');
+    app.set('views', path.join(__dirname, '/front-end/views'));
     app.set('view engine', 'jade');
 
     // For index.ejs. On its way out.
     app.engine('ejs', require('ejs').__express);
+
+    // HTML, CSS, JavaScript files location
+    var staticPath = path.join(__dirname, './front-end/public');
     
     settings.addListener(onSettingsUpdate);
     settings.init(defaultSettings, processSettings);
@@ -102,7 +106,7 @@ var init = function (config, callback) {
         }
 
         // HTML, CSS, JavaScript files
-        app.use(staticFiles(isDebugging));
+        app.use(staticFiles(staticPath, isDebugging));
 
         // Logging
         app.use(logger('dev'));

@@ -3,16 +3,15 @@
 // Express router for serving static files 
 //
 var express = require('express');
-var path    = require('path');
+var path = require('path');
 
 var serveStatic   = require('serve-static');
 var compactModule = require('compact-exclsr');
 // var jsManifest    = require('./js-client-manifest.js');
 
-var staticPath = path.join(__dirname, './front-end/public');
 var minJsPath = '/_js';
 
-module.exports = function (isDebugging) {
+module.exports = function (staticPath, isDebugging) {
     var router = express.Router();
 
     // for minifying JavaScript
