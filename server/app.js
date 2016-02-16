@@ -112,10 +112,11 @@ var init = function (config, callback) {
         app.use(logger('dev'));
 
         // Cookies / HTTP body parser
-        app.use(cookieParser()); // TODO: Signed cookies?
+        app.use(cookieParser());
         app.use(bodyParser.urlencoded({ extended: false }));
         app.use(bodyParser.json());
-        app.use(methodOverride()); // TODO: What do we use this for?
+        // 
+        app.use(methodOverride()); 
 
         // Sessions
         var sessionMiddleware = session.middleware(sessionSecret);
