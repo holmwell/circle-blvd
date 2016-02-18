@@ -1,6 +1,6 @@
 var async = require('async');
 
-var db        = require('circle-blvd/dataAccess').instance();
+var db        = require('circle-blvd/dataAccess');
 var sslServer = require('circle-blvd/https-server');
 var settings  = require('circle-blvd/settings');
 var guard     = require('circle-blvd/errors').guard;

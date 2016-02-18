@@ -10,7 +10,7 @@ var guard  = errors.guard;
 var handle = require('circle-blvd/handle');
 var send   = require('circle-blvd/send');
 
-var db = require('circle-blvd/dataAccess').instance();
+var db = require('circle-blvd/dataAccess');
 
 // Routes
 var usersRoutes = require('./back-end/routes/users');

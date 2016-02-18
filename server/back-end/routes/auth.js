@@ -5,8 +5,8 @@ var secretSessionMaker = require('circle-blvd/secret-session-maker');
 var authLib = require('circle-blvd/auth');
 var errors = require('circle-blvd/errors');
 var notify = require('circle-blvd/notify');
-var members = require('circle-blvd/dataAccess').instance().users;
 
+var members = require('circle-blvd/dataAccess').users;
 var guard = errors.guard;
 
 

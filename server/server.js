@@ -14,13 +14,6 @@ for (var index in process.argv) {
     }
 }
 
-// Process environment variables, for now
-// 
-// TODO: Put all of these in a more robust
-// config situation, and get out of messing
-// with process.env so that we can have a 
-// healthy test environment.
-process.env.DATABASE_NAME = 'circle-blvd';
 
 var config = {
     isDebugging: isDebugging,

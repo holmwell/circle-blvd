@@ -46,7 +46,6 @@ var corsIonic       = require('circle-blvd/middleware/cors-ionic');
 
 var defaultSettings = require('./back-end/settings');
 
-
 // configure Express
 var init = function (config, callback) {
     config = ensureConfig(config);
@@ -161,9 +160,9 @@ function ensureConfig (config) {
 
     config = config || defaults;
 
-    config.isDebugging = config.isDebugging || defaults.isDebugging;
-    config.httpPort    = config.httpPort || defaults.httpPort;
-    config.httpsPort   = config.httpsPort || defaults.httpsPort;
+    config.isDebugging  = config.isDebugging  || defaults.isDebugging;
+    config.httpPort     = config.httpPort     || defaults.httpPort;
+    config.httpsPort    = config.httpsPort    || defaults.httpsPort;
 
     return config;
 }

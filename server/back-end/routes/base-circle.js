@@ -4,7 +4,7 @@
 var express = require('express');
 var router = express.Router();
 
-var db = require('circle-blvd/dataAccess').instance();
+var db = require('circle-blvd/dataAccess');
 var errors = require('circle-blvd/errors');
 var ensure = require('circle-blvd/auth-ensure');
 
