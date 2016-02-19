@@ -13,7 +13,8 @@
 var express = require('express');
 
 // data
-var db = require('circle-blvd/dataAccess');
+var couchLib = require('circle-blvd/data/couch/couch');
+var dbLib    = require('circle-blvd/dataAccess');
 
 // routes
 var routes      = require('./routes.js');
@@ -31,17 +32,21 @@ var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 
 // circle-blvd modules
-var auth    = require('circle-blvd/auth-local')(db);
 var errors  = require('circle-blvd/errors');
 var session = require('circle-blvd/session');
 
-var payment  = require('circle-blvd/payment')(db);
-var settings = require('circle-blvd/settings')(db);
+var settingsLib = require('circle-blvd/settings');
+var paymentLib  = require('circle-blvd/payment');
+
+var auth = require('circle-blvd/auth-local');
+var payment;
 
 // server foundation
-var app        = express();
-var io         = require('socket.io')();
-var webServer  = require('circle-blvd/web-server')(app, io, settings);
+var app = express();
+var io  = require('socket.io')();
+
+var webServerLib = require('circle-blvd/web-server');
+var webServer;
 
 // circle-blvd middleware
 var forceHttps  = require('circle-blvd/middleware/force-https');
@@ -61,6 +66,12 @@ var init = function (config, callback) {
 
     var isDebugging = config.isDebugging;
 
+    var couch    = couchLib(config.database);
+    var db       = dbLib(couch);
+    var settings = settingsLib(db);
+    payment      = paymentLib(db);
+
+    webServer = webServerLib(app, io, settings);
     webServer.setPort(config.httpPort);
     webServer.https.setPort(config.httpsPort);
 
@@ -94,7 +105,7 @@ var init = function (config, callback) {
         var sessionSecret = settings.value('session-secret');
         setupApp(sessionSecret);
         
-        callback();
+        callback(null, webServer.start);
     }
 
     function setupApp (sessionSecret) {
@@ -132,7 +143,7 @@ var init = function (config, callback) {
         app.use(sessionMiddleware);
 
         // Authentication
-        app.use(auth.middleware);
+        app.use(auth(db).middleware);
         
         // Settings cache
         app.use(settings.middleware);
@@ -167,6 +178,9 @@ function ensureConfig (config) {
         isDebugging: false,
         httpPort: 3000,
         httpsPort: 4000,
+        database: {
+            name: 'circle-blvd'
+        },
         sessionDatabase: {}
     };
 
@@ -176,6 +190,7 @@ function ensureConfig (config) {
     config.httpPort     = config.httpPort     || defaults.httpPort;
     config.httpsPort    = config.httpsPort    || defaults.httpsPort;
 
+    config.database = config.database || defaults.database;
     config.sessionDatabase = config.sessionDatabase || defaults.sessionDatabase;
 
     return config;
@@ -190,4 +205,3 @@ function ensureCallback (callback) {
 
 exports.express = app;
 exports.init = init;
-exports.startServer = webServer.start;

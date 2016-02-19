@@ -17,6 +17,8 @@ for (var index in process.argv) {
 config.isDebugging = isDebugging;
 
 // Start the app.
-app.init(config, function () {
-    app.startServer();
+app.init(config, function (err, startServer) {
+    if (startServer) {
+        startServer();
+    }
 });
