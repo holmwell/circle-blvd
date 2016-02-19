@@ -12,11 +12,6 @@
 //
 var express = require('express');
 
-// server foundation
-var app        = express();
-var io         = require('socket.io')();
-var webServer  = require('circle-blvd/web-server')(app, io);
-
 // data
 var db = require('circle-blvd/dataAccess');
 
@@ -36,12 +31,17 @@ var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 
 // circle-blvd modules
-var auth    = require('circle-blvd/auth-local');
+var auth    = require('circle-blvd/auth-local')(db);
 var errors  = require('circle-blvd/errors');
 var session = require('circle-blvd/session');
 
 var payment  = require('circle-blvd/payment')(db);
-var settings = require('circle-blvd/settings');
+var settings = require('circle-blvd/settings')(db);
+
+// server foundation
+var app        = express();
+var io         = require('socket.io')();
+var webServer  = require('circle-blvd/web-server')(app, io, settings);
 
 // circle-blvd middleware
 var forceHttps  = require('circle-blvd/middleware/force-https');
@@ -138,10 +138,10 @@ var init = function (config, callback) {
         app.use(settings.middleware);
 
         // Is this the first run of the system?
-        app.use(firstRun);
+        app.use(firstRun(db));
 
         // Real-time engine
-        app.use(socketSetup(io, sessionMiddleware));
+        app.use(socketSetup(io, sessionMiddleware, db));
 
         // Routes
         var sessionMaker = sessionMakerLib(sessionDatabase, db.users);

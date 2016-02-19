@@ -3,7 +3,6 @@ var express = require('express');
 var router = express.Router();
 
 // Dependencies
-var auth   = require('circle-blvd/auth-local');
 var ensure = require('circle-blvd/auth-ensure');
 var errors = require('circle-blvd/errors');
 var guard  = errors.guard;
@@ -11,7 +10,6 @@ var handle = require('circle-blvd/handle');
 var send   = require('circle-blvd/send');
 
 // Routes
-var usersRoutes = require('./back-end/routes/users');
 var userRoutes  = require('./back-end/routes/user');
 var initRoutes  = require('./back-end/routes/init');
 
@@ -29,13 +27,15 @@ var routes   = require('./front-end/routes');
 var archives = require('./front-end/routes/archives');
 var prelude  = require('./front-end/routes/prelude');
 
-var contact = require('circle-blvd/contact-emailer');
-
 module.exports = function (sessionMaker, db) {
+    var auth    = require('circle-blvd/auth-local')(db);
+    var payment = require('circle-blvd/payment')(db);
+    var contact = require('circle-blvd/contact-emailer')(db.settings);
+
     router.use('/', prelude.router);
     router.use('/archives', archives.router);
-    router.use('/auth', authRoutes.router(auth, sessionMaker, db.users));
-    router.use('/data/metrics', metrics.router);
+    router.use('/auth', authRoutes.router(auth, sessionMaker, db));
+    router.use('/data/metrics', metrics(db).router);
 
     // Search engine things
     router.get('/sitemap.txt', routes.sitemap);
@@ -44,11 +44,11 @@ module.exports = function (sessionMaker, db) {
     router.post("/data/contact", ensure.auth, contact.handler);
 
     // User routes (account actions)
-    router.get("/data/user", ensure.auth, userRoutes.user);
-    router.put("/data/user/name", ensure.auth, userRoutes.updateName);
-    router.put("/data/user/email", ensure.auth, userRoutes.updateEmail);
-    router.put("/data/user/notificationEmail", ensure.auth, userRoutes.updateNotificationEmail)
-    router.put("/data/user/password", ensure.auth, userRoutes.updatePassword);
+    router.get("/data/user", ensure.auth, userRoutes(db).user);
+    router.put("/data/user/name", ensure.auth, userRoutes(db).updateName);
+    router.put("/data/user/email", ensure.auth, userRoutes(db).updateEmail);
+    router.put("/data/user/notificationEmail", ensure.auth, userRoutes(db).updateNotificationEmail)
+    router.put("/data/user/password", ensure.auth, userRoutes(db).updatePassword);
 
     // Init routes
     router.put("/data/initialize", function (req, res) {
@@ -56,14 +56,14 @@ module.exports = function (sessionMaker, db) {
     });
 
     // Settings!
-    router.use("/data/settings", settingsRoutes.router);
+    router.use("/data/settings", settingsRoutes(db).router);
 
     // Circles!
     router.get("/data/circles", ensure.auth, function (req, res) {
         db.circles.findByUser(req.user, handle(res));
     });
     router.get("/data/circles/all", ensure.mainframe, send(db.circles.getAll));
-    router.use('/data/circle', circleRoutes.router);
+    router.use('/data/circle', circleRoutes(db).router);
 
     router.get("/data/invite/:inviteId", function (req, res) {
         var inviteId = req.params.inviteId;
@@ -71,13 +71,13 @@ module.exports = function (sessionMaker, db) {
     });
 
     // Groups!
-    router.use('/data/group', groupRoutes.router);
+    router.use('/data/group', groupRoutes(db).router);
 
     // Fundamental operations, like stories in a circle.
-    router.use('/data', baseCircleRoutes.router);
+    router.use('/data', baseCircleRoutes(db).router);
 
     // Stories!
-    router.use('/data/story', storyRoutes.router);
+    router.use('/data/story', storyRoutes(db).router);
 
     // TODO: Where should this be on the client?
     router.put("/data/:circleId/settings/show-next-meeting", ensure.circleAdmin, function (req, res) {
@@ -103,8 +103,8 @@ module.exports = function (sessionMaker, db) {
         var nextMeeting = db.stories.getNextMeetingByProjectId(projectId, handleNextMeeting);
     });
 
-    router.use('/payment', paymentRoutes.router);
-    router.use('/data/signup', signupRoutes.router);
+    router.use('/payment', paymentRoutes(payment).router);
+    router.use('/data/signup', signupRoutes(db).router);
 
     router.get("/data/waitlist", ensure.mainframe, send(db.waitlist.get));
 
