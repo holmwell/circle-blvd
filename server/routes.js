@@ -33,87 +33,89 @@ var prelude  = require('./front-end/routes/prelude');
 
 var contact = require('circle-blvd/contact-emailer');
 
-router.use('/', prelude.router);
-router.use('/archives', archives.router);
-router.use('/auth', authRoutes.router(auth));
-router.use('/data/metrics', metrics.router);
+module.exports = function (sessionMaker) {
+    router.use('/', prelude.router);
+    router.use('/archives', archives.router);
+    router.use('/auth', authRoutes.router(auth, sessionMaker));
+    router.use('/data/metrics', metrics.router);
 
-// Search engine things
-router.get('/sitemap.txt', routes.sitemap);
+    // Search engine things
+    router.get('/sitemap.txt', routes.sitemap);
 
-// Email form
-router.post("/data/contact", ensure.auth, contact.handler);
+    // Email form
+    router.post("/data/contact", ensure.auth, contact.handler);
 
-// User routes (account actions)
-router.get("/data/user", ensure.auth, userRoutes.user);
-router.put("/data/user/name", ensure.auth, userRoutes.updateName);
-router.put("/data/user/email", ensure.auth, userRoutes.updateEmail);
-router.put("/data/user/notificationEmail", ensure.auth, userRoutes.updateNotificationEmail)
-router.put("/data/user/password", ensure.auth, userRoutes.updatePassword);
+    // User routes (account actions)
+    router.get("/data/user", ensure.auth, userRoutes.user);
+    router.put("/data/user/name", ensure.auth, userRoutes.updateName);
+    router.put("/data/user/email", ensure.auth, userRoutes.updateEmail);
+    router.put("/data/user/notificationEmail", ensure.auth, userRoutes.updateNotificationEmail)
+    router.put("/data/user/password", ensure.auth, userRoutes.updatePassword);
 
-// Init routes
-router.put("/data/initialize", initRoutes.init);
+    // Init routes
+    router.put("/data/initialize", initRoutes.init);
 
-// Settings!
-router.use("/data/settings", settingsRoutes.router);
+    // Settings!
+    router.use("/data/settings", settingsRoutes.router);
 
-// Circles!
-router.get("/data/circles", ensure.auth, function (req, res) {
-    db.circles.findByUser(req.user, handle(res));
-});
-router.get("/data/circles/all", ensure.mainframe, send(db.circles.getAll));
-router.use('/data/circle', circleRoutes.router);
+    // Circles!
+    router.get("/data/circles", ensure.auth, function (req, res) {
+        db.circles.findByUser(req.user, handle(res));
+    });
+    router.get("/data/circles/all", ensure.mainframe, send(db.circles.getAll));
+    router.use('/data/circle', circleRoutes.router);
 
-router.get("/data/invite/:inviteId", function (req, res) {
-    var inviteId = req.params.inviteId;
-    db.invites.get(inviteId, handle(res));
-});
-
-// Groups!
-router.use('/data/group', groupRoutes.router);
-
-// Fundamental operations, like stories in a circle.
-router.use('/data', baseCircleRoutes.router);
-
-// Stories!
-router.use('/data/story', storyRoutes.router);
-
-// TODO: Where should this be on the client?
-router.put("/data/:circleId/settings/show-next-meeting", ensure.circleAdmin, function (req, res) {
-    var showNextMeeting = req.body.showNextMeeting;
-    var projectId = req.params.circleId;
-
-    var handleNextMeeting = guard(res, function (nextMeeting) {
-        if (showNextMeeting) {
-            // TODO: Should probably be in the data access layer.
-            // TODO: Consider passing in the summary from the client,
-            // as 'meeting' should be a configurable word.
-            var story = {};
-            story.summary = "Next";
-            story.isNextMeeting = true;
-
-            storyRoutes.addStory(story, res);
-        }
-        else {
-            storyRoutes.removeStory(nextMeeting, res);
-        }
+    router.get("/data/invite/:inviteId", function (req, res) {
+        var inviteId = req.params.inviteId;
+        db.invites.get(inviteId, handle(res));
     });
 
-    var nextMeeting = db.stories.getNextMeetingByProjectId(projectId, handleNextMeeting);
-});
+    // Groups!
+    router.use('/data/group', groupRoutes.router);
 
-router.use('/payment', paymentRoutes.router);
-router.use('/data/signup', signupRoutes.router);
+    // Fundamental operations, like stories in a circle.
+    router.use('/data', baseCircleRoutes.router);
 
-router.get("/data/waitlist", ensure.mainframe, send(db.waitlist.get));
+    // Stories!
+    router.use('/data/story', storyRoutes.router);
 
-// The secret to bridging Angular and Express in a 
-// way that allows us to pass any path to the client.
-// 
-// Also, this depends on the static middleware being
-// near the top of the stack.
-router.get('*', function (req, res) {
-    routes.index(req, res, req.app);
-});
+    // TODO: Where should this be on the client?
+    router.put("/data/:circleId/settings/show-next-meeting", ensure.circleAdmin, function (req, res) {
+        var showNextMeeting = req.body.showNextMeeting;
+        var projectId = req.params.circleId;
 
-module.exports = router;
+        var handleNextMeeting = guard(res, function (nextMeeting) {
+            if (showNextMeeting) {
+                // TODO: Should probably be in the data access layer.
+                // TODO: Consider passing in the summary from the client,
+                // as 'meeting' should be a configurable word.
+                var story = {};
+                story.summary = "Next";
+                story.isNextMeeting = true;
+
+                storyRoutes.addStory(story, res);
+            }
+            else {
+                storyRoutes.removeStory(nextMeeting, res);
+            }
+        });
+
+        var nextMeeting = db.stories.getNextMeetingByProjectId(projectId, handleNextMeeting);
+    });
+
+    router.use('/payment', paymentRoutes.router);
+    router.use('/data/signup', signupRoutes.router);
+
+    router.get("/data/waitlist", ensure.mainframe, send(db.waitlist.get));
+
+    // The secret to bridging Angular and Express in a 
+    // way that allows us to pass any path to the client.
+    // 
+    // Also, this depends on the static middleware being
+    // near the top of the stack.
+    router.get('*', function (req, res) {
+        routes.index(req, res, req.app);
+    });
+
+    return router;
+};

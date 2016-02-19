@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-var secretSessionMaker = require('circle-blvd/secret-session-maker');
 var authLib = require('circle-blvd/auth');
 var errors = require('circle-blvd/errors');
 var notify = require('circle-blvd/notify');
@@ -11,7 +10,7 @@ var guard = errors.guard;
 
 
 // Requires an auth object like the one in circle-blvd/auth-local
-var init = function (auth) {
+var init = function (auth, secretSessionMaker) {
     router.post('/signin', auth.signin);
     router.get('/signout', auth.signout);
 
@@ -76,8 +75,8 @@ var init = function (auth) {
 
 module.exports = function () {
     return {
-        router: function (auth) {
-            init(auth);
+        router: function (auth, secretSessionMaker) {
+            init(auth, secretSessionMaker);
             return router;
         }
     }

@@ -17,16 +17,20 @@ var app        = express();
 var io         = require('socket.io')();
 var webServer  = require('circle-blvd/web-server')(app, io);
 
+// routes
+var routes      = require('./routes.js');
+var staticFiles = require('./static-files.js');
+
+// sessions
+var sessionDatabaseLib = require('circle-blvd/data/sessions/session-database');
+var sessionMakerLib = require('circle-blvd/secret-session-maker');
+
 // express middleware
 var compression    = require('compression');
 var logger         = require('morgan');
 var cookieParser   = require('cookie-parser');
 var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
-
-// routes
-var routes      = require('./routes.js');
-var staticFiles = require('./static-files.js');
 
 // circle-blvd modules
 var auth    = require('circle-blvd/auth-local');
@@ -45,6 +49,7 @@ var canonicalDomain = require('circle-blvd/middleware/canonical-domain');
 var corsIonic       = require('circle-blvd/middleware/cors-ionic');
 
 var defaultSettings = require('./back-end/settings');
+
 
 // configure Express
 var init = function (config, callback) {
@@ -66,7 +71,7 @@ var init = function (config, callback) {
 
     // HTML, CSS, JavaScript files location
     var staticPath = path.join(__dirname, './front-end/public');
-    
+
     settings.addListener(onSettingsUpdate);
     settings.init(defaultSettings, processSettings);
 
@@ -118,7 +123,9 @@ var init = function (config, callback) {
         app.use(methodOverride()); 
 
         // Sessions
-        var sessionMiddleware = session.middleware(sessionSecret);
+        var sessionDatabaseName = config.sessionDatabase.name;
+        var sessionDatabase = sessionDatabaseLib(sessionDatabaseName);    
+        var sessionMiddleware = session.middleware(sessionSecret, sessionDatabase);
         app.use(sessionMiddleware);
 
         // Authentication
@@ -134,7 +141,8 @@ var init = function (config, callback) {
         app.use(socketSetup(io, sessionMiddleware));
 
         // Routes
-        app.use("/", routes);
+        var sessionMaker = sessionMakerLib(sessionDatabase);
+        app.use("/", routes(sessionMaker));
 
         // Catch errors
         app.use(errors.middleware);
@@ -155,7 +163,8 @@ function ensureConfig (config) {
     var defaults = {
         isDebugging: false,
         httpPort: 3000,
-        httpsPort: 4000
+        httpsPort: 4000,
+        sessionDatabase: {}
     };
 
     config = config || defaults;
@@ -163,6 +172,8 @@ function ensureConfig (config) {
     config.isDebugging  = config.isDebugging  || defaults.isDebugging;
     config.httpPort     = config.httpPort     || defaults.httpPort;
     config.httpsPort    = config.httpsPort    || defaults.httpsPort;
+
+    config.sessionDatabase = config.sessionDatabase || defaults.sessionDatabase;
 
     return config;
 }
