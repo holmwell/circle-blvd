@@ -6,7 +6,7 @@ var router = express.Router();
 var db = require('circle-blvd/dataAccess');
 var ensure = require('circle-blvd/auth-ensure');
 
-var payment = require('circle-blvd/payment')();
+var payment = require('circle-blvd/payment')(db);
 var handle = require('circle-blvd/handle');
 
 

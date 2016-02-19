@@ -1,11 +1,10 @@
 var async = require('async');
 
-var db        = require('circle-blvd/dataAccess');
 var sslServer = require('circle-blvd/https-server');
 var settings  = require('circle-blvd/settings');
 var guard     = require('circle-blvd/errors').guard;
 
-exports.init = function (req, res, app) {
+exports.init = function (req, res, app, db) {
 	var data = req.body;
 
 	var admin  = data.admin;

@@ -10,8 +10,6 @@ var guard  = errors.guard;
 var handle = require('circle-blvd/handle');
 var send   = require('circle-blvd/send');
 
-var db = require('circle-blvd/dataAccess');
-
 // Routes
 var usersRoutes = require('./back-end/routes/users');
 var userRoutes  = require('./back-end/routes/user');
@@ -33,10 +31,10 @@ var prelude  = require('./front-end/routes/prelude');
 
 var contact = require('circle-blvd/contact-emailer');
 
-module.exports = function (sessionMaker) {
+module.exports = function (sessionMaker, db) {
     router.use('/', prelude.router);
     router.use('/archives', archives.router);
-    router.use('/auth', authRoutes.router(auth, sessionMaker));
+    router.use('/auth', authRoutes.router(auth, sessionMaker, db.users));
     router.use('/data/metrics', metrics.router);
 
     // Search engine things
@@ -53,7 +51,9 @@ module.exports = function (sessionMaker) {
     router.put("/data/user/password", ensure.auth, userRoutes.updatePassword);
 
     // Init routes
-    router.put("/data/initialize", initRoutes.init);
+    router.put("/data/initialize", function (req, res) {
+        initRoutes.init(req, res, req.app, db);
+    });
 
     // Settings!
     router.use("/data/settings", settingsRoutes.router);

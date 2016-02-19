@@ -17,13 +17,16 @@ var app        = express();
 var io         = require('socket.io')();
 var webServer  = require('circle-blvd/web-server')(app, io);
 
+// data
+var db = require('circle-blvd/dataAccess');
+
 // routes
 var routes      = require('./routes.js');
 var staticFiles = require('./static-files.js');
 
 // sessions
 var sessionDatabaseLib = require('circle-blvd/data/sessions/session-database');
-var sessionMakerLib = require('circle-blvd/secret-session-maker');
+var sessionMakerLib    = require('circle-blvd/secret-session-maker');
 
 // express middleware
 var compression    = require('compression');
@@ -37,7 +40,7 @@ var auth    = require('circle-blvd/auth-local');
 var errors  = require('circle-blvd/errors');
 var session = require('circle-blvd/session');
 
-var payment  = require('circle-blvd/payment')();
+var payment  = require('circle-blvd/payment')(db);
 var settings = require('circle-blvd/settings');
 
 // circle-blvd middleware
@@ -141,8 +144,8 @@ var init = function (config, callback) {
         app.use(socketSetup(io, sessionMiddleware));
 
         // Routes
-        var sessionMaker = sessionMakerLib(sessionDatabase);
-        app.use("/", routes(sessionMaker));
+        var sessionMaker = sessionMakerLib(sessionDatabase, db.users);
+        app.use("/", routes(sessionMaker, db));
 
         // Catch errors
         app.use(errors.middleware);

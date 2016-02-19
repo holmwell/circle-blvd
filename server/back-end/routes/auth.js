@@ -5,12 +5,11 @@ var authLib = require('circle-blvd/auth');
 var errors = require('circle-blvd/errors');
 var notify = require('circle-blvd/notify');
 
-var members = require('circle-blvd/dataAccess').users;
 var guard = errors.guard;
 
 
 // Requires an auth object like the one in circle-blvd/auth-local
-var init = function (auth, secretSessionMaker) {
+var init = function (auth, secretSessionMaker, members) {
     router.post('/signin', auth.signin);
     router.get('/signout', auth.signout);
 
@@ -75,8 +74,8 @@ var init = function (auth, secretSessionMaker) {
 
 module.exports = function () {
     return {
-        router: function (auth, secretSessionMaker) {
-            init(auth, secretSessionMaker);
+        router: function (auth, secretSessionMaker, members) {
+            init(auth, secretSessionMaker, members);
             return router;
         }
     }
