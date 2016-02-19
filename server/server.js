@@ -5,6 +5,7 @@
 // config for the app.
 // 
 // 
+var config = require('./config.js');
 
 // Process command-line arguments
 var isDebugging = false;
@@ -14,12 +15,7 @@ for (var index in process.argv) {
     }
 }
 
-
-var config = {
-    isDebugging: isDebugging,
-    httpPort: process.env.PORT || 3000,
-    httpsPort: process.env.SSL_PORT || 4000
-};
+config.isDebugging = isDebugging;
 
 
 // This line must be after the env variables are set.
