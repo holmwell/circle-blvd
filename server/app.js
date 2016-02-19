@@ -11,6 +11,8 @@
 // });
 //
 var express = require('express');
+var app;
+var io;
 
 // data
 var couchLib = require('circle-blvd/data/couch/couch');
@@ -41,10 +43,6 @@ var paymentLib  = require('circle-blvd/payment');
 var auth = require('circle-blvd/auth-local');
 var payment;
 
-// server foundation
-var app = express();
-var io  = require('socket.io')();
-
 var webServerLib = require('circle-blvd/web-server');
 var webServer;
 
@@ -65,6 +63,10 @@ var init = function (config, callback) {
     callback = ensureCallback(callback);
 
     var isDebugging = config.isDebugging;
+
+    // server foundation
+    app = express();
+    io  = require('socket.io')();
 
     var couch    = couchLib(config.database);
     var db       = dbLib(couch);
@@ -203,5 +205,7 @@ function ensureCallback (callback) {
     return callback;
 }
 
-exports.express = app;
+exports.express = function() {
+    return app;
+};
 exports.init = init;

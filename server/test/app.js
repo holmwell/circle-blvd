@@ -1,10 +1,19 @@
-var async = require('async');
-var nano = require('nano')('http://localhost:5984');
+var async   = require('async');
+var nano    = require('nano')('http://localhost:5984');
 var request = require('supertest');
 
 var databaseName = 'a-tmp-db-for-circle-blvd-testing-app';
 var sessionsDatabaseName = databaseName + '-sessions';
-process.env.DATABASE_NAME = databaseName;
+
+var appConfig = {
+    database: {
+        name: databaseName
+    },
+    sessionDatabase: {
+        name: sessionsDatabaseName
+    }
+};
+
 
 var unit  = undefined;
 var test  = {};
@@ -32,12 +41,13 @@ var finish = function (test) {
 
 test['database setup'] = function (test) {
 	var app = require('../app.js');
-	unit = app.express;
 	// CouchDB is not entirely ready when ready is
 	// called. So, work around that until we can
 	// fix it.
 	var halfSecond = 500;
-	app.init(null, function () {
+	
+	app.init(appConfig, function (err) {
+		unit = app.express();
 		// for a persistent session
 		admin = request.agent(unit);
 		member = request.agent(unit);
