@@ -1,11 +1,10 @@
 // server.js
 // 
 // The main entry point for Circle Blvd. Handles
-// command-line arguments and the highest level
-// config for the app.
-// 
+// command-line arguments.
 // 
 var config = require('./config.js');
+var app    = require('./app.js');
 
 // Process command-line arguments
 var isDebugging = false;
@@ -16,10 +15,6 @@ for (var index in process.argv) {
 }
 
 config.isDebugging = isDebugging;
-
-
-// This line must be after the env variables are set.
-var app = require('./app.js');
 
 // Start the app.
 app.init(config, function () {
