@@ -24,7 +24,6 @@ var baseCircleRoutes = require('./back-end/routes/base-circle');
 var storyRoutes      = require('./back-end/routes/story');
 
 var routes   = require('./front-end/routes');
-var archives = require('./front-end/routes/archives');
 var prelude  = require('./front-end/routes/prelude');
 
 module.exports = function (sessionMaker, db) {
@@ -33,7 +32,6 @@ module.exports = function (sessionMaker, db) {
     var contact = require('circle-blvd/contact-emailer')(db.settings);
 
     router.use('/', prelude.router);
-    router.use('/archives', archives.router);
     router.use('/auth', authRoutes.router(auth, sessionMaker, db));
     router.use('/data/metrics', metrics(db).router);
 
