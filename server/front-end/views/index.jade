@@ -1,0 +1,218 @@
+doctype html
+html(lang="en" ng-app="myApp" ng-controller="TopLevelCtrl" prefix="og: http://opg.me/ns#")
+head
+  meta(charset="utf-8")
+  meta(name="viewport" content="width=device-width, initial-scale=1")
+  title(ng-bind="pageTitle") Circle Blvd.
+
+  link(href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet")
+  link(href='//fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css')
+  link(href='//fonts.googleapis.com/css?family=Roboto Slab' rel='stylesheet' type='text/css')
+  link(rel="stylesheet" href="css/base.css")
+  link(rel="stylesheet" href="css/app.css")
+  link(rel="stylesheet" href="css/header.css")
+
+  link(rel="stylesheet" 
+    ng-href="/data/circle/{{getActiveCircle()._id}}/custom.css")
+
+  meta(name="description" content="Circle Blvd. Project management for small teams. Just the right size for small, important projects in your community. Make things simple, again.")
+
+  meta(name="keywords" content="circle blvd, project management, project planning, task management, volunteers, software, agile, scrum, free, open source")
+
+  meta(property="og:title" content="Circle Blvd.")
+  meta(property="og:type" content="website")
+  meta(property="og:image" content="http://#{host}/img/logo-on-black-152px.png")
+  meta(property="og:image:secure_url" content="https://#{host}/img/logo-on-black-152px.png")
+  meta(property="og:url" content="https://#{host}/")
+  meta(property="og:description" content="Project management for small teams. Just the right size for small, important projects in your community. Make things simple, again.")
+
+  meta(name="apple-mobile-web-app-capable" content="yes")
+  meta(name="apple-mobile-web-app-status-bar-style" content="black")
+
+  link(rel="apple-touch-icon" href="img/logo-on-black-60px.png")
+  link(rel="apple-touch-icon" sizes="76x76" href="img/logo-on-black-76px.png")
+  link(rel="apple-touch-icon" sizes="120x120" href="img/logo-on-black-120px.png")
+  link(rel="apple-touch-icon" sizes="152x152" href="img/logo-on-black-152px.png")
+  link(rel="apple-touch-startup-image" href="img/startup-ios.png")
+
+  link(rel="icon" sizes="196x196" href="img/logo-196px.png")
+
+  script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
+  script(src="//code.jquery.com/ui/1.11.1/jquery-ui.js")
+  script(src="lib/jQuery.ui.touch-punch.js")
+  script(src="//netdna.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
+  script(src="lib/modernizr/touch.js")
+
+  if (analyticsId) 
+    script.
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', '#{analyticsId}', 'auto');
+
+body(
+  ng-mouseup="mouseup($event)"
+  ng-mousedown="mousedown($event)"
+  ng-mousemove="mousemove($event)"
+  ng-mouseleave="mouseleave($event)"
+  ng-keydown="keydown($event)" 
+  ng-keyup="keyup($event)")
+  #topLevel.home-page
+    .modal.fade#errorModal(tabindex="-1" role="dialog" 
+      aria-labelledby="errorTitle" aria-hidden="true")
+      .modal-dialog
+        .modal-content
+          .modal-header
+            button.close(type="button" data-dismiss="modal" aria-hidden="true") &times;
+            h4.modal-title#errorTitle Sorry, something didn't work
+          .modal-body.
+            <p>Sorry, we failed to save what you did just now. We're still 
+              working on making the website perfect, and it seems we have
+              a bit of work to do.</p>
+            <p>If you keep seeing this message, please let us know.</p>
+
+          .modal-footer
+            button.btn.btn-default(type="button" data-dismiss="modal") Close
+            button.btn.btn-primary(type="button" data-dismiss="modal" ng-click="reload()") Refresh page
+
+    .navbar.navbar-inverse.topMenu(role="navigation" ng-cloak)
+      .container-fluid
+        .navbar-header
+          button.navbar-toggle(type="button" data-toggle="collapse" data-target="#navigation-circles")
+              span.sr-only Show circles
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+          a.navbar-brand(href="/#/")
+            span.circle(ng-include="'/img/glyphs/icon-white-circle.svg'")
+
+          .navbar-title.visible-xs(ng-if="isSignedIn()")
+            h2 {{getActiveCircleName()}}
+
+
+        .collapse.navbar-collapse#navigation-circles
+          ul.nav.navbar-nav
+            li(ng-repeat="circle in circleList()" ng-hide="circle.isArchived" ng-class="{active: isActiveCircle(circle)}")
+              a.jsLink(data-toggle="collapse" data-target="#navigation-circles.in"
+                ng-click="setActiveCircle(circle, true)") {{circle.name}}
+
+          ul.nav.navbar-nav.navbar-right
+            li(ng-show="hasMainframeAccess()" ng-class="{active: isCurrentPath('/mainframe')}")
+              a(data-toggle="collapse" data-target="#navigation-circles.in"
+              href="#/mainframe") Mainframe access
+
+            li(ng-class="{active: isCurrentPath('/tips')}")
+              a(href="/tips" data-toggle="collapse" data-target="#navigation-circles")
+                span.glyphicon.glyphicon-flash
+
+            li(ng-class="{active: isCurrentPath('/tour')}")
+              a(data-toggle="collapse" data-target="#navigation-circles.in" href="/tour") Tour 
+
+            li(ng-show="isSignedIn()"
+              ng-click="resetMindset()"
+              ng-class="{active: isCurrentPath('/profile')}")
+              a(href="/#/profile"
+                data-toggle="collapse" 
+                data-target="#navigation-circles.in") Profile 
+
+            li(ng-show="isSignedIn()")
+              a.jsLink(ng-click="signOut()"
+                data-toggle="collapse" 
+                data-target="#navigation-circles.in") Sign out 
+
+    .main-wrapper
+      .header.clearfix.debug.ng-cloak.text-select(ng-if="isSignedIn()" ng-hide="!isHeaderVisible")
+        .container-fluid.debug.header-inner
+          .col-sm-6.debug.hidden-xs.title-wrapper
+            h2.debug.title
+              a(href="/#/" ng-click="setMindset('detailed')") {{getActiveCircleName()}}
+
+          .col-sm-6.col-xs-12.debug.header-menu
+            div
+              a.glyph(href="/#/archives"
+                ng-click="resetMindset()"
+                ng-class="{active: isCurrentPath('/archives')}")
+                .glyphicon-time.glyphicon
+                div Archives
+
+              a.glyph(href="/#/lists" 
+                ng-click="resetMindset()"
+                ng-class="{active: isCurrentPath('/lists')}")
+                .glyphicon-list.glyphicon
+                div Checklists
+
+              a.jsLink.glyph.hidden-sm(href="/#/" 
+                ng-class="{active: isMindset('bump')}"
+                ng-click="setMindset('bump')")
+                .glyphicon-chevron-up.glyphicon
+                div Next up
+
+              a.jsLink.glyph.hidden-xs(href="/#/" 
+                ng-class="{ active: isMindset('roadmap'), 'right-most': !isAdmin() }"
+                ng-click="setMindset('roadmap')")
+                .glyphicon-road.glyphicon
+                div Roadmap
+
+              a.glyph.jsLink.hidden-xs.right-most(href="/#/admin" 
+                ng-class="{active: isCurrentPath('/admin')}"
+                ng-click="resetMindset()"
+                ng-show="isAdmin()")
+                .glyphicon-cog.glyphicon
+                div Admin
+
+        .back-bar(ng-if="isBackBarVisible")
+          .container-fluid
+            a(href="/#/" ng-click="setMindset('detailed')")
+              .glyphicon-chevron-left.glyphicon
+            a(href="{{backBarUrl || '/#/'}}" ng-click="setMindset('detailed')") {{backBarText || 'Back to task list'}}
+
+      .container-fluid.main.debug.no-select
+        .view(ng-view)
+
+    .footer.desktop-view.hidden-xs.debug
+      .footer-inner.debug
+        .container-fluid.debug
+          .row
+            .col-sm-12
+              .col-sm-6
+                div
+                  img(src="/img/logo-35.png")
+                  h5
+                    a(href="/#/") Circle Blvd.
+                  ul.product
+                    li by <a href="http://holmwell.com">Holmwell Software</a>
+                    li #{version}
+
+                .notice
+                  div
+                    span some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a>
+
+              .col-sm-6
+                .col-sm-6
+                  h5 <a href="/about">Information</a>
+                  ul
+                    li <a href="/about">About</a>
+                    li <a href="/contact">Contact us</a>
+                    li <a href="https://facebook.com/circleblvd">Facebook page</a>
+                    li <a href="/privacy">Privacy policy</a>
+                    li <a href="https://github.com/holmwell/circle-blvd">Source code</a>
+
+                .col-sm-6
+                  h5 <a href="/tour">Tour</a>
+                  ul
+                    li <a href="/tour">What is this?</a>
+                    li <a href="/tour/basics">How to use</a>
+                    li <a href="/tour/organizers">Tips for organizers</a>
+
+    .footer.visible-xs
+      div Circle Blvd. <span>#{version}</span>
+      div
+        span some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a>
+      div
+        <a href="https://github.com/holmwell/circle-blvd">source code</a> on GitHub
+
+  !{compactJsHtml()}
+  script(src="https://checkout.stripe.com/checkout.js")
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js")
