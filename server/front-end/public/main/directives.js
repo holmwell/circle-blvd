@@ -17,7 +17,7 @@ function escapeHtml(string) {
 }
 
 
-angular.module('myApp.directives', []).
+angular.module('CircleBlvd.directives', []).
 directive('appendLinky', ['$filter', function ($filter) {
 	return {
 		restrict: 'A',

@@ -23,21 +23,21 @@ Date.prototype.toJSON = function (key) {
 CircleBlvd.Prelude = angular.module('cbPrelude', [
     'ngRoute',
     'ngSanitize',
-    'myApp.filters',
+    'CircleBlvd.filters',
     'CircleBlvd.services',
-    'myApp.directives'])
+    'CircleBlvd.directives'])
     .config(['$controllerProvider', function ($controllerProvider) {
         // TODO: Complete port to Angular 1.3
         $controllerProvider.allowGlobals();
     }]);
 
 // Declare app level module which depends on filters, and services
-angular.module('myApp', [
+angular.module('CircleBlvd', [
     'ngRoute',
     'ngSanitize',
-    'myApp.filters', 
+    'CircleBlvd.filters', 
     'CircleBlvd.services', 
-    'myApp.directives']).
+    'CircleBlvd.directives']).
     config(['$routeProvider', function ($routeProvider) {
 
         var homePage = {templateUrl: 'ui/views/home.html', controller: HomeCtrl};

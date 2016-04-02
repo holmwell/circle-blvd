@@ -6,7 +6,7 @@ var isString = function(obj) {
 	return toString.call(obj) == '[object String]';
 }
 
-angular.module('myApp.filters', []).
+angular.module('CircleBlvd.filters', []).
   filter('interpolate', ['version', function(version) {
     return function(text) {
       return String(text).replace(/\%VERSION\%/mg, version);
