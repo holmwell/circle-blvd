@@ -1,49 +1,41 @@
-//- This is also in index.jade
-.footer.desktop-view.hidden-xs.
-    <div class="container-fluid">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="col-sm-6">
-              <div>
-                <img src="/img/logo-35.png"/>
-                <h5><a href="/#/">Circle Blvd.</a></h5>
-                <ul class="product">
-                  <li>by <a href="http://holmwell.com">Holmwell Software</a></li>
-                  <li>#{version}</li>
-                </ul>
-              </div>
-              <div class="notice">
-                <div><span>some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a></span></div>
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="col-sm-6">
-                <h5><a href="/about">Information</a></h5>
-                <ul>
-                  <li><a href="/about">About</a></li>
-                  <li><a href="/contact">Contact us</a></li>
-                  <li><a href="https://facebook.com/circleblvd">Facebook page</a></li>
-                  <li><a href="/privacy">Privacy policy</a></li>
-                  <li><a href="https://github.com/holmwell/circle-blvd">Source code</a></li>
-                </ul>
-              </div>
-              <div class="col-sm-6">
-                <h5><a href="/tour">Tour</a></h5>
-                <ul>
-                  <li><a href="/tour">What is this?</a></li>
-                  <li><a href="/tour/basics">How to use</a></li>
-                  <li><a href="/tour/organizers">Tips for organizers</a></li>
-                </ul>
-              </div>
-            </div>
-          </div> 
-        </div>
-    </div>
+//- This is at the bottom of most pages.
+//- Contains our logo and three columns of info.
+.footer.desktop-view.hidden-xs
+  .container-fluid.debug
+    .row
+      .col-sm-12
+        .col-sm-6
+          div
+            img(src="/img/logo-35.png")
+            h5
+              a(href="/#/") Circle Blvd.
+            ul.product
+              li by <a href="http://holmwell.com">Holmwell Software</a>
+              li #{version}
+
+          .notice
+            div
+              span some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a>
+
+        .col-sm-6
+          .col-sm-6
+            h5 <a href="/about">Information</a>
+            ul
+              li <a href="/about">About</a>
+              li <a href="/contact">Contact us</a>
+              li <a href="https://facebook.com/circleblvd">Facebook page</a>
+              li <a href="/privacy">Privacy policy</a>
+              li <a href="https://github.com/holmwell/circle-blvd">Source code</a>
+
+          .col-sm-6
+            h5 <a href="/tour">Tour</a>
+            ul
+              li <a href="/tour">What is this?</a>
+              li <a href="/tour/basics">How to use</a>
+              li <a href="/tour/organizers">Tips for organizers</a>
 
 .footer.visible-xs
-    //- .footer-logo
-    //-     img(src="/img/logo-35.png")
-    div Circle Blvd. <span>#{version}</span>
-    div 
-      span some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a>
-    div <a href="https://github.com/holmwell/circle-blvd">source code</a> on GitHub
+  div Circle Blvd. <span>#{version}</span>
+  div 
+    span some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a>
+  div <a href="https://github.com/holmwell/circle-blvd">source code</a> on GitHub
