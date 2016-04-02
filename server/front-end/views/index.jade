@@ -1,8 +1,6 @@
 doctype html
 html(lang="en" ng-app="myApp" ng-controller="TopLevelCtrl" prefix="og: http://opg.me/ns#")
 head
-  meta(charset="utf-8")
-  meta(name="viewport" content="width=device-width, initial-scale=1")
   title(ng-bind="pageTitle") Circle Blvd.
 
   link(href="//netdna.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet")
@@ -15,27 +13,9 @@ head
   link(rel="stylesheet" 
     ng-href="/data/circle/{{getActiveCircle()._id}}/custom.css")
 
-  meta(name="description" content="Circle Blvd. Project management for small teams. Just the right size for small, important projects in your community. Make things simple, again.")
-
-  meta(name="keywords" content="circle blvd, project management, project planning, task management, volunteers, software, agile, scrum, free, open source")
-
-  meta(property="og:title" content="Circle Blvd.")
-  meta(property="og:type" content="website")
-  meta(property="og:image" content="http://#{host}/img/logo-on-black-152px.png")
-  meta(property="og:image:secure_url" content="https://#{host}/img/logo-on-black-152px.png")
-  meta(property="og:url" content="https://#{host}/")
-  meta(property="og:description" content="Project management for small teams. Just the right size for small, important projects in your community. Make things simple, again.")
-
-  meta(name="apple-mobile-web-app-capable" content="yes")
-  meta(name="apple-mobile-web-app-status-bar-style" content="black")
-
-  link(rel="apple-touch-icon" href="img/logo-on-black-60px.png")
-  link(rel="apple-touch-icon" sizes="76x76" href="img/logo-on-black-76px.png")
-  link(rel="apple-touch-icon" sizes="120x120" href="img/logo-on-black-120px.png")
-  link(rel="apple-touch-icon" sizes="152x152" href="img/logo-on-black-152px.png")
-  link(rel="apple-touch-startup-image" href="img/startup-ios.png")
-
-  link(rel="icon" sizes="196x196" href="img/logo-196px.png")
+  include inc/site-meta
+  include inc/open-graph
+  include inc/mobile-devices
 
   script(src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js")
   script(src="//code.jquery.com/ui/1.11.1/jquery-ui.js")
