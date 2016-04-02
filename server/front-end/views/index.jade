@@ -60,68 +60,10 @@ body(
   ng-keydown="keydown($event)" 
   ng-keyup="keyup($event)")
   #topLevel.home-page
-    .modal.fade#errorModal(tabindex="-1" role="dialog" 
-      aria-labelledby="errorTitle" aria-hidden="true")
-      .modal-dialog
-        .modal-content
-          .modal-header
-            button.close(type="button" data-dismiss="modal" aria-hidden="true") &times;
-            h4.modal-title#errorTitle Sorry, something didn't work
-          .modal-body.
-            <p>Sorry, we failed to save what you did just now. We're still 
-              working on making the website perfect, and it seems we have
-              a bit of work to do.</p>
-            <p>If you keep seeing this message, please let us know.</p>
-
-          .modal-footer
-            button.btn.btn-default(type="button" data-dismiss="modal") Close
-            button.btn.btn-primary(type="button" data-dismiss="modal" ng-click="reload()") Refresh page
-
-    .navbar.navbar-inverse.topMenu(role="navigation" ng-cloak)
-      .container-fluid
-        .navbar-header
-          button.navbar-toggle(type="button" data-toggle="collapse" data-target="#navigation-circles")
-              span.sr-only Show circles
-              span.icon-bar
-              span.icon-bar
-              span.icon-bar
-          a.navbar-brand(href="/#/")
-            span.circle(ng-include="'/img/glyphs/icon-white-circle.svg'")
-
-          .navbar-title.visible-xs(ng-if="isSignedIn()")
-            h2 {{getActiveCircleName()}}
-
-
-        .collapse.navbar-collapse#navigation-circles
-          ul.nav.navbar-nav
-            li(ng-repeat="circle in circleList()" ng-hide="circle.isArchived" ng-class="{active: isActiveCircle(circle)}")
-              a.jsLink(data-toggle="collapse" data-target="#navigation-circles.in"
-                ng-click="setActiveCircle(circle, true)") {{circle.name}}
-
-          ul.nav.navbar-nav.navbar-right
-            li(ng-show="hasMainframeAccess()" ng-class="{active: isCurrentPath('/mainframe')}")
-              a(data-toggle="collapse" data-target="#navigation-circles.in"
-              href="#/mainframe") Mainframe access
-
-            li(ng-class="{active: isCurrentPath('/tips')}")
-              a(href="/tips" data-toggle="collapse" data-target="#navigation-circles")
-                span.glyphicon.glyphicon-flash
-
-            li(ng-class="{active: isCurrentPath('/tour')}")
-              a(data-toggle="collapse" data-target="#navigation-circles.in" href="/tour") Tour 
-
-            li(ng-show="isSignedIn()"
-              ng-click="resetMindset()"
-              ng-class="{active: isCurrentPath('/profile')}")
-              a(href="/#/profile"
-                data-toggle="collapse" 
-                data-target="#navigation-circles.in") Profile 
-
-            li(ng-show="isSignedIn()")
-              a.jsLink(ng-click="signOut()"
-                data-toggle="collapse" 
-                data-target="#navigation-circles.in") Sign out 
-
+    
+    include inc/error-modal
+    include inc/navbar
+    
     .main-wrapper
       .header.clearfix.debug.ng-cloak.text-select(ng-if="isSignedIn()" ng-hide="!isHeaderVisible")
         .container-fluid.debug.header-inner
