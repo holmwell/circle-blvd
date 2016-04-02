@@ -171,47 +171,7 @@ body(
       .container-fluid.main.debug.no-select
         .view(ng-view)
 
-    .footer.desktop-view.hidden-xs.debug
-      .footer-inner.debug
-        .container-fluid.debug
-          .row
-            .col-sm-12
-              .col-sm-6
-                div
-                  img(src="/img/logo-35.png")
-                  h5
-                    a(href="/#/") Circle Blvd.
-                  ul.product
-                    li by <a href="http://holmwell.com">Holmwell Software</a>
-                    li #{version}
-
-                .notice
-                  div
-                    span some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a>
-
-              .col-sm-6
-                .col-sm-6
-                  h5 <a href="/about">Information</a>
-                  ul
-                    li <a href="/about">About</a>
-                    li <a href="/contact">Contact us</a>
-                    li <a href="https://facebook.com/circleblvd">Facebook page</a>
-                    li <a href="/privacy">Privacy policy</a>
-                    li <a href="https://github.com/holmwell/circle-blvd">Source code</a>
-
-                .col-sm-6
-                  h5 <a href="/tour">Tour</a>
-                  ul
-                    li <a href="/tour">What is this?</a>
-                    li <a href="/tour/basics">How to use</a>
-                    li <a href="/tour/organizers">Tips for organizers</a>
-
-    .footer.visible-xs
-      div Circle Blvd. <span>#{version}</span>
-      div
-        span some icons, courtesy <a href="http://www.glyphicons.com">Glyphicons</a>
-      div
-        <a href="https://github.com/holmwell/circle-blvd">source code</a> on GitHub
+    include inc/footer
 
   !{compactJsHtml()}
   script(src="https://checkout.stripe.com/checkout.js")
