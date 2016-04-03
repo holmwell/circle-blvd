@@ -15,7 +15,7 @@ module.exports = {
         'lib/typeahead/0.10.2.js'
     ],
     app: [
-        'main/app.js'
+        'app.js'
     ],
     services: [
         'services/module.js',
