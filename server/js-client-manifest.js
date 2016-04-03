@@ -65,7 +65,10 @@ module.exports = {
         'ui/directives/spRoadmapMilepost.js',
         'ui/directives/typeaheadOwners.js'
     ],
-    main: [
-        'main/filters.js'
+    filters: [
+        'ui/filters/module.js',
+        'ui/filters/interpolate.js',
+        'ui/filters/reverse.js',
+        'ui/filters/slice.js'
     ]
 };
