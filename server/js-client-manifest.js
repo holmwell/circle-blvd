@@ -55,8 +55,17 @@ module.exports = {
         'ui/controllers/mainframe.js',
         'ui/controllers/fix.js'
     ],
+    directives: [
+        'ui/directives/module.js',
+        'ui/directives/appendLinky.js',
+        'ui/directives/autosize.js',
+        'ui/directives/spStory.js',
+        'ui/directives/spStoryList.js',
+        'ui/directives/spStorySummary.js',
+        'ui/directives/spRoadmapMilepost.js',
+        'ui/directives/typeaheadOwners.js'
+    ],
     main: [
-        'main/filters.js',
-        'main/directives.js'
+        'main/filters.js'
     ]
 };
