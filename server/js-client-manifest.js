@@ -29,7 +29,7 @@ module.exports = {
     ],
     controllers: [
         'ui/controllers/topLevel.js',
-        'main/controllers.js',
+        'ui/controllers/initialize.js',
         'ui/controllers/story.js',
         'ui/controllers/storyList.js',
         'ui/controllers/storySummary.js',
