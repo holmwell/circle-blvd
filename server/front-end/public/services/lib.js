@@ -147,3 +147,6 @@ CircleBlvd.Services.lib = function ($http) {
     };
 };
 CircleBlvd.Services.lib.$inject = ['$http'];
+
+angular.module('CircleBlvd.services')
+.factory('lib', CircleBlvd.Services.lib);

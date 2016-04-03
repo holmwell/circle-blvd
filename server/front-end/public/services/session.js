@@ -76,3 +76,6 @@ CircleBlvd.Services.session = function () {
 
 	return session;
 };
+
+angular.module('CircleBlvd.services')
+.factory('session', CircleBlvd.Services.session);

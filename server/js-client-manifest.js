@@ -18,14 +18,14 @@ module.exports = {
         'main/app.js'
     ],
     services: [
+        'services/module.js',
         'services/analytics.js',
         'services/lib.js',
         'services/hacks.js',
         'services/signInName.js',
         'services/session.js',
         'services/stories.js',
-        'services/errors.js',
-        'main/services.js'
+        'services/errors.js'
     ],
     controllers: [
         'ui/controllers/topLevel.js',

@@ -76,3 +76,6 @@ CircleBlvd.Services.hacks = function ($timeout) {
 	}
 };
 CircleBlvd.Services.hacks.$inject = ['$timeout'];
+
+angular.module('CircleBlvd.services')
+.factory('hacks', CircleBlvd.Services.hacks);

@@ -334,3 +334,6 @@ CircleBlvd.Services.stories = function ($http) {
 	return stories;
 };
 CircleBlvd.Services.stories.$inject = ['$http'];
+
+angular.module('CircleBlvd.services')
+.factory('stories', CircleBlvd.Services.stories);

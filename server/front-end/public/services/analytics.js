@@ -43,3 +43,6 @@ CircleBlvd.Services.analytics = function ($window, $location) {
 	};
 };
 CircleBlvd.Services.analytics.$inject = ['$window', '$location'];
+
+angular.module('CircleBlvd.services')
+.factory('analytics', CircleBlvd.Services.analytics);

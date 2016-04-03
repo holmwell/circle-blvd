@@ -21,3 +21,6 @@ CircleBlvd.Services.errors = function ($rootScope, $http, analytics) {
 	};
 };
 CircleBlvd.Services.errors.$inject = ['$rootScope', '$http', 'analytics'];
+
+angular.module('CircleBlvd.services')
+.factory('errors', CircleBlvd.Services.errors);

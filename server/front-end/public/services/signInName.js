@@ -11,3 +11,6 @@ CircleBlvd.Services.signInName = function () {
 		}
 	};
 };
+
+angular.module('CircleBlvd.services')
+.factory('signInName', CircleBlvd.Services.signInName);
