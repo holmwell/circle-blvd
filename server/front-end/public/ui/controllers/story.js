@@ -35,10 +35,6 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 		}
 	});
 
-	$scope.isAndroid = function() {
-        // return /Android/i.test(navigator.userAgent);
-        return false;
-    }(); // closure
 
 	var isStory = function (story) {
 		if (!story || story.isDeadline || story.isNextMeeting) {

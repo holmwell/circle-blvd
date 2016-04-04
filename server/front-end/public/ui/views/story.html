@@ -281,13 +281,15 @@
                     <sp-story-summary/>
                 </div>
             </div>
-            
-            <div class="col-xs-1 grippy" ng-hide="isAndroid">
+
+            <!-- TODO: Use component instead of duplicate markup -->            
+            <div ng-if="(!isMindset('bump') && !isStoryDone(story)) || !story.isAfterNextMeeting || isMindset('roadmap')" 
+                class="col-xs-1 grippy">
                 <div class="pull-right grippy-viz">
                     <span class="grippy-bar top"></span>
                     <span class="grippy-bar"></span>
-                    <div>
-                        <div class="col-xs-offset-4">
+                    <div class="row">
+                        <div class="col-xs-offset-5">
                             <div class="glyphicon glyphicon-move">&nbsp;</div>
                         </div>
                     </div>
@@ -296,11 +298,16 @@
                 </div>
             </div> 
 
-            <!-- <div class="col-xs-1 debug on" ng-if="isMindset('bump')">
+            <!-- TODO: Use component instead of duplicate markup -->
+            <div ng-if="(isMindset('bump') || isStoryDone(story)) && story.isAfterNextMeeting && !isMindset('roadmap')" 
+                class="col-xs-1 bumpy"
+                ng-mousedown="beforeMoveToTop($event, story)"
+                ng-click="moveToTop($event, story)">
                 <div class="pull-right bumpy-viz">
-                    <div class="glyphicon glyphicon-chevron-up">&nbsp;</div>
+                    <div ng-hide="story.isFirstStory" 
+                    class="glyphicon glyphicon-chevron-up">&nbsp;</div>
                 </div>
-            </div> -->
+            </div>
         </div>
     </div>
 
