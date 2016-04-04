@@ -30,29 +30,26 @@ p {
     background-color: #006747;
     background-color: #005522;
     background-color: #32213A;
-    background-color: #26532B;*/
-    background-color: #5D3A24;
-    color: #eee;
+    background-color: #26532B;
+    background-color: #5D3A24;*/
+    background-color: #88CCDD;
+    color: #006688;
 }
 
 .header .glyph {
-  color: #222;
-  color: #eee;
+  color: #006688;
   opacity: 0.25;
 }
 .header .glyph.active {
-  color: gold;
-  color: #eee;
+  color: #006688;
   opacity: 1;
 }
 .header .glyph a {
-  color: #eee;
   color: #0088aa;
 }
 .header .glyph a,
 .header a.glyph:hover {
-  color: gold;
-  color: #eee;
+  color: #003344;
 }
 
 .tour p, 
@@ -246,8 +243,15 @@ p {
     background-color: #aaa;
 }
 
-.big-ideas .same-idea {
+.for-communities .same-idea {
     text-align: center;
+}
+
+.same-idea-glyph {
+    width: 75%;
+}
+.same-idea {
+    fill: #eee;
 }
 
 .big-ideas h2,
@@ -280,8 +284,13 @@ p {
 }
 
 .for-communities h2,
+.big-ideas h2,
 .mileposts h2,
 .simple h2 {
     text-align: center;
     margin-bottom: 1.1em;
+}
+.small-teams h2 {
+    text-align: left;
+    margin-bottom: 0.5ex;
 }
