@@ -5,44 +5,95 @@ append stylesheets
     link(href="css/tips.css" rel="stylesheet")
 
 block header
-    .span How to be the fastest
+    .span Tips: How to be the fastest
 
 block view
     .content.prelude-content.container-fluid.main
         .col-sm-offset-1.col-sm-10.tips
-            h3 Keyboard shortcuts, when highlighting tasks
-            ul
-                li <strong>d</strong> <span class="glyphicon glyphicon-arrow-right"></span> mark as done 
-                li <strong>o</strong> <span class="glyphicon glyphicon-arrow-right"></span> mark as "on it"
-                li <strong>w</strong> <span class="glyphicon glyphicon-arrow-right"></span> "will do"
-                li <strong>n</strong> <span class="glyphicon glyphicon-arrow-right"></span> clear task status
-            ul
-                li <strong>t</strong> <span class="glyphicon glyphicon-arrow-right"></span> take ownership of task
-            ul
-                li Cut with Cmd-X (or Ctrl-X)
-                li Paste with Cmd-V (or Ctrl-V)
-                li Clear selection with Esc
-            ul
-                li Blocks of tasks can be highlighted with a keyboard or a mouse
-                li Arrow keys will change your selection
+            h4.first Keyboard shortcuts, when highlighting tasks
+
+            table
+                tr
+                    td Mark as done
+                    td.key D
+                tr
+                    td Mark as "on it"
+                    td.key O
+                tr
+                    td Mark as "will do"
+                    td.key W
+                tr
+                    td Clear task status
+                    td.key N
+                tr
+                    td Take ownership
+                    td.key T
+
+            h4 Copy and paste tasks within Circle Blvd.
+            table
+                tr
+                    td Cut tasks
+                    td.key Cmd-X (or Ctrl-X)
+                tr 
+                    td Paste tasks
+                    td.key Cmd-V (or Ctrl-V)
+                tr 
+                    td Copy tasks
+                    td.key Cmd-C (or Ctrl-C)
+                tr
+                    td Clear selection
+                    td.key Esc
+
+
+            h4 Highlight multiple tasks at once
+            table
+                tr
+                    td With keyboard
+                    td.key Hold Shift, use arrow keys
+                tr
+                    td With mouse
+                    td.key Click and drag
+
+            h4 Notes
+            p Change your selection with the arrow keys.
 
     .big-ideas
         .container-fluid.main
             .col-sm-offset-1.col-sm-10.tips
-                h3 Shortcuts when adding tasks
-                ul
-                    li Ending a line with ...
-                        ul
-                            li <strong>@@</strong> assigns task to you
-                            li <strong>@Name</strong> assigns to Name
-                            li <strong>!</strong> marks task as "will do"
-                            li <strong>!!</strong> marks as done
-                            li <strong>@@!!</strong> assigns task to you and marks as done
-                    li.section Starting a line with ...
-                        ul
-                            li -- (two minus signs) creates a milepost
+                h2 Shortcuts when adding tasks
+                p For example, entering "Do the thing @@" will assign the task to you. 
+                table
+                    tr
+                        td Action
+                        td End line with
+                    tr
+                        td Assign task to you
+                        td.key @@
+                    tr
+                        td Assign to "Name"
+                        td.key @Name
+                    tr
+                        td Mark task as "will do"
+                        td.key !
+                    tr
+                        td Mark task as done
+                        td.key !!
+                    tr 
+                        td Assign to you and mark as done
+                        td.key @@!!
 
-                //- h3.before-video 60-second whirlwind tour
+                p.section Make mileposts without switching entry tabs by 
+                 | starting the line with two minus signs, i.e. "-- An 
+                 | upcoming milepost". 
+                table
+                    tr
+                        td Action
+                        td Start line with
+                    tr
+                        td Create a milepost
+                        td.key -- (two minus signs)
 
-                //- .embed-container
-                //-     iframe(src="//www.youtube-nocookie.com/embed/6pgBgTjCh6E?rel=0" frameborder="0" allowfullscreen)
+                p.before-video.section To see these entry shortcuts in action, please view the video below.
+
+                .embed-container
+                    iframe(src="//www.youtube-nocookie.com/embed/KCpeBd7fsxk?rel=0" frameborder="0" allowfullscreen)
