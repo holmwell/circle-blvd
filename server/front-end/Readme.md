@@ -8,7 +8,7 @@ We use the Jade template engine, powered by Express.
 The main view is `index.jade`.
 
 The `public` folder is served as-is to our guests 
-and members. It contains an AngularJS (1.3) app, 
+and members. It contains an AngularJS (1.5) app, 
 along with stylesheets and some images.
 
 Note, images of unusual size (IOUS) are in separate repos.
