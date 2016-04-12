@@ -20,6 +20,16 @@ Date.prototype.toJSON = function (key) {
          f(this.getUTCMilliseconds())   + 'Z';
 };
 
+var updateWhitelist = function ($sceDelegateProvider) {
+    // This controls which resources we're allowed to link 
+    // to, for instance with ng-include
+    var whitelist = $sceDelegateProvider.resourceUrlWhitelist();
+    // This contains our SVG glyphs on the homepage, and other
+    // large images.
+    whitelist.push("https://raw.githubusercontent.com/holmwell/**");
+    $sceDelegateProvider.resourceUrlWhitelist(whitelist);
+};
+
 CircleBlvd.Prelude = angular.module('cbPrelude', [
     'ngRoute',
     'ngSanitize',
@@ -29,7 +39,10 @@ CircleBlvd.Prelude = angular.module('cbPrelude', [
     .config(['$controllerProvider', function ($controllerProvider) {
         // TODO: Complete port to Angular 1.3
         $controllerProvider.allowGlobals();
-    }]);
+    }])
+    .config(function ($sceDelegateProvider) {
+        updateWhitelist($sceDelegateProvider);
+    });
 
 // Declare app level module which depends on filters, and services
 angular.module('CircleBlvd', [
@@ -83,6 +96,9 @@ angular.module('CircleBlvd', [
         // TODO: Complete port to Angular 1.3
         $controllerProvider.allowGlobals();
     }])
+    .config(function ($sceDelegateProvider) {
+        updateWhitelist($sceDelegateProvider);
+    }) 
     .factory('$exceptionHandler', ['$injector', function ($injector) {
         return function (exception, cause) {
             var $route = $injector.get("$route");
