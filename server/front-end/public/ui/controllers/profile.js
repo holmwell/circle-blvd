@@ -16,27 +16,17 @@ function ProfileCtrl(session, $scope, $http, errors) {
 
 	var plans = [];
 
-	// Only show the $5 option to members who already have it.
-	if (session.user && session.user.subscription) {
-		var savedPlanName = session.user.subscription.planName;
-		if (savedPlanName === 'Supporter') {
-			plans.push({
-				name: "Supporter",
-				displayAmount: "$5",
-				stripeAmount: 500
-			});
-		}
-	}
-		
+	
+	plans.push({
+		name: "Supporter",
+		displayAmount: "$5",
+		stripeAmount: 500
+	});
+
 	plans.push({
 		name: "Organizer",
 		displayAmount: "$20",
 		stripeAmount: 2000
-	});
-	plans.push({
-		name: "Patron",
-		displayAmount: "$100",
-		stripeAmount: 10000
 	});
 
 	var updateCircles = function () {
