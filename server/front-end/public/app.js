@@ -40,9 +40,9 @@ CircleBlvd.Prelude = angular.module('cbPrelude', [
         // TODO: Complete port to Angular 1.3
         $controllerProvider.allowGlobals();
     }])
-    .config(function ($sceDelegateProvider) {
+    .config(['$sceDelegateProvider', function ($sceDelegateProvider) {
         updateWhitelist($sceDelegateProvider);
-    });
+    }]);
 
 // Declare app level module which depends on filters, and services
 angular.module('CircleBlvd', [
