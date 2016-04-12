@@ -96,9 +96,9 @@ angular.module('CircleBlvd', [
         // TODO: Complete port to Angular 1.3
         $controllerProvider.allowGlobals();
     }])
-    .config(function ($sceDelegateProvider) {
+    .config(['$sceDelegateProvider', function ($sceDelegateProvider) {
         updateWhitelist($sceDelegateProvider);
-    }) 
+    }]) 
     .factory('$exceptionHandler', ['$injector', function ($injector) {
         return function (exception, cause) {
             var $route = $injector.get("$route");
