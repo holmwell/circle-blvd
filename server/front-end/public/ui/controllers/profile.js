@@ -19,14 +19,23 @@ function ProfileCtrl(session, $scope, $http, errors) {
 	
 	plans.push({
 		name: "Supporter",
+		displayName: "Five",
 		displayAmount: "$5",
 		stripeAmount: 500
 	});
 
 	plans.push({
 		name: "Organizer",
+		displayName: "Twenty",
 		displayAmount: "$20",
 		stripeAmount: 2000
+	});
+
+	plans.push({
+		name: "Thirty",
+		displayName: "Thirty",
+		displayAmount: "$30",
+		stripeAmount: 3000
 	});
 
 	var updateCircles = function () {

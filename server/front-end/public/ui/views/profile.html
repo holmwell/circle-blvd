@@ -78,7 +78,8 @@
 	<div class="row clear page-message">
 		<div class="donations" ng-show="supportsPayments">
 			<h5 class="col-xs-12">Subscription level</h5>
-			<div class="row plans">
+			<p class="col-sm-9 col-xs-12">Sliding scale. Pay what you can. All features are the same for each subscription level.</p>
+			<div class="clear row plans">
 				<div ng-repeat="plan in plans">
 					<div class="col-sm-3 plan" 
 						ng-class="{active: (activePlan === plan)}" 
@@ -89,16 +90,13 @@
 						<div ng-if="plan.name === 'Organizer'">
 							<span class="support-circle"></span>
 							<span class="support-circle"></span>
-							<span class="support-circle"></span>
 						</div>
-						<div ng-if="plan.name === 'Patron'">
-							<span class="support-circle"></span>
-							<span class="support-circle"></span>
+						<div ng-if="plan.name === 'Thirty'">
 							<span class="support-circle"></span>
 							<span class="support-circle"></span>
 							<span class="support-circle"></span>
 						</div>
-						<div class="name">{{plan.name}}</div>
+						<div class="name">{{plan.displayName}}</div>
 						<div class="amount">{{plan.displayAmount}} per month</div>
 					</div>
 				</div>
