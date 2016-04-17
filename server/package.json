@@ -39,5 +39,6 @@
     "start": "node server.js",
     "debug": "node server.js --debug",
     "test": "nodeunit ./test"
-  }
+  },
+  "license": "BSD-2-Clause"
 }
