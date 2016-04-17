@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "4"
+  - "0.12"
+  - "0.10"
+
+services:
+  - couchdb
+
+before_script: 
+ - cd server
+ - npm install
