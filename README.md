@@ -2,6 +2,8 @@ circle blvd.
 ===============
 Circle Blvd 1.5 is a task management tool, made for teams of 1-12 people. 
 
+[![Build Status](https://travis-ci.org/holmwell/circle-blvd.svg?branch=master)](https://travis-ci.org/holmwell/circle-blvd)
+
 Circle Blvd supports:
  * Multiple projects
  * Unlimited user accounts 
