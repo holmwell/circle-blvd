@@ -8,5 +8,10 @@ services:
   - couchdb
 
 before_script: 
- - cd server
- - npm install
+  - cd server
+  - npm install
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change
