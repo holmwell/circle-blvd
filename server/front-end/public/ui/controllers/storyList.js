@@ -1508,7 +1508,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 	};
 
 	function updateViewModelStoryOrder() {
-		// The YUI drag-and-drop stuff manipulates the DOM, 
+		// The drag-and-drop stuff manipulates the DOM, 
 		// but doesn't touch our view-model, so we need to 
 		// update our stories array to reflect the new order
 		//  of things.
@@ -1570,7 +1570,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 	//-------------------------------------------------------
 	// Drag and drop
 	//-------------------------------------------------------
-	var thisY = undefined;
 	var idAttr = 'data-story-id';
 	var preMoveStoryBefore = undefined;
 	var preMoveStoryAfter = undefined;
@@ -1832,129 +1831,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		$scope.mouse.lastMouseUpStory = story;
 	});
 
-	var attachToDragEvents = function (Y) {
-		// No longer needed with .grippy
-		//
-		// If a story is selected, (the details panel is open),
-		// then don't allow drag events to happen.
-		// Y.DD.DDM.before('drag:mouseDown', function (e) {
-		// 	var drag = e.target;
-		// 	var preMoveStoryNode = drag.get('node');
-		// 	if (preMoveStoryNode) {
-		// 		var storyId = getStoryFacadeFromNode(preMoveStoryNode).id;		    	
-		// 		var story = stories.get(storyId);
-
-		// 		if (story.isSelected) {
-		// 			e.stopPropagation();
-		// 			e.preventDefault();
-		// 		}
-		// 	}
-		// });
-
-		// Show a semi-transparent version of the story selected.
-		Y.DD.DDM.on('drag:start', function(e) {
-			//Get our drag object
-			var drag = e.target;
-	
-			// It's useful to know the state of things before the move.
-			var preMoveStoryNode = drag.get('node');
-			preMoveStoryBefore = getStoryBefore(preMoveStoryNode);
-			preMoveStoryAfter = getStoryAfter(preMoveStoryNode);
-
-			var storyId = getStoryFacadeFromNode(preMoveStoryNode).id;		    	
-			var story = stories.get(storyId);
-			story.isMoving = true;
-
-			//Set some styles here
-			drag.get('node').addClass('placeholder-story'); // applied to the storyWrapper
-
-			drag.get('dragNode').addClass('dragging-row'); // applied to the storyWrapper
-			drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
-			drag.get('dragNode').one('.story').addClass('dragging-story');
-		});
-
-		// Revert styles on drag end
-		Y.DD.DDM.on('drag:end', function(e) {
-			var drag = e.target;
-			var n = drag.get('node');
-
-			storyNodeMoved(n);
-
-			//Put our styles back
-			drag.get('node').removeClass('placeholder-story');
-
-			// HACK: The end of a drag fires a click event
-			// on touch devices, and I can't figure out how
-			// to stop it. So, in select(story) we don't
-			// do anything when isDragging is true.
-			$scope.$broadcast('spIsDragging', true);
-			$timeout(function () {
-				$scope.$broadcast('spIsDragging', false);
-			}, 500);
-		});
-
-
-		// jQuery UI takes care of this.
-		//
-		// Store stuff while we're dragging
-		// var lastY = 0;
-		// Y.DD.DDM.on('drag:drag', function(e) {
-		// 	//Get the last y point
-		// 	var y = e.target.lastXY[1];
-		// 	//is it greater than the lastY var?
-		// 	if (y < lastY) {
-		// 		//We are going up
-		// 		goingUp = true;
-		// 	} else {
-		// 		//We are going down.
-		// 		goingUp = false;
-		// 	}
-		// 	//Cache for next check
-		// 	lastY = y;
-		// });
-
-		// jQuery UI takes care of this.
-		//
-		// Y.DD.DDM.on('drop:over', function(e) {
-		// 	//Get a reference to our drag and drop nodes
-		// 	var drag = e.drag.get('node'),
-		// 		drop = e.drop.get('node');
-			
-		// 	//Are we dropping on a div node?
-		// 	if (drop.get('tagName').toLowerCase() === 'div') {
-		// 		//Are we not going up?
-		// 		if (!goingUp) {
-		// 			drop = drop.next();
-		// 		}
-				
-		// 		// HACK: We're probably doing something wrong, but
-		// 		// in the mean time let's try this.
-		// 		try {
-		// 			e.drop.get('node').get('parentNode').insertBefore(drag, drop);
-		// 		}
-		// 		catch (e) {
-		// 			handleHierarchyRequestErr(e);
-		// 		}
-		// 		e.drop.sizeShim();
-		// 	}
-		// });
-
-		// jQuery UI takes care of this.
-		//
-		// Y.DD.DDM.on('drag:drophit', function(e) {
-		// 	var drop = e.drop.get('node'),
-		// 		drag = e.drag.get('node');
-
-		// 	//if we are not on an div, we must have been dropped on ...
-		// 	// ... well, not sure this part of the demo applies to our use case.
-		// 	if (drop.get('tagName').toLowerCase() !== 'div') {
-		// 		if (!drop.contains(drag)) {
-		// 			drop.appendChild(drag);
-		// 		}
-		// 	}
-		// });
-	}
-
 	var getStoryElement = function (id) {
 		return $("[data-story-id='" + id + "']");
 	};
@@ -2120,47 +1996,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		}
 	};
 
-	var makeStoriesDraggableCore = function(Y) {
-		if (!Y) {
-			return;
-		}
-		// Allow stories to be dragged
-		// TODO: We should probably make a method for making
-		// a specific item draggable, in the case of adding
-		// a new item to the backlog.
-		var storyElements = Y.Node.all('.storyWrapper');
-		var newStoryElementId = "new-story";
-		storyElements.each(function (v, k) {
-			var nodeId = v.get("id");
-			if (nodeId === newStoryElementId) {
-				// Do nothing.
-				return;
-			}
-
-			// Only add draggable stuff once
-			var draggableClassName = "cb-draggable";
-			if (!v.hasClass(draggableClassName)) {
-				v.addClass(draggableClassName);
-				var dd = new Y.DD.Drag({
-					node: v,
-					target: {
-						padding: '0 0 0 20'
-					}
-				}).plug(Y.Plugin.DDProxy, {
-					// need this to keep things in a list 
-					// (vs leaving the element where the cursor is let go)
-					moveOnEnd: false
-				}).addHandle('.grippy');
-			}
-		});
-	};
-
 	$scope.$on('makeStoriesDraggable', function (e) {
 		makeStoriesDraggable();
 	});
 
 	var makeStoriesDraggable = function () {
-		// makeStoriesDraggableCore(thisY);
 		newDraggable();
 		updateUI();
 	};
@@ -2170,16 +2010,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		// I guess we need to yield to whatever else is happening.
 		$timeout(function () {
 			makeStoriesDraggable();
-
-			// Reference: http://yuilibrary.com/yui/docs/dd/list-drag.html
-			// var gesturesIfTouch = Modernizr.touch ? 'dd-gestures' : 'dd-drop';
-			// YUI({}).use('dd-proxy', 'dd-drop', gesturesIfTouch, function (Y) {
-			// 	// keep a local instance of Y around for adding draggable
-			// 	// objects in the future.
-			// 	thisY = Y;
-			// 	makeStoriesDraggableCore(thisY);
-			// 	attachToDragEvents(thisY);
-			// });
 		}, 0);
 	};
 
