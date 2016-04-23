@@ -59,6 +59,7 @@ module.exports = {
         'ui/directives/module.js',
         'ui/directives/appendLinky.js',
         'ui/directives/autosize.js',
+        'ui/directives/viewportObserver.js',
         'ui/directives/spStory.js',
         'ui/directives/spStoryList.js',
         'ui/directives/spStorySummary.js',

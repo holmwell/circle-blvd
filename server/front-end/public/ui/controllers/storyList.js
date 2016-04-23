@@ -1,4 +1,4 @@
-function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $interval, lib, hacks, errors) {
+function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, errors) {
 	var circleId = undefined;
 	var listId = undefined;
 
@@ -31,21 +31,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		$scope.isScreenXs = false;
 	}
 
-	// Refactor: Move this viewportChanged event broadcaster
-	// into its own directive.
-	var didScroll = false;
-	$document.bind('scroll', function (e) {
-		didScroll = true;
-	}); 
 
-	$interval(function () {
-		if (didScroll) {
-			didScroll = false;
-			$timeout(function () {
-				$scope.$broadcast('viewportChanged');
-			}, 50);
-		}
-	}, 200);
 
 
 	var buildMilepostList = function (list) {
@@ -2058,4 +2044,4 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		}
 	};
 }
-StoryListCtrl.$inject = ['$scope', '$timeout', '$http', '$location', '$route', '$document', '$interval', 'lib', 'hacks', 'errors'];
+StoryListCtrl.$inject = ['$scope', '$timeout', '$http', '$location', '$route', 'lib', 'hacks', 'errors'];
