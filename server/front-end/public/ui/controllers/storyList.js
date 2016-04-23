@@ -31,6 +31,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		$scope.isScreenXs = false;
 	}
 
+	// Refactor: Move this viewportChanged event broadcaster
+	// into its own directive.
 	var didScroll = false;
 	$document.bind('scroll', function (e) {
 		didScroll = true;
@@ -45,12 +47,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		}
 	}, 200);
 
-	// HACK: Until we can figure out how to stop this properly,
-	// reload the page when this happens.
-	var handleHierarchyRequestErr = function (e) {
-		errors.log("Hierarchy request error. Reloading page.");
-		$route.reload();
-	};
 
 	var buildMilepostList = function (list) {
 		var milepostList = [];
@@ -180,6 +176,8 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 		});
 	};
 
+	// Refactor: Move 'pulse' somewhere ... it's a 
+	// utility function.
 	var pulse = function (story) {
 		var pulseClass = "pulse";
 		if ((story.isDeadline && story.isAfterNextMeeting) 
@@ -283,6 +281,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, $document, $i
 	});
 
 
+	// Refactor: Move highlighted stuff into own module
 	var unhighlightAllStories = function () {
 		while (highlightedStories.length > 0) {
 			var story = highlightedStories.pop();
