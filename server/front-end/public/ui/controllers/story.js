@@ -1,6 +1,6 @@
 'use strict';
 
-function StoryCtrl(session, lib, $scope, $timeout, $element) {
+function StoryCtrl(session, lib, mouse, $scope, $timeout, $element) {
 
 	// Hide this element if it's not on the screen or within
 	// our off-screen buffer. We do this so there is a limited
@@ -199,8 +199,8 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 			$scope.$emit('storyHighlight', story, 'single');
 
 			story.highlightedFrom = 'first';
-			$scope.mouse.isHighlighting = true;
-			$scope.mouse.lastMouseDownStory = story;
+			mouse.isHighlighting = true;
+			mouse.lastMouseDownStory = story;
 		}
 	}
 
@@ -208,7 +208,7 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 		// Prevent drag operations from resetting our
 		// selection
 		if (story.isHighlighted) {
-			$scope.mouse.isHighlighting = true;
+			mouse.isHighlighting = true;
 			return;
 		}
 		highlight(story);
@@ -220,24 +220,24 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 	// on it once, when it is highlighted, instead of having
 	// to double-click all over the place.
 	$scope.rememberHighlight = function (story) {
-		if ($scope.mouse.lastMouseUpStory && 
-			$scope.mouse.lastMouseUpStory.id === story.id &&
-			$scope.mouse.lastMouseUpStory.id === $scope.mouse.lastMouseDownStory.id &&
+		if (mouse.lastMouseUpStory && 
+			mouse.lastMouseUpStory.id === story.id &&
+			mouse.lastMouseUpStory.id === mouse.lastMouseDownStory.id &&
 
 			!isMovingToTop) {
 			$scope.select(story);
 		}
 
-		$scope.mouse.lastMouseUpStory = story;
+		mouse.lastMouseUpStory = story;
 	};
 
 	// TODO: This is called N times. Move to list.
 	$scope.$on('mouseUp', function () {
-		$scope.mouse.isHighlighting = false; 
+		mouse.isHighlighting = false; 
 	});
 
 	$scope.$on('labelSelected', function () {
-		$scope.mouse.isHighlighting = false;
+		mouse.isHighlighting = false;
 	});
 
 	$scope.handleSingleClicks = function (story) {
@@ -247,11 +247,11 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 		}
 
 		highlight(story);
-		$scope.mouse.isHighlighting = false; 
+		mouse.isHighlighting = false; 
 	};
 
 	$scope.mouseEnter = function (story) {
-		if ($scope.mouse.isHighlighting) {
+		if (mouse.isHighlighting) {
 			if (!story.isHighlighted) {
 				$scope.$emit('storyHighlight', story);
 			}
@@ -260,9 +260,9 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 	};
 
 	$scope.mouseLeave = function (story) {
-		if ($scope.mouse.isHighlighting) {
+		if (mouse.isHighlighting) {
 			if (story.isHighlighted && story.highlightedFrom !== 'first') {
-				$scope.$emit('storyUnhighlight', story, $scope.mouse.direction);
+				$scope.$emit('storyUnhighlight', story, mouse.direction);
 			}
 		}
 		story.isOver = false;
@@ -360,4 +360,4 @@ function StoryCtrl(session, lib, $scope, $timeout, $element) {
 		$scope.$emit('ownerSelected', owner);
 	};
 }
-StoryCtrl.$inject = ['session', 'lib', '$scope', '$timeout', '$element'];
+StoryCtrl.$inject = ['session', 'lib', 'mouse', '$scope', '$timeout', '$element'];

@@ -1,10 +1,10 @@
 'use strict';
 
-function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $timeout, analytics) {
+function TopLevelCtrl(session, lib, mouse,
+	$scope, $http, $location, $route, $window, $timeout, analytics) {
 
 	$scope.isHeaderVisible = true;
 	$scope.keyboard = {};
-	$scope.mouse = {};
 
 	$scope.showBackBar = function (options) {
 		var message = undefined;
@@ -62,9 +62,9 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 	};
 
 	$scope.mousedown = function (e) {
-		$scope.mouse.isButtonDown = true;
-		$scope.mouse.isButtonUp = false;
-		$scope.mouse.dragStartPoint = {
+		mouse.isButtonDown = true;
+		mouse.isButtonUp = false;
+		mouse.dragStartPoint = {
 			x: e.pageX,
 			y: e.pageY
 		};
@@ -72,36 +72,36 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 	};
 
 	$scope.mouseup = function (e) {
-		$scope.mouse.isButtonDown = false;
-		$scope.mouse.isButtonUp = true;
+		mouse.isButtonDown = false;
+		mouse.isButtonUp = true;
 		$scope.$broadcast('mouseUp', e);
 	};
 
 	$scope.mousemove = function (e) {
-		$scope.mouse.previousPosition = $scope.mouse.position;
-		$scope.mouse.position = {
+		mouse.previousPosition = mouse.position;
+		mouse.position = {
 			x: e.pageX,
 			y: e.pageY
 		};
 
-		if ($scope.mouse.position && $scope.mouse.previousPosition) {
-			var previous = $scope.mouse.previousPosition;
-			var position = $scope.mouse.position;
+		if (mouse.position && mouse.previousPosition) {
+			var previous = mouse.previousPosition;
+			var position = mouse.position;
 
 			if (previous.y > position.y) {
-				$scope.mouse.isMovingUp = true;
-				$scope.mouse.isMovingDown = false;
-				$scope.mouse.direction = 'up';
+				mouse.isMovingUp = true;
+				mouse.isMovingDown = false;
+				mouse.direction = 'up';
 			}
 
 			if (previous.y < position.y) {
-				$scope.mouse.isMovingUp = false;
-				$scope.mouse.isMovingDown = true;
-				$scope.mouse.direction = 'down';
+				mouse.isMovingUp = false;
+				mouse.isMovingDown = true;
+				mouse.direction = 'down';
 			}
 		}
 
-		if ($scope.mouse.isButtonDown) {
+		if (mouse.isButtonDown) {
 			$scope.$broadcast('mouseDrag', e);	
 		}
 	};
@@ -603,4 +603,4 @@ function TopLevelCtrl(session, lib, $scope, $http, $location, $route, $window, $
 
 	init();
 }
-TopLevelCtrl.$inject = ['session', 'lib', '$scope', '$http', '$location', '$route', '$window', '$timeout', 'analytics'];
+TopLevelCtrl.$inject = ['session', 'lib', 'mouse', '$scope', '$http', '$location', '$route', '$window', '$timeout', 'analytics'];

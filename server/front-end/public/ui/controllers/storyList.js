@@ -1,4 +1,4 @@
-function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, errors) {
+function StoryListCtrl($scope, $timeout, $http, $location, $route, mouse, lib, hacks, errors) {
 	var circleId = undefined;
 	var listId = undefined;
 
@@ -30,9 +30,6 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	else {
 		$scope.isScreenXs = false;
 	}
-
-
-
 
 	var buildMilepostList = function (list) {
 		var milepostList = [];
@@ -223,11 +220,11 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	}
 
 	var isMouseAboveFirstHighlight = function () {
-		if (!$scope.mouse.dragStartPoint || !$scope.mouse.position) {
+		if (!mouse.dragStartPoint || !mouse.position) {
 			return false;
 		}
 
-		if ($scope.mouse.dragStartPoint.y > $scope.mouse.position.y) {
+		if (mouse.dragStartPoint.y > mouse.position.y) {
 			return true;
 		}
 		return false;
@@ -248,7 +245,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				return;
 			}
 			storyToHighlight.isHighlighted = true;
-			storyToHighlight.highlightedFrom = $scope.mouse.direction;
+			storyToHighlight.highlightedFrom = mouse.direction;
 			highlightedStories.push(storyToHighlight);
 			$scope.$emit('storyHighlighted', storyToHighlight);
 		};
@@ -695,7 +692,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	$scope.$on('mouseDrag', function (e, event) {
 		var selectionBox = $('#selectionBox');
 
-		var startPoint = $scope.mouse.dragStartPoint;
+		var startPoint = mouse.dragStartPoint;
 		var endPoint = {
 			x: event.pageX,
 			y: event.pageY
@@ -725,7 +722,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		// of the mouse outside the window can be a thing, which messes
 		// up are shared state -- which is a bad idea anyway, and this
 		// is one reason why, but so it goes.
-		$scope.mouse.isHighlighting = false;
+		mouse.isHighlighting = false;
 	})
  
 	$scope.markHighlightedAs = function (newStatus) {
@@ -1757,7 +1754,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 	// into some other service. Go for it.
 	//
 	$scope.$on('storyMoved', function (e, story) {
-		$scope.mouse.lastMouseUpStory = story;
+		mouse.lastMouseUpStory = story;
 	});
 
 	var getStoryElement = function (id) {
@@ -1885,7 +1882,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 
 					$(selector).show();
 					isMovingTask = false;
-					//$scope.mouse.lastMouseDownStory = undefined;
+					//mouse.lastMouseDownStory = undefined;
 					return;
 				}
 
@@ -1901,7 +1898,7 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 				// And, we're done. Show our work.
 				$(selector).show();
 				isMovingTask = false;
-				//$scope.mouse.lastMouseDownStory = undefined;
+				//mouse.lastMouseDownStory = undefined;
 			},
 			start: function (event, ui) {
 				// The drop shadow slows down the phones a bit
@@ -1988,4 +1985,4 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		}
 	};
 }
-StoryListCtrl.$inject = ['$scope', '$timeout', '$http', '$location', '$route', 'lib', 'hacks', 'errors'];
+StoryListCtrl.$inject = ['$scope', '$timeout', '$http', '$location', '$route', 'mouse', 'lib', 'hacks', 'errors'];

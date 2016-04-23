@@ -20,6 +20,7 @@ module.exports = {
     services: [
         'services/module.js',
         'services/analytics.js',
+        'services/mouse.js',
         'services/lib.js',
         'services/hacks.js',
         'services/signInName.js',
