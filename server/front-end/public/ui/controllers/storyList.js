@@ -162,68 +162,12 @@ function StoryListCtrl($scope, $timeout, $http, $location, $route, lib, hacks, e
 		});
 	};
 
-	// Refactor: Move 'pulse' somewhere ... it's a 
-	// utility function.
 	var pulse = function (story) {
-		var pulseClass = "pulse";
-		if ((story.isDeadline && story.isAfterNextMeeting) 
-			|| story.isNextMeeting) {
-			pulseClass = "pulse-milepost";
-		}
-		var qStory = $("[data-story-id='" + story.id + "']");
-		qStory = qStory.find('.story');
-
-		if (qStory.hasClass(pulseClass)) {
-			return;
-		}
-
-		// Use CSS to flash a different colored background
-		// for a moment then fade to whatever we were.
-		qStory.addClass(pulseClass);
-		$timeout(function () {
-			qStory.addClass('color-transition');	
-		}, 10);
-		
-  		$timeout(function () { 
-  			qStory.removeClass(pulseClass);
-  			$timeout(function () {
-  				qStory.removeClass('color-transition');
-  			}, 500);
-  		}, 25);	
+		$scope.$emit('pulseStory', story);
 	};
-	$scope.pulse = pulse;
 
 	var scrollToAndPulse = function (story) {
-		var qStory = $("[data-story-id='" + story.id + "']");
-		qStory = qStory.find('.story');
-		if (!qStory) {
-			return;
-		}
-
-		var shouldScroll = true;
-		var bodyScrollTop = $('body').prop('scrollTop');		
-		if (bodyScrollTop < qStory.offset().top) {
-			shouldScroll = false;
-		}
-
-		if (shouldScroll) {
-			var delay = 500;
-			// Give the story time to close before
-			// starting the scroll animation.
-			$timeout(function () {
-				$('body').animate({
-					// scrollTopWhenSelected
-					scrollTop: qStory.offset().top - 20
-				}, delay);
-
-				$timeout(function () {
-					pulse(story);
-				}, delay + 75);
-			}, 100);
-		}
-		else {
-			pulse(story);
-		}
+		$scope.$emit('scrollToAndPulseStory', story);
 	};
 
 	$scope.$watch('data', function (newVal) {
