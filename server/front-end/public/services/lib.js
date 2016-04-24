@@ -121,12 +121,57 @@ CircleBlvd.Services.lib = function ($http) {
         return story;
     };
 
+    // When passed a block of tasks from the
+    // StoryList, what are the 'start' and
+    // 'end' tasks in that block?
+    function getStartAndEndOfBlock(storyBlock) {
+        var idMap = {};
+        var nextMap = {};
+
+        storyBlock.forEach(function (story) {
+            idMap[story.id] = story;
+            nextMap[story.nextId] = story;
+        });
+
+        var start;
+        var end;
+
+        storyBlock.forEach(function (story) {
+            if (!idMap[story.nextId]) {
+                end = story;
+            }
+            if (!nextMap[story.id]) {
+                start = story;
+            }
+        });
+
+        // If the first clipboard element's next story
+        // is also in the clipboard, that means the stories
+        // are arranged from top to bottom.
+        //
+        // If not, they're bottom to top
+        // if (map[storyBlock[0].nextId]) {
+        //  start = storyBlock[0];
+        //  end = storyBlock[storyBlock.length-1];
+        // }
+        // else {
+        //  end = storyBlock[0];
+        //  start = storyBlock[storyBlock.length-1];
+        // }
+
+        return {
+            start: start,
+            end: end
+        };
+    };
+
     return {
         signIn: signIn,
         consts: {
             ReplaceLabelRegex: ReplaceLabelRegex,
             LabelRegex: LabelRegex
         },
+        getStartAndEndOfBlock: getStartAndEndOfBlock,
         mindset: mindset,
         parseStory: parseStory
     };

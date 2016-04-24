@@ -169,50 +169,8 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
             event.preventDefault();
         });
 
-        function getStartAndEndOfBlock(storyBlock) {
-            var idMap = {};
-            var nextMap = {};
-
-            storyBlock.forEach(function (story) {
-                idMap[story.id] = story;
-                nextMap[story.nextId] = story;
-            });
-
-            var start;
-            var end;
-
-            storyBlock.forEach(function (story) {
-                if (!idMap[story.nextId]) {
-                    end = story;
-                }
-                if (!nextMap[story.id]) {
-                    start = story;
-                }
-            });
-
-            // If the first clipboard element's next story
-            // is also in the clipboard, that means the stories
-            // are arranged from top to bottom.
-            //
-            // If not, they're bottom to top
-            // if (map[storyBlock[0].nextId]) {
-            //  start = storyBlock[0];
-            //  end = storyBlock[storyBlock.length-1];
-            // }
-            // else {
-            //  end = storyBlock[0];
-            //  start = storyBlock[storyBlock.length-1];
-            // }
-
-            return {
-                start: start,
-                end: end
-            };
-        };
-
         function pasteHighlighted() {
             clipboard.pasteHighlighted(highlightedStories, 
-                getStartAndEndOfBlock,
                 moveStoryBlock,
                 stories);
 
@@ -225,7 +183,7 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
         });
 
         scope.$on('keyCopy', function (e, event) {
-            var tasks = clipboard.copyTasks(highlightedStories, getStartAndEndOfBlock, stories);
+            var tasks = clipboard.copyTasks(highlightedStories, stories);
             tasks.forEach(function (story) {
                 pulse(story);
             });
@@ -1072,7 +1030,6 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
         // For drag and drop.
         shared.highlightedStories        = highlightedStories;
         shared.isStoryBetween            = isStoryBetween;
-        shared.getStartAndEndOfBlock     = getStartAndEndOfBlock;
         shared.updateViewModelStoryOrder = updateViewModelStoryOrder;
         shared.getLastStoryId            = getLastStoryId;
         shared.getStoryElement           = getStoryElement;

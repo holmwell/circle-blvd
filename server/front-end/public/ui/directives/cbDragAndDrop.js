@@ -10,8 +10,8 @@
 'use strict';
 
 angular.module('CircleBlvd.directives')
-.directive('cbDragAndDrop', ['mouse', '$timeout', 'errors', 
-function (mouse, $timeout, errors) {
+.directive('cbDragAndDrop', ['lib', 'mouse', '$timeout', 'errors', 
+function (lib, mouse, $timeout, errors) {
 
     var controller = ['$scope', function ($scope) {
         return {
@@ -24,7 +24,7 @@ function (mouse, $timeout, errors) {
     var link = function (scope, element, attr, storyListCtrl) {
         var highlightedStories        = storyListCtrl.highlightedStories;
         var isStoryBetween            = storyListCtrl.isStoryBetween;
-        var getStartAndEndOfBlock     = storyListCtrl.getStartAndEndOfBlock;
+        var getStartAndEndOfBlock     = lib.getStartAndEndOfBlock;
         var stories                   = storyListCtrl.stories;
         var updateViewModelStoryOrder = storyListCtrl.updateViewModelStoryOrder;
         var getLastStoryId            = storyListCtrl.getLastStoryId;

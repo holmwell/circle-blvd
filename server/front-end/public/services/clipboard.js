@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('CircleBlvd.services')
-.factory('clipboard', function () {
+.factory('clipboard', ['lib', function (lib) {
     
     var isActive = false;
     var clipboardStories = [];
@@ -50,7 +50,7 @@ angular.module('CircleBlvd.services')
         highlightedStories.push(highlightedStory);
     }
 
-    function pasteHighlighted(highlightedStories, getStartAndEndOfBlock, moveStoryBlock, stories) {
+    function pasteHighlighted(highlightedStories, moveStoryBlock, stories) {
         if (highlightedStories.length === 0 || clipboardStories.length === 0) {
             return;
         }
@@ -58,7 +58,7 @@ angular.module('CircleBlvd.services')
         var nextStory = highlightedStories.pop();
         nextStory.isHighlighted = false;
 
-        var block = getStartAndEndOfBlock(clipboardStories);
+        var block = lib.getStartAndEndOfBlock(clipboardStories);
 
         moveStoryBlock(block.start,
             stories.get(block.start.id), 
@@ -88,13 +88,13 @@ angular.module('CircleBlvd.services')
         return copiedTasks;
     };
 
-    var copyTasks = function (highlightedStories, getStartAndEndOfBlock, stories) {
+    var copyTasks = function (highlightedStories, stories) {
         if (highlightedStories.length === 0) {
             return [];
         }
 
         var tasks = [];
-        var block = getStartAndEndOfBlock(highlightedStories);
+        var block = lib.getStartAndEndOfBlock(highlightedStories);
 
         var current = stories.get(block.start.id);
         tasks.push(block.start);
@@ -126,4 +126,4 @@ angular.module('CircleBlvd.services')
         copyTasks: copyTasks,
         getCopiedTasks: getCopiedTasks
     }
-});
+}]);
