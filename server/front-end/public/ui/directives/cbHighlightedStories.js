@@ -162,7 +162,7 @@ function (mouse) {
             return storyListCtrl.stories;
         };
         isClipboardActive = function () {
-            return storyListCtrl.isClipboardActive;
+            return scope.isClipboardActive;
         }
 
         // Pass the highlightedStories down to our scope children

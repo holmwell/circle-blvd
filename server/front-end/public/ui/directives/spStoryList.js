@@ -52,8 +52,6 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
         var clipboardStories = [];
         var teamHighlightedStories = {};
 
-        // TODO: Does this do pass by ref in JavaScript?
-        shared.isClipboardActive = scope.isClipboardActive;
         var storyBeingInserted = undefined;
 
 
@@ -632,7 +630,8 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
             }
 
             // Update data model
-            // TODO: Refactor, to share the same code used below
+            // TODO: Refactor, to share the same code used
+            // in the drag and drop module.
             var preMove = {
                 storyBefore: stories.getPrevious(uiStartStory, startStory),
                 storyAfter: stories.get(endStory.nextId)
@@ -1299,6 +1298,7 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
         shared.updateViewModelStoryOrder = updateViewModelStoryOrder;
         shared.getLastStoryId            = getLastStoryId;
         shared.getStoryElement           = getStoryElement;
+        // Not really necessary, but useful for semantics.
         shared.scope = scope;
 
         shared.getCircleId = function () {
