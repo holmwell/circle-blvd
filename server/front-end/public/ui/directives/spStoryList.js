@@ -441,43 +441,6 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
             scope.setOwnerForHighlighted(owner);
         });
 
-        scope.$on('mouseDown', function (e) {
-
-        });
-
-        scope.$on('mouseUp', function (e) {
-            var selectionBox = $('#selectionBox');
-            selectionBox.hide();
-        });
-
-        scope.$on('mouseDrag', function (e, event) {
-            var selectionBox = $('#selectionBox');
-
-            var startPoint = mouse.dragStartPoint;
-            var endPoint = {
-                x: event.pageX,
-                y: event.pageY
-            };
-
-            var topLeft = {
-                left: Math.min(startPoint.x, endPoint.x),
-                top: Math.min(startPoint.y, endPoint.y)
-            };
-
-            var width = Math.max(startPoint.x, endPoint.x) - Math.min(startPoint.x, endPoint.x);
-            var height = Math.max(startPoint.y, endPoint.y) - Math.min(startPoint.y, endPoint.y);
-
-            selectionBox.offset(topLeft);
-            selectionBox.width(width);
-            selectionBox.height(height);
-            // if (isMovingTask) {
-            //  selectionBox.hide();
-            // }
-            // else {
-            //  selectionBox.show();
-            // }
-            
-        });
         scope.$on('mouseLeave', function () {
             // If the guest is moving things quickly, sometimes letting go
             // of the mouse outside the window can be a thing, which messes
