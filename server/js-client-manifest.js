@@ -58,6 +58,7 @@ module.exports = {
         'ui/directives/module.js',
         'ui/directives/appendLinky.js',
         'ui/directives/autosize.js',
+        'ui/directives/cbDragAndDrop.js',
         'ui/directives/cbHighlightedStories.js',
         'ui/directives/cbStoryPulser.js',
         'ui/directives/cbViewportObserver.js',

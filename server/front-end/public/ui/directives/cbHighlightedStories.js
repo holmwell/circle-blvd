@@ -12,9 +12,6 @@ function (mouse) {
 
     // Properties we get from StoryList during 
     // the link step.
-    var isMovingTask = function () {
-        return true;
-    };
     var stories = function () {
         return {};
     };
@@ -46,7 +43,7 @@ function (mouse) {
                 story.highlightedFrom = 'none';
             }
         };
-        
+
 
         // API: highlight
         var highlightStory = function (story, highlightType) {
@@ -55,7 +52,8 @@ function (mouse) {
                 unhighlightAllStories();    
             }
 
-            if (isMovingTask()) {
+            // From cbDragAndDrop
+            if ($scope.isMovingTask) {
                 return;
             }
 
@@ -160,9 +158,6 @@ function (mouse) {
         // TODO: Is this the best we can do, setting
         // these properties of storyListCtrl to local
         // functions at link time? 
-        isMovingTask = function () {
-            return storyListCtrl.isMovingTask;
-        };
         stories = function () {
             return storyListCtrl.stories;
         };
