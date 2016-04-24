@@ -55,7 +55,6 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
         var selectedLabels = [];
         scope.selectedLabels = selectedLabels;
 
-        var clipboardStories = [];
         var teamHighlightedStories = {};
 
         var storyBeingInserted = undefined;
@@ -117,6 +116,7 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
             scope.nextMeeting = findNextMeeting();
 
             clipboard.reset();
+            scope.isClipboardActive = clipboard.isActive();
 
             dragAndDrop.activate();
         });
@@ -151,23 +151,13 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
             
         };
 
-        scope.cutHighlighted = function () {
-            cutHighlighted();
-        };
-
-        scope.pasteHighlighted = function ()  {
-            pasteHighlighted();
-        };
+        scope.cutHighlighted = cutHighlighted;
+        scope.pasteHighlighted = pasteHighlighted;
 
         function cutHighlighted() {
             clipboard.cutHighlighted(highlightedStories, stories);
             scope.isClipboardActive = clipboard.isActive();
         }
-
-        scope.$on('keyCut', function (e, event) {
-            cutHighlighted();
-            event.preventDefault();
-        });
 
         function pasteHighlighted() {
             clipboard.pasteHighlighted(highlightedStories, 
@@ -176,6 +166,11 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
 
             scope.isClipboardActive = clipboard.isActive();
         }
+
+        scope.$on('keyCut', function (e, event) {
+            cutHighlighted();
+            event.preventDefault();
+        });
 
         scope.$on('keyPaste', function (e, event) {
             pasteHighlighted();
