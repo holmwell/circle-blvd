@@ -1,8 +1,8 @@
 //'use strict';
 
 angular.module('CircleBlvd.directives').
-directive('spStoryList', ['$timeout', '$http', '$location', '$route', 'mouse', 'lib', 'hacks', 'errors', 
-function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
+directive('spStoryList', ['$timeout', '$http', '$location', '$route', 'mouse', 'lib', 'clipboard', 'hacks', 'errors', 
+function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, errors) {
     var shared = {};
 
     var directive = {
@@ -139,7 +139,7 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
                 selectedStory.isSelected = false;
                 scope.$emit('storyDeselected', selectedStory);         
             }
-            else if (!scope.isClipboardActive) {
+            else if (!clipboard.isActive()) {
                 highlightedStories.unhighlightAll();
             }
             // TODO: Un-cut the things.
@@ -157,49 +157,9 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
             pasteHighlighted();
         };
 
-        // TODO: Move to clipboard directive / service
-        var isHighlightingUp = function () {
-            // Determine the direction of the current highlight.
-            // If the most recently highlighted story's next story
-            // is highlighted, that means we're moving up.
-            if (highlightedStories.length <= 1) {
-                return false;
-            }
-
-            var lastHighlighted = highlightedStories[highlightedStories.length-1];
-            var nextStory = stories.get(lastHighlighted.nextId);
-            if (!nextStory) {
-                return false;
-            }
-
-            return nextStory.isHighlighted;
-        };
-
-        // TODO: Move to clipboard directive / service
         function cutHighlighted() {
-            if (clipboardStories.length > 0 || highlightedStories.length === 0) {
-                return;
-            }
-
-            highlightedStories.forEach(function (story) {
-                // TODO: Put in order? Maybe.
-                story.isInClipboard = true;
-                scope.isClipboardActive = true;
-                clipboardStories.push(story);
-            });
-
-            // Only highlight the top-most story
-            var highlightedStory;
-            if (isHighlightingUp()) { 
-                highlightedStory = highlightedStories[highlightedStories.length-1];
-            }
-            else {
-                highlightedStory = highlightedStories[0];
-            }
-
-            highlightedStories.unhighlightAll();
-            highlightedStory.isHighlighted = true;
-            highlightedStories.push(highlightedStory);
+            clipboard.cutHighlighted(highlightedStories, stories);
+            scope.isClipboardActive = clipboard.isActive();
         }
 
         scope.$on('keyCut', function (e, event) {
@@ -249,27 +209,12 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
         };
 
         function pasteHighlighted() {
-            if (highlightedStories.length === 0 || clipboardStories.length === 0) {
-                return;
-            }
+            clipboard.pasteHighlighted(highlightedStories, 
+                getStartAndEndOfBlock,
+                moveStoryBlock,
+                stories);
 
-            var nextStory = highlightedStories.pop();
-            nextStory.isHighlighted = false;
-
-            var block = getStartAndEndOfBlock(clipboardStories);
-
-            moveStoryBlock(block.start,
-                stories.get(block.start.id), 
-                stories.get(block.end.id),
-                stories.get(nextStory.id));
-
-            clipboardStories.forEach(function (story) {
-                story.isInClipboard = false;
-                highlightedStories.push(story);
-                story.isHighlighted = true;
-            });
-            clipboardStories = [];
-            scope.isClipboardActive = false;
+            scope.isClipboardActive = clipboard.isActive();
         }
 
         scope.$on('keyPaste', function (e, event) {

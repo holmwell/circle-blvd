@@ -22,6 +22,7 @@ module.exports = {
         'services/analytics.js',
         'services/mouse.js',
         'services/lib.js',
+        'services/clipboard.js',
         'services/hacks.js',
         'services/signInName.js',
         'services/session.js',
