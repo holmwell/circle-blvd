@@ -60,6 +60,7 @@ module.exports = {
         'ui/directives/autosize.js',
         'ui/directives/cbDragAndDrop.js',
         'ui/directives/cbHighlightedStories.js',
+        'ui/directives/cbStoryListBuilder.js',
         'ui/directives/cbStoryPulser.js',
         'ui/directives/cbViewportObserver.js',
         'ui/directives/spStory.js',

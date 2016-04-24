@@ -6,7 +6,11 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
     var shared = {};
 
     var directive = {
-        require: ['cbHighlightedStories', 'cbDragAndDrop'],
+        require: [
+            'cbHighlightedStories', 
+            'cbDragAndDrop', 
+            'cbStoryListBuilder'
+        ],
         restrict: 'E',
         templateUrl: 'ui/views/storyList.html',
         scope: {
@@ -28,17 +32,19 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
 
     function link (scope, element, attr, controllers) {
         var highlightedStories = controllers[0];
-        var dragAndDrop = controllers[1];
+        var dragAndDrop        = controllers[1];
+        var storyListBuilder   = controllers[2];
 
         var circle = undefined;
         var circleId = undefined;
         var listId = undefined;
 
         var selectedStory = undefined;
+        var storiesList   = [];
+        var stories       = CircleBlvd.Services.stories($http);
+        
+        shared.stories    = stories;
 
-        var storiesList = [];
-        var stories = CircleBlvd.Services.stories($http);
-        shared.stories = stories;
         var isFacade = false;
         var isChecklist = false;
         var searchEntry = undefined;
@@ -65,125 +71,8 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
         }
 
         var buildMilepostList = function (list) {
-            var milepostList = [];
-            list.forEach(function (story) {
-                if (story.isDeadline || story.isNextMeeting) {
-                    milepostList.push({
-                        id: story.id,
-                        summary: story.summary,
-                        isDeadline: story.isDeadline,
-                        isNextMeeting: story.isNextMeeting,
-                        isAfterNextMeeting: story.isAfterNextMeeting,
-                        isInRoadmap: true
-                    });
-                }
-            });
-
-            scope.mileposts = milepostList;
-        };
-
-        var buildStoryList = function (firstStory, serverStories, buildDelay) {
-            storiesList = [];
-
-            stories.init(serverStories);
-            // Empty list ... 
-            if (Object.keys(serverStories).length === 0) {
-                scope.stories = storiesList;
-                return;
-            }
-
-            if (!firstStory) {
-                errors.log("The list contains stories but a first story was not specified");
-                return;
-            }
-
-            stories.setFirst(stories.get(firstStory.id));
-            stories.get(firstStory.id).isFirstAtLoad = true;
-
-            if (stories.isListBroken()) {
-                scope.$emit('storyListBroken');
-                return;
-            }
-
-            scope.stories = storiesList;
-
-            // TODO: If we don't have a first story, relax.
-            var currentStory = stories.getFirst();
-            var isAfterNextMeeting = false;
-
-
-            var addAndGetNextStory = function (currentStory) {
-                storiesList.push(currentStory); // <3 pass by reference 
-
-                if (isAfterNextMeeting) {
-                    currentStory.isAfterNextMeeting = true;
-                }
-                else if (currentStory.isNextMeeting) {                  
-                    isAfterNextMeeting = true;
-                }
-
-                var nextStoryId = currentStory.nextId;
-                if (nextStoryId) {
-                    currentStory = stories.get(nextStoryId);
-                }
-                else {
-                    currentStory = undefined;
-                }
-
-                return currentStory;
-            };
-
-
-            // Add the first 10 stories immediately, so that
-            // the view renders as soon as possible.
-            var count = 0;
-            while (currentStory) {
-                currentStory = addAndGetNextStory(currentStory);
-                if (count > 10) {
-                    break;
-                }
-                count++;
-            }
-
-
-            // We build the list slowly by adding elements to the view
-            // 10 at a time, so that the UI doesn't lock up while the
-            // page is loading. 
-            //
-            // This means the page will take a full two seconds to load
-            // if there are 200 items. We'll want to address this need
-            // in the future, but at this point in development, where
-            // not many people have large projects, I think this is a 
-            // reasonable limitation.
-            var buildListSlowly = function () {
-                var delay = 100;
-                var increment = 10;
-
-                if (typeof(buildDelay) !== undefined) {
-                    delay = buildDelay;
-                }
-     
-                $timeout(function () {
-                    var count = 0;
-                    while (currentStory) {
-                        currentStory = addAndGetNextStory(currentStory);
-                        if (count > increment) {
-                            buildListSlowly();
-                            break;
-                        }
-                        count++;
-                    }
-
-                    if (!currentStory) {
-                        scope.$emit('storyListBuilt');
-                    }
-                }, delay);
-            };
-
-            buildListSlowly();
-            
-            // For designing
-            // scope.select(stories.getFirst());
+            var mileposts = storyListBuilder.buildMilepostList(list);
+            scope.mileposts = mileposts;
         };
 
         var findNextMeeting = function () {
@@ -205,23 +94,10 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
                 circle = newVal.circle;
                 circleId = newVal.circleId;
                 listId = newVal.listId || undefined;
-
-                buildStoryList(newVal.firstStory, newVal.allStories, newVal.delay);
-                // Event: See 'storyListBuilt'
-
-                // TODO: Might be cool to remember the highlighted
-                // stories across pages
-                if (highlightedStories.length === 0) {
-                    // Let's not highlight any stories by default,
-                    // for the time being. The odds of a first-story
-                    // selection being useful are low. About all it
-                    // gives us is the arrow keys work right away
-                    // for changing the highlight.
-                    //
-                    // var firstStory = stories.getFirst();
-                    // firstStory.isHighlighted = true;
-                    // highlightedStories.push(firstStory);
-                }
+                // Note, the storyListBuilder also watches
+                // on this property, and ultimately leads
+                // to binding scope.stories to something,
+                // via the storyListBuilt event.
             }
             else {
                 circle = undefined;
@@ -232,7 +108,10 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
             }
         });
 
-        scope.$on('storyListBuilt', function () {
+        // Emitted by storyListBuilder
+        scope.$on('storyListBuilt', function (e, newStoriesList) {
+            storiesList = newStoriesList;
+
             scope.$broadcast('viewportChanged');
             buildMilepostList(storiesList);
             scope.nextMeeting = findNextMeeting();
@@ -726,6 +605,8 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
             // $timeout(makeStoriesDraggable, 0);
         };
 
+        // Refactor: Move all these save operations in
+        // their own directive.
         scope.$on('storyArchived', function (e, story) {
             // Checklists can't be archived for now.
             if (isChecklist) {
@@ -828,6 +709,7 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
             stories.save(serverStory);
         });
 
+        // Refactor: Put these io-handlers into their own directive.
         scope.$on('ioStory', function (e, payload) {
             var story = payload.data;
             var viewModel = stories.get(story.id);
@@ -1223,6 +1105,7 @@ function ($timeout, $http, $location, $route, mouse, lib, hacks, errors) {
             stories.setFacade(isFacade);
         });
 
+        // Refactor: Move into own directive with other filters
         scope.$on('cbSearchEntry', function (e, val) {
             if (!val) {
                 searchEntry = undefined;
