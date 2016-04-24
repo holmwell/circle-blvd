@@ -42,19 +42,6 @@ CircleBlvd.Services.lib = function ($http) {
         }
     }();
 
-    var copiedTasks = [];
-    var setCopiedTasks = function (tasks) {
-        copiedTasks = [];
-        if (tasks) {
-            tasks.forEach(function (task) {
-                copiedTasks.push(task);
-            });
-        }
-    };
-
-    var getCopiedTasks = function () {
-        return copiedTasks;
-    };
 
     // Options:
     //  * profileName: name associated with @@ assignment
@@ -141,8 +128,6 @@ CircleBlvd.Services.lib = function ($http) {
             LabelRegex: LabelRegex
         },
         mindset: mindset,
-        setCopiedTasks: setCopiedTasks,
-        getCopiedTasks: getCopiedTasks,
         parseStory: parseStory
     };
 };

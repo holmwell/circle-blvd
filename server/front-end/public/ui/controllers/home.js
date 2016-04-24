@@ -1,6 +1,6 @@
 'use strict';
 
-function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $route, $rootScope, errors) {
+function HomeCtrl(lib, session, clipboard, hacks, $scope, $timeout, $http, $routeParams, $route, $rootScope, errors) {
 
 	var circleId = session.activeCircle;
 
@@ -357,7 +357,7 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 			return;
 		}
 
-		var tasks = lib.getCopiedTasks();
+		var tasks = clipboard.getCopiedTasks();
 		pasteText = getTaskListText(tasks);
 
 		if (element && element.txt) {
@@ -542,5 +542,5 @@ function HomeCtrl(lib, session, hacks, $scope, $timeout, $http, $routeParams, $r
 
 	init();
 }
-HomeCtrl.$inject = ['lib', 'session', 'hacks', 
+HomeCtrl.$inject = ['lib', 'session', 'clipboard', 'hacks', 
 '$scope', '$timeout', '$http', '$routeParams', '$route', '$rootScope', 'errors'];

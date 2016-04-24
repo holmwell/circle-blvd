@@ -116,6 +116,8 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
             buildMilepostList(storiesList);
             scope.nextMeeting = findNextMeeting();
 
+            clipboard.reset();
+
             dragAndDrop.activate();
         });
 
@@ -223,23 +225,8 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
         });
 
         scope.$on('keyCopy', function (e, event) {
-            if (highlightedStories.length === 0) {
-                return;
-            }
-
-            var clipboard = [];
-            var block = getStartAndEndOfBlock(highlightedStories);
-
-            var current = stories.get(block.start.id);
-            clipboard.push(block.start);
-
-            while (current && current.id !== block.end.id) {
-                current = stories.get(current.nextId);
-                clipboard.push(stories.get(current.id));
-            }
-
-            lib.setCopiedTasks(clipboard);
-            clipboard.forEach(function (story) {
+            var tasks = clipboard.copyTasks(highlightedStories, getStartAndEndOfBlock, stories);
+            tasks.forEach(function (story) {
                 pulse(story);
             });
         });

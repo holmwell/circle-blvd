@@ -70,16 +70,60 @@ angular.module('CircleBlvd.services')
             highlightedStories.push(story);
             story.isHighlighted = true;
         });
+
+        reset();
+    }
+
+    var copiedTasks = [];
+    var setCopiedTasks = function (tasks) {
+        copiedTasks = [];
+        if (tasks) {
+            tasks.forEach(function (task) {
+                copiedTasks.push(task);
+            });
+        }
+    };
+
+    var getCopiedTasks = function () {
+        return copiedTasks;
+    };
+
+    var copyTasks = function (highlightedStories, getStartAndEndOfBlock, stories) {
+        if (highlightedStories.length === 0) {
+            return [];
+        }
+
+        var tasks = [];
+        var block = getStartAndEndOfBlock(highlightedStories);
+
+        var current = stories.get(block.start.id);
+        tasks.push(block.start);
+
+        while (current && current.id !== block.end.id) {
+            current = stories.get(current.nextId);
+            tasks.push(stories.get(current.id));
+        }
+
+        setCopiedTasks(tasks);
+        return tasks;
+    };
+
+    function reset() {
         clipboardStories = [];
         isActive = false;
     }
 
+    // Initialize data.
+    reset();
 
     return {
         isActive: function () {
             return isActive;
         },
+        reset: reset,
         cutHighlighted: cutHighlighted,
-        pasteHighlighted: pasteHighlighted
+        pasteHighlighted: pasteHighlighted,
+        copyTasks: copyTasks,
+        getCopiedTasks: getCopiedTasks
     }
 });
