@@ -1,6 +1,8 @@
 'use strict';
 
 function StoryCtrl(session, lib, mouse, $scope, $timeout, $element) {
+	// Inherited scope
+	var highlightedStories = $scope.highlightedStories;
 
 	// Hide this element if it's not on the screen or within
 	// our off-screen buffer. We do this so there is a limited
@@ -196,7 +198,7 @@ function StoryCtrl(session, lib, mouse, $scope, $timeout, $element) {
 		// FYI: Stories will be highlighted when they are
 		// selected (opened). This is the desired behavior for now.
 		if (!story.isSelected) {
-			$scope.$emit('storyHighlight', story, 'single');
+			highlightedStories.highlight(story, 'single');
 
 			story.highlightedFrom = 'first';
 			mouse.isHighlighting = true;
@@ -231,6 +233,16 @@ function StoryCtrl(session, lib, mouse, $scope, $timeout, $element) {
 		mouse.lastMouseUpStory = story;
 	};
 
+    $scope.isStoryMostRecentHighlight = function (story) {
+        if (highlightedStories.length === 0) {
+            return false;
+        }
+        else if (highlightedStories[highlightedStories.length-1].id === story.id) {
+            return true;
+        }
+        return false;
+    };
+
 	// TODO: This is called N times. Move to list.
 	$scope.$on('mouseUp', function () {
 		mouse.isHighlighting = false; 
@@ -253,7 +265,7 @@ function StoryCtrl(session, lib, mouse, $scope, $timeout, $element) {
 	$scope.mouseEnter = function (story) {
 		if (mouse.isHighlighting) {
 			if (!story.isHighlighted) {
-				$scope.$emit('storyHighlight', story);
+				highlightedStories.highlight(story);
 			}
 		}
 		story.isOver = true;
@@ -262,7 +274,7 @@ function StoryCtrl(session, lib, mouse, $scope, $timeout, $element) {
 	$scope.mouseLeave = function (story) {
 		if (mouse.isHighlighting) {
 			if (story.isHighlighted && story.highlightedFrom !== 'first') {
-				$scope.$emit('storyUnhighlight', story, mouse.direction);
+				highlightedStories.unhighlight(story, mouse.direction);
 			}
 		}
 		story.isOver = false;

@@ -31,8 +31,6 @@ module.exports = {
     controllers: [
         'ui/controllers/topLevel.js',
         'ui/controllers/initialize.js',
-        'ui/controllers/story.js',
-        'ui/controllers/storyList.js',
         'ui/controllers/storySummary.js',
         'ui/controllers/roadmapMilepost.js',
         'ui/controllers/home.js',
@@ -60,6 +58,7 @@ module.exports = {
         'ui/directives/module.js',
         'ui/directives/appendLinky.js',
         'ui/directives/autosize.js',
+        'ui/directives/cbHighlightedStories.js',
         'ui/directives/cbStoryPulser.js',
         'ui/directives/cbViewportObserver.js',
         'ui/directives/spStory.js',
