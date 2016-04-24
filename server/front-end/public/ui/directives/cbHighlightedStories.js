@@ -6,11 +6,12 @@
 'use strict';
 
 angular.module('CircleBlvd.directives')
-.directive('cbHighlightedStories', ['$rootScope', 'mouse', 
-function ($rootScope, mouse) {
+.directive('cbHighlightedStories', ['mouse', 
+function (mouse) {
     var highlightedStories = [];
 
-    // Properties we get from StoryList
+    // Properties we get from StoryList during 
+    // the link step.
     var isMovingTask = function () {
         return true;
     };
@@ -21,124 +22,125 @@ function ($rootScope, mouse) {
         return false;
     };
 
-
-    // local
-    var isMouseAboveFirstHighlight = function () {
-        if (!mouse.dragStartPoint || !mouse.position) {
-            return false;
-        }
-
-        if (mouse.dragStartPoint.y > mouse.position.y) {
-            return true;
-        }
-        return false;
-    };
-
-
-    // API: unhighlightAll
-    var unhighlightAllStories = function () {
-        while (highlightedStories.length > 0) {
-            var story = highlightedStories.pop();
-            story.isHighlighted = false;
-            // TODO: This is a bit fragile ... should
-            // wrap the highlight methods soon.
-            story.highlightedFrom = 'none';
-        }
-    };
-
-
-    // not-local
-    // API: Event listener (for 'storyHighlighted') ... 
-    // currently listend to in TopLevelCtrl
-    var highlightStory = function (story, highlightType) {
-        if (highlightType === 'single') {
-            // Only allow one story to be highlighted.
-            unhighlightAllStories();    
-        }
-
-        if (isMovingTask()) {
-            return;
-        }
-
-        var highlight = function (storyToHighlight) {
-            if (!storyToHighlight) {
-                return;
+    var controller = ['$scope', function ($scope) {
+        //
+        var isMouseAboveFirstHighlight = function () {
+            if (!mouse.dragStartPoint || !mouse.position) {
+                return false;
             }
-            storyToHighlight.isHighlighted = true;
-            storyToHighlight.highlightedFrom = mouse.direction;
-            highlightedStories.push(storyToHighlight);
-            
-            $rootScope.$broadcast('storyHighlighted', storyToHighlight);
+
+            if (mouse.dragStartPoint.y > mouse.position.y) {
+                return true;
+            }
+            return false;
         };
 
-        if (highlightedStories.length === 0) {
-            highlight(story);
-            return;
-        }
 
-        // Account for the mouse leaving and re-entering
-        // the list during a drag. Also makes fast drags
-        // work, if they're going in one direction
-        if (!isMouseAboveFirstHighlight()) {
-            var current = highlightedStories[highlightedStories.length-1];
-
-            while (current && current.id !== story.id) {
-                current = stories().get(current.nextId);
-                highlight(current);
+        // API: unhighlightAll
+        var unhighlightAllStories = function () {
+            while (highlightedStories.length > 0) {
+                var story = highlightedStories.pop();
+                story.isHighlighted = false;
+                // TODO: This is a bit fragile ... should
+                // wrap the highlight methods soon.
+                story.highlightedFrom = 'none';
             }
-        }
-        else {
-            var current = highlightedStories[highlightedStories.length-1];
-
-            while (current && current.id !== story.id) {
-                current = stories().getPrevious(current, stories().get(current.id));
-                highlight(current);
-            }
-        }
-    };
-      
-
-    // API: unhighlight
-    var unhighlightStory = function (story, direction) {
-        if (highlightedStories.length <= 1) {
-            return;
-        }
+        };
         
-        var unhighlight = function () {
-            var indexToRemove = -1;
-            highlightedStories.forEach(function (highlighted, index) {
-                if (highlighted.id === story.id) {
-                    indexToRemove = index;
-                }
-            });
 
-            // Remove everything after the unhighlighted story.
-            // This helps us recover if a mouse-leave event isn't
-            // handled in order or something.
-            var count = highlightedStories.length-indexToRemove
-
-            if (indexToRemove >= 0) {
-                var removedStories = highlightedStories.splice(indexToRemove, count);
-                removedStories.forEach(function (removedStory) {
-                    removedStory.isHighlighted = false;
-                    removedStory.highlightedFrom = 'none';
-                });
+        // API: highlight
+        var highlightStory = function (story, highlightType) {
+            if (highlightType === 'single') {
+                // Only allow one story to be highlighted.
+                unhighlightAllStories();    
             }
-        }
 
-        if (isMouseAboveFirstHighlight() && direction === 'down') {
-            unhighlight();
-        }
-        else if (!isMouseAboveFirstHighlight() && direction === 'up') {
-            unhighlight();
-        }
-    };
+            if (isMovingTask()) {
+                return;
+            }
 
+            var highlight = function (storyToHighlight) {
+                if (!storyToHighlight) {
+                    return;
+                }
+                storyToHighlight.isHighlighted = true;
+                storyToHighlight.highlightedFrom = mouse.direction;
+                highlightedStories.push(storyToHighlight);
+                
+                $scope.$emit('storyHighlighted', storyToHighlight);
+            };
 
-    // API:
-    highlightedStories.highlight      = highlightStory;
-    highlightedStories.unhighlight    = unhighlightStory;
-    highlightedStories.unhighlightAll = unhighlightAllStories;
+            if (highlightedStories.length === 0) {
+                highlight(story);
+                return;
+            }
+
+            // Account for the mouse leaving and re-entering
+            // the list during a drag. Also makes fast drags
+            // work, if they're going in one direction
+            if (!isMouseAboveFirstHighlight()) {
+                var current = highlightedStories[highlightedStories.length-1];
+
+                while (current && current.id !== story.id) {
+                    current = stories().get(current.nextId);
+                    highlight(current);
+                }
+            }
+            else {
+                var current = highlightedStories[highlightedStories.length-1];
+
+                while (current && current.id !== story.id) {
+                    current = stories().getPrevious(current, stories().get(current.id));
+                    highlight(current);
+                }
+            }
+        };
+          
+
+        // API: unhighlight
+        var unhighlightStory = function (story, direction) {
+            if (highlightedStories.length <= 1) {
+                return;
+            }
+            
+            var unhighlight = function () {
+                var indexToRemove = -1;
+                highlightedStories.forEach(function (highlighted, index) {
+                    if (highlighted.id === story.id) {
+                        indexToRemove = index;
+                    }
+                });
+
+                // Remove everything after the unhighlighted story.
+                // This helps us recover if a mouse-leave event isn't
+                // handled in order or something.
+                var count = highlightedStories.length-indexToRemove
+
+                if (indexToRemove >= 0) {
+                    var removedStories = highlightedStories.splice(indexToRemove, count);
+                    removedStories.forEach(function (removedStory) {
+                        removedStory.isHighlighted = false;
+                        removedStory.highlightedFrom = 'none';
+                    });
+                }
+            }
+
+            if (isMouseAboveFirstHighlight() && direction === 'down') {
+                unhighlight();
+            }
+            else if (!isMouseAboveFirstHighlight() && direction === 'up') {
+                unhighlight();
+            }
+        };
+
+        // API: Used by other directives
+        highlightedStories.highlight      = highlightStory;
+        highlightedStories.unhighlight    = unhighlightStory;
+        highlightedStories.unhighlightAll = unhighlightAllStories;
+
+        return highlightedStories;
+    }];
+
 
     var link = function (scope, element, attr, storyListCtrl) {
         // Inherited scope
@@ -328,9 +330,7 @@ function ($rootScope, mouse) {
 
     return {
         link: link,
-        controller: ['$scope', function ($scope) {
-            return highlightedStories;
-        }],
+        controller: controller,
         require: '^spStoryList'
     };
 
