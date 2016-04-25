@@ -375,6 +375,11 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
             storyBeingInserted = newStory;
             stories.insertFirst(newStory, circleId, listId, function (err, serverStory) {
                 insertNewStoryIntoViewModel(serverStory);
+
+                $timeout(function () {
+                    scope.$broadcast('pulseStory', serverStory);
+                }, 50);
+
                 if (callback) {
                     callback(serverStory);
                 }

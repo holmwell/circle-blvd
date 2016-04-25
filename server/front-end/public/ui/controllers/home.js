@@ -180,7 +180,7 @@ function HomeCtrl(lib, session, clipboard, hacks, $scope, $timeout, $http, $rout
 		}
 	};
 
-	// Refactor: This is duplicated in StoryList
+	// Refactor: This is duplicated in StoryList.
 	var insertNewStory = function (newStory, callback) {
 		$scope.$broadcast('insertNewStory', newStory, callback);
 	};
