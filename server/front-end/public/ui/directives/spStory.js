@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('CircleBlvd.directives').
-directive('spStory', ['session', 'lib', 'mouse', '$timeout', 
-function (session, lib, mouse, $timeout) {
+directive('spStory', ['session', 'lib', 'hacks', 'mouse', '$timeout', 
+function (session, lib, hacks, mouse, $timeout) {
 
     return {
         require: '^^cbHighlightedStories',
@@ -212,6 +212,12 @@ function (session, lib, mouse, $timeout) {
                     story.highlightedFrom = 'first';
                     mouse.isHighlighting = true;
                     mouse.lastMouseDownStory = story;
+
+                    if (scope.isShowingInsertStory) {
+                        $timeout(function () {
+                            hacks.focus('storyInsert');
+                        }, 0);
+                    }
                 }
             }
 
