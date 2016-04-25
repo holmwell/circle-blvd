@@ -1,3 +1,4 @@
+// Deprecated ... use the spStory directive instead.
 'use strict';
 
 function StoryCtrl(session, lib, mouse, $scope, $timeout, $element) {

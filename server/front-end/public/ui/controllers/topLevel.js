@@ -195,6 +195,12 @@ function TopLevelCtrl(session, lib, mouse,
 			$scope.$broadcast('keyTakeOwnership', e);
 		}
 
+		if (e.keyCode === 73 || e.keyCode === 187) { 
+			// I or + (or =)
+			$scope.$broadcast('keyInsertStory', e);
+		}
+
+
 		// Scrolling: page up, page down, end, home
 		if (e.keyCode === 33
 			|| e.keyCode === 34

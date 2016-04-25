@@ -134,6 +134,12 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
         });
 
         scope.$on('keyEscape', function (e) {
+            if (scope.isShowingInsertStory) {
+                scope.hideInsertStory();
+                // Keep selection
+                return;
+            }
+
             if (selectedStory) {
                 // Close / deselect the story
                 // TODO: Revert changes to the story, which needs
@@ -249,6 +255,56 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
                     }
                 }
             });
+        };
+
+        scope.$on('keyInsertStory', function () {
+            scope.showInsertStory();
+        });
+
+        scope.showInsertStory = function () {
+            scope.isShowingInsertStory = true;
+            $timeout(function () {
+                hacks.focus('storyInsert');
+            }, 0);
+        };
+
+        scope.hideInsertStory = function () {
+            scope.isShowingInsertStory = false;
+        };
+
+        var insertNewStory = function (newStory, callback) {
+            scope.$broadcast('insertNewStory', newStory, callback);
+        };
+
+        var makeStoriesDraggable = function () {
+            scope.$broadcast('makeStoriesDraggable');
+        };
+
+        var isInsertingStory = false;
+        scope.insertedStory = {};
+        scope.insertStory = function (task, nextStory) {
+            if (!isInsertingStory && task && task.summary) {
+                isInsertingStory = true;
+                var newStory = lib.parseStory(task.summary, scope);
+                newStory.description = task.description;
+                
+                // Insert the story at the top and then move
+                // it down. Feel free to implement a new API
+                // call that inserts directly into the list
+                // at the correct spot, but this works for
+                // the time being (and works with the io
+                // engine).
+                insertNewStory(newStory, function (story) {
+
+                    var storyToMove = stories.get(story.id);
+                    moveStory(story, storyToMove, nextStory);
+
+                    scope.insertedStory = {};
+                    isInsertingStory = false;
+
+                    $timeout(makeStoriesDraggable, 0);
+                }); 
+            }
         };
 
 

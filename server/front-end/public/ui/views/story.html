@@ -8,11 +8,35 @@
         </div>
     </div>
 
+    <div ng-if="story.isHighlighted && isShowingInsertStory">
+        <div class="col-sm-offset-2 col-xs-12 debug insert-destination" ng-class="{
+                'col-sm-8': !isMindset('roadmap'),
+                'col-sm-12': isMindset('roadmap')
+            }">
+            <div class="debug new-story row alignWithStoryList">
+                <form>
+                    <div class="input-group">
+                        <input id="storyInsert" tabindex="1" type="text"
+                        autocomplete="off" 
+                        class="form-control" ng-model="insertedStory.summary" />
+                        <span class="input-group-btn">
+                            <button tabindex="3" class="btn btn-default pull-right" ng-click="insertStory(insertedStory, story)">Add task</button>
+                        </span>
+                    </div>
+
+                    <textarea class="form-control" tabindex="2" 
+                        ng-model="insertedStory.description" 
+                        autosize
+                        placeholder="Task description ..."></textarea>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div ng-if="!isScreenXs && isStoryMostRecentHighlight(story) && !isMindset('roadmap')"
         id="highlightedTools" class="hidden-xs">
         <div class="tools">
-            <div ng-if="!isClipboardActive" class="regularTools">
-
+            <div ng-if="!isClipboardActive && !isShowingInsertStory" class="regularTools">
                 <div class="jsLink" ng-click="markHighlightedAs('active')">
                     <span class="done"
                         ng-include="'/img/glyphs/icon-half-circle.svg'"></span> On it
@@ -21,12 +45,26 @@
                     <span class="done"
                         ng-include="'/img/glyphs/icon-circle.svg'"></span> Done
                 </div>
+
+                <div class="jsLink" ng-click="showInsertStory()">
+                    <span class="">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </span> Add task
+                </div>
+                <!--
                 <div class="jsLink" ng-click="markHighlightedAs('assigned')">
                     <span class="done"></span> Will do
-                </div>
+                </div> 
+                -->
 
                 <div class="jsLink" ng-click="cutHighlighted()">
                     <span class="glyphicon glyphicon-scissors"></span> Cut
+                </div>
+            </div>
+
+            <div ng-if="isShowingInsertStory" class="insertTools">
+                <div class="jsLink" ng-click="hideInsertStory()">
+                    <span class="glyphicon glyphicon-remove"></span> Hide entry
                 </div>
             </div>
 

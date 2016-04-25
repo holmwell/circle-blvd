@@ -269,7 +269,8 @@
   margin: 0;
 }
 
-#backlog .selected input, .new-story input {
+#backlog .selected input, 
+.new-story input {
   margin: 0;
 }
 
@@ -281,6 +282,12 @@
   padding-top: 1.1ex;
   padding-bottom: 1.1ex;
 }
+.insert-destination .new-story {
+  margin-top: 0;
+  margin-bottom: 1.1ex;
+  border: dotted 2px #006688;
+}
+
 .paddy, .dragging-story {
   padding-top: 0.75ex;
   padding-bottom: 0.75ex;
@@ -467,6 +474,15 @@
 #backlog .deadline textarea:focus {
   background-color: #ffc;
 }
+#backlog .deadline .insert-destination input,
+#backlog .deadline .insert-destination textarea,
+#backlog .insert-destination input,
+#backlog .insert-destination textarea,
+.insert-destination input,
+.insert-destination textarea {
+  border-color: #aaa;
+  background-color: white;
+}
 #backlog .deadline .saveBtn {
   background-color: #ffc;
 }
@@ -544,7 +560,9 @@
 }
 
 
-.filter, .paste-destination, .paste-destination:hover {
+.filter, 
+.paste-destination, 
+.paste-destination:hover {
   background-color: #1E69B5;
   background-color: #006688;
   color: white;
@@ -647,12 +665,18 @@
   opacity: 0.3;
 }
 
-.paste-destination, .paste-destination:hover {
+.paste-destination, 
+.paste-destination:hover {
   border: dashed goldenrod 1px;
   background-color: white;
   color: #333;
 }
 
+.insert-destination,
+.insert-destination:hover {
+  background-color: white;
+  color: #333;
+}
 
 .story-label {
   /*background-color: gold;*/
