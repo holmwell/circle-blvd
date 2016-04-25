@@ -131,10 +131,23 @@ function (mouse) {
             }
         };
 
+        var isMostRecent = function (story) {
+            if (highlightedStories.length === 0) {
+                return false;
+            }
+
+            var mostRecent = highlightedStories[highlightedStories.length-1];
+            if (mostRecent.id === story.id) {
+                return true;
+            }
+            return false;
+        };
+
         // API: Used by other directives
         highlightedStories.highlight      = highlightStory;
         highlightedStories.unhighlight    = unhighlightStory;
         highlightedStories.unhighlightAll = unhighlightAllStories;
+        highlightedStories.isMostRecent   = isMostRecent;
 
         return highlightedStories;
     }];

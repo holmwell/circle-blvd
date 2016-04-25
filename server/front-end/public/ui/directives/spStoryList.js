@@ -257,6 +257,17 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
             });
         };
 
+        scope.isExactlyOneHighlighted = function () {
+            if (highlightedStories.length === 1) {
+                return true;
+            }
+            return false;
+        };
+
+        scope.isMostRecentlyHighlighted = function (story) {
+            return highlightedStories.isMostRecent(story);
+        };
+
         scope.$on('keyInsertStory', function () {
             scope.showInsertStory();
         });

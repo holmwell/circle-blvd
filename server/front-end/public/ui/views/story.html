@@ -9,7 +9,9 @@
     </div>
 
     <div ng-if="story.isHighlighted && isShowingInsertStory">
-        <div class="col-sm-offset-2 col-xs-12 debug insert-destination" ng-class="{
+        <div class="col-sm-offset-2 col-xs-12 debug insert-destination" 
+            ng-show="isMostRecentlyHighlighted(story)"
+            ng-class="{
                 'col-sm-8': !isMindset('roadmap'),
                 'col-sm-12': isMindset('roadmap')
             }">
@@ -46,7 +48,8 @@
                         ng-include="'/img/glyphs/icon-circle.svg'"></span> Done
                 </div>
 
-                <div class="jsLink" ng-click="showInsertStory()">
+                <div class="jsLink" 
+                    ng-click="showInsertStory()">
                     <span class="">
                         <span class="glyphicon glyphicon-plus"></span>
                     </span> Add task
