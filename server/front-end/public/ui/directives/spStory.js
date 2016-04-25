@@ -272,7 +272,9 @@ function (session, lib, mouse, $timeout) {
             };
 
             scope.mouseEnter = function (story) {
-                if (mouse.isHighlighting) {
+                if (mouse.isHighlighting 
+                    && !scope.isShowingInsertStory
+                    && !scope.isClipboardActive) {
                     if (!story.isHighlighted) {
                         highlightedStories.highlight(story);
                     }
