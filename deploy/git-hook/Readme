@@ -4,7 +4,7 @@ Deploy Circle Blvd with git push
 1. Prerequisites
 -------------------------------------------
 A. Set up Circle Blvd on Ubuntu (see ../amazon-ec2)
-B. Have a clone of https://github.com/secret-project/circle-blvd on your local machine
+B. Have a clone of https://github.com/holmwell/circle-blvd on your local machine
  
 Things to understand: 
 -- This is for people comfortable with technical things
