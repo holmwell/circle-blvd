@@ -25,18 +25,20 @@ function ProfileCtrl(session, $scope, $http, errors) {
 	});
 
 	plans.push({
+		name: "Ten",
+		displayName: "Ten",
+		displayAmount: "$10",
+		stripeAmount: 1000
+	});
+
+	plans.push({
 		name: "Organizer",
 		displayName: "Twenty",
 		displayAmount: "$20",
 		stripeAmount: 2000
 	});
 
-	plans.push({
-		name: "Thirty",
-		displayName: "Thirty",
-		displayAmount: "$30",
-		stripeAmount: 3000
-	});
+
 
 	var updateCircles = function () {
 		$http.get("/data/circles")
