@@ -17,6 +17,7 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
             data: '=',
             accountName: '=',
             owners: '=',
+            labels: '=',
             enableAltMode: '=',
             mindset: '=',
             isFacade: '=',

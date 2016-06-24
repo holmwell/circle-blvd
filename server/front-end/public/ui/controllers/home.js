@@ -473,6 +473,26 @@ function HomeCtrl(lib, session, clipboard, hacks, $scope, $timeout, $http, $rout
 					circle: $scope.getActiveCircle()
 				};
 				// Event: See 'storyListBuilt' below
+
+				// TODO: Create a labels view on the server.
+				// Also we need to update this each time a
+				// label is added or removed.
+				var labels = {};
+				for(var key in serverStories) {
+					var story = serverStories[key];
+					if (story.labels) {
+						story.labels.forEach(function (label) {
+							labels[label] = label;
+						});
+					}
+				};
+
+				var labelsArray = [];
+				for (var key in labels) {
+					labelsArray.push(labels[key]);
+				}
+				labelsArray = labelsArray.sort();
+				$scope.labels = labelsArray;
 			})
 			.error(handleInitError);
 

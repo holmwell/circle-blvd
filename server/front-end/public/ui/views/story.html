@@ -39,11 +39,15 @@
         id="highlightedTools" class="hidden-xs">
         <div class="tools">
             <div ng-if="!isClipboardActive && !isShowingInsertStory" class="regularTools">
-                <div class="jsLink" ng-click="markHighlightedAs('active')">
+                <div class="jsLink" 
+                    ng-click="markHighlightedAs('active')"
+                    ng-hide="(story.isDeadline || story.isNextMeeting) && isExactlyOneHighlighted()">
                     <span class="done"
                         ng-include="'/img/glyphs/icon-half-circle.svg'"></span> On it
                 </div>
-                <div class="jsLink" ng-click="markHighlightedAs('done')">
+                <div class="jsLink" 
+                    ng-hide="(story.isDeadline || story.isNextMeeting) && isExactlyOneHighlighted()"
+                    ng-click="markHighlightedAs('done')">
                     <span class="done"
                         ng-include="'/img/glyphs/icon-circle.svg'"></span> Done
                 </div>
@@ -140,6 +144,7 @@
                         class="form-control"
                         type="text" 
                         ng-model="story.summary"
+                        typeahead-labels
                         ng-model-options="{ updateOn: 'submit' }"/></div>
                     <div ng-if="::!isScreenXs" class="hidden-xs col-sm-3">
                         <div class="deselect"><a ng-click="deselect(story, $event)">Hide details</a></div>

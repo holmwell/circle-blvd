@@ -68,7 +68,8 @@ module.exports = {
         'ui/directives/spStoryList.js',
         'ui/directives/spStorySummary.js',
         'ui/directives/spRoadmapMilepost.js',
-        'ui/directives/typeaheadOwners.js'
+        'ui/directives/typeaheadOwners.js',
+        'ui/directives/typeaheadLabels.js'
     ],
     filters: [
         'ui/filters/module.js',
