@@ -1,7 +1,7 @@
 {
   "name": "circle-blvd",
-  "version": "1.5.10",
-  "description": "Project management for local community organizers.",
+  "version": "1.5.11",
+  "description": "Project management for community organizers.",
   "repository": {
     "type": "git",
     "url": "https://github.com/holmwell/circle-blvd.git"
