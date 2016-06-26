@@ -4,7 +4,7 @@ var router = express.Router();
 
 // Dependencies
 var ensure = require('circle-blvd/auth-ensure');
-var errors = require('circle-blvd/errors');
+var errors = require('@holmwell/errors');
 var guard  = errors.guard;
 var handle = require('circle-blvd/handle');
 var send   = require('circle-blvd/send');

@@ -34,7 +34,7 @@ var bodyParser     = require('body-parser');
 var methodOverride = require('method-override');
 
 // circle-blvd modules
-var errors  = require('circle-blvd/errors');
+var errors  = require('@holmwell/errors');
 var session = require('circle-blvd/session');
 
 var settingsLib = require('circle-blvd/settings');

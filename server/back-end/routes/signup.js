@@ -3,7 +3,7 @@
 var express = require('express');
 var router = express.Router();
 
-var errors = require('circle-blvd/errors');
+var errors = require('@holmwell/errors');
 var ensure = require('circle-blvd/auth-ensure');
 
 var guard = errors.guard;

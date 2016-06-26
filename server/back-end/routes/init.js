@@ -1,5 +1,5 @@
 var async = require('async');
-var guard     = require('circle-blvd/errors').guard;
+var guard = require('@holmwell/errors').guard;
 
 exports.init = function (req, res, app, db) {
 	var settings  = require('circle-blvd/settings')(db);
