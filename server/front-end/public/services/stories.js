@@ -130,7 +130,7 @@ CircleBlvd.Services.stories = function ($http) {
 			var id = "error-" + Date.now();
 			var facade = null;
 			if (status === 403) {
-				var description = "Hi! Thanks for using Circle Blvd so much!\n\n" + 
+				var description = "Hi! Thanks for using Circle Tasks so much!\n\n" + 
 				"Please tell Phil this is happening, and he'll fix this problem right away.";
 				facade = {
 					id: id,

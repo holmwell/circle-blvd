@@ -3,11 +3,11 @@ extends layout-simple
 block view
     .content.prelude-content(ng-controller="PartnerCtrl")
         .col-sm-offset-2.col-sm-8.partner
-            h2 Partner with Circle Blvd.
+            h2 Partner with Circle Tasks
             p Thank you for considering becoming a development partner.
 
             p The goal of <a href="http://holmwell.com">Holmwell Software</a> and 
-             | Circle Blvd is to provide the best organizational tools available to 
+             | Circle Tasks is to provide the best organizational tools available to 
              | small groups who might not have a six-figure budget. In turn, organizations
              | can focus on making our towns and cities better places to live. 
 
@@ -19,10 +19,10 @@ block view
                     span.glyphicon.glyphicon-move
                 .col-xs-8.col-sm-9
                     h4 Partner by following our news 
-                    p There are many opportunities to contribute to the Circle Blvd project. The easiest
-                     | is to follow us on Twitter at <a href="http://twitter.com/circleblvd">@circleblvd</a>
+                    p There are many opportunities to contribute to the Circle Tasks project. The easiest
+                     | is to follow us on Twitter at <a href="http://twitter.com/circletasks">@CircleTasks</a>
                      | and <a href="http://twitter.com/holmwell">@holmwell</a>, or on Facebook
-                     | at <a href="https://www.facebook.com/circleblvd">/circleblvd</a> or 
+                     | at <a href="https://www.facebook.com/circletasks">/circletasks</a> or 
                      | <a href="https://www.facebook.com/holmwell">/holmwell</a>. This helps us know who is 
                      | actively interested in what we're contributing to your communities.
 
@@ -33,7 +33,7 @@ block view
                     h4 Partner by coding with us 
                     p The code for this website and our app is available on GitHub, at 
                      | <a href="https://github.com/holmwell">holmwell</a> and
-                     | <a href="https://github.com/holmwell/circle-blvd">circle-blvd</a>, and you 
+                     | <a href="https://github.com/holmwell/circle-tasks">circle-tasks</a>, and you 
                      | are welcome to read it and make changes. Let us know how we can help you 
                      | get involved.
 
@@ -43,20 +43,20 @@ block view
                 .col-xs-8.col-sm-9
                     h4 Partner by funding development 
                     p Join the network that shapes the future of Circle
-                     | Blvd. We'll talk with you, change Circle Blvd 
+                     | Tasks. We'll talk with you, change Circle Tasks 
                      | to work for you and your team, and start new projects
                      | on your behalf.
 
             div(ng-show="!isSignedIn() && supportsPayments")
                 p.
-                    To fund Circle Blvd with a monthly contribution, please <a href="/signin/#/partner">sign in</a>. 
+                    To fund Circle Tasks with a monthly contribution, please <a href="/signin/#/partner">sign in</a>. 
                     To make a one-time contribution without creating an account, please visit 
                     our <a href="/donate">donation</a> page.
 
                 p Thank you.
 
             div(ng-show="isSignedIn() && supportsPayments")
-                p To fund Circle Blvd with a monthly contribution, please choose any of the 
+                p To fund Circle Tasks with a monthly contribution, please choose any of the 
                  | three options below. To make a one-time contribution, please visit 
                  | our <a href="/donate">donation</a> page.
 

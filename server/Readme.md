@@ -1,6 +1,6 @@
-## circle-blvd server
+## circle-tasks server
 
-The Circle Blvd server is a Node.js application
+The Circle Tasks server is a Node.js application
 that utilizes Express and Apache CouchDB.
 
 To start it, run:
