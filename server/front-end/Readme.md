@@ -1,6 +1,6 @@
-## circle-tasks front-end
+## circle-blvd front-end
 
-The "front end" of the Circle Tasks server is
+The "front end" of the Circle Blvd server is
 basically an HTML / web client.
 
 The `views` folder contains server-side templates.

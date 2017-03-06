@@ -68,7 +68,7 @@ function PartnerCtrl(session, $scope, $http) {
 				return;
 			}
 			stripeHandler.open({
-				name: 'Circle Tasks',
+				name: 'Circle Blvd.',
 				description: activePlan.name +
 				 " (" + 
 				 	activePlan.displayAmount +

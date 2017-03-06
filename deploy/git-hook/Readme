@@ -1,10 +1,10 @@
-Deploy Circle Tasks with git push
+Deploy Circle Blvd with git push
 ===========================================
 
 1. Prerequisites
 -------------------------------------------
-A. Set up Circle Tasks on Ubuntu (see ../amazon-ec2)
-B. Have a clone of https://github.com/holmwell/circle-tasks on your local machine
+A. Set up Circle Blvd on Ubuntu (see ../amazon-ec2)
+B. Have a clone of https://github.com/holmwell/circle-blvd on your local machine
  
 Things to understand: 
 -- This is for people comfortable with technical things
@@ -13,28 +13,28 @@ Things to understand:
 
 2. Set up the server
 -------------------------------------------
-mkdir -p ~/repos/circle-tasks.git 
-cd repos/circle-tasks.git
+mkdir -p ~/repos/circle-blvd.git 
+cd repos/circle-blvd.git
 git init --bare
  
 # The post-receive file is in the same directory as this Readme
 # Copy it to your server
 cd
 chmod +x post-receive
-cp post-receive ~/repos/circle-tasks.git/hooks/post-receive 
+cp post-receive ~/repos/circle-blvd.git/hooks/post-receive 
 
 
 3. Set up the client
 -------------------------------------------
 
 # In your .ssh/config file
-Host circle-tasks
+Host circle-blvd
   HostName <domain or ip address>
   User ubuntu
   IdentiyFile <path to you your pem key>
 
 # Do this in your local repo
-git remote add deploy circle-tasks:/home/ubuntu/repos/circle-tasks.git
+git remote add deploy circle-blvd:/home/ubuntu/repos/circle-blvd.git
 git push deploy +master:refs/heads/master
  
 # To use: git push deploy

@@ -1,6 +1,6 @@
 // server.js
 // 
-// The main entry point for Circle Tasks. Handles
+// The main entry point for Circle Blvd. Handles
 // command-line arguments.
 // 
 var config = require('./config.js');

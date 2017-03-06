@@ -240,7 +240,7 @@ function ProfileCtrl(session, $scope, $http, errors) {
 				return;
 			}
 			stripeHandler.open({
-				name: 'Circle Tasks',
+				name: 'Circle Blvd.',
 				description: activePlan.name +
 				 " (" + 
 				 	activePlan.displayAmount +

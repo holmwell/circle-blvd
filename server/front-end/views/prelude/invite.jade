@@ -16,12 +16,12 @@ block view
                         .row(ng-if="isShowingChoice")
                             .col-md-8
                                 p You've been invited to join {{invite.circleName}}
-                                 | on Circle Tasks.
+                                 | on Circle Blvd.
 
                                 p Would you like to join using 
                                  | <span ng-show="!isSignedIn()" ng-cloak>an existing</span>
                                  | <span ng-show="isSignedIn()" ng-cloak>your current</span> 
-                                 | Circle Tasks account, or would you like to create a new account?
+                                 | Circle Blvd account, or would you like to create a new account?
 
                         .row.choice-row(ng-if="isShowingChoice")
                             .col-xs-12.choice(ng-if="isSignedIn()" ng-click="showUseCurrent()")
@@ -105,7 +105,7 @@ block view
                      | using the invite section of the Admin page. Each invitation can only be
                      | accepted once, and invites expire after 5 days.
 
-                    a(href="/") Continue to Circle Tasks.
+                    a(href="/") Continue to Circle Blvd.
 
     //- .first.curtain
     //-     .container-fluid.main
@@ -113,10 +113,10 @@ block view
     //-             img(src="img/glyphs/icon-same-idea.svg")
 
     //-         .col-xs-12.gutter-xs.visible-xs.title
-    //-             h1 Circle Tasks.
+    //-             h1 Circle Blvd.
 
     //-         .col-xs-12.gutter-xs.col-sm-8.col-sm-pull-4.headline
-    //-             h1.hidden-xs Welcome to Circle Tasks.
+    //-             h1.hidden-xs Welcome to Circle Blvd.
 
     //-             h4.tagline.visible-xs Project management for small&nbsp;teams.
                 

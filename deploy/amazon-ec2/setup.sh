@@ -22,11 +22,11 @@ sudo ln -s /usr/bin/nodejs /usr/local/bin/node
 # get the app
 cd 
 mkdir repos && cd repos
-git clone https://github.com/holmwell/circle-tasks
-cd circle-tasks/server/
+git clone https://github.com/holmwell/circle-blvd
+cd circle-blvd/server/
 sudo npm install --production
 
 # put the app in the deploy folder
 cd 
-mkdir -p apps/circle-tasks/server
-cp -R repos/circle-tasks/server/* apps/circle-tasks/server
+mkdir -p apps/circle-blvd/server
+cp -R repos/circle-blvd/server/* apps/circle-blvd/server

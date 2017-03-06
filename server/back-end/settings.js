@@ -1,6 +1,6 @@
 // settings.js
 //
-// These are the initial settings for Circle Tasks.
+// These are the initial settings for Circle Blvd.
 // Public and private settings can be edited. These
 // are saved in the database.
 //

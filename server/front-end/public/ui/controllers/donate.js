@@ -44,7 +44,7 @@ function DonateCtrl(session, $scope, $http, errors) {
 			$scope.donation = donation;
 			
 			stripeHandler.open({
-				name: 'Circle Tasks',
+				name: 'Circle Blvd.',
 				description: "One-time donation" +
 				 " (" + donation.displayAmount + ")",
 				amount: donation.stripeAmount,
