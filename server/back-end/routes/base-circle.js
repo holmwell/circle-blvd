@@ -19,6 +19,11 @@ module.exports = function (db) {
         db.stories.findByListId(circleId, handle(res));
     });
 
+    router.get("/:circleId/list-meta", ensure.circle, function (req, res) {
+        var circleId = req.params.circleId;
+        db.listMeta.findByListId(circleId, handle(res));
+    });
+
     // TODO: combine this with /stories to return one object with 
     // both the story list and the first story (in two different things)
     router.get("/:circleId/first-story", ensure.circle, function (req, res) {
