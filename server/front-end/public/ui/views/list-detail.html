@@ -20,9 +20,12 @@
     </div>
 </div>
 
-
 <div ng-if="lists && lists.length !== 0">
     <sp-story-list 
+        cb-highlighted-stories 
+        cb-drag-and-drop 
+        cb-story-list-builder
+
         data="listData" 
         owners="owners" 
         keyboard="keyboard"
