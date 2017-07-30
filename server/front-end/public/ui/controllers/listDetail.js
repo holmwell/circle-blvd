@@ -28,7 +28,7 @@ function ListDetailCtrl(lib, session, $scope, $http, $routeParams, $filter, $tim
                 $scope.listName = list.name;
                 $scope.listDescription = list.description;
 
-                $scope.listData = {
+                $scope.data = {
                     firstStory: firstStory,
                     allStories: allStories,
                     circleId: circleId,
@@ -36,7 +36,7 @@ function ListDetailCtrl(lib, session, $scope, $http, $routeParams, $filter, $tim
                 };
 
                 $scope.isListEmpty = function () {
-                    if (!$scope.listData.firstStory) {
+                    if (!$scope.data.firstStory) {
                         return true;
                     }
                 };
