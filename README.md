@@ -38,7 +38,7 @@ running for fun
 If you can run Apache CouchDB on your system, you can run Circle Blvd. 
 
 ### Prerequisites
-1. Node v4 (see build status)
+1. Node v6 (v4 is probably fine; see build status)
 2. CouchDB >= 1.3
 
 ### Installation
