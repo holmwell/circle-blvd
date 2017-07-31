@@ -242,11 +242,11 @@ test['POST /data/story/ is 200'] = function (test) {
 };
 
 test['GET /data/story/:storyId is 200'] = function (test) {
-	member.get('/data/story/' + memberSession.story._id)
+	member.get('/data/story/' + memberSession.story.id)
 	.expect(200)
 	.expect(function (res) {
 		var story = res.body;
-		test.equal(story._id, memberSession.story._id);
+		test.equal(story.id, memberSession.story.id);
 	})
 	.end(finish(test));
 };
@@ -258,7 +258,7 @@ test['GET /data/:circleId/stories is 200'] = function (test) {
 		var stories = res.body;
 		var containsNewStory = false;
 		for (var key in stories) {
-			if (memberSession.story._id === stories[key].id) {
+			if (memberSession.story.id === stories[key].id) {
 				console.log(stories[key].summary);
 				containsNewStory = true;
 			}
