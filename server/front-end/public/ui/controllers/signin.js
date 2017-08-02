@@ -143,7 +143,7 @@ function SignInCtrl(signInName, session, lib, $scope, $location, $window, $http)
 			$scope.user.email = $scope.signup.email;
 			$scope.user.password = $scope.signup.password;
 
-			session.lastLocationPath = "/welcome";
+			session.lastLocationPath = "/home/first";
 			$scope.signIn();
 		};
 		
