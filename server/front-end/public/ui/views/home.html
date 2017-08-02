@@ -20,7 +20,23 @@
 	</div>
 </div>
 
-<div class="entry-facade no-select" ng-hide="isAddingNew || isBacklogBroken">
+<div ng-cloak ng-show="isShowingRoadmapIntro">
+	<p>Add a few more tasks (and a milepost) to enter roadmap view! Here's a short video to explain:</p> 
+	<div class="row">
+		<div class="col-xs-12">
+			<div class="embed-container">
+				<iframe src="//www.youtube-nocookie.com/embed/NPoVfno85No?rel=0" frameborder="0" allowfullscreen/>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div ng-cloak ng-show="isShowingBumpIntro" class="col-xs-8 col-xs-offset-2">
+	<p style="padding-bottom: 1.5em">Add about 15 tasks to enable the "Next up" view, which you can use
+		to bump items up to the top of the list.</p> 
+</div>
+
+<div class="entry-facade no-select" ng-hide="isAddingNew || isBacklogBroken || isShowingRoadmapIntro || isShowingBumpIntro">
 	<div class="clearfix entry-facade-container">
 		<div class="col-xs-12 debug alignWithStoryList"
 			ng-class="{
@@ -243,19 +259,21 @@
 	</div>
 </div>
 
-<sp-story-list 
-	cb-highlighted-stories 
-	cb-drag-and-drop 
-	cb-story-list-builder
-	
-	circle="circle"
-	data="data" 
-	account-name="accountName"
-	owners="owners" 
-	keyboard="keyboard"
-	mouse="mouse"
-	enable-alt-mode="(isManualAltMode || isAltMode)"
-/>
+<div ng-hide="isShowingRoadmapIntro || isShowingBumpIntro">
+	<sp-story-list 
+		cb-highlighted-stories 
+		cb-drag-and-drop 
+		cb-story-list-builder
+		
+		circle="circle"
+		data="data" 
+		account-name="accountName"
+		owners="owners" 
+		keyboard="keyboard"
+		mouse="mouse"
+		enable-alt-mode="(isManualAltMode || isAltMode)"
+	/>
+</div>
 </div>
 
 <div ng-if="::isFirstView" class="hide-introduction"><a href="/#/" class="subtle link-btn">Hide introduction text, forever.</a></div>

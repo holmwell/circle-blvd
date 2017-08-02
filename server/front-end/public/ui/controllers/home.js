@@ -27,7 +27,24 @@ function HomeCtrl(lib, session, clipboard, hacks, $scope, $timeout, $http, $rout
 	updateBackBar();
 
 	$scope.$on('mindsetChanged', function () {
-		updateBackBar();
+		updateBackBar();  
+
+		var tasks = $scope.data && $scope.data.allStories;
+		var deadlineCount = 0;
+		var storyCount = 0;
+		if (tasks) {
+			for (var key in tasks) {
+				if (tasks[key].isDeadline) {
+					deadlineCount++;
+				}
+				storyCount++;
+			}
+		}
+
+		$scope.isShowingRoadmapIntro = ($scope.isMindset('roadmap') 
+			&& (storyCount < 5 || deadlineCount < 1))
+
+		$scope.isShowingBumpIntro = ($scope.isMindset('bump') && storyCount < 15)
 	});
 
 	var entryPanel = function () {
