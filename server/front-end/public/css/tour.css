@@ -64,7 +64,7 @@ p {
 }
 
 .tour .intro {
-    /*padding-top: 1.5em;*/
+    padding-top: 1.5em;
 }
 
 .easy-way,
@@ -123,8 +123,8 @@ p {
     padding-top: 2em;
     padding-bottom: 2em;
 }
-.framework .list-introduction-video {
-    padding-top: 2.6em;
+.list-introduction-video {
+    padding-top: 1em;
 }
 .caption {
     font-size: 12pt;
@@ -214,11 +214,11 @@ p {
 .for-communities,
 .big-ideas,
 .simple {
-    padding-top: 2.6em;
+    padding-top: 1.25em;
     padding-bottom: 2.6em;
 }
 .for-communities a {
-    color: #eee;
+    color: gold;
 }
 .for-communities .caption {
     margin-top: 0.25ex;
