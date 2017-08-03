@@ -37,7 +37,7 @@ var finish = function (test) {
 };
 
 test['database setup'] = function (test) {
-    var app = require('../app.js');
+    var app = require('../back-end/app.js');
     // CouchDB is not entirely ready when ready is
     // called. So, work around that until we can
     // fix it.
