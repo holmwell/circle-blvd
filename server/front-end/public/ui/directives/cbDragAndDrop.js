@@ -397,7 +397,9 @@ function (lib, mouse, $timeout, errors) {
             var selector = '.highlightedWrapper';
 
             $('#sortableList').sortable({
-                handle: ".grippy",
+                // handle: ".grippy", Do some more testing on mobile before eliminating
+                // the use of grippy entirely.
+                handle: ".highlighted",
                 placeholder: "dragging-row",
                 forcePlaceholderSize: true,
                 opacity: 0.75,
@@ -467,6 +469,15 @@ function (lib, mouse, $timeout, errors) {
                 $("#sortableList").sortable("option", "connectWith", "#mileposts"); 
             }
         };
+
+        scope.$on('keyShiftDown', function () {
+            var isDisabled = true;
+            $("#sortableList").sortable("option", "handle", isDisabled);
+        });
+
+        scope.$on('keyShiftUp', function () { 
+            $("#sortableList").sortable("option", "handle", ".highlighted");
+        });
 
         scope.$on('makeStoriesDraggable', function (e) {
             makeStoriesDraggable();

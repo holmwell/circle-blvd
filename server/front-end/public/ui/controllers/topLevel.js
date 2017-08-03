@@ -125,6 +125,7 @@ function TopLevelCtrl(session, lib, mouse,
 
 		if (e.keyCode === 16) {
 			$scope.keyboard.isShiftDown = true;
+			$scope.$broadcast('keyShiftDown', e);
 		}
 		if (e.keyCode === 224 || 
 			e.keyCode === 17 || 
@@ -213,6 +214,7 @@ function TopLevelCtrl(session, lib, mouse,
 	$scope.keyup = function (e) {
 		if (e.keyCode === 16) {
 			$scope.keyboard.isShiftDown = false;
+			$scope.$broadcast('keyShiftUp', e);
 		}
 
 		if (e.keyCode === 224 || 
