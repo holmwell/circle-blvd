@@ -3,8 +3,8 @@
 // The main entry point for Circle Blvd. Handles
 // command-line arguments.
 // 
-var config = require('./config.js');
-var app    = require('./app.js');
+var config = require('./back-end/config.js');
+var app    = require('./back-end/app.js');
 
 // Process command-line arguments
 var isDebugging = false;

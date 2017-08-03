@@ -54,7 +54,7 @@ var socketSetup = require('circle-blvd/middleware/socket-setup');
 var canonicalDomain = require('circle-blvd/middleware/canonical-domain');
 var corsIonic       = require('circle-blvd/middleware/cors-ionic');
 
-var defaultSettings = require('./back-end/settings');
+var defaultSettings = require('./settings');
 
 
 // configure Express
@@ -79,11 +79,11 @@ var init = function (config, callback) {
 
     // Views and view engines
     var path = require('path');
-    app.set('views', path.join(__dirname, '/front-end/views'));
+    app.set('views', path.join(__dirname, '../front-end/views'));
     app.set('view engine', 'jade');
 
     // HTML, CSS, JavaScript files location
-    var staticPath = path.join(__dirname, './front-end/public');
+    var staticPath = path.join(__dirname, '../front-end/public');
 
     settings.addListener(onSettingsUpdate);
     settings.init(defaultSettings, processSettings);

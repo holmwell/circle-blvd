@@ -10,21 +10,21 @@ var handle = require('circle-blvd/handle');
 var send   = require('circle-blvd/send');
 
 // Routes
-var userRoutes  = require('./back-end/routes/user');
-var initRoutes  = require('./back-end/routes/init');
+var userRoutes  = require('./routes/user');
+var initRoutes  = require('./routes/init');
 
-var authRoutes       = require('./back-end/routes/auth');
-var metrics          = require('./back-end/routes/metrics');
-var settingsRoutes   = require('./back-end/routes/settings');
-var paymentRoutes    = require('./back-end/routes/payment');
-var signupRoutes     = require('./back-end/routes/signup');
-var circleRoutes     = require('./back-end/routes/circle');
-var groupRoutes      = require('./back-end/routes/group');
-var baseCircleRoutes = require('./back-end/routes/base-circle');
-var storyRoutes      = require('./back-end/routes/story');
+var authRoutes       = require('./routes/auth');
+var metrics          = require('./routes/metrics');
+var settingsRoutes   = require('./routes/settings');
+var paymentRoutes    = require('./routes/payment');
+var signupRoutes     = require('./routes/signup');
+var circleRoutes     = require('./routes/circle');
+var groupRoutes      = require('./routes/group');
+var baseCircleRoutes = require('./routes/base-circle');
+var storyRoutes      = require('./routes/story');
 
-var routes   = require('./front-end/routes');
-var prelude  = require('./front-end/routes/prelude');
+var routes   = require('../front-end/routes');
+var prelude  = require('../front-end/routes/prelude');
 
 module.exports = function (sessionMaker, db) {
     var auth    = require('circle-blvd/auth-local')(db);
