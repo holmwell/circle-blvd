@@ -297,15 +297,6 @@ function (lib, mouse, $timeout, errors) {
             return true;
         };
 
-        // This works in conjunction with the scope.rememberHighlight
-        // function in StoryCtrl. This probably means we should refactor
-        // into some other service. Go for it.
-        //
-        scope.$on('storyMoved', function (e, story) {
-            mouse.lastMouseUpStory = story;
-        });
-
-
         var checkStoryListDom = function () {
             var current = stories.getFirst();
             var element; 
@@ -430,7 +421,6 @@ function (lib, mouse, $timeout, errors) {
 
                         $(selector).show();
                         scope.isMovingTask = false;
-                        //mouse.lastMouseDownStory = undefined;
                         return;
                     }
 
@@ -446,7 +436,6 @@ function (lib, mouse, $timeout, errors) {
                     // And, we're done. Show our work.
                     $(selector).show();
                     scope.isMovingTask = false;
-                    //mouse.lastMouseDownStory = undefined;
                 },
                 start: function (event, ui) {
                     // The drop shadow slows down the phones a bit

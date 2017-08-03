@@ -211,7 +211,6 @@ function (session, lib, hacks, mouse, $timeout) {
 
                     story.highlightedFrom = 'first';
                     mouse.isHighlighting = true;
-                    mouse.lastMouseDownStory = story;
 
                     if (scope.isShowingInsertStory) {
                         $timeout(function () {
@@ -229,23 +228,6 @@ function (session, lib, hacks, mouse, $timeout) {
                     return;
                 }
                 highlight(story);
-            };
-
-            // Called on ng-mouseup
-            //
-            // This allows us to open (select) a story by clicking
-            // on it once, when it is highlighted, instead of having
-            // to double-click all over the place.
-            scope.rememberHighlight = function (story) {
-                if (mouse.lastMouseUpStory && 
-                    mouse.lastMouseUpStory.id === story.id &&
-                    mouse.lastMouseUpStory.id === mouse.lastMouseDownStory.id &&
-
-                    !isMovingToTop) {
-                    scope.select(story);
-                }
-
-                mouse.lastMouseUpStory = story;
             };
 
             scope.isStoryMostRecentHighlight = function (story) {
