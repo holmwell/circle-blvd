@@ -167,6 +167,9 @@ function (mouse) {
         scope.$on("storyDeselected", function () {
             selectedStory = undefined;
         });
+        scope.$on("storyRemoved", function () {
+            selectedStory = undefined;
+        });
 
         // TODO: Is this the best we can do, setting
         // these properties of storyListCtrl to local
@@ -193,7 +196,7 @@ function (mouse) {
             if (selectedStory || highlightedStories.length === 0) {
                 return;
             }
-        
+
             // If the shift key is pressed, add to the selection, 
             // otherwise ... 
             var recentStory;
