@@ -207,10 +207,13 @@ function (session, lib, hacks, mouse, $timeout) {
                 // FYI: Stories will be highlighted when they are
                 // selected (opened). This is the desired behavior for now.
                 if (!story.isSelected) {
-                    highlightedStories.highlight(story, 'single');
+
+                    var highlightingType = scope.keyboard.isShiftDown ? 'multi' : 'single';
+
+                    highlightedStories.highlight(story, highlightingType);
 
                     story.highlightedFrom = 'first';
-                    mouse.isHighlighting = true;
+                    mouse.isHighlighting = (highlightingType === 'single');
 
                     if (scope.isShowingInsertStory) {
                         $timeout(function () {
@@ -250,7 +253,7 @@ function (session, lib, hacks, mouse, $timeout) {
             });
 
             scope.handleSingleClicks = function (story) {
-                if (scope.keyboard.isShiftDown || scope.isScreenXs) {
+                if (scope.isScreenXs) {
                     scope.select(story);
                     return;
                 }
