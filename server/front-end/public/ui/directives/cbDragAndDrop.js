@@ -390,7 +390,7 @@ function (lib, mouse, $timeout, errors) {
             $('#sortableList').sortable({
                 // handle: ".grippy", Do some more testing on mobile before eliminating
                 // the use of grippy entirely.
-                handle: ".highlighted",
+                handle: ".story",
                 placeholder: "dragging-row",
                 forcePlaceholderSize: true,
                 opacity: 0.75,
