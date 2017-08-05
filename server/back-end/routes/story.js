@@ -103,23 +103,31 @@ module.exports = function (db) {
     };
 
     var saveStoryWithComment = function (story, req, res) {
-        ioNotify(res, story.projectId, 'story-save', story);
-        db.stories.save(story, 
-            function (savedStory) {
-                if (story.newComment) {
-                    var params = {
-                        story: savedStory,
-                        comment: story.newComment,
-                        user: req.user
-                    };
-                    notify.newComment(params, req); 
-                }
-                res.status(200).send(savedStory);
-            },
-            function (err) {
-                errors.handle(err, res);
+        db.docs.get(story.id, function (err, oldStory) {
+            if (err) {
+                console.log(err);
             }
-        );
+
+            story._previousValue = oldStory;
+            ioNotify(res, story.projectId, 'story-save', story);
+
+            db.stories.save(story, 
+                function (savedStory) {
+                    if (story.newComment) {
+                        var params = {
+                            story: savedStory,
+                            comment: story.newComment,
+                            user: req.user
+                        };
+                        notify.newComment(params, req); 
+                    }
+                    res.status(200).send(savedStory);
+                },
+                function (err) {
+                    errors.handle(err, res);
+                }
+            );
+        });
     };
 
     router.put("/", ensure.auth, function (req, res) {
