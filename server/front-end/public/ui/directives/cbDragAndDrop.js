@@ -388,9 +388,7 @@ function (lib, mouse, $timeout, errors) {
             var selector = '.highlightedWrapper';
 
             $('#sortableList').sortable({
-                // handle: ".grippy", Do some more testing on mobile before eliminating
-                // the use of grippy entirely.
-                handle: ".story",
+                handle: storyListScope.isScreenXs ? ".grippy" : ".story",
                 placeholder: "dragging-row",
                 forcePlaceholderSize: true,
                 opacity: 0.75,
