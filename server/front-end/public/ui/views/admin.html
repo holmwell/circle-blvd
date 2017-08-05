@@ -137,6 +137,20 @@
 </ul>
 
 <form>
+	<h4>Integrations (Webhooks)</h4>
+	<div class="row">
+		<div class="col-sm-5">
+			<input ng-model="slackUrl" class="form-control" type="text" placeholder="https://hooks.slack.com/..."/>
+		</div>
+		<div class="col-sm-2">
+			<button class="btn btn-default" 
+			ng-click="saveSlackUrl(slackUrl)">Save</button>
+			<span>&nbsp;{{messages.slackUrl}}</span>
+		</div>
+	</div>
+</form>
+
+<form>
 	<h4>Archive circle</h4>
 	<div class="row">
 		<p class="col-sm-7">Hide the circle from the top navbar, for all members. The circle will still be accessible from the <a href="/#/profile">profile page</a>,

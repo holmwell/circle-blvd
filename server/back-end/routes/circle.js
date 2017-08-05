@@ -157,6 +157,18 @@ module.exports = function (db) {
         }));
     });
 
+    router.put("/:circleId/webhooks/:type", ensure.circleAdmin, function (req, res) {
+        var data = req.body;
+        var circleId = req.params.circleId;
+        var type = req.params.type || 'default';
+        db.circles.get(circleId, guard(res, function (circle) {
+            circle.webhooks = circle.webhooks || {};
+            circle.webhooks[type] = circle.webhooks[type] || {};
+            circle.webhooks[type].url = data.url;
+            db.circles.update(circle, handle(res));
+        }));
+    });
+
     // Invites!
     router.post("/:circleId/invite", ensure.circleAdmin, function (req, res) {
         var data = req.body;

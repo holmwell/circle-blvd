@@ -50,6 +50,7 @@ var webServer;
 var forceHttps  = require('circle-blvd/middleware/force-https');
 var firstRun    = require('circle-blvd/middleware/first-run');
 var socketSetup = require('circle-blvd/middleware/socket-setup');
+var slack       = require('circle-blvd/middleware/slack');
 
 var canonicalDomain = require('circle-blvd/middleware/canonical-domain');
 var corsIonic       = require('circle-blvd/middleware/cors-ionic');
@@ -152,6 +153,9 @@ var init = function (config, callback) {
 
         // Real-time engine
         app.use(socketSetup(io, sessionMiddleware, db));
+        
+        // Webhooks
+        app.use(slack(db));
 
         // Routes
         var sessionMaker = sessionMakerLib(sessionDatabase, db.users);

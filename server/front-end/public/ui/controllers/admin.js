@@ -28,6 +28,10 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 				$scope.milepostBackground = data.colors.mileposts.background;
 				$scope.milepostForeground = data.colors.mileposts.foreground;
 			}
+			if (data.webhooks) {
+				$scope.slackUrl = data.webhooks.slack.url;
+			}
+			console.log(data);
 		}
 
 		function getCircleFailure(data, status) {
@@ -57,6 +61,17 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 		$http.put('/data/circle/' + activeCircle + '/colors/mileposts', data)
 		.success(function () {
 			$scope.messages.milepostColors = "Ok!";
+		})
+		.error(errors.handle);
+	};
+
+	$scope.saveSlackUrl = function (slackUrl) {
+		var data = {
+			url: slackUrl
+		};
+		$http.put('/data/circle/' + activeCircle + '/webhooks/slack', data)
+		.success(function () {
+			$scope.messages.slackUrl = "Ok!";
 		})
 		.error(errors.handle);
 	};
