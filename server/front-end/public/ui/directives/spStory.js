@@ -253,10 +253,10 @@ function (session, lib, hacks, mouse, $timeout) {
             });
 
             scope.handleSingleClicks = function (story) {
-                // if (scope.isScreenXs) {
-                //     scope.select(story);
-                //     return;
-                // }
+                if (scope.isScreenXs) {
+                    scope.select(story);
+                    return;
+                }
 
                 highlight(story);
                 mouse.isHighlighting = false; 
