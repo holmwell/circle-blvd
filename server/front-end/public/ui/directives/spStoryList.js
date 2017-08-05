@@ -881,7 +881,7 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
                     });             
                 }
                 else {
-                    highlightStory(stories.get(storyId), 'single');
+                    highlightedStories.highlight(stories.get(storyId), 'single');
                     scrollToStory(storyId);
                 }
             })
