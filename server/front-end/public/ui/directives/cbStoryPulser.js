@@ -22,8 +22,7 @@ directive('cbStoryPulser', ['$timeout', function ($timeout) {
         var selector = ensureSelector(selector);
 
         var pulseClass = "pulse";
-        if ((story.isDeadline && story.isAfterNextMeeting) 
-            || story.isNextMeeting) {
+        if (story.isDeadline || story.isNextMeeting) {
             pulseClass = "pulse-milepost";
         }
         var qStory = $("[" + selector + "='" + story.id + "']");

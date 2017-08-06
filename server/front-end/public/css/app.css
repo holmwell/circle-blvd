@@ -106,10 +106,10 @@
   margin-right: 0.35ex;
   
   vertical-align: text-top;  
-  opacity: 0.2;
+  /*opacity: 0.2;*/
 }
-#highlightedTools .jsLink:hover .done {
-  opacity: 0.6;
+#highlightedTools .jsLink:hover .done .icon-status {
+  stroke: #888;
 }
 
 #backlog {
@@ -126,6 +126,8 @@
 .archive {
   color: #222;
   background-color: #ddd;
+  background-color: rgb(255, 219, 129);
+  background-color: #ffe7b0;
 /*  background-color: #00BFFF;
   background-color: #D3BAC1;
   background-color: #6B5E62; color: #eee;
@@ -146,7 +148,6 @@
 .selected {
   cursor: default;
 }
-.story:hover, 
 .selected {
   background-color: #eee;
 /*  background-color: #6B5E62;
@@ -158,9 +159,12 @@
 
 .grippy:active .grippy-viz .grippy-bar {
   background-color: #888;
+  background-color: #FEC849;
+  background-color: rgb(255, 219, 129);
 }
 .grippy:active .grippy-viz .glyphicon {
   color: #888;
+  background-color: rgb(255, 219, 129);
 }
 .next-meeting .grippy:active .grippy-viz .grippy-bar {
   background-color: white;
@@ -202,9 +206,11 @@
 }
 .first-at-load .grippy-bar {
   background-color: #b6b6b6;
+  background-color: #FEC849;
 }
 .first-at-load .grippy .glyphicon {
   color: #aaa;
+  color: #FEC849;;
 }
 .next-meeting .grippy-bar {
   background-color: #111;
@@ -221,6 +227,7 @@
 
 .grippy-viz {
   background-color: #d0d0d0;
+  background-color: rgb(255, 219, 129);
 }
 .first-at-load .grippy-viz {
   background-color: inherit;
@@ -285,7 +292,7 @@
 .insert-destination .new-story {
   margin-top: 0;
   margin-bottom: 1.1ex;
-  border: dotted 2px #006688;
+  border: dotted 1px #006688;
 }
 
 .paddy, .dragging-story {
@@ -466,13 +473,14 @@
 #backlog .deadline textarea,
 #backlog .deadline input {
   border-color: #b2960a;
-  background-color: #E5C10D;
+  border-color: #aaa;
+  background-color: #ddd;
 }
 #backlog .deadline input:hover,
 #backlog .deadline input:focus,
 #backlog .deadline textarea:hover,
 #backlog .deadline textarea:focus {
-  background-color: #ffc;
+  background-color: #ddd;
 }
 #backlog .deadline .insert-destination input,
 #backlog .deadline .insert-destination textarea,
@@ -484,7 +492,7 @@
   background-color: white;
 }
 #backlog .deadline .saveBtn {
-  background-color: #ffc;
+  background-color: #ddd;
 }
 #backlog .deadline.after-meeting .saveBtn {
   background-color: white;
@@ -493,9 +501,11 @@
 .next-meeting {
   color: #eee;
   background-color: #333 !important;
+  background-color: rgb(66, 69, 69) !important;
 }
 .next-meeting:hover {
   background-color:  #333;
+  background-color: rgb(66, 69, 69);
 }
 
 .after-meeting {
@@ -510,6 +520,13 @@
 .deadline, .deadline:hover {
   color: #333;
   background-color: gold;
+  background-color: #007799;
+  background-color: #eee;
+  background-color: rgb(137, 97, 52);
+  background-color: #070;
+  background-color: rgb(54, 123, 56);
+  background-color: #006688;
+  color: white;
 }
 
 .after-meeting.deadline {
@@ -608,7 +625,7 @@
 .backlog-status, 
 .backlog-owner,
 .tools {
-  border: solid 2px transparent;
+  border: solid 1px transparent;
 }
 .backlog-status,
 .backlog-owner,
@@ -618,26 +635,34 @@
 }
 
 .story.mine {
-  border-left: dotted 2px #3994d0;
-  border-right: dotted 2px #3994d0;
+  border-left: dotted 1px #3994d0;
+  border-right: dotted 1px #3994d0;
   border-color: #006688;
   border-top-color: transparent;
   border-bottom-color: transparent;
 }
+.story:hover {
+/*  box-shadow: 0 0 0 1px goldenrod;*/
+  border: solid 1px goldenrod;
+}
 .story.highlighted {
-  border: solid 2px #3994d0;
-  border: solid 2px #006688;
+  border: solid 1px #3994d0;
+  /*box-shadow: 0 0 0 1px #3994d0;*/
+  /*border: solid 2px #006688;*/
+}
+.story.highlighted:hover {
+  /*box-shadow: none;*/
 }
 .story.team-highlighted {
-  border: dotted 2px #3994d0;
-  border: dotted 2px #006688;
+  border: dotted 1px #3994d0;
+  border: dotted 1px #006688;
 }
 .highlighted.team-highlighted {
   /* gold is too light, but orange is not quite right */
-  border: dotted 2px orange;
+  border: dotted 1px orange;
 }
 .next-meeting, .next-meeting.highlighted {
-  border-width: 2px;
+  border-width: 1px;
 }
 .next-meeting.highlighted {
   border-color: goldenrod;
@@ -714,10 +739,16 @@
 .deadline a, 
 .deadline .deselect a, 
 .deadline .removeBtn {
-  color: #b2960a;
+  color: #eee;
+}
+.deadline a:hover,
+.deadline .deselect a:hover,
+.deadline .removeBtn:hover {
+  color: #ddd;
 }
 .deadline.highlighted {
   border-color: goldenrod;
+  border-color: #005577;
 }
 .after-meeting.deadline.highlighted {
   border-color: #3994d0;
@@ -772,7 +803,7 @@
   background-color: white;
 }
 #backlog .status .in-progress.btn-active {
-  background-color: #608A43;
+  background-color: #006688;
   color: white;
 }
 #backlog .status .done.btn-active {
@@ -845,6 +876,7 @@
 }
 .action-buttons a:hover {
   color: #999;
+  color: currentColor;
 }
 
 .saveBtn, .linkToTask, .link-btn { 
@@ -899,7 +931,9 @@
 
 /* outside the story but in the backlog */
 .backlog-owner {
-  color: #999;
+  /* slightly darker than icon-status because it 
+     is thinner */
+  color: #bbb;
 
   padding-top: 1.1ex;
   padding-bottom: 1.1ex;
@@ -912,7 +946,7 @@
   text-decoration: underline;
 }
 .backlog-owner.after {
-  color: #bbb;
+  color: #ccc;
 }
 
 .notify {
@@ -956,11 +990,11 @@
   padding-bottom: 1.1ex;
 
   text-align: right;
-  opacity: 0.6;
+  /*opacity: 0.6;*/
 }
 .new .backlog-status {
-  color: #999;
-  opacity: 1.0;
+/*  color: #999;
+  opacity: 1.0;*/
 }
 
 .backlog-status .done-status,
@@ -1016,7 +1050,9 @@
 }
 .sad-status, .new-status {
   margin-top: 1px;
-  margin-left: 0.6ex;
+}
+.sad-status {
+  color: #b00;
 }
 .phone-backlog-status .new-status,
 .phone-backlog-status .sad-status {
@@ -1033,8 +1069,14 @@
 }
 
 .icon-status {
-  stroke: black;
+  stroke: #ddd;
   fill: transparent;
+}
+.new .backlog-status {
+  color: #ddd;
+}
+.status .btn .icon-status {
+  stroke: #888;
 }
 
 .icon-status-invert {
@@ -1050,8 +1092,7 @@
   height: 26px;
   margin-top: -0.75ex;
   
-  vertical-align: text-top;  
-  opacity: 0.6;
+  vertical-align: text-top;
 }
 .bump-status {
   padding-top: 0;
@@ -1075,13 +1116,13 @@
   margin-top: -0.25ex;
   margin-left: -2ex;
   
-  vertical-align: text-top;  
-  opacity: 0.6;
+  vertical-align: text-top;
+  color: #888;
 }
 .sad .btn-icon-status {
   font-size: 11px;
-  margin-top: 0.1ex;
-  margin-left: -1.5ex;
+  margin-top: 0.05ex;
+  margin-left: -1ex;
 }
 .in-progress .btn-icon-status {
   margin-top: -0.40ex;
@@ -1091,8 +1132,10 @@
   margin-left: 0;
 }
 
+.btn-active .btn-icon-status,
 .btn-active .btn-icon-status .icon-status {
   stroke: white;
+  color: white;
 }
 
 
@@ -1105,7 +1148,6 @@
 .done-status:hover {
   background-image: url("../img/glyphs/icon-check.svg");
   cursor: pointer;
-  opacity: 0.5;
 }
 .done-status:active {
   margin-top: -0.65ex;
@@ -1411,7 +1453,7 @@
   color: black;
 }
 .pulse-milepost {
-  background-color: #606 !important;
+  background-color: #3994d0 !important;
   color: white;
 }
 
