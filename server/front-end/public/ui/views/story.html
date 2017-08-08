@@ -124,7 +124,7 @@
             mine: isStoryMine(story)
         }"
         ng-style="{ 'background-color': 
-            !story.isAfterNextMeeting && !story.isDeadline ? 'rgba(255,231,176,' + (1 - $index * 0.12) + ')' : ''}"
+            !story.isAfterNextMeeting && !story.isDeadline && !story.isSelected ? 'rgba(255,231,176,' + (1 - $index * 0.12) + ')' : ''}"
         ng-dblclick="select(story)" 
         ng-click="handleSingleClicks(story)"
         ng-mousedown="highlight(story)"
