@@ -55,7 +55,10 @@
 				ng-repeat="story in stories"
 				ng-hide="shouldHideStory(story)"
 				ng-class="{highlightedWrapper: story.isHighlighted}">
-				<sp-story/>
+				<!-- Migrating away from: <sp-story/> -->
+				<div sp-story-vue-wrapper>
+					<cb-story-angular-interop ng-non-bindable></cb-story-angular-interop>
+				</div>
 			</div>
 		</div>
 	</div>

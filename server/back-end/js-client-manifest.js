@@ -15,7 +15,8 @@ module.exports = {
         'lib/typeahead/0.10.2.js'
     ],
     app: [
-        'app.js'
+        'app.js',
+        'vue-migration.js'
     ],
     services: [
         'services/module.js',
@@ -67,6 +68,7 @@ module.exports = {
         'ui/directives/spStory.js',
         'ui/directives/spStoryList.js',
         'ui/directives/spStorySummary.js',
+        'ui/directives/spStoryVueWrapper.js',
         'ui/directives/spRoadmapMilepost.js',
         'ui/directives/typeaheadOwners.js'
     ],
