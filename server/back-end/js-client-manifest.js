@@ -20,6 +20,7 @@ module.exports = {
     components: [
         'vue-migration.js',
         'ui/components/cbStory.js',
+        'ui/components/cbStoryOwnerColumn.js',
         'ui/components/cbStoryStatusClass.js',
         'ui/components/cbStoryStatusColumn.js'
     ],

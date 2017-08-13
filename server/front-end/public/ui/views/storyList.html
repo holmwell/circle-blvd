@@ -61,9 +61,9 @@
 					:data-left-story-id="story.id" 
 					:key="story.id">
 					<cb-story-status-class v-bind="story">
-
 						<cb-story-status-column v-bind="story" @archive="archive"></cb-story-status-column>
 						<cb-story v-bind="story" @highlight="highlight"></cb-story>
+						<cb-story-owner-column v-bind="story"></cb-story-owner-column>
 					</cb-story-status-class>
 				</div>
 			</div>
