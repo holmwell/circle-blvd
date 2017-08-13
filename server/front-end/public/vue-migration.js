@@ -1,6 +1,37 @@
 //-------------------------------------------------------------------------
 // Vue components for migrating the story element over to Vue.js
 //
+Vue.component('cb-story-status-class', {
+    props: {
+        isDeadline: Boolean,
+        isNextMeeting: Boolean,
+        status: String
+    },
+    computed: {
+        statusClass: function () {
+            if (this.isDeadline) {
+                return "deadline";
+            }
+
+            if (this.isNextMeeting) {
+                return "next-meeting";
+            }
+
+            switch (this.status) {
+                case "sad":
+                case "assigned":
+                case "active":
+                case "done":
+                    return this.status;
+                default: 
+                    return "new";
+            }
+        }
+    },
+    template: '<div :class="statusClass"><slot></slot></div>'
+});
+
+
 Vue.component('cb-story', {
     props: {
         id: String,
@@ -36,35 +67,11 @@ Vue.component('cb-story', {
                 'after-meeting': this.isAfterNextMeeting
             }];
         },
-
-        statusClass: function () {
-            if (this.isDeadline) {
-                return "deadline";
-            }
-
-            if (this.isNextMeeting) {
-                return "next-meeting";
-            }
-
-            switch (this.status) {
-                case "sad":
-                case "assigned":
-                case "active":
-                case "done":
-                    return this.status;
-                default: 
-                    return "new";
-            }
-        }
     },
     methods: {
         highlight: function () {
             this.$emit('highlight', this.id);
         }
     },
-
-    template: "" +
-    '<div :class="statusClass">' + 
-        '<div v-bind:class="cssClass" @click="highlight" @mousedown="highlight">{{summary}}</div>' +
-    '</div>'
+    template: '<div v-bind:class="cssClass" @click="highlight" @mousedown="highlight">{{summary}}</div>'
 });

@@ -60,7 +60,9 @@
 					:data-story-id="story.id" 
 					:data-left-story-id="story.id" 
 					:key="story.id">
-					<cb-story v-bind="story" @highlight="highlight"></cb-story>
+					<cb-story-status-class v-bind="story">
+						<cb-story v-bind="story" @highlight="highlight"></cb-story>
+					</cb-story-status-class>
 				</div>
 			</div>
 		</div>
