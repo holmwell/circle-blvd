@@ -14,6 +14,7 @@ Vue.component('cb-story', {
         isAfterNextMeeting: Boolean,
 
         summary: String, 
+        status: String
     }, 
     data: function () {
         return {};
@@ -33,6 +34,26 @@ Vue.component('cb-story', {
                 'next-meeting': this.isNextMeeting,
                 'after-meeting': this.isAfterNextMeeting
             }];
+        },
+
+        statusClass: function () {
+            if (this.isDeadline) {
+                return "deadline";
+            }
+
+            if (this.isNextMeeting) {
+                return "next-meeting";
+            }
+
+            switch (this.status) {
+                case "sad":
+                case "assigned":
+                case "active":
+                case "done":
+                    return this.status;
+                default: 
+                    return "new";
+            }
         }
     },
     methods: {
@@ -40,5 +61,8 @@ Vue.component('cb-story', {
             this.$emit('highlight');
         }
     },
-    template: '<div v-bind:class="cssClass" @click="highlight" @mousedown="highlight">{{summary}}</div>',
+    template: "" +
+    '<div :class="statusClass">' + 
+        '<div v-bind:class="cssClass" @click="highlight" @mousedown="highlight">{{summary}}</div>' +
+    '</div>'
 });

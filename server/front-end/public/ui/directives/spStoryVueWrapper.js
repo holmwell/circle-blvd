@@ -25,6 +25,7 @@ function () {
                             isNextMeeting: model.isNextMeeting,
 
                             summary: model.summary,
+                            status: model.status
                         }
                     }
                 },
