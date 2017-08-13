@@ -10,13 +10,23 @@ function () {
             scope.vue = new Vue({
                 el: 'cb-story-angular-interop',
                 data: function () {
+                    var model = scope.story;
                     return {
                         // Each property has to be referenced individually
                         story: {
-                            summary: scope.story.summary,
-                            isHighlighted: scope.story.isHighlighted
+                            isSelected: model.isSelected,
+
+                            isFirstStory: model.isFirstStory,
+                            isFirstAtLoad: model.isFirstAtLoad,
+
+                            isAfterNextMeeting: model.isAfterNextMeeting,
+                            isDeadline: model.isDeadline,
+                            isHighlighted: model.isHighlighted,
+                            isNextMeeting: model.isNextMeeting,
+
+                            summary: model.summary,
                         }
-                    };
+                    }
                 },
 
                 methods: {

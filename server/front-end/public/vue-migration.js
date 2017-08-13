@@ -3,8 +3,17 @@
 //
 Vue.component('cb-story', {
     props: {
-        summary: '', 
-        isHighlighted: false
+        isSelected: Boolean,
+
+        isFirstStory: Boolean,
+        isFirstAtLoad: Boolean,
+
+        isDeadline: Boolean,
+        isHighlighted: Boolean,
+        isNextMeeting: Boolean,
+        isAfterNextMeeting: Boolean,
+
+        summary: String, 
     }, 
     data: function () {
         return {};
@@ -12,10 +21,18 @@ Vue.component('cb-story', {
     computed: {
         cssClass: function () {
             var isClipboardActive = false;
-            return {
-                story: true,
+            return ['story', 'col-xs-12', 'debug', 'no-select', {
+                selected: this.isSelected,
+                'not-selected': !this.isSelected,
+
+                first: this.isFirstStory,
+                'first-at-load': this.isFirstAtLoad,
+
+                deadline: this.isDeadline,
                 highlighted: this.isHighlighted && !isClipboardActive,
-            };
+                'next-meeting': this.isNextMeeting,
+                'after-meeting': this.isAfterNextMeeting
+            }];
         }
     },
     methods: {
