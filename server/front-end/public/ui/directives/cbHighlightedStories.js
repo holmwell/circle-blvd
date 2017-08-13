@@ -41,6 +41,7 @@ function (mouse) {
                 // TODO: This is a bit fragile ... should
                 // wrap the highlight methods soon.
                 story.highlightedFrom = 'none';
+                $scope.$broadcast('storyUnhighlighted', story);
             }
         };
 
@@ -66,6 +67,7 @@ function (mouse) {
                 highlightedStories.push(storyToHighlight);
                 
                 $scope.$emit('storyHighlighted', storyToHighlight);
+                $scope.$broadcast('storyHighlighted', storyToHighlight);
             };
 
             if (highlightedStories.length === 0) {
@@ -119,6 +121,7 @@ function (mouse) {
                     removedStories.forEach(function (removedStory) {
                         removedStory.isHighlighted = false;
                         removedStory.highlightedFrom = 'none';
+                        $scope.$broadcast('storyUnhighlighted', removedStory);
                     });
                 }
             }

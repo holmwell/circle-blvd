@@ -65,10 +65,10 @@ module.exports = {
         'ui/directives/cbStoryListBuilder.js',
         'ui/directives/cbStoryPulser.js',
         'ui/directives/cbViewportObserver.js',
+        'ui/directives/spSortableListWrapper.js',
         'ui/directives/spStory.js',
         'ui/directives/spStoryList.js',
         'ui/directives/spStorySummary.js',
-        'ui/directives/spStoryVueWrapper.js',
         'ui/directives/spRoadmapMilepost.js',
         'ui/directives/typeaheadOwners.js'
     ],

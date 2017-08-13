@@ -3,6 +3,7 @@
 //
 Vue.component('cb-story', {
     props: {
+        id: String,
         isSelected: Boolean,
 
         isFirstStory: Boolean,
@@ -58,9 +59,10 @@ Vue.component('cb-story', {
     },
     methods: {
         highlight: function () {
-            this.$emit('highlight');
+            this.$emit('highlight', this.id);
         }
     },
+
     template: "" +
     '<div :class="statusClass">' + 
         '<div v-bind:class="cssClass" @click="highlight" @mousedown="highlight">{{summary}}</div>' +

@@ -48,16 +48,19 @@
 				</div>
 			</div>
 		</div>
-		<div id="sortableList">
-			<div class="storyWrapper row debug no-select" 
-				data-left-story-id="{{::story.id}}"
-				data-story-id="{{::story.id}}"
-				ng-repeat="story in stories"
-				ng-hide="shouldHideStory(story)"
-				ng-class="{highlightedWrapper: story.isHighlighted}">
-				<!-- Migrating away from: <sp-story/> -->
-				<div sp-story-vue-wrapper>
-					<cb-story-angular-interop ng-non-bindable></cb-story-angular-interop>
+<!--
+	Things to add in wrapper:
+		ng-hide="shouldHideStory(story)"
+ -->
+		<!-- Migrating away from: <sp-story/> -->
+		<div sp-sortable-list-wrapper>
+			<div id="sortableList" ng-non-bindable>
+				<div v-for="story in stories" class="storyWrapper row debug no-select"
+					:class="story.isHighlighted ? 'highlightedWrapper' : ''" 
+					:data-story-id="story.id" 
+					:data-left-story-id="story.id" 
+					:key="story.id">
+					<cb-story v-bind="story" @highlight="highlight"></cb-story>
 				</div>
 			</div>
 		</div>

@@ -13,6 +13,8 @@ angular.module('CircleBlvd.directives')
 .directive('cbDragAndDrop', ['lib', 'mouse', '$timeout', 'errors', 
 function (lib, mouse, $timeout, errors) {
 
+    var sortableListSelector = "#sortableList";
+
     var controller = ['$scope', function ($scope) {
         return {
             activate: function () {
@@ -387,7 +389,7 @@ function (lib, mouse, $timeout, errors) {
             var multidragDataLabel = 'multidrag';
             var selector = '.highlightedWrapper';
 
-            $('#sortableList').sortable({
+            $(sortableListSelector).sortable({
                 handle: storyListScope.isScreenXs ? ".grippy" : ".story",
                 placeholder: "dragging-row",
                 forcePlaceholderSize: true,
@@ -453,17 +455,17 @@ function (lib, mouse, $timeout, errors) {
                     // cannot be moved.
                     cancel: ".storyWrapper",
                 });
-                $("#sortableList").sortable("option", "connectWith", "#mileposts"); 
+                $(sortableListSelector).sortable("option", "connectWith", "#mileposts"); 
             }
         };
 
         scope.$on('keyShiftDown', function () {
             var isDisabled = true;
-            $("#sortableList").sortable("option", "handle", isDisabled);
+            $(sortableListSelector).sortable("option", "handle", isDisabled);
         });
 
         scope.$on('keyShiftUp', function () { 
-            $("#sortableList").sortable("option", "handle", ".highlighted");
+            $(sortableListSelector).sortable("option", "handle", ".highlighted");
         });
 
         scope.$on('makeStoriesDraggable', function (e) {

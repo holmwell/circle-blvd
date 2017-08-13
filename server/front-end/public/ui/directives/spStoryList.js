@@ -362,6 +362,10 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
             // scrollToAndPulse(story);
         });
 
+        scope.$on('storyHighlight', function (e, id, type) {
+            highlightedStories.highlight(stories.get(id), type);
+        });
+
         function insertNewStoryIntoViewModel (serverStory) {
             // add the new story to the front of the backlog.
             storiesList.unshift(serverStory);
@@ -1046,6 +1050,7 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
                 for (var key in storiesInNewOrder) {
                     storiesList[key] = stories.get(storiesInNewOrder[key].id);
                 }
+                scope.$broadcast('storyOrderUpdated');
 
                 buildMilepostList(storiesList);
             }
