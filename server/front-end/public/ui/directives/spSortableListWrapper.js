@@ -3,6 +3,7 @@ angular.module('CircleBlvd.directives').
 directive('spSortableListWrapper', [ 
 function () {
     // We're a wrapper around a Vue component.
+    var elementId = "#sortableList";
     return {
         require: '^^cbHighlightedStories',
         restrict: 'A',
@@ -15,13 +16,17 @@ function () {
 
             function mount() {
                 scope.vue = new Vue({
-                    el: '#sortableList',
+                    el: elementId,
                     data: function () {
                         return {
                             stories: scope.stories
                         }
                     },
                     methods: {
+                        archive: function (id) {
+                            // TODO: This works, but then our list is not updated.
+                            scope.$emit('storyArchived', { id: id });
+                        },
                         highlight: function (id) {
                             scope.$emit('storyHighlight', id, 'single');
                         },
