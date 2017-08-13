@@ -15,8 +15,12 @@ module.exports = {
         'lib/typeahead/0.10.2.js'
     ],
     app: [
-        'app.js',
-        'vue-migration.js'
+        'app.js'
+    ],
+    components: [
+        'vue-migration.js',
+        'ui/components/cbStory.js',
+        'ui/components/cbStoryStatusClass.js'
     ],
     services: [
         'services/module.js',
