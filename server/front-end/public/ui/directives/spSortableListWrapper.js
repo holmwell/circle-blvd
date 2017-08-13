@@ -10,17 +10,20 @@ function () {
         link: function (scope, element, attr, highlightedStories) {
             scope.$watch('stories', function (newVal, oldVal) {
                 if (newVal && newVal.length) {
-                    mount();
+                    if (scope.vue) {
+                        scope.vue.$data.stories = scope.stories;
+                    }
+                    else {
+                       mount();
+                    }
                 }
             });
 
             function mount() {
                 scope.vue = new Vue({
                     el: elementId,
-                    data: function () {
-                        return {
-                            stories: scope.stories
-                        }
+                    data: {
+                        stories: scope.stories
                     },
                     methods: {
                         archive: function (id) {
