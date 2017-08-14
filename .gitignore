@@ -25,3 +25,4 @@ typings
 npm-debug.log
 
 server/front-end/public/_js
+server/front-end/public/_dist

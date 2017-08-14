@@ -1,10 +1,11 @@
-// static.js
+// static-files.js
 //
 // Express router for serving static files 
 //
 var express = require('express');
 var path = require('path');
 
+var webpack       = require('webpack');
 var serveStatic   = require('serve-static');
 var compactModule = require('compact-exclsr');
 var jsManifest    = require('./js-client-manifest.js');
@@ -43,6 +44,28 @@ module.exports = function (staticPath, isDebugging) {
     var version = Date.now().toString();
     compact.addNamespace(version);
     namespaceList.push(version);
+
+    // Bundle everything with webpack
+    router.use(function (req, res, next) {
+        var outputPath = '/_dist';
+        var appEntry = "../front-end/entry.js";
+
+        var config = {
+            entry: path.join(__dirname, appEntry),
+            output: {
+                path: path.join(staticPath, outputPath)
+            }
+        };
+
+        webpack(config, (err, stats) => {
+            if (stats.hasErrors()) {
+                console.log(stats);
+                next(stats);
+                return;
+            }
+            next(err);
+        });
+    });
 
     router.use(serveStatic(staticPath));
     router.use(compact.middleware(namespaceList));
