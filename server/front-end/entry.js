@@ -2,4 +2,5 @@
 //
 // Our entry point for Webpack.
 //
-module.exports = {};
+import StoryOwnerColumn from './components/cbStoryOwnerColumn.vue';
+Vue.component('cb-story-owner-column', StoryOwnerColumn);

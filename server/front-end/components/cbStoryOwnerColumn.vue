@@ -1,4 +1,13 @@
-Vue.component('cb-story-owner-column', {
+<template>
+    <div v-if="!isScreenXs" class="backlog-owner hidden-xs col-sm-2 debug no-select hide-mindset-roadmap" :class="isAfterClass">
+        <span class="owner-name">{{owner}}</span><span class="show-status-new">?</span>
+        <!-- TODO: Notification ... -->
+    </div>
+</template>
+
+
+<script>
+module.exports = {
     props: {
         id: String,
         isAfterNextMeeting: Boolean,
@@ -14,13 +23,8 @@ Vue.component('cb-story-owner-column', {
             return this.isAfterNextMeeting ? "after" : "";
         }
     },
-    methods: {},
-    template: "" + 
-    '<div v-if="!isScreenXs" class="backlog-owner hidden-xs col-sm-2 debug no-select hide-mindset-roadmap" :class="isAfterClass">' +
-        '<span class="owner-name">{{owner}}</span><span class="show-status-new">?</span>' +
-        // TODO: Notification ...
-    '</div>'
-});
+    methods: {}
+};
 
 // Old template, for reference:
 //
@@ -39,3 +43,4 @@ Vue.component('cb-story-owner-column', {
 //         <i ng-show="story.isOwnerNotified" title="ok!" class="glyphicon glyphicon-ok"></i>
 //     </div>
 // </div>
+</script>
