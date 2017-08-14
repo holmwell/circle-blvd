@@ -1,4 +1,5 @@
-Vue.component('cb-story', {
+<script>
+module.exports = {
     props: {
         id: String,
         isSelected: Boolean,
@@ -43,40 +44,43 @@ Vue.component('cb-story', {
         highlight: function () {
             this.$emit('highlight', this.id);
         }
-    },
-    template: "" + 
-    '<div v-bind:class="cssClass" @click="highlight" @mousedown="highlight">' +
-        // TODO: Get the id, for scrolling
-        '<div class="row no-select hidden-xs">' +
-            '<div class="col-sm-10 paddy">' +
-                '<div class="summary" :class="isStoryMineClass">' +
-                    '{{summary}}' +
-                '</div>' +
-            '</div>' +
-            '<div class="col-sm-1 paddy details icon">' +
-    //         <div class="pull-right" ng-show="story.isOver" ng-click="select(story)">
-    //             <span class="glyphicon glyphicon-option-horizontal"></span>
-    //         </div>
-            '</div>' +
-            '<div class="col-sm-1 grippy">' +
-                '<div class="pull-right grippy-viz">' +
-                    '<span class="grippy-bar top"></span>' +
-                    '<span class="grippy-bar"></span>' +
-                    '<div class="row">' +
-                         '<div class="col-sm-offset-5">' +
-                            '<div class="glyphicon glyphicon-move">&nbsp;</div>' +
-                         '</div>' +
-                    '</div>' +
-                    '<span class="grippy-bar top"></span>' +
-                    '<span class="grippy-bar"></span>' +
-                '</div>' +
-            '</div>' +
-            // TODO: bumpy
-        '</div>' +
-    '</div>'
-});
+    }
+}
+</script>
 
-// Old template, for reference:
+<template>
+    <div v-bind:class="cssClass" @click="highlight" @mousedown="highlight">
+        <!-- // TODO: Get the id, for scrolling -->
+        <div class="row no-select hidden-xs">
+            <div class="col-sm-10 paddy">
+                <div class="summary" :class="isStoryMineClass">
+                    {{summary}}
+                </div>
+            </div>
+            <div class="col-sm-1 paddy details icon">
+<!--     //         <div class="pull-right" ng-show="story.isOver" ng-click="select(story)">
+    //             <span class="glyphicon glyphicon-option-horizontal"></span>
+    //         </div> -->
+            </div>
+            <div class="col-sm-1 grippy">
+                <div class="pull-right grippy-viz">
+                    <span class="grippy-bar top"></span>
+                    <span class="grippy-bar"></span>
+                    <div class="row">
+                         <div class="col-sm-offset-5">
+                            <div class="glyphicon glyphicon-move">&nbsp;</div>
+                         </div>
+                    </div>
+                    <span class="grippy-bar top"></span>
+                    <span class="grippy-bar"></span>
+                </div>
+            </div>
+            <!-- // TODO: bumpy -->
+        </div>
+    </div>
+</template>
+
+<!-- // Old template, for reference:
 //
 // <div ng-if="::!isScreenXs" class="row no-select hidden-xs" ng-show="!story.isSelected" id="story-{{$index}}">
 //     <div class="col-sm-10 paddy">
@@ -142,3 +146,4 @@ Vue.component('cb-story', {
 
 
 
+ -->

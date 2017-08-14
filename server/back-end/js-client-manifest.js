@@ -17,12 +17,6 @@ module.exports = {
     app: [
         'app.js'
     ],
-    components: [
-        'vue-migration.js',
-        'ui/components/cbStory.js',
-        'ui/components/cbStoryStatusClass.js',
-        'ui/components/cbStoryStatusColumn.js'
-    ],
     services: [
         'services/module.js',
         'services/analytics.js',

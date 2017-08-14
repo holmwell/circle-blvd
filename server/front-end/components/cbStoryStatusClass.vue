@@ -1,4 +1,5 @@
-Vue.component('cb-story-status-class', {
+<script>
+module.exports = {
     props: {
         isDeadline: Boolean,
         isNextMeeting: Boolean,
@@ -24,6 +25,10 @@ Vue.component('cb-story-status-class', {
                     return "new";
             }
         }
-    },
-    template: '<div :class="statusClass"><slot></slot></div>'
-});
+    }
+};
+</script>
+
+<template>
+    <div :class="statusClass"><slot></slot></div>
+</template>
