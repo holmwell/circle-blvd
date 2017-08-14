@@ -71,11 +71,15 @@ module.exports = function (staticPath, isDebugging) {
                     }
                 },
                 {
-                    test: /\.(png|jpg|gif|svg)$/,
+                    test: /\.(png|jpg|gif)$/,
                     loader: 'file-loader',
                     options: {
                       name: '[name].[ext]?[hash]'
                     }
+                },
+                {
+                    test: /\.svg$/,
+                    loader: 'svg-inline-loader'
                 }]
             }
         };

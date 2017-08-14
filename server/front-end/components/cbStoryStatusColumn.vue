@@ -9,7 +9,9 @@ module.exports = {
     },
     data: function () {
         return {
-            isScreenXs: false // TODO ...
+            isScreenXs: false, // TODO ...
+            iconCircleSvg: require('../public/img/glyphs/icon-circle.svg'),
+            iconHalfCircleSvg: require('../public/img/glyphs/icon-half-circle.svg')
         }
     },
     computed: {
@@ -56,12 +58,10 @@ function isStoryStatus(story, status) {
             so this is just here for spacing. -->
         </div>
         <div class="backlog-status col-xs-3 debug no-select">
-            <!-- // TODO: Need to include /img/glyphs/icon-circle.svg -->
             <i class="done-status done-status-archive" v-show="isDeadline && !isAfterNextMeeting" @click="archive" 
-                title="archive milepost">o</i>
-            <i class="done-status" @click="archive" title="archive task">o</i>
-            <!-- // TODO: Include /img/glyphs/icon-half-circle.svg -->
-            <i class="active-status">c</i>
+                title="archive milepost"><div v-html="iconCircleSvg"></div></i>
+            <i class="done-status" @click="archive" title="archive task"><div v-html="iconCircleSvg"></div></i>
+            <i class="active-status"><div v-html="iconHalfCircleSvg"></div></i>
             <i class="sad-status glyphicon glyphicon-stop"></i>
             <span class="new-status" v-show="isStoryMine">New</span>
         </div>
