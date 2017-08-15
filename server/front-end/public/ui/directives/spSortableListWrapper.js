@@ -40,6 +40,9 @@ function () {
                                     Vue.set(this.stories, index, newVal);
                                 }
                             }
+                        },
+                        selectLabel: function (text) {
+                            scope.$emit('labelSelected', text);
                         }
                     },
                     created: function () {
@@ -55,6 +58,8 @@ function () {
                                 Vue.set(self.stories, index, scope.stories[index]);
                             }
                         });
+
+
                     }
                 });
 

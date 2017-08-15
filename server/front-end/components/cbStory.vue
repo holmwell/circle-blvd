@@ -43,6 +43,9 @@ module.exports = {
     methods: {
         highlight: function () {
             this.$emit('highlight', this.id);
+        },
+        selectLabel: function (text) {
+            this.$emit('select-label', text);
         }
     }
 }
@@ -54,7 +57,7 @@ module.exports = {
         <div class="row no-select hidden-xs">
             <div class="col-sm-10 paddy">
                 <div class="summary" :class="isStoryMineClass">
-                    {{summary}}
+                    <cb-story-summary @select-label="selectLabel" :summary="summary"></cb-story-summary>
                 </div>
             </div>
             <div class="col-sm-1 paddy details icon">

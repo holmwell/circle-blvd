@@ -54,8 +54,8 @@
  -->
 		<!-- Migrating away from: <sp-story/> -->
 		<div sp-sortable-list-wrapper>
-			<!-- Our Vue root binds to #sortableList, and this is the template for
-			 that component -->
+			<!-- Our Vue root (in directives/spSortableListWrapper) binds to #sortableList, 
+			 and this is the template for that component -->
 			<div id="sortableList" ng-non-bindable>
 				<div v-for="story in stories" class="storyWrapper row debug no-select"
 					:class="story.isHighlighted ? 'highlightedWrapper' : ''" 
@@ -64,7 +64,7 @@
 					:key="story.id">
 					<cb-story-status-class v-bind="story">
 						<cb-story-status-column v-bind="story" @archive="archive"></cb-story-status-column>
-						<cb-story v-bind="story" @highlight="highlight"></cb-story>
+						<cb-story v-bind="story" @highlight="highlight" @select-label="selectLabel"></cb-story>
 						<cb-story-owner-column v-bind="story"></cb-story-owner-column>
 					</cb-story-status-class>
 				</div>
