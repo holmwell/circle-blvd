@@ -48,16 +48,13 @@
 				</div>
 			</div>
 		</div>
-<!--
-	Things to add in wrapper:
-		ng-hide="shouldHideStory(story)"
- -->
 		<!-- Migrating away from: <sp-story/> -->
 		<div sp-sortable-list-wrapper>
 			<!-- Our Vue root (in directives/spSortableListWrapper) binds to #sortableList, 
 			 and this is the template for that component -->
 			<div id="sortableList" ng-non-bindable>
 				<div v-for="story in stories" class="storyWrapper row debug no-select"
+					v-show="!shouldHide(story)"
 					:class="story.isHighlighted ? 'highlightedWrapper' : ''" 
 					:data-story-id="story.id" 
 					:data-left-story-id="story.id" 

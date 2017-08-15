@@ -1070,22 +1070,22 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
         // Refactor: Move into own directive with other filters
         scope.$on('cbSearchEntry', function (e, val) {
             if (!val) {
-                searchEntry = undefined;
+                scope.searchEntry = undefined;
             }
             else {
                 val = val.toLowerCase();
                 // searchEntry = val.split(" ");
                 // Get phrases surrounded by quotes: 
                 // http://stackoverflow.com/questions/16261635/javascript-split-string-by-space-but-ignore-space-in-quotes-notice-not-to-spli
-                searchEntry = val.match(/(?:[^\s"]+|"[^"]*")+/g);
+                scope.searchEntry = val.match(/(?:[^\s"]+|"[^"]*")+/g);
                 // Remove quotes
-                for (index in searchEntry) {
-                    var token = searchEntry[index];
+                for (index in scope.searchEntry) {
+                    var token = scope.searchEntry[index];
 
                     if (token.length >= 2 &&
                         token.charAt(0) === '"' && 
                         token.charAt(token.length-1) === '"') {
-                        searchEntry[index] = token.substring(1, token.length - 1);
+                        scope.searchEntry[index] = token.substring(1, token.length - 1);
                     }
                 }
             }
