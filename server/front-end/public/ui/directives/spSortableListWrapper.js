@@ -43,6 +43,9 @@ function () {
                         },
                         selectLabel: function (text) {
                             scope.$emit('labelSelected', text);
+                        },
+                        selectOwner: function (owner) {
+                            scope.$emit('ownerSelected', owner);
                         }
                     },
                     created: function () {

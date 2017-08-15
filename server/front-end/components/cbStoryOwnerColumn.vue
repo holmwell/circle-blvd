@@ -1,6 +1,6 @@
 <template>
     <div v-if="!isScreenXs" class="backlog-owner hidden-xs col-sm-2 debug no-select hide-mindset-roadmap" :class="isAfterClass">
-        <span class="owner-name">{{owner}}</span><span class="show-status-new">?</span>
+        <span class="owner-name" @mousedown="ownerSelected">{{owner}}</span><span class="show-status-new">?</span>
         <!-- TODO: Notification ... -->
     </div>
 </template>
@@ -23,7 +23,11 @@ module.exports = {
             return this.isAfterNextMeeting ? "after" : "";
         }
     },
-    methods: {}
+    methods: {
+        ownerSelected: function () {
+            this.$emit('select-owner', this.owner);
+        }
+    }
 };
 
 // Old template, for reference:
