@@ -188,8 +188,6 @@ function () {
                                 Vue.set(self.stories, index, scope.stories[index]);
                             }
                         });
-
-
                     }
                 });
 

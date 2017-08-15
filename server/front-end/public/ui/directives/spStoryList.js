@@ -318,7 +318,6 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
             }
         };
 
-
         scope.$on('beforeStorySelected', function (e) {
             // Deselect the story that was selected previously
             if (selectedStory) {

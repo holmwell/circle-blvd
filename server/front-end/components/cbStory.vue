@@ -19,12 +19,6 @@ module.exports = {
     }, 
     data: function () {
         return {
-            edited: {
-                id: this.id,
-                summary: this.summary,
-                owner: this.owner,
-                status: this.status
-            },
             isScreenXs: false
         };
     },
@@ -55,12 +49,11 @@ module.exports = {
         selectLabel: function (text) {
             this.$emit('select-label', text);
         },
-        save: function () {
-            this.$emit('save', this.edited);
-            this.deselect();
-        },
         select: function () {
             this.$emit('select-story', this);
+        },
+        save: function (story) {
+            this.$emit('save', story);
         },
         deselect: function () {
             this.$emit('deselect-story', this);
@@ -76,7 +69,7 @@ module.exports = {
             <div class="row no-select hidden-xs">
                 <div class="col-sm-10 paddy">
                     <div class="summary" :class="isStoryMineClass">
-                        <cb-story-summary @select-label="selectLabel" :summary="edited.summary"></cb-story-summary>
+                        <cb-story-summary @select-label="selectLabel" :summary="summary"></cb-story-summary>
                     </div>
                 </div>
                 <div class="col-sm-1 paddy details icon">
@@ -101,31 +94,7 @@ module.exports = {
             </div>
         </div>
         <div v-else>
-            <div name="storyForm">
-                <div class="summary row">
-                    <div class="visible-xs col-xs-12">
-                        <div class="deselect"><a class="subtle jslink" @click.stop="deselect">Hide details</a></div>
-                    </div>
-                    <div class="col-xs-12 col-sm-9 summary-input">
-                        <input :id="'boxForStory' + id" class="form-control" type="text" 
-                        @keyup.enter="save"
-                        v-model="edited.summary"/></div>
-                    <div ng-if="!isScreenXs" class="hidden-xs col-sm-3">
-                        <div class="deselect"><a @click.stop="deselect">Hide details</a></div>
-                    </div>
-                </div>
-
-                <div class="top-info" v-show="!(isNextMeeting || isDeadline)">
-                    <div class="owner">Who's doing this?
-                        <input type="text" v-model="edited.owner" />
-<!-- TODO: typeahead-owners class="typeahead form-control" /> -->
-                     </div>
-                    <div class="owner-placeholder">{{warning}}
-                    </div>
-                </div>
-
-                <button type="button" @click="save">Save!</button>
-            </div>
+            <cb-story-detail v-bind="$props" @save="save" @deselect="deselect"></cb-story-detail>
         </div>
     </div>
 </template>
