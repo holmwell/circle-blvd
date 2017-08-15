@@ -17,6 +17,10 @@ function () {
         require: '^^cbHighlightedStories',
         restrict: 'A',
         link: function (scope, element, attr, highlightedStories) {
+            watch('searchEntry', scope);
+            watch('selectedOwner', scope);
+            watch('selectedLabels', scope);
+
             scope.$watch('stories', function (newVal, oldVal) {
                 if (newVal && newVal.length) {
                     if (scope.vue) {
@@ -28,9 +32,16 @@ function () {
                 }
             });
 
-            watch('searchEntry', scope);
-            watch('selectedOwner', scope);
-            watch('selectedLabels', scope);
+            scope.$watchCollection('stories', function (newVal, oldVal) {
+                if (!newVal || !oldVal) 
+                    return;
+                // When our Angular parent removes a story from the list,
+                // we arrive here. Update our local data based on the 
+                // new collection.
+                if (newVal.length < oldVal.length && scope.vue) {
+                    scope.vue.$data.stories = newVal;
+                }
+            });
 
             function mount() {
                 scope.vue = new Vue({
@@ -42,9 +53,8 @@ function () {
                         selectedLabels: scope.selectedLabels
                     },
                     methods: {
-                        archive: function (id) {
-                            // TODO: This works, but then our list is not updated.
-                            scope.$emit('storyArchived', { id: id });
+                        archive: function (story) {
+                            scope.$emit('storyArchived', story);
                         },
                         highlight: function (id) {
                             scope.$emit('storyHighlight', id, 'single');
