@@ -43,6 +43,11 @@ function () {
                 }
             });
 
+            var isDragging = false;
+            scope.$on('spIsDragging', function (e, val) {
+                isDragging = val;
+            });
+
             function mount() {
                 scope.vue = new Vue({
                     el: elementId,
@@ -59,19 +64,63 @@ function () {
                         highlight: function (id) {
                             scope.$emit('storyHighlight', id, 'single');
                         },
-                        updateStory: function (newVal) {
+                        editStory: function (story, editCallback) {
+                            // Utility method for dealing with story updates.
+                            // It's too clever, so please rewrite it if you 
+                            // have the energy.
                             for (var index in this.stories) {
-                                var story = this.stories[index];
-                                if (story.id === newVal.id) {
-                                    Vue.set(this.stories, index, newVal);
+                                var current = this.stories[index];
+                                if (current.id === story.id) {
+                                    var edited = editCallback(current);
+                                    Vue.set(this.stories, index, edited);
                                 }
                             }
+                        },
+                        updateStory: function (newVal) {
+                            this.editStory(newVal, function (edit) {
+                                return newVal;
+                            });
+                        },
+                        save: function (story) {
+                            scope.$emit('storySaved', story);
                         },
                         selectLabel: function (text) {
                             scope.$emit('labelSelected', text);
                         },
                         selectOwner: function (owner) {
                             scope.$emit('ownerSelected', owner);
+                        },
+                        selectStory: function (story) {
+                            if (isDragging || story.isBeingDragged) {
+                                // Do nothing. We're dragging. See the note
+                                // in 'drag:end' as to why.
+                                return;
+                            }
+
+                            // Do not refocus stuff if we're already on this story.
+                            if (!story.isSelected) {
+                                scope.$emit('beforeStorySelected');
+                                var selectedStory = null;
+                                this.editStory(story, function (edit) {
+                                    edit.isSelected = true;
+                                    selectedStory = edit;
+                                    return edit;
+                                });
+                                scope.$emit('storySelected', selectedStory);
+                            }
+                        },
+                        deselectStory: function (story) {
+                            if (story && story.isSelected) {
+                                var editedStory = null;
+                                this.editStory(story, function (edit) {
+                                    edit.isSelected = false;
+                                    editedStory = edit;
+                                    return edit;
+                                });
+                                
+                                scope.$emit('storyDeselected', editedStory);
+                            }
+
                         },
                         shouldHide: function (story) {
                             var selectedOwner = this.selectedOwner;
