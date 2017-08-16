@@ -22,7 +22,8 @@ module.exports = {
     }, 
     data: function () {
         return {
-            isScreenXs: false
+            isScreenXs: false,
+            isMouseOver: false
         };
     },
     computed: {
@@ -63,23 +64,31 @@ module.exports = {
         },
         remove: function () {
             this.$emit('remove', this);
+        },
+        mouseOver: function () {
+            this.isMouseOver = true;
+        },
+        mouseLeave: function () {
+            this.isMouseOver = false;
         }
      }
 }
 </script>
 
 <template lang="pug">
-    div(v-bind:class="cssClass" @click="highlight" @dblclick="select" @mousedown="highlight")
+    div(v-bind:class="cssClass" @click="highlight" @dblclick="select" @mousedown="highlight" 
+        @mouseenter="mouseOver" @mouseleave="mouseLeave")
         //-  TODO: Get the id, for scrolling 
         div(v-if="!isSelected")
             .row.no-select.hidden-xs
                 .col-sm-10.paddy
                     .summary(:class="isStoryMineClass")
                         cb-story-summary(@select-label="selectLabel", :summary="summary")
+
                 .col-sm-1.paddy.details.icon
-                    //-         <div class="pull-right" ng-show="story.isOver" ng-click="select(story)">
-                    //-             <span class="glyphicon glyphicon-option-horizontal"></span>
-                    //-         </div> 
+                     .pull-right(v-show="isMouseOver" @click="select")
+                         span.glyphicon.glyphicon-option-horizontal
+
                 .col-sm-1.grippy
                     .pull-right.grippy-viz
                         span.grippy-bar.top
