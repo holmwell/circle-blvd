@@ -822,7 +822,7 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
             storiesList.forEach(function (story, index) {
                 if (story.id === storyId) {
                     var scrollNow = function () {
-                        var elementId = "#story-" + index;
+                        var elementId = '[data-story-id="' + story.id + '"]'
                         var topMargin = 75;
                         if (isMovingUp) {
                             topMargin *= 2.5;
