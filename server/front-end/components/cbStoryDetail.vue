@@ -14,6 +14,9 @@ module.exports = {
     },
     data: function () {
         return {
+            iconCircleSvg: require('../public/img/glyphs/icon-circle.svg'),
+            iconHalfCircleSvg: require('../public/img/glyphs/icon-half-circle.svg'),
+            isScreenXs: false,
             model: {
                 id: this.id,
                 summary: this.summary,
@@ -31,6 +34,18 @@ module.exports = {
             else {
                 return 'task';
             }
+        },
+        isSad: function () {
+            return this.is('sad');
+        },
+        isNew: function () {
+            if (!this.model.status) {
+                return true;
+            }
+            return this.model.status === '';
+        },
+        isAssigned: function () {
+            return this.is('assigned');
         }
     },
     methods: {
@@ -40,6 +55,16 @@ module.exports = {
         },
         deselect: function () {
             this.$emit('deselect', this);
+        },
+        setStatus: function (status) {
+            this.model.status = status;
+            this.$emit('save', this.model);
+        },
+        activeIf: function (status) {
+            return this.model.status === status ? 'btn-active' : '';
+        },
+        is: function (status) {
+            return this.model.status && this.model.status === status;
         }
     }
 };
@@ -73,6 +98,39 @@ module.exports = {
             .textarea-container
                 //- TODO: autosize
                 textarea.form-control(autosize v-model="model.description")
+
+        .status(v-show="!(isNextMeeting || isDeadline)") Task progress?
+            .row
+                .col-xs-5.col-sm-2.wider-left.debug
+                    a(:class="activeIf('sad')" @click="setStatus('sad')").btn.btn-default.sad.form-control
+                        i.btn-icon-status.glyphicon.glyphicon-stop
+                        span Help?
+
+                .col-xs-3.col-sm-2.debug
+                    a(:class="activeIf('')" @click="setStatus('')").btn.btn-default.question.neutral.form-control
+                        span.txt New
+
+                .col-xs-4.col-sm-2.wider
+                    a(:class="activeIf('assigned')" @click="setStatus('assigned')").btn.btn-default.neutral.form-control
+                     | Will do
+
+                .hidden-xs.col-sm-3.wider(v-if="!isScreenXs")
+                    a(:class="activeIf('active')" @click="setStatus('active')").btn.btn-default.in-progress.form-control
+                        i.btn-icon-status
+                            span(v-html="iconHalfCircleSvg")
+                        span &nbsp;On it
+
+                .col-xs-6.visible-xs
+                    a(:class="activeIf('active')" @click="setStatus('active')").btn.btn-default.in-progress.form-control
+                        i.btn-icon-status
+                            span(v-html="iconHalfCircleSvg")
+                        span &nbsp;On it
+
+                .col-xs-6.col-sm-3.wider
+                    a(:class="activeIf('done')" @click="setStatus('done')").btn.btn-default.done.form-control
+                        i.btn-icon-status
+                            span(v-html="iconCircleSvg")
+                        span &nbsp;Done!
 
         button(type="button" @click="save") Save!
 </template>
