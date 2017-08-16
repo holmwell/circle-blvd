@@ -122,6 +122,9 @@ function () {
                             }
 
                         },
+                        remove: function (story) {
+                            scope.$emit('storyRemoved', story);
+                        },
                         shouldHide: function (story) {
                             var selectedOwner = this.selectedOwner;
                             var searchEntry = this.searchEntry;

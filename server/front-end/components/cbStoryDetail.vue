@@ -66,6 +66,10 @@ module.exports = {
         deselect: function () {
             this.$emit('deselect', this);
         },
+        remove: function () {
+            this.deselect();
+            this.$emit('remove', this);
+        },
         setStatus: function (status) {
             this.model.status = status;
             this.$emit('save', this.model);
@@ -103,7 +107,7 @@ module.exports = {
 
         .top-info(v-show="!(isNextMeeting || isDeadline)")
             .owner Who's doing this?
-                input(type="text" v-model="model.owner")
+                input(type="text" v-model="model.owner").form-control
                 //- TODO: typeahead-owners class="typeahead form-control" 
             .owner-placeholder {{warning}}
 
@@ -177,5 +181,17 @@ module.exports = {
                         //- TODO: getTimestampFilter(comment)
                         span.timestamp {{comment.timestamp | date}}:&nbsp;
                         span {{comment.text}}
+
+        .action-buttons
+            button(v-if="!isScreenXs" v-show="!isNextMeeting" type="button" @click="remove").hidden-xs.removeBtn
+                span Remove {{storyNoun}}
+
+            .pull-right(v-show="isNextMeeting || isDeadline")
+                span.linkToTask.subtle
+                    a(v-bind:href="'/#/stories/' + id")
+                        span.glyphicon.glyphicon-link
+                        span Link to {{storyNoun}}
+
+                button(type="button" @click="save").saveBtn.btn.btn-default Save
 </template>
 

@@ -60,6 +60,9 @@ module.exports = {
         },
         deselect: function () {
             this.$emit('deselect-story', this);
+        },
+        remove: function () {
+            this.$emit('remove', this);
         }
      }
 }
@@ -88,7 +91,7 @@ module.exports = {
                         span.grippy-bar
                 //- TODO: bumpy
         div(v-else)
-            cb-story-detail(v-bind="$props" @save="save" @deselect="deselect")
+            cb-story-detail(v-bind="$props" @save="save" @deselect="deselect" @remove="remove")
 </template>
 
 <!-- // Old template, for reference:
