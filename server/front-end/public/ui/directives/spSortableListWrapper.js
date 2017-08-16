@@ -63,7 +63,8 @@ function () {
                             scope.$emit('storyArchived', story);
                         },
                         highlight: function (id) {
-                            scope.$emit('storyHighlight', id, 'single');
+                            var highlightingType = scope.keyboard.isShiftDown ? 'multi' : 'single';
+                            scope.$emit('storyHighlight', id, highlightingType);
                         },
                         setHighlightedStatus: function (status) {
                             scope.markHighlightedAs(status);

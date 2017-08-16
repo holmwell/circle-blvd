@@ -48,7 +48,18 @@ module.exports = {
     },
     methods: {
         highlight: function () {
-            this.$emit('highlight', this.id);
+            // Only emit highlight events if we're not highlighted,
+            // other we'll emit 'single' highlight events on mousedown
+            // when we have multiple stories highlighted, which will
+            // mess up moving a block of stories (by changing our 
+            // highlight)
+            //
+            // Really, though, whoever we send this event to should
+            // be able to figure that out, so in the future it could
+            // be extracted.
+            if (!this.isHighlighted) {
+                this.$emit('highlight', this.id);
+            }
         },
         selectLabel: function (text) {
             this.$emit('select-label', text);
