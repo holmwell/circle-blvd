@@ -29,6 +29,7 @@ module.exports = {
 };
 </script>
 
-<template>
-    <div :class="statusClass"><slot></slot></div>
+<template lang="pug">
+    div(:class="statusClass")
+        slot
 </template>

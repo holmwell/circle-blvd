@@ -51,21 +51,24 @@ function isStoryStatus(story, status) {
 }
 </script>
 
-<template>
-    <div v-if="!isScreenXs" class="hidden-xs col-sm-2 debug clear hide-mindset-roadmap">
-        <div :class="isStoryDoneClass" class="backlog-mine col-xs-9 debug">
-            <!-- The 'mine button' stuff would go here, but that should be removed anyway,
-            so this is just here for spacing. -->
-        </div>
-        <div class="backlog-status col-xs-3 debug no-select">
-            <i class="done-status done-status-archive" v-show="isDeadline && !isAfterNextMeeting" @click="archive" 
-                title="archive milepost"><div v-html="iconCircleSvg"></div></i>
-            <i class="done-status" @click="archive" title="archive task"><div v-html="iconCircleSvg"></div></i>
-            <i class="active-status"><div v-html="iconHalfCircleSvg"></div></i>
-            <i class="sad-status glyphicon glyphicon-stop"></i>
-            <span class="new-status" v-show="isStoryMine">New</span>
-        </div>
-    </div>
+<template lang="pug">
+    .hidden-xs.col-sm-2.debug.clear.hide-mindset-roadmap(v-if="!isScreenXs")
+        .backlog-mine.col-xs-9.debug(:class="isStoryDoneClass")
+            //- The 'mine button' stuff would go here, but that should be removed anyway,
+            //- so this is just here for spacing.
+        .backlog-status.col-xs-3.debug.no-select
+            i.done-status.done-status-archive(v-show="isDeadline && !isAfterNextMeeting" 
+                @click="archive" title="archive milepost")
+                div(v-html="iconCircleSvg")
+
+            i.done-status(@click="archive" title="archive task")
+                div(v-html="iconCircleSvg")
+
+            i.active-status
+                div(v-html="iconHalfCircleSvg")
+
+            i.sad-status.glyphicon.glyphicon-stop
+            span.new-status(v-show="isStoryMine") New
 </template>
 
 

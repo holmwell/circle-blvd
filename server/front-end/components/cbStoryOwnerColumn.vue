@@ -1,10 +1,9 @@
-<template>
-    <div v-if="!isScreenXs" class="backlog-owner hidden-xs col-sm-2 debug no-select hide-mindset-roadmap" :class="isAfterClass">
-        <span class="owner-name" @mousedown="ownerSelected">{{owner}}</span><span class="show-status-new">?</span>
-        <!-- TODO: Notification ... -->
-    </div>
+<template lang="pug">
+    .backlog-owner.hidden-xs.col-sm-2.debug.no-select.hide-mindset-roadmap(v-if="!isScreenXs", :class="isAfterClass")
+        span.owner-name(@mousedown="ownerSelected") {{owner}}
+        span.show-status-new ?
+        //- TODO: Notification ...
 </template>
-
 
 <script>
 module.exports = {

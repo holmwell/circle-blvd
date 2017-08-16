@@ -62,41 +62,30 @@ module.exports = {
 }
 </script>
 
-<template>
-    <div v-bind:class="cssClass" @click="highlight" @dblclick="select" @mousedown="highlight">
-        <!-- // TODO: Get the id, for scrolling -->
-        <div v-if="!isSelected">
-            <div class="row no-select hidden-xs">
-                <div class="col-sm-10 paddy">
-                    <div class="summary" :class="isStoryMineClass">
-                        <cb-story-summary @select-label="selectLabel" :summary="summary"></cb-story-summary>
-                    </div>
-                </div>
-                <div class="col-sm-1 paddy details icon">
-    <!--     //         <div class="pull-right" ng-show="story.isOver" ng-click="select(story)">
-        //             <span class="glyphicon glyphicon-option-horizontal"></span>
-        //         </div> -->
-                </div>
-                <div class="col-sm-1 grippy">
-                    <div class="pull-right grippy-viz">
-                        <span class="grippy-bar top"></span>
-                        <span class="grippy-bar"></span>
-                        <div class="row">
-                             <div class="col-sm-offset-5">
-                                <div class="glyphicon glyphicon-move">&nbsp;</div>
-                             </div>
-                        </div>
-                        <span class="grippy-bar top"></span>
-                        <span class="grippy-bar"></span>
-                    </div>
-                </div>
-                <!-- // TODO: bumpy -->
-            </div>
-        </div>
-        <div v-else>
-            <cb-story-detail v-bind="$props" @save="save" @deselect="deselect"></cb-story-detail>
-        </div>
-    </div>
+<template lang="pug">
+    div(v-bind:class="cssClass" @click="highlight" @dblclick="select" @mousedown="highlight")
+        //-  TODO: Get the id, for scrolling 
+        div(v-if="!isSelected")
+            .row.no-select.hidden-xs
+                .col-sm-10.paddy
+                    .summary(:class="isStoryMineClass")
+                        cb-story-summary(@select-label="selectLabel", :summary="summary")
+                .col-sm-1.paddy.details.icon
+                    //-         <div class="pull-right" ng-show="story.isOver" ng-click="select(story)">
+                    //-             <span class="glyphicon glyphicon-option-horizontal"></span>
+                    //-         </div> 
+                .col-sm-1.grippy
+                    .pull-right.grippy-viz
+                        span.grippy-bar.top
+                        span.grippy-bar
+                        .row
+                             .col-sm-offset-5
+                                .glyphicon.glyphicon-move &nbsp;
+                        span.grippy-bar.top
+                        span.grippy-bar
+                //- TODO: bumpy
+        div(v-else)
+            cb-story-detail(v-bind="$props" @save="save" @deselect="deselect")
 </template>
 
 <!-- // Old template, for reference:

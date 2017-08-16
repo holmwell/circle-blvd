@@ -1,31 +1,3 @@
-<template>
-    <div name="storyForm">
-        <div class="summary row">
-            <div class="visible-xs col-xs-12">
-                <div class="deselect"><a class="subtle jslink" @click.stop="deselect">Hide details</a></div>
-            </div>
-            <div class="col-xs-12 col-sm-9 summary-input">
-                <input :id="'boxForStory' + id" class="form-control" type="text" 
-                @keyup.enter="save"
-                v-model="model.summary"/></div>
-            <div ng-if="!isScreenXs" class="hidden-xs col-sm-3">
-                <div class="deselect"><a @click.stop="deselect">Hide details</a></div>
-            </div>
-        </div>
-
-        <div class="top-info" v-show="!(isNextMeeting || isDeadline)">
-            <div class="owner">Who's doing this?
-                <input type="text" v-model="model.owner" />
-<!-- TODO: typeahead-owners class="typeahead form-control" /> -->
-             </div>
-            <div class="owner-placeholder">{{warning}}
-            </div>
-        </div>
-
-        <button type="button" @click="save">Save!</button>
-    </div>
-</template>
-
 <script>
 module.exports = {
     props: {
@@ -59,3 +31,27 @@ module.exports = {
     }
 };
 </script>
+
+<template lang="pug">
+    div(name="storyForm")
+        .summary.row
+            .visible-xs.col-xs-12
+                .deselect
+                    a.subtle.jslink(@click.stop="deselect") Hide details
+            
+            .col-xs-12.col-sm-9.summary-input
+                input.form-control(:id="'boxForStory' + id" type="text" @keyup.enter="save" v-model="model.summary")
+
+            .hidden-xs.col-sm-3(ng-if="!isScreenXs")
+                .deselect
+                    a(@click.stop="deselect") Hide details
+
+        .top-info(v-show="!(isNextMeeting || isDeadline)")
+            .owner Who's doing this?
+                input(type="text" v-model="model.owner")
+                //- TODO: typeahead-owners class="typeahead form-control" 
+            .owner-placeholder {{warning}}
+
+        button(type="button" @click="save") Save!
+</template>
+
