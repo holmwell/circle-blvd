@@ -55,7 +55,8 @@ function () {
                         stories: scope.stories,
                         searchEntry: scope.searchEntry,
                         selectedOwner: scope.selectedOwner,
-                        selectedLabels: scope.selectedLabels
+                        selectedLabels: scope.selectedLabels,
+                        highlightedStories: highlightedStories
                     },
                     methods: {
                         archive: function (story) {
@@ -63,6 +64,9 @@ function () {
                         },
                         highlight: function (id) {
                             scope.$emit('storyHighlight', id, 'single');
+                        },
+                        setHighlightedStatus: function (status) {
+                            scope.markHighlightedAs(status);
                         },
                         editStory: function (story, editCallback) {
                             // Utility method for dealing with story updates.
