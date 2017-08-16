@@ -15,7 +15,10 @@ module.exports = {
         summary: String, 
         status: String,
         owner: String,
-        warning: String
+        description: String,
+        warning: String,
+
+        comments: Array
     }, 
     data: function () {
         return {

@@ -10,7 +10,9 @@ module.exports = {
         description: String,
         status: String,
         warning: String,
-        createdBy: Object
+        createdBy: Object,
+
+        comments: Array
     },
     data: function () {
         return {
@@ -22,7 +24,8 @@ module.exports = {
                 summary: this.summary,
                 owner: this.owner,
                 description: this.description,
-                status: this.status
+                status: this.status,
+                newComment: null
             }
         }
     },
@@ -46,6 +49,13 @@ module.exports = {
         },
         isAssigned: function () {
             return this.is('assigned');
+        },
+        commentsReversed: function () {
+            if (!this.comments) {
+                return [];
+            }
+
+            return this.comments.reverse();
         }
     },
     methods: {
@@ -66,7 +76,14 @@ module.exports = {
         is: function (status) {
             return this.model.status && this.model.status === status;
         }
-    }
+    },
+    filters: {
+        date: function (timestamp) {
+            var date = new Date(timestamp);
+            // TODO: Use cool filter like in spStory.js
+            return date.toDateString();
+        }
+     }
 };
 </script>
 
@@ -132,6 +149,33 @@ module.exports = {
                             span(v-html="iconCircleSvg")
                         span &nbsp;Done!
 
-        button(type="button" @click="save") Save!
+        .commentArea(v-if="!(isNextMeeting || isDeadline)")
+            .commentHeading Questions or comments?
+            .textarea-container
+                //- TODO: Autosize ...
+                textarea(autosize placeholder="Add comment or link ..." v-model="model.newComment" rows="1").form-control
+
+            .btn-wrapper
+                .pull-right
+                    span.subtle.topLinkToTask
+                        a(v-bind:href="'/#/stories/' + id")
+                            span.glyphicon.glyphicon-link
+                            span Link to {{storyNoun}}
+
+                    button(type="button" @click="save").saveBtn.topSaveBtn.btn.btn-default Save
+                
+                //- button class="saveBtn saveCommentBtn topSaveBtn btn pull-left"
+                //-     type="button"
+                //-     ng-click="saveComment(story, $event)">Add comment</button>
+            
+            .comments.clear
+                //- ng-class-odd="'odd'"
+                .comment(v-for="comment in commentsReversed") 
+                    //- TODO Linky (see append-linky)
+                    .text
+                        span.name {{comment.createdBy.name}}, 
+                        //- TODO: getTimestampFilter(comment)
+                        span.timestamp {{comment.timestamp | date}}:&nbsp;
+                        span {{comment.text}}
 </template>
 
