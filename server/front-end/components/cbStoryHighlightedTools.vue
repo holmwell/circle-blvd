@@ -1,8 +1,7 @@
 <script>
 module.exports = {
     props: {
-        id: String,
-        highlightedStories: Array
+        isMostRecentHighlight: Boolean
     },
     data: function () {
         return {
@@ -27,25 +26,13 @@ module.exports = {
         pasteHighlighted: function () {
 
         }
-    },
-    computed: {
-        isStoryMostRecentHighlight: function () {
-            var highlightedStories = this.highlightedStories;
-            if (highlightedStories.length === 0) {
-                return false;
-            }
-            else if (highlightedStories[highlightedStories.length-1].id === this.id) {
-                return true;
-            }
-            return false;
-        }        
     }
 }
 </script>
 
 <template>
-    <div v-if="!isScreenXs && isStoryMostRecentHighlight && !isMindset('roadmap')"
-        id="highlightedTools" class="hidden-xs">
+<div> <!-- Root to get overriden -->
+    <div v-if="!isScreenXs && isMostRecentHighlight && !isMindset('roadmap')" id="highlightedTools" class="hidden-xs">
         <div class="tools">
             <div ng-if="!isClipboardActive && !isShowingInsertStory" class="regularTools">
                 <div class="jsLink" @click="markHighlightedAs('active')">
@@ -80,4 +67,5 @@ module.exports = {
             </div>
         </div>
     </div>
+</div>
 </template>

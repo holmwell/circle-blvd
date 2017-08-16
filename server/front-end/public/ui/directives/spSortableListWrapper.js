@@ -185,9 +185,14 @@ function () {
                     created: function () {
                         var self = this;
                         scope.$on('storyHighlighted', function (e, story) {
+                            for(var index in scope.stories) {
+                                scope.stories[index].isMostRecentHighlight = false;
+                            }
+                            story.isMostRecentHighlight = true;
                             self.updateStory(story);
                         });
                         scope.$on('storyUnhighlighted', function (e, story) {
+                            story.isMostRecentHighlight = false;
                             self.updateStory(story);
                         });
                         scope.$on('storyOrderUpdated', function () {
