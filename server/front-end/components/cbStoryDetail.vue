@@ -7,8 +7,10 @@ module.exports = {
 
         summary: String,
         owner: String,
+        description: String,
         status: String,
-        warning: String
+        warning: String,
+        createdBy: Object
     },
     data: function () {
         return {
@@ -16,7 +18,18 @@ module.exports = {
                 id: this.id,
                 summary: this.summary,
                 owner: this.owner,
+                description: this.description,
                 status: this.status
+            }
+        }
+    },
+    computed: {
+        storyNoun: function () {
+            if (this.isDeadline || this.isNextMeeting) {
+                return 'milepost';
+            }
+            else {
+                return 'task';
             }
         }
     },
@@ -38,7 +51,7 @@ module.exports = {
             .visible-xs.col-xs-12
                 .deselect
                     a.subtle.jslink(@click.stop="deselect") Hide details
-            
+
             .col-xs-12.col-sm-9.summary-input
                 input.form-control(:id="'boxForStory' + id" type="text" @keyup.enter="save" v-model="model.summary")
 
@@ -51,6 +64,15 @@ module.exports = {
                 input(type="text" v-model="model.owner")
                 //- TODO: typeahead-owners class="typeahead form-control" 
             .owner-placeholder {{warning}}
+
+        .description
+            div What are the details?
+                .created-by.pull-right(v-if="createdBy")
+                    | {{storyNoun}} created by {{createdBy.name}}
+
+            .textarea-container
+                //- TODO: autosize
+                textarea.form-control(autosize v-model="model.description")
 
         button(type="button" @click="save") Save!
 </template>
