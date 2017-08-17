@@ -17,6 +17,7 @@ function () {
         require: '^^cbHighlightedStories',
         restrict: 'A',
         link: function (scope, element, attr, highlightedStories) {
+            watch('isScreenXs', scope);
             watch('searchEntry', scope);
             watch('selectedOwner', scope);
             watch('selectedLabels', scope);
@@ -53,6 +54,7 @@ function () {
                 scope.vue = new Vue({
                     el: elementId,
                     data: {
+                        isScreenXs: scope.isScreenXs,
                         stories: scope.stories,
                         searchEntry: scope.searchEntry,
                         selectedOwner: scope.selectedOwner,

@@ -64,21 +64,27 @@
 							:story="story"
 							@insert-story="insertStory"
 						></cb-insert-story>
+						
 						<cb-story-highlighted-tools
+							:is-screen-xs="isScreenXs"
 							:is-most-recent-highlight="story.isMostRecentHighlight"
 							:is-showing-insert-story="isShowingInsertStory" 
 							@change-status="setHighlightedStatus"
 							@show-insert-story="showInsertStory"
 							@hide-insert-story="hideInsertStory">
 						</cb-story-highlighted-tools>
+
 						<cb-story-status-column v-bind="story" @archive="archive(story)"></cb-story-status-column>
+
 						<cb-story v-bind="story" 
+							:is-screen-xs="isScreenXs"
 							@highlight="highlight" 
 							@select-label="selectLabel" 
 							@select-story="selectStory"
 							@deselect-story="deselectStory"
 							@remove="remove(story)"
 							@save="save"></cb-story>
+
 						<cb-story-owner-column v-bind="story" @select-owner="selectOwner"></cb-story-owner-column>
 					</cb-story-status-class>
 				</div>

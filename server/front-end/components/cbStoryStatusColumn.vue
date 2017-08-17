@@ -5,11 +5,11 @@ module.exports = {
         isDeadline: Boolean,
         isNextMeeting: Boolean,
         isAfterNextMeeting: Boolean,
+        isScreenXs: Boolean,
         status: String
     },
     data: function () {
         return {
-            isScreenXs: false, // TODO ...
             iconCircleSvg: require('../public/img/glyphs/icon-circle.svg'),
             iconHalfCircleSvg: require('../public/img/glyphs/icon-half-circle.svg')
         }

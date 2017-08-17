@@ -18,11 +18,11 @@ module.exports = {
         description: String,
         warning: String,
 
-        comments: Array
+        comments: Array,
+        isScreenXs: Boolean
     }, 
     data: function () {
         return {
-            isScreenXs: false,
             isMouseOver: false
         };
     },
@@ -91,7 +91,7 @@ module.exports = {
         @mouseenter="mouseOver" @mouseleave="mouseLeave")
         //-  TODO: Get the id, for scrolling 
         div(v-if="isSelected")
-            cb-story-detail(v-bind="$props" @save="save" @deselect="deselect" @remove="remove")
+            cb-story-detail(v-bind="$props" is-screen-xs="isScreenXs" @save="save" @deselect="deselect" @remove="remove")
         div(v-else)
             .row.no-select.hidden-xs
                 .col-sm-10.paddy
@@ -112,6 +112,50 @@ module.exports = {
                         span.grippy-bar.top
                         span.grippy-bar
                 //- TODO: bumpy
+
+            div(v-if="isScreenXs").no-select.phone-row.hidden-sm.hidden-md.hidden-lg
+                //- ng-class="{mine: isStoryMine(story)}" 
+            
+                .col-xs-11.paddy
+                    .phone-backlog-status.col-xs-2.debug.no-select
+                        //- i.done-status(v-show="isDeadline && !isAfterNextMeeting" @click="archive" title="archive milepost")
+
+                        //- <i ng-show="isStoryDone(story)" 
+                        //-     class="done-status"
+                        //-     ng-click="archive(story)" 
+                        //-     title="archive story">
+                        //- </i>
+                        //- <i class="active-status" ng-show="isStoryActive(story)"></i>
+                        //- <i class="sad-status glyphicon glyphicon-stop" 
+                        //- ng-show="isStorySad(story)"></i>
+                        //- <span class="new-status"
+                        //- ng-show="(isStoryNew(story) && isStoryMine(story))">New</span>
+
+                    .phone-summary.col-xs-10
+                        cb-story-summary(@select-label="selectLabel", :summary="summary")
+
+                    //-<!-- TODO: Use component instead of duplicate markup -->            
+                    //- <div ng-if="(!isMindset('bump') && !isStoryDone(story)) || !isAfterNextMeeting || isMindset('roadmap')" 
+                .col-xs-1.grippy
+                    .pull-right.grippy-viz
+                        span.grippy-bar.top
+                        span.grippy-bar
+                        .row
+                            .col-xs-offset-5
+                                .glyphicon.glyphicon-move &nbsp;
+                        span.grippy-bar.top
+                        span.grippy-bar
+
+                //- <!-- TODO: Use component instead of duplicate markup -->
+                //- <div ng-if="(isMindset('bump') || isStoryDone(story)) && story.isAfterNextMeeting && !isMindset('roadmap')" 
+                //-     class="col-xs-1 bumpy"
+                //-     ng-mousedown="beforeMoveToTop($event, story)"
+                //-     ng-click="moveToTop($event, story)">
+                //-     <div class="pull-right bumpy-viz">
+                //-         <div ng-hide="story.isFirstStory" 
+                //-         class="glyphicon glyphicon-chevron-up">&nbsp;</div>
+                //-     </div>
+                //- </div>
 </template>
 
 <!-- // Old template, for reference:

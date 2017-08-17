@@ -12,13 +12,13 @@ module.exports = {
         warning: String,
         createdBy: Object,
 
-        comments: Array
+        comments: Array,
+        isScreenXs: Boolean
     },
     data: function () {
         return {
             iconCircleSvg: require('../public/img/glyphs/icon-circle.svg'),
             iconHalfCircleSvg: require('../public/img/glyphs/icon-half-circle.svg'),
-            isScreenXs: false,
             model: {
                 id: this.id,
                 summary: this.summary,

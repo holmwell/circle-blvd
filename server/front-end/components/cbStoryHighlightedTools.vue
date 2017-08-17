@@ -2,11 +2,11 @@
 module.exports = {
     props: {
         isMostRecentHighlight: Boolean,
-        isShowingInsertStory: Boolean
+        isShowingInsertStory: Boolean,
+        isScreenXs: Boolean
     },
     data: function () {
         return {
-            isScreenXs: false,
             isClipboardActive: false,
             iconCircleSvg: require('../public/img/glyphs/icon-circle.svg'),
             iconHalfCircleSvg: require('../public/img/glyphs/icon-half-circle.svg'),
