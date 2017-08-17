@@ -19,7 +19,8 @@ module.exports = {
         warning: String,
 
         comments: Array,
-        isScreenXs: Boolean
+        isScreenXs: Boolean,
+        index: Number
     }, 
     data: function () {
         return {
@@ -44,6 +45,18 @@ module.exports = {
         },
         isStoryMineClass: function () {
             return "";
+        },
+        backgroundStyle: function () {
+            if (this.isAfterNextMeeting || this.isDeadline || this.isSelected) {
+                return "";
+            }
+            // TODO: What's the cool way to do this?
+            return {
+                'background-color': 'rgba(255,231,176,' + this.backgroundAlpha + ')'
+            };
+        },
+        backgroundAlpha: function () {
+            return 1 - (this.index * 0.12);
         }
     },
     methods: {
@@ -88,7 +101,7 @@ module.exports = {
 
 <template lang="pug">
     div(v-bind:class="cssClass" @click="highlight" @dblclick="select" @mousedown="highlight" 
-        @mouseenter="mouseOver" @mouseleave="mouseLeave")
+        @mouseenter="mouseOver" @mouseleave="mouseLeave" v-bind:style="backgroundStyle")
         //-  TODO: Get the id, for scrolling 
         div(v-if="isSelected")
             cb-story-detail(v-bind="$props" is-screen-xs="isScreenXs" @save="save" @deselect="deselect" @remove="remove")

@@ -53,7 +53,7 @@
 			<!-- Our Vue root (in directives/spSortableListWrapper) binds to #sortableList, 
 			 and this is the template for that component -->
 			<div id="sortableList" ng-non-bindable>
-				<div v-for="story in stories" class="storyWrapper row debug no-select" v-show="!shouldHide(story)"
+				<div v-for="(story, index) in stories" class="storyWrapper row debug no-select" v-show="!shouldHide(story)"
 					:class="story.isHighlighted ? 'highlightedWrapper' : ''" 
 					:data-story-id="story.id" 
 					:data-left-story-id="story.id" 
@@ -77,6 +77,7 @@
 
 						<cb-story v-bind="story" 
 							:is-screen-xs="isScreenXs"
+							:index="index"
 							@highlight="highlight" 
 							@select-label="selectLabel" 
 							@select-story="selectStory"
