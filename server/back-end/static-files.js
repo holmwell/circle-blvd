@@ -58,6 +58,7 @@ module.exports = function (staticPath, isDebugging) {
 
         var config = {
             entry: path.join(__dirname, appEntry),
+            context: path.resolve(__dirname, "../front-end"),
             output: {
                 path: path.join(staticPath, outputPath)
             },
@@ -87,6 +88,9 @@ module.exports = function (staticPath, isDebugging) {
                     test: /\.svg$/,
                     loader: 'svg-inline-loader'
                 }]
+            },
+            resolveLoader: {
+                modules: [path.resolve(__dirname, '../node_modules')]
             }
         };
 
