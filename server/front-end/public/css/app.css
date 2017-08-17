@@ -710,6 +710,7 @@
 }
 .deadline .story-label {
   color: #996D09;
+  color: gold;
 }
 .deadline.after-meeting .story-label {
   color: #EAAB23;
