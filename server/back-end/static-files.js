@@ -4,6 +4,7 @@
 //
 var express = require('express');
 var path = require('path');
+var fs   = require('fs');
 
 var webpack       = require('webpack');
 var serveStatic   = require('serve-static');
@@ -49,6 +50,11 @@ module.exports = function (staticPath, isDebugging) {
     router.use(function (req, res, next) {
         var outputPath = '/_dist';
         var appEntry = "../front-end/entry.js";
+
+        var fullOutputPath = path.join(staticPath, outputPath);
+        if (fs.existsSync(fullOutputPath) && !isDebugging) {
+            return next();
+        }
 
         var config = {
             entry: path.join(__dirname, appEntry),
