@@ -90,7 +90,9 @@ module.exports = {
     div(v-bind:class="cssClass" @click="highlight" @dblclick="select" @mousedown="highlight" 
         @mouseenter="mouseOver" @mouseleave="mouseLeave")
         //-  TODO: Get the id, for scrolling 
-        div(v-if="!isSelected")
+        div(v-if="isSelected")
+            cb-story-detail(v-bind="$props" @save="save" @deselect="deselect" @remove="remove")
+        div(v-else)
             .row.no-select.hidden-xs
                 .col-sm-10.paddy
                     .summary(:class="isStoryMineClass")
@@ -110,8 +112,6 @@ module.exports = {
                         span.grippy-bar.top
                         span.grippy-bar
                 //- TODO: bumpy
-        div(v-else)
-            cb-story-detail(v-bind="$props" @save="save" @deselect="deselect" @remove="remove")
 </template>
 
 <!-- // Old template, for reference:

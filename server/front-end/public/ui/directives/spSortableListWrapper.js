@@ -20,6 +20,7 @@ function () {
             watch('searchEntry', scope);
             watch('selectedOwner', scope);
             watch('selectedLabels', scope);
+            watch('isShowingInsertStory', scope);
 
             scope.$watch('stories', function (newVal, oldVal) {
                 if (newVal && newVal.length) {
@@ -56,7 +57,8 @@ function () {
                         searchEntry: scope.searchEntry,
                         selectedOwner: scope.selectedOwner,
                         selectedLabels: scope.selectedLabels,
-                        highlightedStories: highlightedStories
+                        highlightedStories: highlightedStories,
+                        isShowingInsertStory: scope.isShowingInsertStory
                     },
                     methods: {
                         archive: function (story) {
@@ -68,6 +70,15 @@ function () {
                         },
                         setHighlightedStatus: function (status) {
                             scope.markHighlightedAs(status);
+                        },
+                        showInsertStory: function () {
+                            scope.showInsertStory();
+                        },
+                        insertStory: function (options) {
+                            scope.insertStory(options.task, options.nextStory);
+                        },
+                        hideInsertStory: function () {
+                            scope.hideInsertStory();
                         },
                         editStory: function (story, editCallback) {
                             // Utility method for dealing with story updates.

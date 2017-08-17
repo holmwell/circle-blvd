@@ -60,7 +60,17 @@
 					:data-left-story-id="story.id" 
 					:key="story.id">
 					<cb-story-status-class v-bind="story">
-						<cb-story-highlighted-tools v-bind="story" @change-status="setHighlightedStatus"></cb-story-highlighted-tools>
+						<cb-insert-story v-if="story.isMostRecentHighlight && isShowingInsertStory"
+							:story="story"
+							@insert-story="insertStory"
+						></cb-insert-story>
+						<cb-story-highlighted-tools
+							:is-most-recent-highlight="story.isMostRecentHighlight"
+							:is-showing-insert-story="isShowingInsertStory" 
+							@change-status="setHighlightedStatus"
+							@show-insert-story="showInsertStory"
+							@hide-insert-story="hideInsertStory">
+						</cb-story-highlighted-tools>
 						<cb-story-status-column v-bind="story" @archive="archive(story)"></cb-story-status-column>
 						<cb-story v-bind="story" 
 							@highlight="highlight" 

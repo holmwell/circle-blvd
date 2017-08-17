@@ -1,13 +1,13 @@
 <script>
 module.exports = {
     props: {
-        isMostRecentHighlight: Boolean
+        isMostRecentHighlight: Boolean,
+        isShowingInsertStory: Boolean
     },
     data: function () {
         return {
             isScreenXs: false,
             isClipboardActive: false,
-            isShowingInsertStory: false,
             iconCircleSvg: require('../public/img/glyphs/icon-circle.svg'),
             iconHalfCircleSvg: require('../public/img/glyphs/icon-half-circle.svg'),
         }
@@ -16,12 +16,15 @@ module.exports = {
         markHighlightedAs: function (status) {
             this.$emit('change-status', status);
         },
+        showInsertStory: function () {
+            this.$emit('show-insert-story');
+        },
         isMindset: function (m) {
             // TODO ...
             return false;
         },
         hideInsertStory: function () {
-            // TODO ...
+            this.$emit('hide-insert-story');
         },
         pasteHighlighted: function () {
 
@@ -34,7 +37,7 @@ module.exports = {
 <div> <!-- Root to get overriden -->
     <div v-if="!isScreenXs && isMostRecentHighlight && !isMindset('roadmap')" id="highlightedTools" class="hidden-xs">
         <div class="tools">
-            <div ng-if="!isClipboardActive && !isShowingInsertStory" class="regularTools">
+            <div v-if="!isClipboardActive && !isShowingInsertStory" class="regularTools">
                 <div class="jsLink" @click="markHighlightedAs('active')">
                     <span class="done" v-html="iconHalfCircleSvg"></span> On it
                 </div>
@@ -42,13 +45,12 @@ module.exports = {
                     <span class="done" v-html="iconCircleSvg"></span> Done
                 </div>
 
-<!--                 <div class="jsLink" 
-                    ng-click="showInsertStory()">
+                <div class="jsLink" @click="showInsertStory">
                     <span class="">
                         <span class="glyphicon glyphicon-plus"></span>
                     </span> Add task
                 </div>
- -->
+
 <!--                 <div class="jsLink" ng-click="cutHighlighted()">
                     <span class="glyphicon glyphicon-scissors"></span> Cut
                 </div>
