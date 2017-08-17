@@ -78,11 +78,13 @@
 						<cb-story v-bind="story" 
 							:is-screen-xs="isScreenXs"
 							:index="index"
+							:mindset="mindset"
 							@highlight="highlight" 
 							@select-label="selectLabel" 
 							@select-story="selectStory"
 							@deselect-story="deselectStory"
 							@remove="remove(story)"
+							@move-to-top="moveToTop(story)"
 							@save="save"></cb-story>
 
 						<cb-story-owner-column v-bind="story" @select-owner="selectOwner"></cb-story-owner-column>

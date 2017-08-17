@@ -149,6 +149,9 @@ function () {
                         remove: function (story) {
                             scope.$emit('storyRemoved', story);
                         },
+                        moveToTop: function (story) {
+                            scope.$emit('storyMovedToTop', story);
+                        },
                         shouldHide: function (story) {
                             var selectedOwner = this.selectedOwner;
                             var searchEntry = this.searchEntry;

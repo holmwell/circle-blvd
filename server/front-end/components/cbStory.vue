@@ -20,7 +20,8 @@ module.exports = {
 
         comments: Array,
         isScreenXs: Boolean,
-        index: Number
+        index: Number,
+        mindset: String
     }, 
     data: function () {
         return {
@@ -43,6 +44,9 @@ module.exports = {
                 'after-meeting': this.isAfterNextMeeting
             }];
         },
+        isDone: function () {
+            return status === 'done';
+        },
         isStoryMineClass: function () {
             return "";
         },
@@ -57,6 +61,9 @@ module.exports = {
         },
         backgroundAlpha: function () {
             return 1 - (this.index * 0.12);
+        },
+        isMindsetBump: function () {
+            return this.mindset === 'bump';
         }
     },
     methods: {
@@ -102,6 +109,9 @@ module.exports = {
         },
         mouseLeave: function () {
             this.isMouseOver = false;
+        },
+        moveToTop: function () {
+            this.$emit('move-to-top', this);
         }
      }
 }
@@ -123,7 +133,11 @@ module.exports = {
                      .pull-right(v-show="isMouseOver" @click="select")
                          span.glyphicon.glyphicon-option-horizontal
 
-                .col-sm-1.grippy
+                div(v-if="(isMindsetBump || isDone) && isAfterNextMeeting" @click.stop.prevent="moveToTop").col-sm-1.bumpy
+                    .pull-right.bumpy-viz
+                        div(v-show="!isFirstStory").glyphicon.glyphicon-chevron-up &nbsp;
+
+                div(v-else).col-sm-1.grippy
                     .pull-right.grippy-viz
                         span.grippy-bar.top
                         span.grippy-bar
@@ -132,6 +146,9 @@ module.exports = {
                                 .glyphicon.glyphicon-move &nbsp;
                         span.grippy-bar.top
                         span.grippy-bar
+                
+
+
                 //- TODO: bumpy
 
             div(v-if="isScreenXs").no-select.phone-row.hidden-sm.hidden-md.hidden-lg
