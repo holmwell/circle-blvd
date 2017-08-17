@@ -60,6 +60,14 @@ module.exports = {
         }
     },
     methods: {
+        handleSingleClicks: function () {
+            if (this.isScreenXs) {
+                this.select();
+            }
+            else {
+                this.highlight();
+            }
+        },
         highlight: function () {
             // Only emit highlight events if we're not highlighted,
             // other we'll emit 'single' highlight events on mousedown
@@ -100,7 +108,7 @@ module.exports = {
 </script>
 
 <template lang="pug">
-    div(v-bind:class="cssClass" @click="highlight" @dblclick="select" @mousedown="highlight" 
+    div(v-bind:class="cssClass" @click="handleSingleClicks" @dblclick="select" @mousedown="highlight" 
         @mouseenter="mouseOver" @mouseleave="mouseLeave" v-bind:style="backgroundStyle")
         //-  TODO: Get the id, for scrolling 
         div(v-if="isSelected")
