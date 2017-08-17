@@ -119,7 +119,7 @@ module.exports = {
                     .summary(:class="isStoryMineClass")
                         cb-story-summary(@select-label="selectLabel", :summary="summary")
 
-                .col-sm-1.paddy.details.icon
+                .col-sm-1.paddy.details-icon
                      .pull-right(v-show="isMouseOver" @click="select")
                          span.glyphicon.glyphicon-option-horizontal
 
