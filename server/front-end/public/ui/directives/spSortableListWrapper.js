@@ -60,7 +60,13 @@ function () {
                         selectedOwner: scope.selectedOwner,
                         selectedLabels: scope.selectedLabels,
                         highlightedStories: highlightedStories,
-                        isShowingInsertStory: scope.isShowingInsertStory
+                        isShowingInsertStory: scope.isShowingInsertStory,
+                        mindset: scope.mindset
+                    },
+                    computed: {
+                        isMindsetRoadmap: function () {
+                            return this.mindset === 'roadmap';
+                        }
                     },
                     methods: {
                         archive: function (story) {
@@ -213,6 +219,9 @@ function () {
                             for (var index in scope.stories) {
                                 Vue.set(self.stories, index, scope.stories[index]);
                             }
+                        });
+                        scope.$on('mindsetChanged', function (e, mindset) {
+                            self.mindset = mindset;
                         });
                     }
                 });
