@@ -21,7 +21,8 @@ module.exports = {
         comments: Array,
         isScreenXs: Boolean,
         index: Number,
-        mindset: String
+        mindset: String,
+        isClipboardActive: Boolean
     }, 
     data: function () {
         return {
@@ -30,7 +31,6 @@ module.exports = {
     },
     computed: {
         cssClass: function () {
-            var isClipboardActive = false;
             return ['story', 'col-xs-12', 'debug', 'no-select', {
                 selected: this.isSelected,
                 'not-selected': !this.isSelected,
@@ -39,7 +39,7 @@ module.exports = {
                 'first-at-load': this.isFirstAtLoad,
 
                 deadline: this.isDeadline,
-                highlighted: this.isHighlighted && !isClipboardActive,
+                highlighted: this.isHighlighted && !this.isClipboardActive,
                 'next-meeting': this.isNextMeeting,
                 'after-meeting': this.isAfterNextMeeting
             }];

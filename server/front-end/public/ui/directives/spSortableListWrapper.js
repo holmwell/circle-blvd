@@ -22,6 +22,7 @@ function () {
             watch('selectedOwner', scope);
             watch('selectedLabels', scope);
             watch('isShowingInsertStory', scope);
+            watch('isClipboardActive', scope);
 
             scope.$watch('stories', function (newVal, oldVal) {
                 if (newVal && newVal.length) {
@@ -54,6 +55,7 @@ function () {
                 scope.vue = new Vue({
                     el: elementId,
                     data: {
+                        scope: scope,
                         isScreenXs: scope.isScreenXs,
                         stories: scope.stories,
                         searchEntry: scope.searchEntry,
@@ -61,6 +63,7 @@ function () {
                         selectedLabels: scope.selectedLabels,
                         highlightedStories: highlightedStories,
                         isShowingInsertStory: scope.isShowingInsertStory,
+                        isClipboardActive: scope.isClipboardActive,
                         mindset: scope.mindset
                     },
                     computed: {

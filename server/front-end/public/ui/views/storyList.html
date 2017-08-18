@@ -64,19 +64,30 @@
 							@insert-story="insertStory"
 						></cb-insert-story>
 						
+						<div v-if="story.isHighlighted && isClipboardActive">
+							<div class="story col-sm-offset-2 col-xs-12 debug paste-destination"
+								:class="isMindsetRoadmap ? 'col-sm-12' : 'col-sm-8'">
+								<div class="paddy">(clipboard tasks will be moved here)</div>
+							</div>
+						</div>
+
 						<cb-story-highlighted-tools v-if="!isMindsetRoadmap"
+							:is-clipboard-active="isClipboardActive"
 							:is-screen-xs="isScreenXs"
 							:is-most-recent-highlight="story.isMostRecentHighlight"
 							:is-showing-insert-story="isShowingInsertStory" 
 							@change-status="setHighlightedStatus"
 							@show-insert-story="showInsertStory"
-							@hide-insert-story="hideInsertStory">
+							@hide-insert-story="hideInsertStory"
+							@cut="scope.cutHighlighted"
+							@paste="scope.pasteHighlighted">
 						</cb-story-highlighted-tools>
 
 						<cb-story-status-column v-bind="story" @archive="archive(story)"></cb-story-status-column>
 
 						<cb-story v-bind="story" 
 							:is-screen-xs="isScreenXs"
+							:is-clipboard-active="isClipboardActive"
 							:index="index"
 							:mindset="mindset"
 							@highlight="highlight" 

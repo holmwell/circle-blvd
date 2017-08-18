@@ -3,11 +3,11 @@ module.exports = {
     props: {
         isMostRecentHighlight: Boolean,
         isShowingInsertStory: Boolean,
-        isScreenXs: Boolean
+        isScreenXs: Boolean,
+        isClipboardActive: Boolean
     },
     data: function () {
         return {
-            isClipboardActive: false,
             iconCircleSvg: require('../public/img/glyphs/icon-circle.svg'),
             iconHalfCircleSvg: require('../public/img/glyphs/icon-half-circle.svg'),
         }
@@ -27,7 +27,10 @@ module.exports = {
             this.$emit('hide-insert-story');
         },
         pasteHighlighted: function () {
-
+            this.$emit('paste');
+        },
+        cutHighlighted: function () {
+            this.$emit('cut');
         }
     }
 }
@@ -51,10 +54,10 @@ module.exports = {
                     </span> Add task
                 </div>
 
-<!--                 <div class="jsLink" ng-click="cutHighlighted()">
+                <div class="jsLink" @click="cutHighlighted">
                     <span class="glyphicon glyphicon-scissors"></span> Cut
                 </div>
- -->            </div>
+            </div>
 
             <div v-if="isShowingInsertStory" class="insertTools">
                 <div class="jsLink" @click="hideInsertStory">
