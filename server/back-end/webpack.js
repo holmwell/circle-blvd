@@ -15,7 +15,7 @@ module.exports = function (staticPath, isDebugging) {
     // TODO: 
     // var router = express.Router();
 
-    var build = function () {
+    var build = function (callback) {
         var outputPath = '/_dist';
         var appEntry = "../front-end/entry.js";
 
@@ -62,14 +62,13 @@ module.exports = function (staticPath, isDebugging) {
             }
         };
 
+        callback = callback || function () {};
         webpack(config, (err, stats) => {
             if (stats.hasErrors()) {
                 // console.log(stats);
-                throw stats;
+                return callback(stats);
             }
-            if (err) {
-                throw err;
-            }
+            return callback(err);
         });
     }
 

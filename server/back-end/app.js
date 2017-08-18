@@ -105,8 +105,10 @@ var init = function (config, callback) {
         // Set up the app with our session secret
         var sessionSecret = settings.value('session-secret');
         setupApp(sessionSecret);
-        
-        callback(null, webServer.start);
+
+        webpack(staticPath, isDebugging).build(function (err) {
+            callback(err, webServer.start);            
+        });
     }
 
     function setupApp (sessionSecret) {
@@ -125,7 +127,6 @@ var init = function (config, callback) {
         }
 
         // HTML, CSS, JavaScript files
-        webpack(staticPath, isDebugging).build();
         app.use(staticFiles(staticPath, isDebugging));
 
         // Logging
