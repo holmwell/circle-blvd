@@ -176,6 +176,13 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
                 moveStoryBlock,
                 stories);
 
+            for (var index in storiesList) {
+                storiesList[index].isMostRecentHighlight = false;
+            }
+            if (highlightedStories.length > 0) {
+                highlightedStories[0].isMostRecentHighlight = true;
+            }
+
             scope.isClipboardActive = clipboard.isActive();
         }
 
