@@ -22,7 +22,9 @@ module.exports = {
         isScreenXs: Boolean,
         index: Number,
         mindset: String,
-        isClipboardActive: Boolean
+
+        isClipboardActive: Boolean,
+        isInClipboard: Boolean
     }, 
     data: function () {
         return {
@@ -41,7 +43,8 @@ module.exports = {
                 deadline: this.isDeadline,
                 highlighted: this.isHighlighted && !this.isClipboardActive,
                 'next-meeting': this.isNextMeeting,
-                'after-meeting': this.isAfterNextMeeting
+                'after-meeting': this.isAfterNextMeeting,
+                inClipboard: this.isInClipboard,
             }];
         },
         isDone: function () {
