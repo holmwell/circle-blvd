@@ -75,7 +75,9 @@ module.exports = {
                 this.select();
             }
             else {
-                this.highlight();
+                // Let a full click highlight one story,
+                // even if a block is highlighted
+                this.$emit('highlight', this.id);
             }
         },
         highlight: function () {
