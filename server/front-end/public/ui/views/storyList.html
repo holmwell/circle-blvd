@@ -64,7 +64,7 @@
 							@insert-story="insertStory"
 						></cb-insert-story>
 						
-						<div v-if="story.isHighlighted && isClipboardActive">
+						<div v-cloak v-if="isClipboardActive && story.isHighlighted">
 							<div class="story col-sm-offset-2 col-xs-12 debug paste-destination"
 								:class="isMindsetRoadmap ? 'col-sm-12' : 'col-sm-8'">
 								<div class="paddy">(clipboard tasks will be moved here)</div>
