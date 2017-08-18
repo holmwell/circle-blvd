@@ -79,9 +79,9 @@
 							@change-status="setHighlightedStatus"
 							@show-insert-story="showInsertStory"
 							@hide-insert-story="hideInsertStory"
-							@cut="scope.cutHighlighted"
-							@paste="scope.pasteHighlighted">
-						</cb-story-highlighted-tools>
+ 							@cut="cutHighlighted"
+							@paste="pasteHighlighted">
+ 						</cb-story-highlighted-tools>
 
 						<cb-story-status-column v-bind="story" @archive="archive(story)"></cb-story-status-column>
 

@@ -55,7 +55,6 @@ function () {
                 scope.vue = new Vue({
                     el: elementId,
                     data: {
-                        scope: scope,
                         isScreenXs: scope.isScreenXs,
                         stories: scope.stories,
                         searchEntry: scope.searchEntry,
@@ -81,6 +80,12 @@ function () {
                         },
                         setHighlightedStatus: function (status) {
                             scope.markHighlightedAs(status);
+                        },
+                        cutHighlighted: function () {
+                            scope.cutHighlighted();
+                        },
+                        pasteHighlighted: function () {
+                            scope.pasteHighlighted();
                         },
                         showInsertStory: function () {
                             scope.showInsertStory();
