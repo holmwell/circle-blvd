@@ -81,7 +81,13 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
         };
 
         var pulse = function (story) {
-            scope.$emit('pulseStory', story);
+            // With the introduction of Vue, Vue is a lot faster
+            // than Angular, so oftentimes this event will fire
+            // before the UI is ready, so put a little delay in
+            // there to make things display.
+            $timeout(function () {
+                scope.$emit('pulseStory', story);
+            }, 100);
         };
 
         var scrollToAndPulse = function (story) {
