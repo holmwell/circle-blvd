@@ -68,6 +68,9 @@ module.exports = {
     },
     methods: {
         handleSingleClicks: function () {
+            if (this.isSelected)
+                return;
+
             if (this.isScreenXs) {
                 this.select();
             }

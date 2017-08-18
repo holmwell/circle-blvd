@@ -166,7 +166,7 @@ module.exports = {
                             span.glyphicon.glyphicon-link
                             span Link to {{storyNoun}}
 
-                    button(type="button" @click="save").saveBtn.topSaveBtn.btn.btn-default Save
+                    button(type="button" @click.stop="save").saveBtn.topSaveBtn.btn.btn-default Save
                 
                 //- button class="saveBtn saveCommentBtn topSaveBtn btn pull-left"
                 //-     type="button"
@@ -192,6 +192,6 @@ module.exports = {
                         span.glyphicon.glyphicon-link
                         span Link to {{storyNoun}}
 
-                button(type="button" @click="save").saveBtn.btn.btn-default Save
+                button(type="button" @click.stop="save").saveBtn.btn.btn-default Save
 </template>
 
