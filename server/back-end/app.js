@@ -21,6 +21,7 @@ var dbLib    = require('circle-blvd/dataAccess');
 // routes
 var routes      = require('./routes.js');
 var staticFiles = require('./static-files.js');
+var webpack     = require('./webpack.js'); 
 
 // sessions
 var sessionDatabaseLib = require('circle-blvd/data/sessions/session-database');
@@ -124,6 +125,7 @@ var init = function (config, callback) {
         }
 
         // HTML, CSS, JavaScript files
+        webpack(staticPath, isDebugging).build();
         app.use(staticFiles(staticPath, isDebugging));
 
         // Logging
