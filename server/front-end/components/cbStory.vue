@@ -50,7 +50,7 @@ module.exports = {
             }];
         },
         isDone: function () {
-            return status === 'done';
+            return this.status === 'done';
         },
         isStoryMineClass: function () {
             return this.isMine ? 'mine' : '';
