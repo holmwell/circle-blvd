@@ -24,7 +24,8 @@ module.exports = {
         mindset: String,
 
         isClipboardActive: Boolean,
-        isInClipboard: Boolean
+        isInClipboard: Boolean,
+        isMine: Boolean
     }, 
     data: function () {
         return {
@@ -45,13 +46,14 @@ module.exports = {
                 'next-meeting': this.isNextMeeting,
                 'after-meeting': this.isAfterNextMeeting,
                 inClipboard: this.isInClipboard,
+                mine: this.isMine
             }];
         },
         isDone: function () {
             return status === 'done';
         },
         isStoryMineClass: function () {
-            return "";
+            return this.isMine ? 'mine' : '';
         },
         backgroundStyle: function () {
             if (this.isAfterNextMeeting || this.isDeadline || this.isSelected) {

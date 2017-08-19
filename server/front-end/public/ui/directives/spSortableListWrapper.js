@@ -160,6 +160,19 @@ function () {
                         moveToTop: function (story) {
                             scope.$emit('storyMovedToTop', story);
                         },
+                        isMine: function (story) {
+                            if (story.owner && scope.accountName) {
+                                var owner = story.owner.toLowerCase();
+                                var member = scope.accountName;
+                                if (member) {
+                                    member = member.toLowerCase();
+                                    if (owner === member) {
+                                        return true;
+                                    }
+                                }
+                            }
+                            return false;
+                        },
                         shouldHide: function (story) {
                             var selectedOwner = this.selectedOwner;
                             var searchEntry = this.searchEntry;
