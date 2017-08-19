@@ -351,11 +351,13 @@
 .search .new-story {
   background-color: #1E69B5;
   background-color: #006688;
+  background-color: gold;
   /*background-color: transparent;*/
 }
 .search .new-story:hover {
   background-color: #2272B8;
   background-color: #006a8c;
+  background-color: gold;
 }
 
 .entry-facade-container {
@@ -582,17 +584,21 @@
 .paste-destination:hover {
   background-color: #1E69B5;
   background-color: #006688;
-  color: white;
+  background-color: gold;
+  color: #333;
   padding-left: 3ex;
 }
 .filter:hover {
   background-color: #2272B8;
   background-color: #006a8c;
+  background-color: gold;
   color: white;
+  color: #333;
   cursor: default;
 }
 .filter a {
   color: gold;
+  color: #006688;
 }
 .filter ul {
   padding-left: 0;
@@ -615,6 +621,7 @@
 }
 .filter a.active-filter {
   color: white;
+  color: #006688;
 }
 .active-filter:hover {
   cursor: pointer;
