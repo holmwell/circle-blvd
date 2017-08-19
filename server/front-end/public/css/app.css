@@ -351,13 +351,13 @@
 .search .new-story {
   background-color: #1E69B5;
   background-color: #006688;
-  background-color: gold;
+  background-color: rgb(66, 69, 69);
   /*background-color: transparent;*/
 }
 .search .new-story:hover {
   background-color: #2272B8;
   background-color: #006a8c;
-  background-color: gold;
+  background-color: rgb(66, 69, 69);
 }
 
 .entry-facade-container {
@@ -584,21 +584,20 @@
 .paste-destination:hover {
   background-color: #1E69B5;
   background-color: #006688;
-  background-color: gold;
-  color: #333;
+  background-color: rgb(66, 69, 69);
+  color: #eee;
   padding-left: 3ex;
 }
 .filter:hover {
   background-color: #2272B8;
   background-color: #006a8c;
-  background-color: gold;
+  background-color: rgb(66, 69, 69);
   color: white;
-  color: #333;
+  color: #eee;
   cursor: default;
 }
 .filter a {
   color: gold;
-  color: #006688;
 }
 .filter ul {
   padding-left: 0;
@@ -621,7 +620,7 @@
 }
 .filter a.active-filter {
   color: white;
-  color: #006688;
+  color: gold;
 }
 .active-filter:hover {
   cursor: pointer;
@@ -723,7 +722,7 @@
   color: #EAAB23;
 }
 .next-meeting .story-label {
-  color: goldenrod;
+  color: gold;
 }
 .story-label:hover {
   text-decoration: underline;
