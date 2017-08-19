@@ -783,6 +783,8 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
                     // Do nothing.
                 }
                 else {
+                    // Note: We lazily use this teamHighlightedStories dictionary
+                    // for two purposes: remembering stories by ID and by user.
                     teamHighlightedStories[payload.user] = story;
                     if (teamHighlightedStories[story.id] !== scope.accountName) {
                         teamHighlightedStories[story.id] = payload.user;

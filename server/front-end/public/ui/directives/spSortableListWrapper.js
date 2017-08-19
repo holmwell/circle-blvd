@@ -173,6 +173,11 @@ function () {
                             }
                             return false;
                         },
+                        isHighlightedByTeam: function (story) {
+                            // TODO: This doesn't quite cut it to catch all real-time
+                            // updates, but this feature isn't too important right now.
+                            return scope.isStoryHighlightedByTeam(story);
+                        },
                         shouldHide: function (story) {
                             var selectedOwner = this.selectedOwner;
                             var searchEntry = this.searchEntry;

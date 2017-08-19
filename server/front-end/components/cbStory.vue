@@ -25,7 +25,8 @@ module.exports = {
 
         isClipboardActive: Boolean,
         isInClipboard: Boolean,
-        isMine: Boolean
+        isMine: Boolean,
+        isHighlightedByTeam: Boolean
     }, 
     data: function () {
         return {
@@ -34,7 +35,12 @@ module.exports = {
     },
     computed: {
         cssClass: function () {
-            return ['story', 'col-xs-12', 'debug', 'no-select', {
+            return ['story', 'debug', 'col-xs-12', 'no-select', {
+                // This is in our Angular implementation, but it seems to 
+                // be incorrect.
+                // 'col-sm-12': !this.isMindsetRoadmap,
+                // 'col-sm-8': this.isMindsetRoadmap,
+
                 selected: this.isSelected,
                 'not-selected': !this.isSelected,
 
@@ -46,7 +52,8 @@ module.exports = {
                 'next-meeting': this.isNextMeeting,
                 'after-meeting': this.isAfterNextMeeting,
                 inClipboard: this.isInClipboard,
-                mine: this.isMine
+                mine: this.isMine,
+                'team-highlighted': this.isHighlightedByTeam,
             }];
         },
         isDone: function () {
@@ -66,6 +73,9 @@ module.exports = {
         },
         backgroundAlpha: function () {
             return 1 - (this.index * 0.12);
+        },
+        isMindsetRoadmap: function () {
+            return this.mindset === 'roadmap';
         },
         isMindsetBump: function () {
             return this.mindset === 'bump';
