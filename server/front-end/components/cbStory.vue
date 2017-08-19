@@ -57,8 +57,17 @@ module.exports = {
                 'team-highlighted': this.isHighlightedByTeam,
             }];
         },
+        isSad: function () {
+            return this.status === "sad";
+        },
+        isActive: function () {
+            return this.status === "active";
+        },
         isDone: function () {
             return this.status === 'done';
+        },
+        isNew: function () {
+            return this.status === '' || !this.status
         },
         isStoryMineClass: function () {
             return this.isMine ? 'mine' : '';
@@ -173,18 +182,19 @@ module.exports = {
             
                 .col-xs-11.paddy
                     .phone-backlog-status.col-xs-2.debug.no-select
-                        //- i.done-status(v-show="isDeadline && !isAfterNextMeeting" @click="archive" title="archive milepost")
+                        i(v-show="isDeadline && !isAfterNextMeeting").done-status
+                        //- @click="archive" title="archive milepost")
 
-                        //- <i ng-show="isStoryDone(story)" 
+                        i(v-show="isDone").done-status 
                         //-     class="done-status"
                         //-     ng-click="archive(story)" 
                         //-     title="archive story">
                         //- </i>
-                        //- <i class="active-status" ng-show="isStoryActive(story)"></i>
-                        //- <i class="sad-status glyphicon glyphicon-stop" 
-                        //- ng-show="isStorySad(story)"></i>
-                        //- <span class="new-status"
-                        //- ng-show="(isStoryNew(story) && isStoryMine(story))">New</span>
+
+                        i(v-show="isActive").active-status
+                        i(v-show="isSad").sad-status.glyphicon.glyphicon-stop
+
+                        span.new-status(v-show="isNew && isMine") New
 
                     .phone-summary.col-xs-10
                         cb-story-summary(@select-label="selectLabel", :summary="summary")
