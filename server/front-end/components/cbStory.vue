@@ -19,10 +19,11 @@ module.exports = {
         warning: String,
 
         comments: Array,
-        isScreenXs: Boolean,
         index: Number,
-        mindset: String,
 
+        isScreenXs: Boolean,
+
+        mindset: String,
         isClipboardActive: Boolean,
         isInClipboard: Boolean,
         isMine: Boolean,
@@ -166,10 +167,6 @@ module.exports = {
                                 .glyphicon.glyphicon-move &nbsp;
                         span.grippy-bar.top
                         span.grippy-bar
-                
-
-
-                //- TODO: bumpy
 
             div(v-if="isScreenXs").no-select.phone-row.hidden-sm.hidden-md.hidden-lg
                 //- ng-class="{mine: isStoryMine(story)}" 
@@ -192,9 +189,12 @@ module.exports = {
                     .phone-summary.col-xs-10
                         cb-story-summary(@select-label="selectLabel", :summary="summary")
 
-                    //-<!-- TODO: Use component instead of duplicate markup -->            
-                    //- <div ng-if="(!isMindset('bump') && !isStoryDone(story)) || !isAfterNextMeeting || isMindset('roadmap')" 
-                .col-xs-1.grippy
+                //- Note: Small screens don't switch to bumpy when a task is done
+                div(v-if="isMindsetBump && isAfterNextMeeting" @click.stop.prevent="moveToTop").col-xs-1.bumpy
+                    .pull-right.bumpy-viz
+                        div(v-show="!isFirstStory").glyphicon.glyphicon-chevron-up &nbsp;
+
+                div(v-else).col-xs-1.grippy
                     .pull-right.grippy-viz
                         span.grippy-bar.top
                         span.grippy-bar
@@ -204,16 +204,6 @@ module.exports = {
                         span.grippy-bar.top
                         span.grippy-bar
 
-                //- <!-- TODO: Use component instead of duplicate markup -->
-                //- <div ng-if="(isMindset('bump') || isStoryDone(story)) && story.isAfterNextMeeting && !isMindset('roadmap')" 
-                //-     class="col-xs-1 bumpy"
-                //-     ng-mousedown="beforeMoveToTop($event, story)"
-                //-     ng-click="moveToTop($event, story)">
-                //-     <div class="pull-right bumpy-viz">
-                //-         <div ng-hide="story.isFirstStory" 
-                //-         class="glyphicon glyphicon-chevron-up">&nbsp;</div>
-                //-     </div>
-                //- </div>
 </template>
 
 <!-- // Old template, for reference:
