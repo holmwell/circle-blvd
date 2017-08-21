@@ -99,7 +99,9 @@ module.exports = {
                     a.subtle.jslink(@click.stop="deselect") Hide details
 
             .col-xs-12.col-sm-9.summary-input
-                input.form-control(:id="'boxForStory' + id" type="text" @keyup.enter="save" v-model="model.summary")
+                input.form-control(:id="'boxForStory' + id" type="text" autocomplete="off"
+                    @keyup.enter="save" 
+                    v-model="model.summary")
 
             .hidden-xs.col-sm-3(ng-if="!isScreenXs")
                 .deselect
