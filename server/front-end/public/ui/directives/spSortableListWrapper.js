@@ -116,6 +116,10 @@ function () {
                         save: function (story) {
                             scope.$emit('storySaved', story);
                         },
+                        saveComment: function (story) {
+                            console.log(story);
+                            scope.$emit('storyCommentSaved', story);
+                        },
                         selectLabel: function (text) {
                             scope.$emit('labelSelected', text);
                         },

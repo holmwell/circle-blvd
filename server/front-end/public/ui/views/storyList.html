@@ -98,7 +98,8 @@
 							@deselect-story="deselectStory"
 							@remove="remove(story)"
 							@move-to-top="moveToTop(story)"
-							@save="save"></cb-story>
+							@save="save"
+							@save-comment="saveComment"></cb-story>
 
 						<cb-story-owner-column v-bind="story" @select-owner="selectOwner"></cb-story-owner-column>
 					</cb-story-status-class>

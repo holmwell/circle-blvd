@@ -2,6 +2,7 @@
 module.exports = {
     props: {
         id: String,
+        projectId: String,
         isSelected: Boolean,
 
         isFirstStory: Boolean,
@@ -128,6 +129,9 @@ module.exports = {
         save: function (story) {
             this.$emit('save', story);
         },
+        saveComment: function (story) {
+            this.$emit('save-comment', story);
+        },
         deselect: function () {
             this.$emit('deselect-story', this);
         },
@@ -152,7 +156,11 @@ module.exports = {
         @mouseenter="mouseOver" @mouseleave="mouseLeave" v-bind:style="backgroundStyle")
         //-  TODO: Get the id, for scrolling 
         div(v-if="isSelected")
-            cb-story-detail(v-bind="$props" is-screen-xs="isScreenXs" @save="save" @deselect="deselect" @remove="remove")
+            cb-story-detail(v-bind="$props" is-screen-xs="isScreenXs" 
+                @save="save" 
+                @save-comment="saveComment"
+                @deselect="deselect" 
+                @remove="remove")
         div(v-else)
             .row.no-select.hidden-xs
                 .col-sm-10.paddy

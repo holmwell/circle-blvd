@@ -2,6 +2,7 @@
 module.exports = {
     props: {
         id: String,
+        projectId: String,
         isDeadline: Boolean,
         isNextMeeting: Boolean,
 
@@ -21,6 +22,7 @@ module.exports = {
             iconHalfCircleSvg: require('../public/img/glyphs/icon-half-circle.svg'),
             model: {
                 id: this.id,
+                projectId: this.projectId,
                 summary: this.summary,
                 owner: this.owner,
                 description: this.description,
@@ -79,6 +81,9 @@ module.exports = {
         },
         is: function (status) {
             return this.model.status && this.model.status === status;
+        },
+        saveComment: function () {
+            this.$emit('save-comment', this.model);
         }
     },
     filters: {
@@ -170,9 +175,7 @@ module.exports = {
 
                     button(type="button" @click.stop="save").saveBtn.topSaveBtn.btn.btn-default Save
                 
-                //- button class="saveBtn saveCommentBtn topSaveBtn btn pull-left"
-                //-     type="button"
-                //-     ng-click="saveComment(story, $event)">Add comment</button>
+                button(type="button" @click="saveComment").saveBtn.saveCommentBtn.topSaveBtn.btn.pull-left Add comment
             
             .comments.clear
                 //- ng-class-odd="'odd'"
