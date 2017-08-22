@@ -74,23 +74,8 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                     var highlightingType = scope.keyboard.isShiftDown ? 'multi' : 'single';
                     scope.$emit('storyHighlight', id, highlightingType);
                 },
-                setHighlightedStatus: function (status) {
-                    scope.markHighlightedAs(status);
-                },
-                cutHighlighted: function () {
-                    scope.cutHighlighted();
-                },
-                pasteHighlighted: function () {
-                    scope.pasteHighlighted();
-                },
-                showInsertStory: function () {
-                    scope.showInsertStory();
-                },
                 insertStory: function (options) {
                     scope.insertStory(options.task, options.nextStory);
-                },
-                hideInsertStory: function () {
-                    scope.hideInsertStory();
                 },
                 editStory: function (story, editCallback) {
                     // Utility method for dealing with story updates.
@@ -231,6 +216,10 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                 }
             },
             created: function () {
+                // Make scope a read-only property, as adding it to
+                // data as a reactive property causes havoc.
+                this.scope = scope;
+
                 var self = this;
                 scope.$on('storyHighlighted', function (e, story) {
                     for(var index in scope.stories) {
