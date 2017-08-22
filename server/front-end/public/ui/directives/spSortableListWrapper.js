@@ -23,7 +23,7 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                     scope.vue.$data.stories = scope.stories;
                 }
                 else {
-                   mount();
+                   createVueInstance(scope);
                 }
             }
         });
@@ -39,12 +39,7 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
             }
         });
 
-        var isDragging = false;
-        scope.$on('spIsDragging', function (e, val) {
-            isDragging = val;
-        });
-
-        function mount() {
+        function createVueInstance(scope) {
             scope.vue = new Vue({
                 el: elementId,
                 data: {
@@ -56,7 +51,8 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                     highlightedStories: highlightedStories,
                     isShowingInsertStory: scope.isShowingInsertStory,
                     isClipboardActive: scope.isClipboardActive,
-                    mindset: scope.mindset
+                    mindset: scope.mindset,
+                    isDragging: false
                 },
                 computed: {
                     isMindsetRoadmap: function () {
@@ -119,7 +115,7 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                         scope.$emit('ownerSelected', owner);
                     },
                     selectStory: function (story) {
-                        if (isDragging || story.isBeingDragged) {
+                        if (this.isDragging || story.isBeingDragged) {
                             // Do nothing. We're dragging. See the note
                             // in 'drag:end' as to why.
                             return;
@@ -247,6 +243,9 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                     });
                     scope.$on('mindsetChanged', function (e, mindset) {
                         self.mindset = mindset;
+                    });
+                    scope.$on('spIsDragging', function (e, val) {
+                        self.isDragging = val;
                     });
                 }
             });
