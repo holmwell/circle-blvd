@@ -53,13 +53,14 @@
 			<!-- Our Vue root (in directives/spSortableListWrapper) binds to #sortableList, 
 			 and this is the template for that component -->
 			<div id="sortableList" ng-non-bindable>
-				<div v-for="(story, index) in stories" class="storyWrapper row debug no-select" v-show="!shouldHide(story)"
+				<div v-for="(story, index) in stories" class="storyWrapper row debug no-select" 
+					v-show="!shouldHide(story)"
 					:class="story.isHighlighted ? 'highlightedWrapper' : ''" 
 					:data-story-id="story.id" 
 					:data-left-story-id="story.id" 
 					:key="story.id">
 					<cb-story-status-class v-bind="story">
-						<cb-insert-story v-if="story.isMostRecentHighlight && isShowingInsertStory"
+						<cb-insert-story v-if="isShowingInsertStory && story.isMostRecentHighlight"
 							:story="story"
 							@insert-story="insertStory"
 						></cb-insert-story>
