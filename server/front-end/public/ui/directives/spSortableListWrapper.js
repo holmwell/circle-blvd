@@ -67,8 +67,8 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                 }
             },
             methods: {
-                archive: function (story) {
-                    scope.$emit('storyArchived', story);
+                emit: function (eventName, param) {
+                    scope.$emit(eventName, param);
                 },
                 highlight: function (id) {
                     var highlightingType = scope.keyboard.isShiftDown ? 'multi' : 'single';
@@ -93,12 +93,6 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                     this.editStory(newVal, function (edit) {
                         return newVal;
                     });
-                },
-                save: function (story) {
-                    scope.$emit('storySaved', story);
-                },
-                saveComment: function (story) {
-                    scope.$emit('storyCommentSaved', story);
                 },
                 selectLabel: function (text) {
                     scope.$emit('labelSelected', text);
@@ -137,12 +131,6 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                         scope.$emit('storyDeselected', editedStory);
                     }
 
-                },
-                remove: function (story) {
-                    scope.$emit('storyRemoved', story);
-                },
-                moveToTop: function (story) {
-                    scope.$emit('storyMovedToTop', story);
                 },
                 isMine: function (story) {
                     if (story.owner && scope.accountName) {

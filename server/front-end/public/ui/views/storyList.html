@@ -84,7 +84,9 @@
 							@paste="scope.pasteHighlighted">
  						</cb-story-highlighted-tools>
 
-						<cb-story-status-column v-bind="story" @archive="archive(story)"></cb-story-status-column>
+						<cb-story-status-column v-bind="story" 
+							@archive="emit('storyArchived', story)">
+						</cb-story-status-column>
 
 						<cb-story v-bind="story" 
 							:is-screen-xs="isScreenXs"
@@ -97,12 +99,14 @@
 							@select-label="selectLabel" 
 							@select-story="selectStory"
 							@deselect-story="deselectStory"
-							@remove="remove(story)"
-							@move-to-top="moveToTop(story)"
-							@save="save"
-							@save-comment="saveComment"></cb-story>
+							@remove="emit('storyRemoved', story)"
+							@move-to-top="emit('storyMovedToTop', story)"
+							@save="emit('storySaved', story)"
+							@save-comment="emit('storyCommentSaved', story)"></cb-story>
 
-						<cb-story-owner-column v-bind="story" @select-owner="selectOwner"></cb-story-owner-column>
+						<cb-story-owner-column v-bind="story" 
+							@select-owner="emit('ownerSelected', story.owner)">
+						</cb-story-owner-column>
 					</cb-story-status-class>
 				</div>
 			</div>
