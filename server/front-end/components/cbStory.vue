@@ -1,5 +1,12 @@
 <script>
-module.exports = {
+import StoryDetail  from './cbStoryDetail.vue';
+import StorySummary from './cbStorySummary.vue';
+
+export default {
+    components: {
+        'cb-story-detail': StoryDetail,
+        'cb-story-summary': StorySummary
+    },
     props: {
         id: String,
         projectId: String,

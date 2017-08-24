@@ -17,7 +17,8 @@ module.exports = function (staticPath, isDebugging) {
 
     var build = function (callback) {
         var outputPath = '/_dist';
-        var appEntry = "../front-end/entry.js";
+        // All of our Vue stuff is in the story list
+        var appEntry = "../front-end/public/ui/directives/spSortableListWrapper.js";
 
         var fullOutputPath = path.join(staticPath, outputPath);
         if (fs.existsSync(fullOutputPath) && !isDebugging) {

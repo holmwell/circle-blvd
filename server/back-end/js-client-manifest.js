@@ -64,7 +64,7 @@ module.exports = {
         'ui/directives/cbStoryListBuilder.js',
         'ui/directives/cbStoryPulser.js',
         'ui/directives/cbViewportObserver.js',
-        'ui/directives/spSortableListWrapper.js',
+//      'ui/directives/spSortableListWrapper.js', // Loaded via webpack
         'ui/directives/spStory.js',
         'ui/directives/spStoryList.js',
         'ui/directives/spStorySummary.js',

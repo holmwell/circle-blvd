@@ -52,64 +52,18 @@
 		<div sp-sortable-list-wrapper>
 			<!-- Our Vue root (in directives/spSortableListWrapper) binds to #sortableList, 
 			 and this is the template for that component -->
-			<div id="sortableList" ng-non-bindable>
-				<div v-for="(story, index) in stories" class="storyWrapper row debug no-select" 
-					v-show="!shouldHide(story)"
-					:class="story.isHighlighted ? 'highlightedWrapper' : ''" 
-					:data-story-id="story.id" 
-					:data-left-story-id="story.id" 
-					:key="story.id">
-					<cb-story-status-class v-bind="story">
-						<cb-insert-story v-if="isShowingInsertStory && story.isMostRecentHighlight"
-							:story="story"
-							@insert-story="insertStory"
-						></cb-insert-story>
-						
-						<div v-cloak v-if="isClipboardActive && story.isHighlighted">
-							<div class="story col-sm-offset-2 col-xs-12 debug paste-destination"
-								:class="isMindsetRoadmap ? 'col-sm-12' : 'col-sm-8'">
-								<div class="paddy">(clipboard tasks will be moved here)</div>
-							</div>
-						</div>
-
-						<cb-story-highlighted-tools v-if="!isMindsetRoadmap"
-							:is-clipboard-active="isClipboardActive"
-							:is-screen-xs="isScreenXs"
-							:is-most-recent-highlight="story.isMostRecentHighlight"
-							:is-showing-insert-story="isShowingInsertStory" 
-							@change-status="scope.markHighlightedAs"
-							@show-insert-story="scope.showInsertStory"
-							@hide-insert-story="scope.hideInsertStory"
- 							@cut="scope.cutHighlighted"
-							@paste="scope.pasteHighlighted">
- 						</cb-story-highlighted-tools>
-
-						<cb-story-status-column v-bind="story" 
-							@archive="emit('storyArchived', story)">
-						</cb-story-status-column>
-
-						<cb-story v-bind="story" 
-							:is-screen-xs="isScreenXs"
-							:is-clipboard-active="isClipboardActive"
-							:is-mine="isMine(story)"
-							:is-highlighted-by-team="isHighlightedByTeam(story)"
-							:index="index"
-							:mindset="mindset"
-							@highlight="highlight" 
-							@select-label="selectLabel" 
-							@select-story="selectStory"
-							@deselect-story="deselectStory"
-							@remove="emit('storyRemoved', story)"
-							@move-to-top="emit('storyMovedToTop', story)"
-							@save="emit('storySaved', story)"
-							@save-comment="emit('storyCommentSaved', story)"></cb-story>
-
-						<cb-story-owner-column v-bind="story" 
-							@select-owner="emit('ownerSelected', story.owner)">
-						</cb-story-owner-column>
-					</cb-story-status-class>
-				</div>
-			</div>
+			<cb-story-list id="sortableList" ng-non-bindable
+				:scope="scope" 
+				:stories="stories"
+				:highlighted-stories="highlightedStories"
+				:selected-owner="selectedOwner"
+				:selected-labels="selectedLabels"
+				:search-entry="searchEntry"
+				:is-screen-xs="isScreenXs"
+				:is-showing-insert-story="isShowingInsertStory"
+				:is-clipboard-active="isClipboardActive"
+				:initial-mindset="mindset"
+				></cb-story-list>
 		</div>
 	</div>
 
