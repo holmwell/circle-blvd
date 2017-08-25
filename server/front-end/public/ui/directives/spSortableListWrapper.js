@@ -12,6 +12,8 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
         link: link
     };
 
+    var vm = null;
+
     function link (scope, element, attr, highlightedStories) {
         // The role of this directive is to serve as an interop
         // between the Angular story list directive and our 
@@ -28,8 +30,8 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
 
         scope.$watch('stories', function (newVal, oldVal) {
             if (newVal && newVal.length) {
-                if (scope.vue) {
-                    scope.vue.$data.stories = scope.stories;
+                if (vm) {
+                    vm.$data.stories = scope.stories;
                 }
                 else {
                    createVueInstance(scope, highlightedStories);
@@ -43,14 +45,23 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
             // When our Angular parent removes a story from the list,
             // we arrive here. Update our local data based on the 
             // new collection.
-            if (newVal.length < oldVal.length && scope.vue) {
-                scope.vue.$data.stories = newVal;
+            if (newVal.length < oldVal.length && vm) {
+                vm.$data.stories = newVal;
             }
         });
     }
 
+    function watch (prop, scope) {
+        scope.$watch(prop, function (newVal) {
+            if (vm) {
+                vm.$data[prop] = scope[prop];
+            }
+        });
+    };
+
+
     function createVueInstance(scope, highlightedStories) {
-        scope.vue = new Vue({
+        vm = new Vue({
             el: elementId,
             data: {
                 stories: scope.stories,
@@ -83,15 +94,6 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                 ></cb-story-list>`
         });
     }
-
-
-    function watch (prop, scope) {
-        scope.$watch(prop, function (newVal) {
-            if (scope.vue) {
-                scope.vue.$data[prop] = scope[prop];
-            }
-        });
-    };
 
     return directive;
 }]);
