@@ -185,29 +185,34 @@ export default {
         // Make scope a read-only property, as adding it to
         // data as a reactive property causes havoc.
         // this.scope = scope;
+        //
+        var scope = this.scope;
 
-        var self = this;
-        this.scope.$on('storyHighlighted', function (e, story) {
-            for(var index in self.scope.stories) {
-                self.scope.stories[index].isMostRecentHighlight = false;
+        scope.$on('storyHighlighted', (e, story) => {
+            for(var index in scope.stories) {
+                scope.stories[index].isMostRecentHighlight = false;
             }
             story.isMostRecentHighlight = true;
-            self.updateStory(story);
+            this.updateStory(story);
         });
-        this.scope.$on('storyUnhighlighted', function (e, story) {
+
+        scope.$on('storyUnhighlighted', (e, story) => {
             story.isMostRecentHighlight = false;
-            self.updateStory(story);
+            this.updateStory(story);
         });
-        this.scope.$on('storyOrderUpdated', function () {
-            for (var index in self.scope.stories) {
-                Vue.set(self.stories, index, self.scope.stories[index]);
+
+        scope.$on('storyOrderUpdated', () => {
+            for (var index in scope.stories) {
+                Vue.set(this.stories, index, scope.stories[index]);
             }
         });
-        this.scope.$on('mindsetChanged', function (e, mindset) {
-            self.mindset = mindset;
+
+        scope.$on('mindsetChanged', (e, mindset) => {
+            this.mindset = mindset;
         });
-        this.scope.$on('spIsDragging', function (e, val) {
-            self.isDragging = val;
+        
+        scope.$on('spIsDragging', (e, val) => {
+            this.isDragging = val;
         });
     }
 }
