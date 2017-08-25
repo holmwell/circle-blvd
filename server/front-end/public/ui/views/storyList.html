@@ -48,23 +48,10 @@
 				</div>
 			</div>
 		</div>
-		<!-- Migrating away from: <sp-story/> -->
 		<div sp-sortable-list-wrapper>
-			<!-- Our Vue root (in directives/spSortableListWrapper) binds to #sortableList, 
-			 and this is the template for that component -->
-			<cb-story-list id="sortableList" ng-non-bindable
-				:scope="scope" 
-				:stories="stories"
-				:highlighted-stories="highlightedStories"
-				:selected-owner="selectedOwner"
-				:selected-labels="selectedLabels"
-				:search-entry="searchEntry"
-				:is-screen-xs="isScreenXs"
-				:is-showing-insert-story="isShowingInsertStory"
-				:is-clipboard-active="isClipboardActive"
-				:initial-mindset="mindset"
-				></cb-story-list>
-		</div>
+			<!-- Our Vue root (in directives/spSortableListWrapper) binds to #sortableList -->
+			<div id="sortableList" ng-non-bindable></div>
+ 		</div>
 	</div>
 
 	<div id="mileposts-wrapper" class="debug" ng-if="isMindset('roadmap')">

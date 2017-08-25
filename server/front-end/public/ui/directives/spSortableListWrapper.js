@@ -68,7 +68,19 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
             },
             components: {
                 'cb-story-list': StoryList
-            }
+            },
+            template: `<cb-story-list id="sortableList"
+                :scope="scope" 
+                :stories="stories"
+                :highlighted-stories="highlightedStories"
+                :selected-owner="selectedOwner"
+                :selected-labels="selectedLabels"
+                :search-entry="searchEntry"
+                :is-screen-xs="isScreenXs"
+                :is-showing-insert-story="isShowingInsertStory"
+                :is-clipboard-active="isClipboardActive"
+                :initial-mindset="mindset"
+                ></cb-story-list>`
         });
     }
 
