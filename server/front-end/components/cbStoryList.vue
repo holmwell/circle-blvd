@@ -228,6 +228,7 @@ export default {
         <cb-story-status-class v-bind="story">
             <cb-insert-story v-if="isShowingInsertStory && story.isMostRecentHighlight"
                 :story="story"
+                :mindset="mindset"
                 @insert-story="insertStory"
             ></cb-insert-story>
             
