@@ -23,6 +23,7 @@ export default {
         summary: String, 
         status: String,
         owner: String,
+        createdBy: Object,
         description: String,
         warning: String,
 
