@@ -47,7 +47,7 @@ angular.module('CircleBlvd.services')
 
         highlightedStories.unhighlightAll();
         highlightedStory.isHighlighted = true;
-        highlightedStories.push(highlightedStory);
+        highlightedStories.highlight(highlightedStory, 'single');
     }
 
     function pasteHighlighted(highlightedStories, moveStoryBlock, stories) {
