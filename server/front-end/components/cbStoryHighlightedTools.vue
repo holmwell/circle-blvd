@@ -34,35 +34,33 @@ export default {
 </script>
 
 <template lang="pug">
-div <!-- Root to get overriden -->
-    #highlightedTools
-        .tools
-            .regularTools(v-if="!isClipboardActive && !isShowingInsertStory")
-                .jsLink(@click="markHighlightedAs('active')")
-                    span.done(v-html="iconHalfCircleSvg") 
-                    span.text On it
+    #highlightedTools.tools
+        .insertTools(v-if="isShowingInsertStory")
+            .jsLink(@click="hideInsertStory")
+                span.glyphicon.glyphicon-remove 
+                span.text Hide entry
 
-                .jsLink(@click="markHighlightedAs('done')")
-                    span.done(v-html="iconCircleSvg") 
-                    span.text Done
+        .clipboardTools(v-else-if="isClipboardActive")
+            .jsLink(@click="pasteHighlighted")
+                span.glyphicon.glyphicon-paste 
+                span.text Paste
 
-                .jsLink(@click="showInsertStory")
-                    span.glyphicon.glyphicon-plus
-                    span.text Add task
+        .regularTools(v-else)
+            .jsLink(@click="markHighlightedAs('active')")
+                span.done(v-html="iconHalfCircleSvg") 
+                span.text On it
 
-                .jsLink(@click="cutHighlighted")
-                    span.glyphicon.glyphicon-scissors 
-                    span.text Cut
+            .jsLink(@click="markHighlightedAs('done')")
+                span.done(v-html="iconCircleSvg") 
+                span.text Done
 
-            .insertTools(v-if="isShowingInsertStory")
-                .jsLink(@click="hideInsertStory")
-                    span.glyphicon.glyphicon-remove 
-                    span.text Hide entry
+            .jsLink(@click="showInsertStory")
+                span.glyphicon.glyphicon-plus
+                span.text Add task
 
-            .clipboardTools(v-if="isClipboardActive")
-                .jsLink(@click="pasteHighlighted")
-                    span.glyphicon.glyphicon-paste 
-                    span.text Paste
+            .jsLink(@click="cutHighlighted")
+                span.glyphicon.glyphicon-scissors 
+                span.text Cut
 </template>
 
 <style scoped>
