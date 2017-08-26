@@ -1,5 +1,6 @@
 <script>
-import autosize from "autosize"
+import Autosize from "autosize"
+import Awesomplete from "awesomplete"
 
 export default {
     props: {
@@ -16,7 +17,8 @@ export default {
         createdBy: Object,
 
         comments: Array,
-        isScreenXs: Boolean
+        isScreenXs: Boolean,
+        owners: Array
     },
     data: function () {
         return {
@@ -109,7 +111,7 @@ export default {
             new Vue({
                 el: textareas[index],
                 mounted: function () {
-                    autosize(this.$el);
+                    Autosize(this.$el);
                 }
             });
         }
@@ -135,8 +137,9 @@ export default {
 
         .top-info(v-show="!(isNextMeeting || isDeadline)")
             .owner Who's doing this?
-                input(type="text" v-model="model.owner").form-control
-                //- TODO: typeahead-owners class="typeahead form-control" 
+                input(type="text" v-model="model.owner" list="owner-list").form-control.awesomplete
+                datalist#owner-list
+                    option(v-for="name in owners") {{name}}
             .owner-placeholder {{warning}}
 
         .description
@@ -219,4 +222,6 @@ export default {
 
                 button(type="button" @click.stop="save").saveBtn.btn.btn-default Save
 </template>
+
+<style src="awesomplete/awesomplete.css"></style>
 

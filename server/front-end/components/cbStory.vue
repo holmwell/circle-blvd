@@ -32,6 +32,7 @@ export default {
 
         isScreenXs: Boolean,
 
+        owners: Array,
         mindset: String,
         isClipboardActive: Boolean,
         isInClipboard: Boolean,

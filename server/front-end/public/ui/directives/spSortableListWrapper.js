@@ -71,7 +71,8 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                 isScreenXs: scope.isScreenXs,
                 isShowingInsertStory: scope.isShowingInsertStory,
                 isClipboardActive: scope.isClipboardActive,
-                mindset: scope.mindset
+                mindset: scope.mindset,
+                owners: scope.owners
             },
             beforeMount: function () {
                 this.scope = scope;
@@ -91,6 +92,7 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                 :is-showing-insert-story="isShowingInsertStory"
                 :is-clipboard-active="isClipboardActive"
                 :initial-mindset="mindset"
+                :owners="owners"
                 ></cb-story-list>`
         });
     }

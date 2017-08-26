@@ -25,7 +25,8 @@ export default {
         isScreenXs: Boolean,
         isShowingInsertStory: Boolean,
         isClipboardActive: Boolean,
-        initialMindset: String
+        initialMindset: String,
+        owners: Array
     },
     data: function () {
         return {
@@ -264,6 +265,7 @@ export default {
                 :is-highlighted-by-team="isHighlightedByTeam(story)"
                 :index="index"
                 :mindset="mindset"
+                :owners="owners"
                 @highlight="highlight" 
                 @select-label="selectLabel" 
                 @select-story="selectStory"
