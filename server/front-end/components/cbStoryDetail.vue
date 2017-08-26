@@ -110,14 +110,9 @@ export default {
         }
     },
     mounted: function () {
-        var textareas = ['#comment-textarea', '#description-textarea'];
+        var textareas = ['comment-textarea', 'description-textarea'];
         for (var index in textareas) {
-            // new Vue({
-            //     el: textareas[index],
-            //     mounted: function () {
-            //         Autosize(this.$el);
-            //     }
-            // });
+            Autosize(document.getElementById(textareas[index]));
         }
     }
 };
