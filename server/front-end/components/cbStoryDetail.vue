@@ -2,6 +2,7 @@
 import Autolinker from "autolinker"
 import Autosize from "autosize"
 import Awesomplete from "awesomplete"
+import dateformat from "dateformat"
 import sanitizeHtml from "sanitize-html"
 
 export default {
@@ -105,8 +106,24 @@ export default {
     filters: {
         date: function (timestamp) {
             var date = new Date(timestamp);
-            // TODO: Use cool filter like in spStory.js
-            return date.toDateString();
+            var now = new Date();
+            var filter = "";
+
+            if (now.getDate() === date.getDate()
+            && now.getMonth() === date.getMonth()
+            && now.getFullYear() === date.getFullYear()) {
+                // Today
+                filter = "'at' h:MM tt";
+            }
+            else if (now.getFullYear() === date.getFullYear()) {
+                // This year
+                filter = "'on' mmm d";
+            }
+            else {
+                filter = "'on' mmm d, yyyy";
+            }
+
+            return dateformat(timestamp, filter);
         }
     },
     mounted: function () {
