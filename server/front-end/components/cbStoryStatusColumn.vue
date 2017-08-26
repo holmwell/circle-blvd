@@ -6,7 +6,9 @@ module.exports = {
         isNextMeeting: Boolean,
         isAfterNextMeeting: Boolean,
         isScreenXs: Boolean,
-        status: String
+        status: String,
+        owner: String,
+        accountName: String
     },
     data: function () {
         return {
@@ -19,8 +21,10 @@ module.exports = {
             return isStoryStatus(this, "done") ? "done" : "";
         },
         isStoryMine: function () {
-            // TODO: Add owner, current user to props ... 
-            return false;
+            if (!this.owner || !this.accountName)
+                return false;
+
+            return this.owner.toLowerCase() === this.accountName.toLowerCase();
         },
     },
     methods: {

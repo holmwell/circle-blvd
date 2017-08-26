@@ -72,7 +72,8 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                 isShowingInsertStory: scope.isShowingInsertStory,
                 isClipboardActive: scope.isClipboardActive,
                 mindset: scope.mindset,
-                owners: scope.owners
+                owners: scope.owners,
+                accountName: scope.accountName
             },
             beforeMount: function () {
                 this.scope = scope;
@@ -93,6 +94,7 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                 :is-clipboard-active="isClipboardActive"
                 :initial-mindset="mindset"
                 :owners="owners"
+                :account-name="accountName"
                 ></cb-story-list>`
         });
     }

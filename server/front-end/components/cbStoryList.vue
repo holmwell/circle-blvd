@@ -16,7 +16,7 @@ export default {
         'cb-insert-story': InsertStory,
     },
     props: {
-        scope: Object, 
+        scope: Object, // For calling methods only, please
         stories: Array,
         highlightedStories: Array, 
         selectedOwner: String,
@@ -26,7 +26,8 @@ export default {
         isShowingInsertStory: Boolean,
         isClipboardActive: Boolean,
         initialMindset: String,
-        owners: Array
+        owners: Array,
+        accountName: String
     },
     data: function () {
         return {
@@ -255,6 +256,7 @@ export default {
                 </cb-story-highlighted-tools>
 
             <cb-story-status-column v-bind="story" 
+                :account-name="accountName"
                 @archive="emit('storyArchived', story)">
             </cb-story-status-column>
 
