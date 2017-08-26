@@ -11,8 +11,7 @@ module.exports = {
         'lib/angular/angular-route.js',
         'lib/angular/angular-sanitize.js',
         'lib/store/store.min.js',
-        'lib/autosize/jquery.autosize.min.js',
-        'lib/typeahead/0.10.2.js'
+        'lib/autosize/jquery.autosize.min.js'
     ],
     app: [
         'app.js'
@@ -68,8 +67,7 @@ module.exports = {
         'ui/directives/spStory.js',
         'ui/directives/spStoryList.js',
         'ui/directives/spStorySummary.js',
-        'ui/directives/spRoadmapMilepost.js',
-        'ui/directives/typeaheadOwners.js'
+        'ui/directives/spRoadmapMilepost.js'
     ],
     filters: [
         'ui/filters/module.js',
