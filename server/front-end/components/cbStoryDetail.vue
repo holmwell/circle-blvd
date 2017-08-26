@@ -63,7 +63,7 @@ export default {
                 return [];
             }
 
-            return this.comments.reverse();
+            return this.comments.slice().reverse();
         }
     },
     methods: {
