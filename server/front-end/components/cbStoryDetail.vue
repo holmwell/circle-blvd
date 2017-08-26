@@ -1,5 +1,7 @@
 <script>
-module.exports = {
+import autosize from "autosize"
+
+export default {
     props: {
         id: String,
         projectId: String,
@@ -91,8 +93,27 @@ module.exports = {
             var date = new Date(timestamp);
             // TODO: Use cool filter like in spStory.js
             return date.toDateString();
+        },
+        // WIP ...
+        //        
+        // linky: function (text) {
+        //     var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        //     return text.replace(urlRegex, function(url) {
+        //         return '<a href="' + url + '">' + url + '</a>';
+        //     });
+        // }
+    },
+    mounted: function () {
+        var textareas = ['#comment-textarea', '#description-textarea'];
+        for (var index in textareas) {
+            new Vue({
+                el: textareas[index],
+                mounted: function () {
+                    autosize(this.$el);
+                }
+            });
         }
-     }
+    }
 };
 </script>
 
@@ -124,8 +145,7 @@ module.exports = {
                     | {{storyNoun}} created by {{createdBy.name}}
 
             .textarea-container
-                //- TODO: autosize
-                textarea.form-control(autosize v-model="model.description")
+                textarea#description-textarea.form-control(v-model="model.description")
 
         .status(v-show="!(isNextMeeting || isDeadline)") Task progress?
             .row
@@ -163,8 +183,8 @@ module.exports = {
         .commentArea(v-if="!(isNextMeeting || isDeadline)")
             .commentHeading Questions or comments?
             .textarea-container
-                //- TODO: Autosize ...
-                textarea(autosize placeholder="Add comment or link ..." v-model="model.newComment" rows="1").form-control
+                textarea#comment-textarea(placeholder="Add comment or link ..." 
+                    v-model="model.newComment" rows="1").form-control
 
             .btn-wrapper
                 .pull-right
