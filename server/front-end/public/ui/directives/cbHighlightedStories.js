@@ -75,6 +75,9 @@ function (mouse) {
                 return;
             }
 
+            if (story.isHighlighted)
+                return;
+
             // Account for the mouse leaving and re-entering
             // the list during a drag. Also makes fast drags
             // work, if they're going in one direction
