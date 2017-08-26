@@ -1,6 +1,8 @@
 <script>
+import Autolinker from "autolinker"
 import Autosize from "autosize"
 import Awesomplete from "awesomplete"
+import sanitizeHtml from "sanitize-html"
 
 export default {
     props: {
@@ -88,6 +90,16 @@ export default {
         },
         saveComment: function () {
             this.$emit('save-comment', this.model);
+        },
+        linky: function (text) {
+            var options = {
+                allowedTags: [ 'b', 'i', 'em', 'strong', 'a' ],
+                allowedAttributes: {
+                    'a': [ 'href' ]
+                }
+            };
+
+            return Autolinker.link(sanitizeHtml(text, options));
         }
     },
     filters: {
@@ -95,15 +107,7 @@ export default {
             var date = new Date(timestamp);
             // TODO: Use cool filter like in spStory.js
             return date.toDateString();
-        },
-        // WIP ...
-        //        
-        // linky: function (text) {
-        //     var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-        //     return text.replace(urlRegex, function(url) {
-        //         return '<a href="' + url + '">' + url + '</a>';
-        //     });
-        // }
+        }
     },
     mounted: function () {
         var textareas = ['#comment-textarea', '#description-textarea'];
@@ -203,12 +207,11 @@ export default {
             .comments.clear
                 //- ng-class-odd="'odd'"
                 .comment(v-for="comment in commentsReversed") 
-                    //- TODO Linky (see append-linky)
                     .text
                         span.name {{comment.createdBy.name}}, 
                         //- TODO: getTimestampFilter(comment)
                         span.timestamp {{comment.timestamp | date}}:&nbsp;
-                        span {{comment.text}}
+                        span(v-html="linky(comment.text)")
 
         .action-buttons
             button(v-if="!isScreenXs" v-show="!isNextMeeting" type="button" @click="remove").hidden-xs.removeBtn
