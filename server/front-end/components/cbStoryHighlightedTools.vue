@@ -1,10 +1,11 @@
 <script>
-module.exports = {
+export default {
     props: {
         isMostRecentHighlight: Boolean,
         isShowingInsertStory: Boolean,
         isScreenXs: Boolean,
-        isClipboardActive: Boolean
+        isClipboardActive: Boolean,
+        mindset: String
     },
     data: function () {
         return {
@@ -19,10 +20,6 @@ module.exports = {
         showInsertStory: function () {
             this.$emit('show-insert-story');
         },
-        isMindset: function (m) {
-            // TODO ...
-            return false;
-        },
         hideInsertStory: function () {
             this.$emit('hide-insert-story');
         },
@@ -36,41 +33,41 @@ module.exports = {
 }
 </script>
 
-<template>
-<div> <!-- Root to get overriden -->
-    <div v-if="!isScreenXs && isMostRecentHighlight && !isMindset('roadmap')" id="highlightedTools" class="hidden-xs">
-        <div class="tools">
-            <div v-if="!isClipboardActive && !isShowingInsertStory" class="regularTools">
-                <div class="jsLink" @click="markHighlightedAs('active')">
-                    <span class="done" v-html="iconHalfCircleSvg"></span> On it
-                </div>
-                <div class="jsLink" @click="markHighlightedAs('done')">
-                    <span class="done" v-html="iconCircleSvg"></span> Done
-                </div>
+<template lang="pug">
+div <!-- Root to get overriden -->
+    #highlightedTools
+        .tools
+            .regularTools(v-if="!isClipboardActive && !isShowingInsertStory")
+                .jsLink(@click="markHighlightedAs('active')")
+                    span.done(v-html="iconHalfCircleSvg") 
+                    span.text On it
 
-                <div class="jsLink" @click="showInsertStory">
-                    <span class="">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </span> Add task
-                </div>
+                .jsLink(@click="markHighlightedAs('done')")
+                    span.done(v-html="iconCircleSvg") 
+                    span.text Done
 
-                <div class="jsLink" @click="cutHighlighted">
-                    <span class="glyphicon glyphicon-scissors"></span> Cut
-                </div>
-            </div>
+                .jsLink(@click="showInsertStory")
+                    span.glyphicon.glyphicon-plus
+                    span.text Add task
 
-            <div v-if="isShowingInsertStory" class="insertTools">
-                <div class="jsLink" @click="hideInsertStory">
-                    <span class="glyphicon glyphicon-remove"></span> Hide entry
-                </div>
-            </div>
+                .jsLink(@click="cutHighlighted")
+                    span.glyphicon.glyphicon-scissors 
+                    span.text Cut
 
-            <div v-if="isClipboardActive" class="clipboardTools">
-                <div class="jsLink" @click="pasteHighlighted">
-                    <span class="glyphicon glyphicon-paste"></span> Paste
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+            .insertTools(v-if="isShowingInsertStory")
+                .jsLink(@click="hideInsertStory")
+                    span.glyphicon.glyphicon-remove 
+                    span.text Hide entry
+
+            .clipboardTools(v-if="isClipboardActive")
+                .jsLink(@click="pasteHighlighted")
+                    span.glyphicon.glyphicon-paste 
+                    span.text Paste
 </template>
+
+<style scoped>
+    .text {
+        display: inline-block;
+        padding-left: 0.5ex;
+    }
+</style>

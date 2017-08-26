@@ -239,11 +239,13 @@ export default {
                 </div>
             </div>
 
-            <cb-story-highlighted-tools v-if="!isMindsetRoadmap"
+            <cb-story-highlighted-tools v-if="!isMindsetRoadmap && !isScreenXs && story.isMostRecentHighlight"
+                class="hidden-xs"
                 :is-clipboard-active="isClipboardActive"
                 :is-screen-xs="isScreenXs"
                 :is-most-recent-highlight="story.isMostRecentHighlight"
                 :is-showing-insert-story="isShowingInsertStory" 
+                :mindset="mindset"
                 @change-status="scope.markHighlightedAs"
                 @show-insert-story="scope.showInsertStory"
                 @hide-insert-story="scope.hideInsertStory"
