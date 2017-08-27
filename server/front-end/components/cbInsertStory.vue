@@ -8,10 +8,12 @@
                 span.input-group-btn
                     button(@click="insertStory" tabindex="3").btn.btn-default.pull-right Add task
 
-            textarea(v-model="description" autosize placeholder="Task description ..." tabindex="2").form-control
+            textarea#task-description(v-model="description" placeholder="Task description ..." tabindex="2").form-control
 </template>
 
 <script>
+import Autosize from 'autosize'
+
 export default {
     props: {
         story: Object,
@@ -42,6 +44,9 @@ export default {
         isMindsetRoadmap: function () {
             return this.mindset === 'roadmap';
         }
+    },
+    mounted: function () {
+        Autosize(document.getElementById('task-description'));
     }
 }
 </script>
