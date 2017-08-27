@@ -306,11 +306,15 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
 
         var isInsertingStory = false;
         scope.insertedStory = {};
-        scope.insertStory = function (task, nextStory) {
-            if (!isInsertingStory && task && task.summary) {
+        scope.insertStory = function (story, nextStory) {
+            if (!isInsertingStory && story && story.summary) {
                 isInsertingStory = true;
-                var newStory = lib.parseStory(task.summary, scope);
-                newStory.description = task.description;
+                var newStory = lib.parseStory(story.summary, scope);
+
+                newStory.description = story.description;
+                if (!newStory.isDeadline) {
+                    newStory.isDeadline = story.isDeadline;
+                }
                 
                 // Insert the story at the top and then move
                 // it down. Feel free to implement a new API

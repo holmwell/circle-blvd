@@ -28,6 +28,9 @@ export default {
         },
         cutHighlighted: function () {
             this.$emit('cut');
+        },
+        changeInsertType: function (val) {
+            this.$emit('change-insert-type', val);
         }
     }
 }
@@ -36,6 +39,13 @@ export default {
 <template lang="pug">
     #highlightedTools.tools
         .insertTools(v-if="isShowingInsertStory")
+
+            //- .jsLink(@click="changeInsertType('task')")
+            //-     span.text Task
+
+            //- .jsLink(@click="changeInsertType('deadline')")
+            //-     span.text Milepost 
+
             .jsLink(@click="hideInsertStory")
                 span.glyphicon.glyphicon-remove 
                 span.text Hide entry

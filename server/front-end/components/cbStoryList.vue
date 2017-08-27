@@ -32,7 +32,8 @@ export default {
     data: function () {
         return {
             isDragging: false,
-            mindset: this.initialMindset
+            mindset: this.initialMindset,
+            insertType: 'default'
         }
     },
     computed: {
@@ -129,6 +130,9 @@ export default {
             // TODO: This doesn't quite cut it to catch all real-time
             // updates, but this feature isn't too important right now.
             return this.scope.isStoryHighlightedByTeam(story);
+        },
+        insertTypeChanged: function (val) {
+            this.insertType = val;
         },
         shouldHide: function (story) {
             var selectedOwner = this.selectedOwner;
@@ -231,7 +235,9 @@ export default {
             <cb-insert-story v-if="isShowingInsertStory && story.isMostRecentHighlight"
                 :story="story"
                 :mindset="mindset"
+                :insert-type="insertType"
                 @insert-story="insertStory"
+                @hide="scope.hideInsertStory"
             ></cb-insert-story>
             
             <div v-cloak v-if="isClipboardActive && story.isHighlighted">
@@ -249,6 +255,7 @@ export default {
                 :is-showing-insert-story="isShowingInsertStory" 
                 :mindset="mindset"
                 @change-status="scope.markHighlightedAs"
+                @change-insert-type="insertTypeChanged"
                 @show-insert-story="scope.showInsertStory"
                 @hide-insert-story="scope.hideInsertStory"
                 @cut="scope.cutHighlighted"
