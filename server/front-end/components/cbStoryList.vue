@@ -1,10 +1,12 @@
 <script>
-import InsertStory       from './cbInsertStory.vue';
-import HighlightedTools  from './cbStoryHighlightedTools.vue';
-import Story             from './cbStory.vue';
-import StoryOwnerColumn  from './cbStoryOwnerColumn.vue';
-import StoryStatusClass  from './cbStoryStatusClass.vue';
-import StoryStatusColumn from './cbStoryStatusColumn.vue';
+import InsertStory       from './cbInsertStory.vue'
+import HighlightedTools  from './cbStoryHighlightedTools.vue'
+import Story             from './cbStory.vue'
+import StoryOwnerColumn  from './cbStoryOwnerColumn.vue'
+import StoryStatusClass  from './cbStoryStatusClass.vue'
+import StoryStatusColumn from './cbStoryStatusColumn.vue'
+
+import debounce from "lodash.debounce"
 
 export default {
     components: {
@@ -33,7 +35,9 @@ export default {
         return {
             isDragging: false,
             mindset: this.initialMindset,
-            insertType: 'default'
+            insertType: 'task',
+            insertQueue: [],
+            isProcessingQueue: false
         }
     },
     computed: {
@@ -56,7 +60,34 @@ export default {
             this.scope.$emit('storyHighlight', id, highlightingType);
         },
         insertStory: function (options) {
-            this.scope.insertStory(options.task, options.nextStory);
+            this.insertQueue.push(options);
+            // In the case of a 'many' insert, we'll get a series
+            // of events in quick succession. Wait for them to 
+            // settle down before we start to interact with the 
+            // Angular / DOM stuff.
+            this.debouncedProcessNextInQueue();
+        },
+        processNextInQueue: function (ok) {
+            if (!ok && this.isProcessingQueue)
+                return;
+
+            var me = this;
+
+            if (this.insertQueue.length > 0) {
+                this.isProcessingQueue = true;
+                var option = this.insertQueue.shift();
+
+                this.scope.insertStory(option.task, option.nextStory, function () {
+                    // Wait for the DOM to settle before adding another task, so
+                    // our Angular code can catch up.
+                    Vue.nextTick(function () {
+                        me.processNextInQueue(true);
+                    });
+                });
+            }
+            else {
+                this.isProcessingQueue = false;                
+            }
         },
         editStory: function (story, editCallback) {
             // Utility method for dealing with story updates.
@@ -220,6 +251,9 @@ export default {
         scope.$on('spIsDragging', (e, val) => {
             this.isDragging = val;
         });
+
+        var enoughTime = 100;
+        this.debouncedProcessNextInQueue = debounce(this.processNextInQueue, enoughTime);
     }
 }
 </script>
@@ -236,6 +270,8 @@ export default {
                 :story="story"
                 :mindset="mindset"
                 :insert-type="insertType"
+                :account-name="accountName"
+                @change-insert-type="insertTypeChanged"
                 @insert-story="insertStory"
                 @hide="scope.hideInsertStory"
             ></cb-insert-story>

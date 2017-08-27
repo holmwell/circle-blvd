@@ -306,7 +306,7 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
 
         var isInsertingStory = false;
         scope.insertedStory = {};
-        scope.insertStory = function (story, nextStory) {
+        scope.insertStory = function (story, nextStory, callback) {
             if (!isInsertingStory && story && story.summary) {
                 isInsertingStory = true;
                 var newStory = lib.parseStory(story.summary, scope);
@@ -330,7 +330,7 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
                     scope.insertedStory = {};
                     isInsertingStory = false;
 
-                    $timeout(makeStoriesDraggable, 0);
+                    callback && callback();
                 }); 
             }
         };
