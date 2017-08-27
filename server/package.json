@@ -13,6 +13,10 @@
     "autolinker": "^1.4.3",
     "autosize": "^4.0.0",
     "awesomplete": "^1.1.2",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-es2015-template-literals": "^6.22.0",
+    "babel-preset-es2015": "^6.24.1",
     "body-parser": "^1.15.0",
     "color": "^0.11.1",
     "compact-exclsr": "^0.2.4",
@@ -53,6 +57,10 @@
     "start": "node server.js",
     "debug": "nodemon",
     "test": "nodeunit ./test"
+  },
+  "babel": {
+    "presets": ["es2015"],
+    "plugins": ["transform-es2015-template-literals"]
   },
   "license": "BSD-2-Clause"
 }

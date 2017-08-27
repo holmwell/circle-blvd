@@ -41,7 +41,8 @@ module.exports = function (staticPath, isDebugging) {
                         // the "scss" and "sass" values for the lang attribute to the right configs here.
                         // other preprocessors should work out of the box, no loader config like this necessary.
                         'scss': 'vue-style-loader!css-loader!sass-loader',
-                        'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
+                        'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax',
+                        js: 'babel-loader'
                       }
                       // other vue-loader options go here
                     }
