@@ -31,9 +31,9 @@ CircleBlvd.Services.session = function () {
 	}(); // closure
 
 	var getSession = function() {
-		if (!store.enabled) {
-			return null;
-		}
+		// if (!store.enabled) {
+		// 	return null;
+		// }
 
 		var session = store.get(sessionKey);
 
@@ -74,9 +74,9 @@ CircleBlvd.Services.session = function () {
 			var now = new Date();
 			session.isExpired = undefined;
 			session.expirationDate = getExpirationDate(now);
-			if (store.enabled) {
+			//if (store.enabled) {
 				store.set(sessionKey, session);
-			}
+			//}
 		};
 	}
 

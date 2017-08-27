@@ -7,9 +7,9 @@ CircleBlvd.Services.signInName = function () {
 			return store.get(storageKey);
 		}, 
 		set: function (value) {
-			if (store.enabled) {
+//			if (store.enabled) {
 				store.set(storageKey, value);
-			}
+//			}
 		}
 	};
 };
