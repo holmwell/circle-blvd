@@ -31,6 +31,10 @@ CircleBlvd.Services.session = function () {
 	}(); // closure
 
 	var getSession = function() {
+		if (!store.enabled) {
+			return null;
+		}
+
 		var session = store.get(sessionKey);
 
 		if (!session) {
@@ -53,7 +57,7 @@ CircleBlvd.Services.session = function () {
 	}
 	else if (session.expirationDate < today) {
 		// the session is expired?
-		session.isExpired = true;			
+		session.isExpired = true;
 	}
 	else {
 		// There is a non-stale session in local storage,
@@ -70,7 +74,9 @@ CircleBlvd.Services.session = function () {
 			var now = new Date();
 			session.isExpired = undefined;
 			session.expirationDate = getExpirationDate(now);
-			store.set(sessionKey, session);
+			if (store.enabled) {
+				store.set(sessionKey, session);
+			}
 		};
 	}
 
