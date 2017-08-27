@@ -42,7 +42,6 @@ module.exports = {
         'ui/controllers/listDetail.js',
         'ui/controllers/profile.js',
         'ui/controllers/invite.js',
-        'ui/controllers/tour.js',
         'ui/controllers/contact.js',
         'ui/controllers/partner.js',
         'ui/controllers/about.js',

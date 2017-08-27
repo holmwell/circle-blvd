@@ -53,10 +53,6 @@ router.get("/entrance", function (req, res, next) {
     }
 });
 
-router.get("/entrance/old", function (req, res, next) {
-    res.render('prelude/entrance-old', getDefaultParams(req));
-});
-
 
 router.get("/create", function (req, res, next) {
     if (!req.isAuthenticated()) {
@@ -75,7 +71,7 @@ router.get("/auth-forgot/signin/:docId/:secret", function (req, res, next) {
         secret: req.params.secret
     }; 
     res.render('auth/forgot', params);
-});             
+});
 
 router.get("/about", render('about'));
 
@@ -85,18 +81,6 @@ router.get('/tour', render('tour'));
 router.get('/tour/basics', render('tour-basics'));
 router.get('/tour/organizers', render('tour-organizers'));
 router.get('/tour/workflow', render('tour-workflow'));
-router.get('/tour/more', render('tour-more'));
-
-
-router.get('/tour/old', render('tour-old'));
-router.get('/tour/start', render('tour-old'));
-router.get('/tour/start/*', render('tour-old'));
-
-router.get('/tour/work', render('tour-work'));
-router.get('/tour/work/*', render('tour-work'));
-
-router.get('/tour/plan', render('tour-plan'));
-router.get('/tour/plan/*', render('tour-plan'));
 
 router.get("/privacy", render('privacy'));
 router.get("/partner", render('partner'));
