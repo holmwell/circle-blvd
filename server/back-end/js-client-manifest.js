@@ -64,7 +64,7 @@ module.exports = {
 //      'ui/directives/spSortableListWrapper.js', // Loaded via webpack
 //      'ui/directives/spStory.js',
         'ui/directives/spStoryList.js',
-//      'ui/directives/spStorySummary.js',
+        'ui/directives/spStorySummary.js',
         'ui/directives/spRoadmapMilepost.js'
     ],
     filters: [
