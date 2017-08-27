@@ -1,3 +1,5 @@
+// Deprecated: Being replaced by cbStory.vue
+//
 'use strict';
 
 angular.module('CircleBlvd.directives').
