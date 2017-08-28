@@ -27,6 +27,7 @@ export default {
         isScreenXs: Boolean,
         isShowingInsertStory: Boolean,
         isClipboardActive: Boolean,
+        isSearching: Boolean,
         initialMindset: String,
         owners: Array,
         accountName: String
@@ -252,6 +253,17 @@ export default {
             this.isDragging = val;
         });
 
+        scope.$on('show-entry', (e) => {
+            for (var index in this.stories) {
+                if (this.stories[index].isFirstStory) {
+                    this.highlight(this.stories[index].id);
+                    break;
+                }
+            }
+
+            scope.showInsertStory();
+        });
+
         var enoughTime = 100;
         this.debouncedProcessNextInQueue = debounce(this.processNextInQueue, enoughTime);
     }
@@ -266,7 +278,7 @@ export default {
         :data-left-story-id="story.id" 
         :key="story.id">
         <cb-story-status-class v-bind="story">
-            <cb-insert-story v-if="isShowingInsertStory && story.isMostRecentHighlight"
+            <cb-insert-story v-if="isShowingInsertStory && story.isMostRecentHighlight && !isSearching"
                 :story="story"
                 :mindset="mindset"
                 :insert-type="insertType"

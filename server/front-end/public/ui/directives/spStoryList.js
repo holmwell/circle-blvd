@@ -21,6 +21,7 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
             mindset: '=',
             isFacade: '=',
             isChecklist: '=',
+            isSearching: '=',
             keyboard: '=',
             mouse: '='
         },
@@ -290,10 +291,12 @@ function ($timeout, $http, $location, $route, mouse, lib, clipboard, hacks, erro
             $timeout(function () {
                 hacks.focus('storyInsert');
             }, 0);
+            // scope.$emit('show-entry');
         };
 
         scope.hideInsertStory = function () {
             scope.isShowingInsertStory = false;
+            scope.$emit('hide-entry');
         };
 
         var insertNewStory = function (newStory, callback) {

@@ -36,7 +36,7 @@
 		to bump items up to the top of the list.</p> 
 </div>
 
-<div class="entry-facade no-select" ng-hide="isAddingNew || isBacklogBroken || isShowingRoadmapIntro || isShowingBumpIntro">
+<div class="entry-facade no-select" ng-hide="isAddingNew || isBacklogBroken || isShowingRoadmapIntro || isShowingBumpIntro || isInserting">
 	<div class="clearfix entry-facade-container">
 		<div class="col-xs-12 debug alignWithStoryList"
 			ng-class="{
@@ -64,7 +64,7 @@
 				<div class="pull-right" ng-show="isSearching">
 					<a ng-click="hideSearch()" class="jsLink subtle">Hide search</a>
 				</div>
-				<span ng-hide="isSearching">
+				<span ng-hide="isSearching || isInserting">
 					+ <a ng-click="showEntry()" class="jsLink">Add task</a>
 				</span>
 			</div>
@@ -273,6 +273,7 @@
 		owners="owners" 
 		keyboard="keyboard"
 		mouse="mouse"
+		is-searching="isSearching"
 		enable-alt-mode="(isManualAltMode || isAltMode)"
 	/>
 </div>

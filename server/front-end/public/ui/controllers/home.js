@@ -63,6 +63,10 @@ function HomeCtrl(lib, session, clipboard, hacks, $scope, $timeout, $http, $rout
 			}
 
 			if (!panelName) {
+				$scope.$broadcast('show-entry');
+				$scope.isInserting = true;
+				return;
+
 				$scope.isAddingNew = true;
 				$scope.showEntry('story');
 				// TODO: Focus for all the story types
@@ -80,6 +84,7 @@ function HomeCtrl(lib, session, clipboard, hacks, $scope, $timeout, $http, $rout
 
 	$scope.hideEntry = function () {
 		$scope.isAddingNew = undefined;
+		$scope.isInserting = undefined;
 	};
 
 	$scope.$watch('searchEntry', function (val) {
@@ -105,6 +110,14 @@ function HomeCtrl(lib, session, clipboard, hacks, $scope, $timeout, $http, $rout
 			$scope.hideEntry();
 		}
 	}); 
+
+	// $scope.$on('show-entry', function () {
+	// 	$scope.isInserting = true;
+	// });
+
+	$scope.$on('hide-entry', function () {
+		$scope.hideEntry();
+	});
 
 	$scope.selectOwner = function (owner) {
 		$scope.$broadcast('ownerSelected', owner);

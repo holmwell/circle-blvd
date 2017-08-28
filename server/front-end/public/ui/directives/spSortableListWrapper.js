@@ -27,6 +27,7 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
         watch('selectedLabels', scope);
         watch('isShowingInsertStory', scope);
         watch('isClipboardActive', scope);
+        watch('isSearching', scope);
 
         scope.$watch('stories', function (newVal, oldVal) {
             if (newVal && newVal.length) {
@@ -71,6 +72,7 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                 isScreenXs: scope.isScreenXs,
                 isShowingInsertStory: scope.isShowingInsertStory,
                 isClipboardActive: scope.isClipboardActive,
+                isSearching: scope.isSearching,
                 mindset: scope.mindset,
                 owners: scope.owners,
                 accountName: scope.accountName
@@ -92,6 +94,7 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
                 :is-screen-xs="isScreenXs"
                 :is-showing-insert-story="isShowingInsertStory"
                 :is-clipboard-active="isClipboardActive"
+                :is-searching="isSearching"
                 :initial-mindset="mindset"
                 :owners="owners"
                 :account-name="accountName"
