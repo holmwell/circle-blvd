@@ -31,11 +31,11 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
 
         scope.$watch('stories', function (newVal, oldVal) {
             if (newVal && newVal.length) {
+                // TODO: Not sure that we need this. This gets called,
+                // but typically the stories array is empty at this point,
+                // so our Vue ends up empty.
                 if (vm) {
                     vm.$data.stories = scope.stories;
-                }
-                else {
-                   createVueInstance(scope, highlightedStories);
                 }
             }
         });
@@ -49,6 +49,10 @@ angular.module('CircleBlvd.directives').directive('spSortableListWrapper', [ fun
             if (newVal.length < oldVal.length && vm) {
                 vm.$data.stories = newVal;
             }
+        });
+
+        scope.$on('storyListBuilt', function () {
+            createVueInstance(scope, highlightedStories);
         });
     }
 
