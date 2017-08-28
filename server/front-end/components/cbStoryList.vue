@@ -57,6 +57,8 @@ export default {
             this.emit('storyCommentSaved', story);
         },
         highlight: function (id) {
+            this.scope.hideInsertStory();
+
             var highlightingType = this.scope.keyboard.isShiftDown ? 'multi' : 'single';
             this.scope.$emit('storyHighlight', id, highlightingType);
         },
