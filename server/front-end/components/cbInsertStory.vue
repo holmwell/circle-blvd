@@ -1,5 +1,5 @@
 <template lang="pug">
-    .col-sm-offset-2.col-xs-12.insert-destination.debug(:class="isMindsetRoadmap ? 'col-sm-12' : 'col-sm-8'")
+    .col-xs-12.insert-destination.debug(:class="isMindsetRoadmap ? 'col-sm-12' : ['col-sm-8', 'col-sm-offset-2']")
         .row.alignWithStoryList.debug(:class="wrapperClass")
             ul.entry-nav.nav.nav-pills.alignWithStoryList
                 li(:class="insertType === 'task' ? 'active' : ''")
