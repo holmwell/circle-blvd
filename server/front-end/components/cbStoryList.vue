@@ -229,10 +229,6 @@ export default {
         var scope = this.scope;
 
         scope.$on('storyHighlighted', (e, story) => {
-            for(var index in scope.stories) {
-                scope.stories[index].isMostRecentHighlight = false;
-            }
-            story.isMostRecentHighlight = true;
             this.updateStory(story);
         });
 

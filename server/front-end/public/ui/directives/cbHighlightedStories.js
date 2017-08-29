@@ -62,7 +62,13 @@ function (mouse) {
                 if (!storyToHighlight) {
                     return;
                 }
+
+                angular.forEach(highlightedStories, function (s) {
+                    s.isMostRecentHighlight = false;
+                })
+
                 storyToHighlight.isHighlighted = true;
+                storyToHighlight.isMostRecentHighlight = true;
                 storyToHighlight.highlightedFrom = mouse.direction;
                 highlightedStories.push(storyToHighlight);
                 
