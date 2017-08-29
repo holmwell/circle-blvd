@@ -310,7 +310,7 @@ export default {
                 @hide-insert-story="scope.hideInsertStory"
                 @cut="scope.cutHighlighted"
                 @paste="scope.pasteHighlighted">
-                </cb-story-highlighted-tools>
+            </cb-story-highlighted-tools>
 
             <cb-story-status-column v-bind="story" 
                 :account-name="accountName"

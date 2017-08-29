@@ -1,8 +1,7 @@
 <!-- <button class="btn btn-default" ng-click="checkIntegrity()">Check integrity</button> -->
-<div id="storyList" class="no-select {{getMindsetClass()}}" 
-	cb-viewport-observer cb-story-pulser>
+<div id="storyList" class="no-select {{getMindsetClass()}} row" cb-viewport-observer cb-story-pulser>
 	<div id="visibilityHelper" class="hidden-xs"></div>
-	<div id="backlog" class="debug clear"
+	<div id="backlog" class="debug"
 		ng-class="{
 			'col-sm-7': isMindset('roadmap')
 		}">
@@ -54,9 +53,9 @@
  		</div>
 	</div>
 
-	<div id="mileposts-wrapper" class="debug" ng-if="isMindset('roadmap')">
+	<div id="mileposts-wrapper" class="debug col-sm-5" ng-if="isMindset('roadmap')">
 		<div id="mileposts" class="debug">
-			<div class="storyWrapper row debug no-select" 
+ 			<div class="storyWrapper row debug no-select" 
 				data-story-id="{{::story.id}}"
 				ng-repeat="story in mileposts">
 				<sp-roadmap-milepost/>

@@ -39,31 +39,32 @@
 
 /* home */
 #storyList {
-  position: relative;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 #storyList #mileposts-wrapper {
   position: absolute;
-  top: 1ex;
+  position: sticky;
+  top: 0;
   right: 0;
   width: 290px;
 }
 
 #storyList #mileposts {
-  position: fixed;
+  position: relative;
+  left: 20px;
+  top: 7.5ex;
   width: 270px;
-  /*top: 100px;
-  *//*right: 10%;*/
 }
 
 .dragHelper #highlightedTools {
   display: none;
 }
+
 #highlightedTools {
+  float: left;
   position: absolute;
-  left: -2ex; /* this is flush */
-  border: none;
-  /*border-right: 1px dotted #ccc;*/
   z-index: 10000;
 }
 #highlightedTools h6 {
@@ -121,6 +122,9 @@
 .storyWrapper, .filterWrapper {
   padding-left: 1ex;
   position: static;
+}
+.storyWrapper {
+  position: relative;
 }
 .story, 
 .archive {
