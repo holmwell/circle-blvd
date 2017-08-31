@@ -106,6 +106,12 @@ module.exports = function (sessionMaker, db) {
 
     router.get("/data/waitlist", ensure.mainframe, send(db.waitlist.get));
 
+    router.get('/o/:circleId', ensure.circle, function (req, res, next) {
+        res.render('o', {
+            circleId: req.params.circleId
+        });
+    });
+
     // The secret to bridging Angular and Express in a 
     // way that allows us to pass any path to the client.
     // 

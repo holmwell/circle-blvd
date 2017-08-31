@@ -13,6 +13,7 @@
     "autolinker": "^1.4.3",
     "autosize": "^4.0.0",
     "awesomplete": "^1.1.2",
+    "axios": "^0.16.2",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-es2015-template-literals": "^6.22.0",
@@ -45,6 +46,7 @@
     "stylus": "^0.54.2",
     "svg-inline-loader": "^0.8.0",
     "uid-safe": "^2.1.0",
+    "vue": "^2.4.2",
     "vue-loader": "^13.0.4",
     "vue-template-compiler": "^2.4.2",
     "webpack": "^3.5.4"
