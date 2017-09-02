@@ -20,6 +20,7 @@
 			.collapse.navbar-collapse#navigation-circles
 				ul.nav.navbar-nav
 					navbar-link(v-for="circle in member.circles" v-if="!circle.isArchived"
+						:class="activeIf(circle.id === circleId)"
 						@click="circleNav(circle.id)") {{circle.name}}
 
 				ul.nav.navbar-nav.navbar-right
@@ -48,6 +49,9 @@
 			},
 			nav: function (destination) {
 				this.$emit('nav', destination);
+			},
+			activeIf: function (condition) {
+				return condition ? 'active' : null;
 			}
 		}
 	}
