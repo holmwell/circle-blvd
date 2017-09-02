@@ -17,7 +17,8 @@ new Vue({
     render (createElement) {
         return createElement('blvd', {
             props: {
-                circleId: this.$el.attributes.id.value
+                circleId: this.$el.attributes.id.value,
+                member: JSON.parse(this.$el.attributes.member.value)
             }
         })
     }

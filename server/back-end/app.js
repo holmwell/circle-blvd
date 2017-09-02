@@ -82,7 +82,7 @@ var init = function (config, callback) {
     // Views and view engines
     var path = require('path');
     app.set('views', path.join(__dirname, '../front-end/views'));
-    app.set('view engine', 'jade');
+    app.set('view engine', 'pug');
 
     // HTML, CSS, JavaScript files location
     var staticPath = path.join(__dirname, '../front-end/public');

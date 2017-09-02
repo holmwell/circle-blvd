@@ -107,8 +107,49 @@ module.exports = function (sessionMaker, db) {
     router.get("/data/waitlist", ensure.mainframe, send(db.waitlist.get));
 
     router.get('/o/:circleId', ensure.circle, function (req, res, next) {
+
+        var circleList = {};
+        var memberships = req.user.memberships || [];
+        for (var key in memberships) {
+            if (memberships[key].circle) {
+                circleList[memberships[key].circle] = {
+                    id: memberships[key].circle,
+                    name: memberships[key].circleName,
+                    colors: memberships[key].circleColors,
+                    isArchived: memberships[key].circleIsArchived
+                };
+            }
+        }
+
+        // Sort the circle list by name
+        var circleArray = [];
+        for (var key in circleList) {
+            var circle = circleList[key];
+            circleArray.push(circle);
+        }
+        circleArray.sort(function (a, b) {
+            if (a.name < b.name) {
+                return -1;
+            }
+            if (a.name > b.name) {
+                return 1;
+            }
+            return 0;
+        });
+
+        var circleId = req.params.circleId;
+
+        for (var membershipKey in memberships) {
+            var hasMainframeAccess = memberships[membershipKey].name === "Mainframe";
+        }
+
         res.render('o', {
-            circleId: req.params.circleId
+            circleId: circleId,
+            member: {
+                circles: circleArray,
+                activeCircle: circleList[circleId],
+                hasMainframeAccess: hasMainframeAccess                
+            }
         });
     });
 
