@@ -51,6 +51,7 @@
     "webpack": "^3.5.4"
   },
   "devDependencies": {
+    "nodemon": "^1.11.0",
     "nodeunit": "~0.9.1",
     "rewire": "^2.1.5",
     "supertest": "~0.15.0"

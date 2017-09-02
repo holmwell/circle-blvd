@@ -5,6 +5,7 @@
 var express = require('express');
 var path    = require('path');
 var fs      = require('fs');
+var util    = require('util')
 
 var webpack    = require('webpack');
 var jsManifest = require('./js-client-manifest.js');
@@ -59,6 +60,7 @@ module.exports = function (staticPath, isDebugging) {
         };
 
         var config = [{
+            stats: "errors-only",
             entry: path.join(__dirname, '../front-end/entry.js'),
             output: {
                 path: path.join(staticPath, outputPath),
@@ -66,8 +68,7 @@ module.exports = function (staticPath, isDebugging) {
             },
             module: module,
             resolveLoader: resolveLoader
-        }, 
-        {
+        },{
             entry: path.join(__dirname, appEntry),
             context: path.resolve(__dirname, "../front-end"),
             output: {
@@ -75,12 +76,36 @@ module.exports = function (staticPath, isDebugging) {
             },
             module: module,
             resolveLoader: resolveLoader
-        }];
+        }
+        ];
+
+        if (!isDebugging) {
+            for (var index in config) {
+                config[index].plugins = [
+                    // short-circuits all Vue.js warning code
+                    new webpack.DefinePlugin({
+                      'process.env': {
+                        NODE_ENV: '"production"'
+                      }
+                    })//,
+                    // minify with dead-code elimination
+                    // new webpack.optimize.UglifyJsPlugin({
+                    //   compress: {
+                    //     warnings: false
+                    //   }
+                    // })
+                ]
+            }
+        }
 
         callback = callback || function () {};
         webpack(config, (err, stats) => {
+            if (err) {
+                console.log(err);
+            }
+
             if (stats.hasErrors()) {
-                // console.log(stats);
+                console.log(util.inspect(stats, false, 4));
                 return callback(stats);
             }
             return callback(err);

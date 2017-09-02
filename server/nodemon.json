@@ -2,5 +2,5 @@
 	"ext": "js,vue,svg,png,jpg",
 	"ignore": ["front-end/public/_*/"],
 	"verbose": true,
-	"exec": "server.js --debug"
+	"exec": "node server.js --debug"
 }
