@@ -61,9 +61,9 @@ export default {
 
     signOut: function () {
       http.get('/auth/signout').then(function () {
-                //resetSession();
-                this.href("/signin");
-              });
+        //resetSession();
+        this.href("/signin");
+      });
     }
   }
 }
