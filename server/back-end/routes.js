@@ -139,16 +139,29 @@ module.exports = function (sessionMaker, db) {
 
         var circleId = req.params.circleId;
 
-        for (var membershipKey in memberships) {
-            var hasMainframeAccess = memberships[membershipKey].name === "Mainframe";
-        }
+        var isInGroup = function (groupName, circleId) {
+            for (var membershipKey in memberships) {
+                if (circleId && memberships[membershipKey].circle !== circleId) {
+                    continue;
+                }
+
+                if (memberships[membershipKey].name === groupName) {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        var hasMainframeAccess = isInGroup("Mainframe", circleId);
+        var isAdmin = isInGroup("Administrative", circleId);
 
         res.render('o', {
             circleId: circleId,
             member: {
                 circles: circleArray,
                 activeCircle: circleList[circleId],
-                hasMainframeAccess: hasMainframeAccess                
+                hasMainframeAccess: hasMainframeAccess,
+                isAdmin: isAdmin
             }
         });
     });

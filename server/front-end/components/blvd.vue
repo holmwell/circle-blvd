@@ -1,49 +1,70 @@
 <template lang="pug">
-    //- 1. Top navbar
-    //- 2. Circle header
-    //- 3. Story list
-    navbar(:circleId="circleId", :member="member" @nav="nav")
+div
+  navbar(
+    :circleId="circleId", 
+    :member="member" 
+    @nav="nav")
+
+  circle-header(
+    :circleId="circleId", 
+    :member="member"
+    :mindset="mindset"
+    @nav="nav"
+    @mindset-changed="setMindset")
 
 </template>
 
 <script>
 import navbar from './navbar.vue'
+import circleHeader from './circleHeader.vue'
 import http from 'axios'
 
 export default {
-    name: 'blvd',
-    components: { navbar },
-    props: ['circleId', 'member'],
+  name: 'blvd',
+  components: { navbar, circleHeader },
+  props: ['circleId', 'member'],
+  data: function () {
+    return {
+      mindset: 'detailed'
+    }
+  },
+  methods: {
+    nav: function (destination) {
+      switch (destination) {
+        case 'signout':
+          this.signout();
+          break;
+        case 'admin':
+        case 'mainframe':
+        case 'profile':
+        case 'archives':
+        case 'lists':
+          this.href('/#/' + destination);
+          break;
+        case 'home':
+          this.href('/');
+          break;
+        default: 
+          this.href('/' + destination);
+          break;
+      }
+    },
 
-    methods: {
-        nav: function (destination) {
-            switch (destination) {
-                case 'signout':
-                    this.signout();
-                    break;
-                case 'mainframe':
-                case 'profile':
-                    this.href('/#/' + destination);
-                    break;
-                case 'home':
-                    this.href('/');
-                    break;
-                default: 
-                    this.href('/' + destination);
-                    break;
-            }
-        },
+    href: function (url) {
+      window.location.href = url;
+    },
 
-        href: function (url) {
-            window.location.href = url;
-        },
+    setMindset: function (name) {
+      console.log("Mindset: " + name);
+      this.mindset = name;
+    },
 
-        signOut: function () {
-            http.get('/auth/signout').then(function () {
+    signOut: function () {
+      http.get('/auth/signout').then(function () {
                 //resetSession();
                 this.href("/signin");
-            });
-        }
+              });
     }
+  }
 }
 </script>
