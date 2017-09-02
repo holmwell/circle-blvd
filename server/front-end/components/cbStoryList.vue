@@ -1,4 +1,6 @@
 <script>
+import Vue from 'vue'
+
 import InsertStory       from './cbInsertStory.vue'
 import HighlightedTools  from './cbStoryHighlightedTools.vue'
 import Story             from './cbStory.vue'
@@ -9,6 +11,7 @@ import StoryStatusColumn from './cbStoryStatusColumn.vue'
 import debounce from "lodash.debounce"
 
 export default {
+    name: 'cb-story-list',
     components: {
         'cb-story': Story,
         'cb-story-owner-column': StoryOwnerColumn,

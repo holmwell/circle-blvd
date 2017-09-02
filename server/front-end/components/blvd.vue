@@ -5,24 +5,31 @@ div
     :member="member" 
     @nav="nav")
 
-  circle-header(
-    :circleId="circleId", 
-    :member="member"
-    :mindset="mindset"
-    @nav="nav"
-    @mindset-changed="setMindset")
+  .main-wrapper
+    circle-header(
+      :circleId="circleId", 
+      :member="member"
+      :mindset="mindset"
+      @nav="nav"
+      @mindset-changed="setMindset")
+
+    .main.container-fluid.no-select.debug
+      .view
+        story-list(:storyDictionary="stories", :listMeta="listMeta")
 
 </template>
 
 <script>
-import navbar from './navbar.vue'
+import navbar       from './navbar.vue'
 import circleHeader from './circleHeader.vue'
+import storyList    from './storyList.vue'
+
 import http from 'axios'
 
 export default {
   name: 'blvd',
-  components: { navbar, circleHeader },
-  props: ['circleId', 'member'],
+  components: { navbar, circleHeader, storyList },
+  props: ['circleId', 'member', 'stories', 'listMeta'],
   data: function () {
     return {
       mindset: 'detailed'

@@ -9,8 +9,8 @@ import blvd from './components/blvd.vue'
 // We do this little dance to get into the Vue Way of componenets and 
 // pre-compiled (via webpack) templates as soon as possible.
 new Vue({
-    name: 'Circle',
     el: 'circle',
+    name: 'Circle',
     components: { blvd },
     // Use render here instead of a string template so
     // we don't have to include the compiler in our dist.
@@ -18,8 +18,15 @@ new Vue({
         return createElement('blvd', {
             props: {
                 circleId: this.$el.attributes.id.value,
-                member: JSON.parse(this.$el.attributes.member.value)
+                member: this.attr("member"),
+                stories: this.attr("stories"),
+                listMeta: this.attr("listMeta")
             }
         })
+    },
+    methods: {
+        attr: function (attrName) {
+            return JSON.parse(this.$el.attributes[attrName].value);
+        }
     }
 });

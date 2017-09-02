@@ -21,7 +21,7 @@ module.exports = function (db) {
 
     router.get("/:circleId/list-meta", ensure.circle, function (req, res) {
         var circleId = req.params.circleId;
-        db.listMeta.findByListId(circleId, handle(res));
+        db.listMeta.byListId(circleId, handle(res));
     });
 
     // TODO: combine this with /stories to return one object with 

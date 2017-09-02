@@ -155,15 +155,21 @@ module.exports = function (sessionMaker, db) {
         var hasMainframeAccess = isInGroup("Mainframe", circleId);
         var isAdmin = isInGroup("Administrative", circleId);
 
-        res.render('o', {
-            circleId: circleId,
-            member: {
-                circles: circleArray,
-                activeCircle: circleList[circleId],
-                hasMainframeAccess: hasMainframeAccess,
-                isAdmin: isAdmin
-            }
-        });
+        db.listMeta.byListId(circleId, guard(res, function (meta) {
+            db.stories.findByListId(circleId, guard(res, function (stories) {
+                res.render('o', {
+                    circleId: circleId,
+                    member: {
+                        circles: circleArray,
+                        activeCircle: circleList[circleId],
+                        hasMainframeAccess: hasMainframeAccess,
+                        isAdmin: isAdmin
+                    },
+                    stories: stories,
+                    listMeta: meta
+                });
+            }));
+        }));
     });
 
     // The secret to bridging Angular and Express in a 
