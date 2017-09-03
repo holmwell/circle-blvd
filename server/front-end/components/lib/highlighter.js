@@ -1,39 +1,45 @@
+'use strict';
+
 import forEach from 'lodash.foreach'
 
-var highlightedStories = [];
-
-var unhighlightAll = function () {
-   while (highlightedStories.length > 0) {
-      var story = highlightedStories.pop();
-      story.isHighlighted = false;
-      story.isMostRecentHighlight = false;
-      // TODO: This is a bit fragile ... should
-      // wrap the highlight methods soon.
-      story.highlightedFrom = 'none';
-      // $scope.$broadcast('storyUnhighlighted', story);
-   }
+var self = {
+   highlightedStories: [],
+   mostRecentHighlight: null
 };
 
-var internalHighlight = function (storyToHighlight) {
+function unhighlightAll() {
+   while (self.highlightedStories.length > 0) {
+      var story = self.highlightedStories.pop();
+      story.isHighlighted = false;
+      story.isMostRecentHighlight = false;
+
+      self.mostRecentHighlight = null;
+   }
+}
+
+function internalHighlight(storyToHighlight) {
    if (!storyToHighlight) {
       return;
    }
 
-   forEach(highlightedStories, function (s) {
+   forEach(self.highlightedStories, function (s) {
       s.isMostRecentHighlight = false;
    })
 
+   self.mostRecentHighlight = storyToHighlight;
    storyToHighlight.isHighlighted = true;
    storyToHighlight.isMostRecentHighlight = true;
-   // storyToHighlight.highlightedFrom = mouse.direction;
-   highlightedStories.push(storyToHighlight);
-
-   // $scope.$emit('storyHighlighted', storyToHighlight);
-   // $scope.$broadcast('storyHighlighted', storyToHighlight);
-};
+   self.highlightedStories.push(storyToHighlight);
+}
 
 // API: highlight
-var highlight = function (story, highlightType) {
+function highlight(request) {
+   if (!request)
+      return;
+
+   var highlightType = request.type;
+   var story = request.story;
+
    if (highlightType === 'single') {
       // Only allow one story to be highlighted.
       unhighlightAll();
@@ -45,7 +51,7 @@ var highlight = function (story, highlightType) {
    //     return;
    // }
 
-   if (highlightedStories.length === 0) {
+   if (self.highlightedStories.length === 0) {
       internalHighlight(story);
       return;
    }
@@ -53,26 +59,16 @@ var highlight = function (story, highlightType) {
    if (story.isHighlighted)
       return;
 
-    // Account for the mouse leaving and re-entering
-    // the list during a drag. Also makes fast drags
-    // work, if they're going in one direction
-    // if (!isMouseAboveFirstHighlight()) {
-    //     var current = highlightedStories[highlightedStories.length-1];
+   var isHighlightingDown = request.storyIndex > self.mostRecentHighlight.index;
+   var lastIndex = self.highlightedStories.length-1;
+   var current = self.highlightedStories[lastIndex];
 
-    //     while (current && current.id !== story.id) {
-    //         current = stories().get(current.nextId);
-    //         internalHighlight(current);
-    //     }
-    // }
-    // else {
-    //     var current = highlightedStories[highlightedStories.length-1];
-
-    //     while (current && current.id !== story.id) {
-    //         current = stories().getPrevious(current, stories().get(current.id));
-    //         internalHighlight(current);
-    //     }
-    // }
-};
+   while (current && current.id !== story.id) {
+      var increment = isHighlightingDown ? 1 : -1; 
+      current = request.stories[current.index + increment];
+      internalHighlight(current);
+   }
+}
 
 export default {
    highlight: highlight,

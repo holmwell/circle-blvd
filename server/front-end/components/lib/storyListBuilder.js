@@ -5,8 +5,10 @@ function getStoryArray(dict, meta) {
 
    var array = [];
    var isAfterNextMeeting = false;
+   var index = 0;
 
    var addAndGetNextStory = function (currentStory) {
+      currentStory.index = index;
       array.push(currentStory);
 
       if (isAfterNextMeeting) {
@@ -31,6 +33,7 @@ function getStoryArray(dict, meta) {
 
    while (currentStory) {
       currentStory = addAndGetNextStory(currentStory);
+      index++;
    }
 
    return array;

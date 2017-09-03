@@ -102,18 +102,18 @@ export default {
         }
     },
     methods: {
-        handleSingleClicks: function () {
+        handleSingleClicks: function (e) {
             if (this.isSelected)
                 return;
 
             if (this.isScreenXs) {
                 this.select();
+                return;
             }
-            else {
-                // Let a full click highlight one story,
-                // even if a block is highlighted
-                this.$emit('highlight', this.id);
-            }
+
+            // Let a full click highlight one story,
+            // even if a block is highlighted
+            this.internalHighlight();
         },
         highlight: function () {
             // Only emit highlight events if we're not highlighted,
@@ -126,8 +126,15 @@ export default {
             // be able to figure that out, so in the future it could
             // be extracted.
             if (!this.isHighlighted) {
-                this.$emit('highlight', this.id);
+                this.internalHighlight();
             }
+        },
+        internalHighlight: function () {
+            var request = {
+                storyId: this.id,
+                storyIndex: this.index
+            }
+            this.$emit('highlight', request);
         },
         selectLabel: function (text) {
             this.$emit('select-label', text);
@@ -161,8 +168,12 @@ export default {
 </script>
 
 <template lang="pug">
-    div(v-bind:class="cssClass" @click="handleSingleClicks" @dblclick="select" @mousedown="highlight" 
-        @mouseenter="mouseOver" @mouseleave="mouseLeave" v-bind:style="backgroundStyle")
+    div(v-bind:class="cssClass" 
+        @dblclick="select" 
+        @click="handleSingleClicks" 
+        @mousedown="highlight" 
+        @mouseenter="mouseOver" 
+        @mouseleave="mouseLeave" v-bind:style="backgroundStyle")
         //-  TODO: Get the id, for scrolling 
         div(v-if="isSelected")
             cb-story-detail(v-bind="$props" is-screen-xs="isScreenXs" 

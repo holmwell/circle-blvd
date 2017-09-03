@@ -1,5 +1,5 @@
 <template lang="pug">
-div
+div(@keydown="keydown(event)" @keyup="keyup(event)")
    navbar(
       :circleId="circleId", 
       :member="member" 
@@ -19,6 +19,7 @@ div
             story-list(
                :storyDictionary="storyDictionary", 
                :listMeta="listMeta"
+               :keyboard="keyboard"
                @highlight="highlight")
 </template>
 
@@ -38,13 +39,30 @@ export default {
    data: function () {
       return {
          mindset: 'detailed',
-         storyDictionary: getReactiveStories(this.stories)
+         storyDictionary: getReactiveStories(this.stories),
+         keyboard: {
+            isShiftDown: false
+         }
       }
    },
    components: { 
       navbar, 
       circleHeader, 
       storyList 
+   },
+   created: function () {
+      var self = this;
+      window.addEventListener('keydown', function (e) {
+         if (e.keyCode === 16) {
+            self.keyboard.isShiftDown = true;
+         }
+      });
+
+      window.addEventListener('keyup', function (e) {
+         if (e.keyCode === 16) {
+            self.keyboard.isShiftDown = false;
+         }
+      });
    },
    methods: {
       nav: navvy.nav,
@@ -57,8 +75,13 @@ export default {
       setMindset: function (name) {
          this.mindset = name;
       },
-      highlight: function (id, type) {
-         highlighter.highlight(this.storyDictionary[id], type);
+      highlight: function (request) {
+         var id = request.storyId;
+         // We go through this 'event hassle' in order to
+         // modify the storyDictionary proper ... even though
+         // it's all pass-by-reference ... so, whatever.
+         request.story = this.storyDictionary[id];
+         highlighter.highlight(request);
       },
    }
 }

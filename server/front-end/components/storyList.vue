@@ -12,18 +12,20 @@
       :initial-mindset="mindset"
       :owners="owners"
       :account-name="accountName"
+      :keyboard="keyboard"
       @highlight="highlight")
 </template>
 
 <script>
 import cbStoryList from './cbStoryList.vue'
 import listBuilder from './lib/storyListBuilder.js'
+
 // import listUtil    from './lib/storyListUtil.js'
 // import dragAndDrop from './lib/dragAndDrop.js'
 
 export default {
    components: { cbStoryList },
-   props: ['storyDictionary', 'listMeta'],
+   props: ['storyDictionary', 'listMeta', 'keyboard'],
    data: function () {
       return {
          scope: {
@@ -53,8 +55,9 @@ export default {
    },
    methods: {
       nope: function () {},
-      highlight: function (storyId, highlightType) {
-         this.$emit('highlight', storyId, highlightType);
+      highlight: function (request) {
+         request.stories = this.stories;
+         this.$emit('highlight', request);
       }
    }
 }

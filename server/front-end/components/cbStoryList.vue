@@ -32,7 +32,8 @@ export default {
         isSearching: Boolean,
         initialMindset: String,
         owners: Array,
-        accountName: String
+        accountName: String,
+        keyboard: Object
     },
     data: function () {
         return {
@@ -58,13 +59,11 @@ export default {
         saveComment: function (story) {
             this.emit('storyCommentSaved', story);
         },
-        highlight: function (id) {
+        highlight: function (request) {
             this.scope.hideInsertStory();
 
-            var highlightingType = this.scope.keyboard.isShiftDown ? 'multi' : 'single';
-            this.scope.$emit('storyHighlight', id, highlightingType);
-            // highlightedStories.highlight(stories.get(id), type);
-            this.$emit('highlight', id, highlightingType);
+            request.type = this.keyboard.isShiftDown ? 'multi' : 'single';
+            this.$emit('highlight', request);
         },
         insertStory: function (options) {
             this.insertQueue.push(options);
@@ -325,7 +324,7 @@ export default {
                 :index="index"
                 :mindset="mindset"
                 :owners="owners"
-                @highlight="highlight" 
+                @highlight="highlight"
                 @select-label="selectLabel" 
                 @select-story="selectStory"
                 @deselect-story="deselectStory"
