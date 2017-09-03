@@ -1,6 +1,6 @@
-function getStoryArray(dict, meta) {
+function getStoryArray(dict, firstStory) {
    // Migrating from cbStoryListBuilder
-   var first = dict[meta.firstStoryId];
+   var first = dict[firstStory.id];
    first.isFirstAtLoad = true;
 
    var array = [];
@@ -16,6 +16,9 @@ function getStoryArray(dict, meta) {
       }
       else if (currentStory.isNextMeeting) {
          isAfterNextMeeting = true;
+      }
+      else {
+         currentStory.isAfterNextMeeting = false;
       }
 
       var nextStoryId = currentStory.nextId;

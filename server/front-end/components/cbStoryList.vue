@@ -136,6 +136,10 @@ export default {
                 StoryListBus.$emit('deselect-story', story);
             }
         },
+        moveToTop: function (story) {
+            // this.$emit('storyMovedToTop', story);
+            StoryListBus.$emit('move-story-to-top', story, this.stories);
+        },
         isMine: function (story) {
             if (story.owner && this.scope.accountName) {
                 var owner = story.owner.toLowerCase();
@@ -262,7 +266,7 @@ export default {
         v-show="!shouldHide(story)"
         :class="story.isHighlighted ? 'highlightedWrapper' : ''" 
         :data-story-id="story.id" 
-        :data-left-story-id="story.id" 
+        :data-left-story-id="story.id"
         :key="story.id">
         <cb-story-status-class v-bind="story">
             <cb-insert-story v-if="isShowingInsertStory && story.isMostRecentHighlight && !isSearching"
@@ -310,12 +314,12 @@ export default {
                 :index="index"
                 :mindset="mindset"
                 :owners="owners"
+                @deselect-story="deselectStory"
                 @highlight="highlight"
+                @move-to-top="moveToTop"
+                @remove="emit('storyRemoved', story)"
                 @select-label="selectLabel" 
                 @select-story="selectStory"
-                @deselect-story="deselectStory"
-                @remove="emit('storyRemoved', story)"
-                @move-to-top="emit('storyMovedToTop', story)"
                 @save="save"
                 @save-comment="saveComment"></cb-story>
 

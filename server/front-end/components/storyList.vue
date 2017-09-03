@@ -20,6 +20,9 @@
 import cbStoryList from './cbStoryList.vue'
 import listBuilder from './lib/storyListBuilder.js'
 
+import legacyStories from './lib/legacy/stories.js'
+import StoryListBus  from './lib/storyListBus.js'
+
 // import listUtil    from './lib/storyListUtil.js'
 // import dragAndDrop from './lib/dragAndDrop.js'
 
@@ -40,7 +43,10 @@ export default {
             markHighlightedAs: this.nope,
             keyboard: {}
          },
-         stories: listBuilder.getStoryArray(this.storyDictionary, this.listMeta),
+         stories: listBuilder.getStoryArray(
+            this.storyDictionary, 
+            this.storyDictionary[this.listMeta.firstStoryId]
+         ),
          selectedOwner: '',
          selectedLabels: [],
          searchEntry: [],
@@ -52,6 +58,17 @@ export default {
          owners: [],
          accountName: ''
       }
+   },
+   created: function () {
+      var self = this;
+      StoryListBus.$on('story-order-updated', function() {
+         // Developers note: Vue can be slow in development mode
+         // as list size increases, and this will take a second,
+         // but in production mode it is near-instant.
+         self.stories = listBuilder.getStoryArray(
+            self.storyDictionary, 
+            legacyStories.getFirst());
+      });
    },
    methods: {
       nope: function () {},

@@ -31,9 +31,10 @@ import storyList    from './storyList.vue'
 import navvy        from './lib/navvy.js'
 import highlighter  from './lib/highlighter.js'
 import selector     from './lib/selector.js'
+import mover        from './lib/mover.js'
 
-import StoryBus     from './lib/storyBus.js'
-import StoryListBus from './lib/storyListBus.js'
+import StoryListBus  from './lib/storyListBus.js'
+import legacyStories from './lib/legacy/stories.js'
 
 import http from 'axios'
 
@@ -75,6 +76,15 @@ export default {
       StoryListBus.$on('deselect-story', function (story) {
          selector.deselect(self.storyDictionary[story.id]);
       });
+
+      StoryListBus.$on('move-story-to-top', function (story, stories) {
+         mover.moveToTop(self.storyDictionary[story.id], self.circleId);
+      });
+   },
+   mounted: function () {
+      legacyStories.init(this.storyDictionary);
+      var firstStory = this.storyDictionary[this.listMeta.firstStoryId];
+      legacyStories.setFirst(firstStory);
    },
    methods: {
       nav: navvy.nav,
@@ -109,6 +119,7 @@ function getReactiveStories(stories) {
       ensure(story, "isSelected", false);
       ensure(story, "isHighlighted", false);
       ensure(story, "isMostRecentHighlight", false);
+      ensure(story, "isAfterNextMeeting", false);
    }
 
    return reactive;
