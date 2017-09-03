@@ -23,7 +23,6 @@ export default {
     props: {
         scope: Object, // For calling methods only, please
         stories: Array,
-        highlightedStories: Array, 
         selectedOwner: String,
         selectedLabels: Array,
         searchEntry: Array,
@@ -64,6 +63,8 @@ export default {
 
             var highlightingType = this.scope.keyboard.isShiftDown ? 'multi' : 'single';
             this.scope.$emit('storyHighlight', id, highlightingType);
+            // highlightedStories.highlight(stories.get(id), type);
+            this.$emit('highlight', id, highlightingType);
         },
         insertStory: function (options) {
             this.insertQueue.push(options);

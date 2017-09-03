@@ -1,22 +1,25 @@
 <template lang="pug">
 div
-  navbar(
-    :circleId="circleId", 
-    :member="member" 
-    @nav="nav")
-
-  .main-wrapper
-    circle-header(
+   navbar(
       :circleId="circleId", 
-      :member="member"
-      :mindset="mindset"
+      :member="member" 
       @nav="nav"
-      @mindset-changed="setMindset")
+      @signout="signout")
 
-    .main.container-fluid.no-select.debug
-      .view
-        story-list(:storyDictionary="stories", :listMeta="listMeta")
+   .main-wrapper
+      circle-header(
+         :circleId="circleId", 
+         :member="member"
+         :mindset="mindset"
+         @nav="nav"
+         @mindset-changed="setMindset")
 
+      .main.container-fluid.no-select.debug
+         .view
+            story-list(
+               :storyDictionary="storyDictionary", 
+               :listMeta="listMeta"
+               @highlight="highlight")
 </template>
 
 <script>
@@ -24,54 +27,59 @@ import navbar       from './navbar.vue'
 import circleHeader from './circleHeader.vue'
 import storyList    from './storyList.vue'
 
+import navvy        from './lib/navvy.js'
+import highlighter  from './lib/highlighter.js'
+
 import http from 'axios'
 
 export default {
-  name: 'blvd',
-  components: { navbar, circleHeader, storyList },
-  props: ['circleId', 'member', 'stories', 'listMeta'],
-  data: function () {
-    return {
-      mindset: 'detailed'
-    }
-  },
-  methods: {
-    nav: function (destination) {
-      switch (destination) {
-        case 'signout':
-          this.signout();
-          break;
-        case 'admin':
-        case 'mainframe':
-        case 'profile':
-        case 'archives':
-        case 'lists':
-          this.href('/#/' + destination);
-          break;
-        case 'home':
-          this.href('/');
-          break;
-        default: 
-          this.href('/' + destination);
-          break;
+   name: 'blvd',
+   props: ['circleId', 'member', 'stories', 'listMeta'],
+   data: function () {
+      return {
+         mindset: 'detailed',
+         storyDictionary: getReactiveStories(this.stories)
       }
-    },
-
-    href: function (url) {
-      window.location.href = url;
-    },
-
-    setMindset: function (name) {
-      console.log("Mindset: " + name);
-      this.mindset = name;
-    },
-
-    signOut: function () {
-      http.get('/auth/signout').then(function () {
-        //resetSession();
-        this.href("/signin");
-      });
-    }
-  }
+   },
+   components: { 
+      navbar, 
+      circleHeader, 
+      storyList 
+   },
+   methods: {
+      nav: navvy.nav,
+      signout: function() {
+         http.get('/auth/signout').then(function () {
+            //resetSession();
+            navvy.nav("signin");
+         });
+      },
+      setMindset: function (name) {
+         this.mindset = name;
+      },
+      highlight: function (id, type) {
+         highlighter.highlight(this.storyDictionary[id], type);
+      },
+   }
 }
+
+// Ensure properties are defined so that Vue can put a getter 
+// on them / react to changes. 
+function getReactiveStories(stories) {
+   var reactive = {};
+
+   for (var prop in stories) {
+      var story = reactive[prop] = stories[prop];
+
+      ensure(story, "isHighlighted", false);
+      ensure(story, "isMostRecentHighlight", false);
+   }
+
+   return reactive;
+}
+
+function ensure (obj, prop, defaultValue) {
+   obj[prop] = obj[prop] || defaultValue;
+}
+
 </script>

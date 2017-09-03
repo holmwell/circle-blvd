@@ -32,7 +32,7 @@
 
           navbar-link(@click="nav('tour')") Tour
           navbar-link(@click="nav('profile')") Profile
-          navbar-link(@click="nav('signout')") Sign out
+          navbar-link(@click="$emit('signout')") Sign out
 </template>
 
 <script>
