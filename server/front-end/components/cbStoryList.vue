@@ -7,6 +7,7 @@ import Story             from './cbStory.vue'
 import StoryOwnerColumn  from './cbStoryOwnerColumn.vue'
 import StoryStatusClass  from './cbStoryStatusClass.vue'
 import StoryStatusColumn from './cbStoryStatusColumn.vue'
+import StoryListBus      from './lib/storyListBus.js'
 
 import debounce from "lodash.debounce"
 
@@ -127,28 +128,13 @@ export default {
 
             // Do not refocus stuff if we're already on this story.
             if (!story.isSelected) {
-                this.scope.$emit('beforeStorySelected');
-                var selectedStory = null;
-                this.editStory(story, function (edit) {
-                    edit.isSelected = true;
-                    selectedStory = edit;
-                    return edit;
-                });
-                this.scope.$emit('storySelected', selectedStory);
+                StoryListBus.$emit('select-story', story);
             }
         },
         deselectStory: function (story) {
             if (story && story.isSelected) {
-                var editedStory = null;
-                this.editStory(story, function (edit) {
-                    edit.isSelected = false;
-                    editedStory = edit;
-                    return edit;
-                });
-                
-                this.scope.$emit('storyDeselected', editedStory);
+                StoryListBus.$emit('deselect-story', story);
             }
-
         },
         isMine: function (story) {
             if (story.owner && this.scope.accountName) {

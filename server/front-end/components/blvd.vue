@@ -30,6 +30,10 @@ import storyList    from './storyList.vue'
 
 import navvy        from './lib/navvy.js'
 import highlighter  from './lib/highlighter.js'
+import selector     from './lib/selector.js'
+
+import StoryBus     from './lib/storyBus.js'
+import StoryListBus from './lib/storyListBus.js'
 
 import http from 'axios'
 
@@ -63,6 +67,14 @@ export default {
             self.keyboard.isShiftDown = false;
          }
       });
+
+      StoryListBus.$on('select-story', function (story) {
+         selector.select(self.storyDictionary[story.id]);
+      });
+
+      StoryListBus.$on('deselect-story', function (story) {
+         selector.deselect(self.storyDictionary[story.id]);
+      });
    },
    methods: {
       nav: navvy.nav,
@@ -94,6 +106,7 @@ function getReactiveStories(stories) {
    for (var prop in stories) {
       var story = reactive[prop] = stories[prop];
 
+      ensure(story, "isSelected", false);
       ensure(story, "isHighlighted", false);
       ensure(story, "isMostRecentHighlight", false);
    }
