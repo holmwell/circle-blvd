@@ -140,6 +140,10 @@ export default {
             // this.$emit('storyMovedToTop', story);
             StoryListBus.$emit('move-story-to-top', story, this.stories);
         },
+        remove: function (story) {
+            // emit('storyRemoved', story)
+            StoryListBus.$emit('remove-story', story);
+        },
         isMine: function (story) {
             if (story.owner && this.scope.accountName) {
                 var owner = story.owner.toLowerCase();
@@ -317,7 +321,7 @@ export default {
                 @deselect-story="deselectStory"
                 @highlight="highlight"
                 @move-to-top="moveToTop"
-                @remove="emit('storyRemoved', story)"
+                @remove="remove"
                 @select-label="selectLabel" 
                 @select-story="selectStory"
                 @save="save"

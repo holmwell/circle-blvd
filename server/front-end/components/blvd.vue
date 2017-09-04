@@ -32,6 +32,7 @@ import navvy        from './lib/navvy.js'
 import highlighter  from './lib/highlighter.js'
 import selector     from './lib/selector.js'
 import mover        from './lib/mover.js'
+import remover      from './lib/remover.js'
 
 import StoryListBus  from './lib/storyListBus.js'
 import legacyStories from './lib/legacy/stories.js'
@@ -79,6 +80,10 @@ export default {
 
       StoryListBus.$on('move-story-to-top', function (story, stories) {
          mover.moveToTop(self.storyDictionary[story.id], self.circleId);
+      });
+
+      StoryListBus.$on('remove-story', function (story) {
+         remover.remove(self.storyDictionary[story.id]);
       });
    },
    mounted: function () {
