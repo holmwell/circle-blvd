@@ -55,7 +55,8 @@ export default {
             this.scope.$emit(eventName, param);
         },
         save: function (story) {
-            this.emit('storySaved', story)
+            // this.emit('storySaved', story)
+            StoryListBus.$emit('save-story', story);
         },
         saveComment: function (story) {
             this.emit('storyCommentSaved', story);

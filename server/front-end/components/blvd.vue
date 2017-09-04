@@ -1,5 +1,5 @@
 <template lang="pug">
-div(@keydown="keydown(event)" @keyup="keyup(event)")
+div
    navbar(
       :circleId="circleId", 
       :member="member" 
@@ -33,6 +33,7 @@ import highlighter  from './lib/highlighter.js'
 import selector     from './lib/selector.js'
 import mover        from './lib/mover.js'
 import remover      from './lib/remover.js'
+import saver        from './lib/saver.js'
 
 import StoryListBus  from './lib/storyListBus.js'
 import legacyStories from './lib/legacy/stories.js'
@@ -84,6 +85,10 @@ export default {
 
       StoryListBus.$on('remove-story', function (story) {
          remover.remove(self.storyDictionary[story.id]);
+      });
+
+      StoryListBus.$on('save-story', function (story) {
+         saver.save(story);
       });
    },
    mounted: function () {
