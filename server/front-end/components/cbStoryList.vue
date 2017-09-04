@@ -67,7 +67,7 @@ export default {
             StoryListBus.$emit('save-story-comment', story);
         },
         highlight: function (request) {
-            this.scope.hideInsertStory();
+            this.hideInsertStory();
 
             request.type = this.keyboard.isShiftDown ? 'multi' : 'single';
             this.$emit('highlight', request);
@@ -79,6 +79,12 @@ export default {
             // settle down before we start to interact with the 
             // Angular / DOM stuff.
             this.debouncedProcessNextInQueue();
+        },
+        showInsertStory: function () {
+            this.$emit('show-insert-story');
+        },
+        hideInsertStory: function () {
+            this.$emit('hide-insert-story');
         },
         pasteHighlighted: function () {
             // scope.pasteHighlighted
@@ -297,7 +303,7 @@ export default {
                 :account-name="accountName"
                 @change-insert-type="insertTypeChanged"
                 @insert-story="insertStory"
-                @hide="scope.hideInsertStory"
+                @hide="hideInsertStory"
             ></cb-insert-story>
             
             <div v-cloak v-if="isClipboardActive && story.isHighlighted">
@@ -316,8 +322,8 @@ export default {
                 :mindset="mindset"
                 @change-status="scope.markHighlightedAs"
                 @change-insert-type="insertTypeChanged"
-                @show-insert-story="scope.showInsertStory"
-                @hide-insert-story="scope.hideInsertStory"
+                @show-insert-story="showInsertStory"
+                @hide-insert-story="hideInsertStory"
                 @cut="cutHighlighted"
                 @paste="pasteHighlighted">
             </cb-story-highlighted-tools>

@@ -17,7 +17,9 @@
       @highlight="highlight"
       @paste-highlighted="pasteHighlighted"
       @select-label="selectLabel"
-      @select-owner="selectOwner")
+      @select-owner="selectOwner"
+      @show-insert-story="showInsertStory"
+      @hide-insert-story="hideInsertStory")
 </template>
 
 <script>
@@ -106,6 +108,12 @@ export default {
             highlighter.setMostRecent(mostRecent);
          }
          this.isClipboardActive = clipboard.isActive();
+      },
+      showInsertStory: function () {
+         this.isShowingInsertStory = true;
+      },
+      hideInsertStory: function () {
+         this.isShowingInsertStory = false;
       },
       selectLabel: function (text) {
          if (this.selectedLabels.indexOf(text) < 0) {
