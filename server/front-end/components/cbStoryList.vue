@@ -59,7 +59,8 @@ export default {
             StoryListBus.$emit('save-story', story);
         },
         saveComment: function (story) {
-            this.emit('storyCommentSaved', story);
+            // this.emit('storyCommentSaved', story);
+            StoryListBus.$emit('save-story-comment', story);
         },
         highlight: function (request) {
             this.scope.hideInsertStory();

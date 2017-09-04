@@ -46,5 +46,12 @@ export default {
           //     }
           // });
       }
+   },
+
+   saveComment: function (story) {
+      stories.saveComment(story, story.newComment, function (savedStory) {
+         story.newComment = undefined;
+         story.comments = savedStory.comments;
+      });
    }
 }

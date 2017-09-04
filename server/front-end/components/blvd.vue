@@ -90,6 +90,10 @@ export default {
       StoryListBus.$on('save-story', function (story) {
          saver.save(story);
       });
+
+      StoryListBus.$on('save-story-comment', function (story) {
+         saver.saveComment(story);
+      });
    },
    mounted: function () {
       legacyStories.init(this.storyDictionary);
@@ -130,6 +134,8 @@ function getReactiveStories(stories) {
       ensure(story, "isHighlighted", false);
       ensure(story, "isMostRecentHighlight", false);
       ensure(story, "isAfterNextMeeting", false);
+      // TODO: This doesn't work
+      ensure(story, "comments", []);
    }
 
    return reactive;
