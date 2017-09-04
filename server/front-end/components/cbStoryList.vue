@@ -114,7 +114,8 @@ export default {
             });
         },
         selectLabel: function (text) {
-            this.scope.$emit('labelSelected', text);
+            // this.scope.$emit('labelSelected', text);
+            this.$emit('select-label', text);
         },
         selectOwner: function (owner) {
             this.scope.$emit('ownerSelected', owner);

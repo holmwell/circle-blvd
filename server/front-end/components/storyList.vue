@@ -13,7 +13,8 @@
       :owners="owners"
       :account-name="accountName"
       :keyboard="keyboard"
-      @highlight="highlight")
+      @highlight="highlight"
+      @select-label="selectLabel")
 </template>
 
 <script>
@@ -75,6 +76,11 @@ export default {
       highlight: function (request) {
          request.stories = this.stories;
          this.$emit('highlight', request);
+      },
+      selectLabel: function (text) {
+         if (this.selectedLabels.indexOf(text) < 0) {
+            this.selectedLabels.push(text);
+         }
       }
    }
 }
