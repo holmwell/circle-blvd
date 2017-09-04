@@ -137,7 +137,7 @@ function moveStoryBlock (uiStartStory, startStory, endStory, nextStory, isLocalO
 
 export default {
    moveToTop: function (story, listId) {
-      var self = {
+      self = {
          listId: listId
       };
 
@@ -146,5 +146,13 @@ export default {
       });
 
       moveStoryBlock(story, story, story, nextStory);
+   },
+
+   getMoveStoryBlock: function (listId) {
+      // TODO: This is tenuous at best
+      self = {
+         listId: listId
+      }
+      return moveStoryBlock;
    }
 }

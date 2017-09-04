@@ -17,18 +17,25 @@ function unhighlightAll() {
    }
 }
 
-function internalHighlight(storyToHighlight) {
-   if (!storyToHighlight) {
+function setMostRecent(story) {
+   if (!story)
       return;
-   }
 
    forEach(self.highlightedStories, function (s) {
       s.isMostRecentHighlight = false;
    })
 
-   self.mostRecentHighlight = storyToHighlight;
-   storyToHighlight.isHighlighted = true;
-   storyToHighlight.isMostRecentHighlight = true;
+   self.mostRecentHighlight = story;
+   story.isHighlighted = true;
+   story.isMostRecentHighlight = true;   
+}
+
+function internalHighlight(storyToHighlight) {
+   if (!storyToHighlight) {
+      return;
+   }
+
+   setMostRecent(storyToHighlight);
    self.highlightedStories.push(storyToHighlight);
 }
 
@@ -73,13 +80,14 @@ function highlight(request) {
 export default {
    highlight: highlight,
    unhighlightAll: unhighlightAll,
+   setMostRecent: setMostRecent,
    // The legacy controller / API
    getHighlightedStories: function () {
       self.highlightedStories.highlight      = highlight;
       //self.highlightedStories.unhighlight    = unhighlightStory;
       self.highlightedStories.unhighlightAll = unhighlightAll;
       //self.highlightedStories.isMostRecent   = isMostRecent;
-      
+
       return self.highlightedStories;
    }
 }

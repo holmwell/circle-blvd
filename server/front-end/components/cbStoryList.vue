@@ -82,6 +82,7 @@ export default {
         },
         pasteHighlighted: function () {
             // scope.pasteHighlighted
+            this.$emit('paste-highlighted');
         },
         cutHighlighted: function () {
             // scope.cutHighlighted

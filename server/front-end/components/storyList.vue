@@ -15,6 +15,7 @@
       :keyboard="keyboard"
       @cut-highlighted="cutHighlighted"
       @highlight="highlight"
+      @paste-highlighted="pasteHighlighted"
       @select-label="selectLabel"
       @select-owner="selectOwner")
 </template>
@@ -28,6 +29,7 @@ import StoryListBus  from './lib/storyListBus.js'
 
 import clipboard from './lib/legacy/clipboard.js'
 import highlighter from './lib/highlighter.js'
+import mover from './lib/mover.js'
 
 // import listUtil    from './lib/storyListUtil.js'
 // import dragAndDrop from './lib/dragAndDrop.js'
@@ -85,8 +87,24 @@ export default {
       cutHighlighted: function () {
          var highlightedStories = highlighter.getHighlightedStories();
          var stories = legacyStories;
-         
+
          clipboard.cutHighlighted(highlightedStories, stories);
+         this.isClipboardActive = clipboard.isActive();
+      },
+      pasteHighlighted: function () {
+         var highlightedStories = highlighter.getHighlightedStories();
+         var stories = legacyStories;
+         var moveStoryBlock = mover.getMoveStoryBlock(this.listMeta.listId);
+
+         clipboard.pasteHighlighted(highlightedStories, 
+             moveStoryBlock,
+             stories);
+
+         // TODO: reactivity is broken
+         if (highlightedStories.length > 0) {
+            var mostRecent = highlightedStories[0];
+            highlighter.setMostRecent(mostRecent);
+         }
          this.isClipboardActive = clipboard.isActive();
       },
       selectLabel: function (text) {
