@@ -72,5 +72,14 @@ function highlight(request) {
 
 export default {
    highlight: highlight,
-   unhighlightAll: unhighlightAll
+   unhighlightAll: unhighlightAll,
+   // The legacy controller / API
+   getHighlightedStories: function () {
+      self.highlightedStories.highlight      = highlight;
+      //self.highlightedStories.unhighlight    = unhighlightStory;
+      self.highlightedStories.unhighlightAll = unhighlightAll;
+      //self.highlightedStories.isMostRecent   = isMostRecent;
+      
+      return self.highlightedStories;
+   }
 }

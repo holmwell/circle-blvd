@@ -80,6 +80,13 @@ export default {
             // Angular / DOM stuff.
             this.debouncedProcessNextInQueue();
         },
+        pasteHighlighted: function () {
+            // scope.pasteHighlighted
+        },
+        cutHighlighted: function () {
+            // scope.cutHighlighted
+            this.$emit('cut-highlighted');
+        },
         processNextInQueue: function (ok) {
             if (!ok && this.isProcessingQueue)
                 return;
@@ -310,8 +317,8 @@ export default {
                 @change-insert-type="insertTypeChanged"
                 @show-insert-story="scope.showInsertStory"
                 @hide-insert-story="scope.hideInsertStory"
-                @cut="scope.cutHighlighted"
-                @paste="scope.pasteHighlighted">
+                @cut="cutHighlighted"
+                @paste="pasteHighlighted">
             </cb-story-highlighted-tools>
 
             <cb-story-status-column v-bind="story" 
