@@ -14,7 +14,8 @@
       :account-name="accountName"
       :keyboard="keyboard"
       @highlight="highlight"
-      @select-label="selectLabel")
+      @select-label="selectLabel"
+      @select-owner="selectOwner")
 </template>
 
 <script>
@@ -80,6 +81,11 @@ export default {
       selectLabel: function (text) {
          if (this.selectedLabels.indexOf(text) < 0) {
             this.selectedLabels.push(text);
+         }
+      },
+      selectOwner: function (owner) {
+         if (owner) {
+            this.selectedOwner = owner;
          }
       }
    }

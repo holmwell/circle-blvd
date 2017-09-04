@@ -120,7 +120,9 @@ export default {
             this.$emit('select-label', text);
         },
         selectOwner: function (owner) {
-            this.scope.$emit('ownerSelected', owner);
+            // emit('ownerSelected', story.owner)
+            // this.scope.$emit('ownerSelected', owner);
+            this.$emit('select-owner', owner);
         },
         selectStory: function (story) {
             if (this.isDragging || story.isBeingDragged) {
@@ -331,7 +333,7 @@ export default {
                 @save-comment="saveComment"></cb-story>
 
             <cb-story-owner-column v-bind="story" 
-                @select-owner="emit('ownerSelected', story.owner)">
+                @select-owner="selectOwner">
             </cb-story-owner-column>
         </cb-story-status-class>
     </div>
