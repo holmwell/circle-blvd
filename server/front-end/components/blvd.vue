@@ -87,6 +87,10 @@ export default {
          remover.remove(self.storyDictionary[story.id]);
       });
 
+      StoryListBus.$on('archive-story', function (storyId) {
+         remover.archive(self.storyDictionary[storyId]);
+      });
+
       StoryListBus.$on('save-story', function (story) {
          saver.save(story);
       });

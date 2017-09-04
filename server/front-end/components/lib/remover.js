@@ -16,9 +16,10 @@ var removeFromView = function (viewStory, serverStory, shouldAnimate) {
 
    var nextStory = stories.get(serverStory.nextId);
 
+   // TODO: Might need to update storyList with this?
    if (viewStory.isSelected) {
        viewStory.isSelected = false;
-       selectedStory = undefined;
+       // selectedStory = undefined;
    }
 
    if (stories.isListBroken()) {
@@ -52,6 +53,30 @@ var removeFromView = function (viewStory, serverStory, shouldAnimate) {
 };
 
 export default {
+   archive: function (story) {
+      // Checklists can't be archived for now.
+      // if (isChecklist) {
+      //     return;
+      // }
+
+      var storyToArchive = stories.get(story.id);
+      removeFromView(story, storyToArchive);
+      
+      // Facades give the impression that the story
+      // has gone into the archives.
+      // if (isFacade) {
+      //     return;
+      // }
+
+      http.put('/data/story/archive', storyToArchive)
+      .then(function (data) {
+          // nbd.
+      })
+      .catch(function (data, status) {
+          errors.handle(data, status);
+      });
+   },
+
    remove: function (story) {
       var storyToRemove = stories.get(story.id);
       removeFromView(story, storyToRemove);

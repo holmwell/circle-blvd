@@ -54,6 +54,10 @@ export default {
         emit: function (eventName, param) {
             this.scope.$emit(eventName, param);
         },
+        archive: function (storyId) {
+            // emit('storyArchived', story)
+            StoryListBus.$emit('archive-story', storyId);
+        },
         save: function (story) {
             // this.emit('storySaved', story)
             StoryListBus.$emit('save-story', story);
@@ -312,7 +316,7 @@ export default {
 
             <cb-story-status-column v-bind="story" 
                 :account-name="accountName"
-                @archive="emit('storyArchived', story)">
+                @archive="archive">
             </cb-story-status-column>
 
             <cb-story v-bind="story" 
