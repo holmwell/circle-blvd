@@ -51,19 +51,13 @@ export default {
         }
     },
     methods: {
-        emit: function (eventName, param) {
-            this.scope.$emit(eventName, param);
-        },
         archive: function (storyId) {
-            // emit('storyArchived', story)
             StoryListBus.$emit('archive-story', storyId);
         },
         save: function (story) {
-            // this.emit('storySaved', story)
             StoryListBus.$emit('save-story', story);
         },
         saveComment: function (story) {
-            // this.emit('storyCommentSaved', story);
             StoryListBus.$emit('save-story-comment', story);
         },
         highlight: function (request) {
@@ -130,12 +124,9 @@ export default {
             });
         },
         selectLabel: function (text) {
-            // this.scope.$emit('labelSelected', text);
             this.$emit('select-label', text);
         },
         selectOwner: function (owner) {
-            // emit('ownerSelected', story.owner)
-            // this.scope.$emit('ownerSelected', owner);
             this.$emit('select-owner', owner);
         },
         selectStory: function (story) {
@@ -156,11 +147,9 @@ export default {
             }
         },
         moveToTop: function (story) {
-            // this.$emit('storyMovedToTop', story);
             StoryListBus.$emit('move-story-to-top', story, this.stories);
         },
         remove: function (story) {
-            // emit('storyRemoved', story)
             StoryListBus.$emit('remove-story', story);
         },
         isMine: function (story) {
