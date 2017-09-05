@@ -117,7 +117,7 @@ export default {
             // Run through the lines again, to capture
             // all of the lines that start with '>',
             // which denote descriptions
-            angular.forEach(lines, function (line) {
+            lines.forEach(function (line) {
                 if (line.trim().length === 0) {
                     // Ignore empty lines.
                 }
@@ -182,7 +182,7 @@ export default {
                 me.insert(story);
             };
 
-            angular.forEach(protoTasks, function (task) {
+            protoTasks.forEach(function (task) {
                 createStory(task);
             });
             

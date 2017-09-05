@@ -107,11 +107,6 @@ export default {
                 this.isProcessingQueue = true;
                 var option = this.insertQueue.shift();
                 StoryListBus.$emit('insert-story', option);
-
-                // Probably don't need this nextTick anymore
-                Vue.nextTick(function () {
-                    me.processNextInQueue(true);
-                });
             }
             else {
                 this.isProcessingQueue = false;                
@@ -243,6 +238,16 @@ export default {
         }
     },
     created: function () {
+        var me = this;
+        // Received from Blvd when it's ready to get another
+        // story to insert.
+        StoryListBus.$on('insert-queue-ready', function () {
+            // Probably don't need this nextTick anymore
+            Vue.nextTick(function () {
+                me.processNextInQueue(true);
+            });
+        });
+
         // Make scope a read-only property, as adding it to
         // data as a reactive property causes havoc.
         // this.scope = scope;
@@ -302,6 +307,7 @@ export default {
                 :mindset="mindset"
                 :insert-type="insertType"
                 :account-name="accountName"
+                @change-insert-type="insertTypeChanged"
                 @insert-story="insertStory"
                 @hide="hideInsertStory"
             ></cb-insert-story>

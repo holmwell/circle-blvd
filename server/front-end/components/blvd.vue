@@ -109,12 +109,13 @@ export default {
       });
 
       StoryListBus.$on('insert-story', function (options) {
-         console.log(self.member);
          inserter.insertStory(
             options.task, options.nextStory, self.circleId, self.circleId,
             self.member.name, [self.member.name],
             function () {
-               console.log('ok?');
+               // Serialize our insert behavior by sending 
+               // events back and forth on the bus.
+               StoryListBus.$emit('insert-queue-ready');
             }
          );
       });
