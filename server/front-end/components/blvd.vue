@@ -20,6 +20,7 @@ div
                :storyDictionary="storyDictionary", 
                :listMeta="listMeta"
                :keyboard="keyboard"
+               :member="member"
                @highlight="highlight")
 </template>
 

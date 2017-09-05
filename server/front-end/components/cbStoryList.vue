@@ -31,7 +31,7 @@ export default {
         isShowingInsertStory: Boolean,
         isClipboardActive: Boolean,
         isSearching: Boolean,
-        initialMindset: String,
+        mindset: String,
         owners: Array,
         accountName: String,
         keyboard: Object
@@ -39,7 +39,6 @@ export default {
     data: function () {
         return {
             isDragging: false,
-            mindset: this.initialMindset,
             insertType: 'task',
             insertQueue: [],
             isProcessingQueue: false
@@ -81,11 +80,9 @@ export default {
             this.$emit('hide-insert-story');
         },
         pasteHighlighted: function () {
-            // scope.pasteHighlighted
             this.$emit('paste-highlighted');
         },
         cutHighlighted: function () {
-            // scope.cutHighlighted
             this.$emit('cut-highlighted');
         },
         markHighlightedAs: function (status) {
@@ -153,9 +150,9 @@ export default {
             StoryListBus.$emit('remove-story', story);
         },
         isMine: function (story) {
-            if (story.owner && this.scope.accountName) {
+            if (story.owner && this.accountName) {
                 var owner = story.owner.toLowerCase();
-                var member = this.scope.accountName;
+                var member = this.accountName;
                 if (member) {
                     member = member.toLowerCase();
                     if (owner === member) {
@@ -168,7 +165,10 @@ export default {
         isHighlightedByTeam: function (story) {
             // TODO: This doesn't quite cut it to catch all real-time
             // updates, but this feature isn't too important right now.
-            return this.scope.isStoryHighlightedByTeam(story);
+            // return this.scope.isStoryHighlightedByTeam(story);
+
+            // TODO: Revisit when we get back to the realtime stuff
+            return false;
         },
         insertTypeChanged: function (val) {
             this.insertType = val;
@@ -242,30 +242,7 @@ export default {
         // this.scope = scope;
         //
         var scope = this.scope;
-
-        scope.$on('storyHighlighted', (e, story) => {
-            this.updateStory(story);
-        });
-
-        scope.$on('storyUnhighlighted', (e, story) => {
-            story.isMostRecentHighlight = false;
-            this.updateStory(story);
-        });
-
-        scope.$on('storyOrderUpdated', () => {
-            for (var index in scope.stories) {
-                Vue.set(this.stories, index, scope.stories[index]);
-            }
-        });
-
-        scope.$on('mindsetChanged', (e, mindset) => {
-            this.mindset = mindset;
-        });
         
-        scope.$on('spIsDragging', (e, val) => {
-            this.isDragging = val;
-        });
-
         scope.$on('show-entry', (e) => {
             for (var index in this.stories) {
                 if (this.stories[index].isFirstStory) {

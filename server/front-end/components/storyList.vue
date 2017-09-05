@@ -9,7 +9,7 @@
       :is-showing-insert-story="isShowingInsertStory"
       :is-clipboard-active="isClipboardActive"
       :is-searching="isSearching"
-      :initial-mindset="mindset"
+      :mindset="mindset"
       :owners="owners"
       :account-name="accountName"
       :keyboard="keyboard"
@@ -38,7 +38,7 @@ import mover from './lib/mover.js'
 
 export default {
    components: { cbStoryList },
-   props: ['storyDictionary', 'listMeta', 'keyboard'],
+   props: ['storyDictionary', 'listMeta', 'keyboard', 'member'],
    data: function () {
       return {
          scope: {
@@ -66,7 +66,7 @@ export default {
          isSearching: false,
          mindset: 'detailed',
          owners: [],
-         accountName: ''
+         accountName: this.member.name
       }
    },
    created: function () {
