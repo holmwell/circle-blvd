@@ -36,7 +36,8 @@ var saveStory = function (story, callback) {
 	}
 
 	http.put('/data/story/', story)
-	.then(function (savedStory) {
+	.then(function (res) {
+		var savedStory = res.data;
 		if (callback) {
 			callback(savedStory);
 		}
@@ -60,7 +61,8 @@ var saveStoryComment = function (story, comment, callback) {
 	data.storyId = story.id;
 	data.comment = comment;
 	http.put('/data/story/comment', data)
-	.then(function (savedStory) {
+	.then(function (res) {
+		var savedStory = res.data;
 		if (callback) {
 			callback(savedStory);
 		}
@@ -108,7 +110,8 @@ var addStoryLocally = function (story) {
 };
 
 var addStory = function (story, callback) {
-	var onSuccess = function (newStory) {
+	var onSuccess = function (res) {
+		var newStory = res.data;
 		s[newStory.id] = newStory;
 		callback(null, newStory);
 	};
@@ -125,6 +128,7 @@ var addStory = function (story, callback) {
 		// TODO: Show that something went wrong.
 		// Most likely there was a data conflict
 		// that could not be resolved.
+		console.log(err);
 		console.log(err.response.status);
 		console.log(err.response.data);
 		var id = "error-" + Date.now();
@@ -181,7 +185,7 @@ var insertFirstStory = function (story, projectId, listId, callback) {
 		if (newStory) {
 			var serverStory = getStory(newStory.id);
 			if (newStory.isFirstStory) {
-				usefulStories.setFirst(serverStory);	
+				usefulStories.setFirst(serverStory);
 			}
 			else {
 				// TODO: Probably want to refresh the whole list 
@@ -261,9 +265,9 @@ var stories = function() {
 		}
 
 		http.put('/data/story/move-block', body)
-		.then(function (response) {
+		.then(function (res) {
 			// TODO: Move stuff around or something
-			callback(null, response);
+			callback(null, res.data);
 		})
 		.catch(function (err) {
 			callback({

@@ -2,6 +2,7 @@
 
 import stories      from './legacy/stories.js'
 import StoryListBus from './storyListBus.js'
+import errors       from './errors.js'
 
 
 var self = {
@@ -134,6 +135,9 @@ function moveStoryBlock (uiStartStory, startStory, endStory, nextStory, isLocalO
    }, 0);
 }
 
+function moveStory (uiStory, storyToMove, nextStory) {
+   moveStoryBlock(uiStory, storyToMove, storyToMove, nextStory);
+}
 
 export default {
    moveToTop: function (story, listId) {
@@ -146,6 +150,14 @@ export default {
       });
 
       moveStoryBlock(story, story, story, nextStory);
+   },
+
+   move: function (story, nextStory, listId) {
+      // TODO: This is tenuous at best
+      self = {
+         listId: listId
+      };
+      moveStory(story, story, nextStory);
    },
 
    getMoveStoryBlock: function (listId) {

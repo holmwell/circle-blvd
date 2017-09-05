@@ -106,13 +106,11 @@ export default {
             if (this.insertQueue.length > 0) {
                 this.isProcessingQueue = true;
                 var option = this.insertQueue.shift();
+                StoryListBus.$emit('insert-story', option);
 
-                this.scope.insertStory(option.task, option.nextStory, function () {
-                    // Wait for the DOM to settle before adding another task, so
-                    // our Angular code can catch up.
-                    Vue.nextTick(function () {
-                        me.processNextInQueue(true);
-                    });
+                // Probably don't need this nextTick anymore
+                Vue.nextTick(function () {
+                    me.processNextInQueue(true);
                 });
             }
             else {

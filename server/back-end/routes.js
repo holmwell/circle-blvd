@@ -160,6 +160,7 @@ module.exports = function (sessionMaker, db) {
                 res.render('o', {
                     circleId: circleId,
                     member: {
+                        name: req.user.name,
                         circles: circleArray,
                         activeCircle: circleList[circleId],
                         hasMainframeAccess: hasMainframeAccess,
