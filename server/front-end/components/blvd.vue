@@ -38,6 +38,7 @@ import inserter     from './lib/inserter.js'
 
 import StoryListBus  from './lib/storyListBus.js'
 import legacyStories from './lib/legacy/stories.js'
+import legacyDnd     from './lib/legacy/dragAndDrop.js'
 
 import http from 'axios'
 
@@ -124,6 +125,10 @@ export default {
       legacyStories.init(this.storyDictionary);
       var firstStory = this.storyDictionary[this.listMeta.firstStoryId];
       legacyStories.setFirst(firstStory);
+
+      var isScreenXs = false;
+      var dnd = legacyDnd(this.circleId, this.circleId, this.mindset, isScreenXs);
+      dnd.activate();
    },
    methods: {
       nav: navvy.nav,
