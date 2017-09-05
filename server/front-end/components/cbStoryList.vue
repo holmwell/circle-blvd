@@ -94,6 +94,9 @@ export default {
             // scope.cutHighlighted
             this.$emit('cut-highlighted');
         },
+        markHighlightedAs: function (status) {
+            StoryListBus.$emit('mark-highlighted', status);
+        },
         processNextInQueue: function (ok) {
             if (!ok && this.isProcessingQueue)
                 return;
@@ -301,7 +304,6 @@ export default {
                 :mindset="mindset"
                 :insert-type="insertType"
                 :account-name="accountName"
-                @change-insert-type="insertTypeChanged"
                 @insert-story="insertStory"
                 @hide="hideInsertStory"
             ></cb-insert-story>
@@ -320,8 +322,7 @@ export default {
                 :is-most-recent-highlight="story.isMostRecentHighlight"
                 :is-showing-insert-story="isShowingInsertStory" 
                 :mindset="mindset"
-                @change-status="scope.markHighlightedAs"
-                @change-insert-type="insertTypeChanged"
+                @change-status="markHighlightedAs"
                 @show-insert-story="showInsertStory"
                 @hide-insert-story="hideInsertStory"
                 @cut="cutHighlighted"

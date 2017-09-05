@@ -98,6 +98,14 @@ export default {
       StoryListBus.$on('save-story-comment', function (story) {
          saver.saveComment(story);
       });
+
+      StoryListBus.$on('mark-highlighted', function (status) {
+         var highlighted = highlighter.getHighlightedStories();
+         highlighted.forEach(function (story) {
+            story.status = status;
+            saver.save(story);
+         });
+      });
    },
    mounted: function () {
       legacyStories.init(this.storyDictionary);
