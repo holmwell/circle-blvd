@@ -61,7 +61,8 @@
   "scripts": {
     "start": "node server.js",
     "debug": "nodemon",
-    "test": "nodeunit ./test"
+    "test": "nodeunit ./test",
+    "watch": "webpack --config ./back-end/webpack.config.js --watch"
   },
   "babel": {
     "presets": [
