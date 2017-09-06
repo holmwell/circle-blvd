@@ -112,6 +112,10 @@ var addStoryLocally = function (story) {
 var addStory = function (story, callback) {
 	var onSuccess = function (res) {
 		var newStory = res.data;
+
+		// Ensure reactive properties
+		newStory.isSelected = false;
+		
 		s[newStory.id] = newStory;
 		callback(null, newStory);
 	};
