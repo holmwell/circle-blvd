@@ -15,7 +15,7 @@ div
          @mindset-changed="setMindset")
 
       .main.container-fluid.no-select.debug
-         .view
+         .content.view.home
             story-list(
                :storyDictionary="storyDictionary", 
                :listMeta="listMeta"
