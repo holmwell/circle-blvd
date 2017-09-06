@@ -142,12 +142,12 @@ export default {
                 .deselect
                     a.subtle.jslink(@click.stop="deselect") Hide details
 
-            .col-xs-12.col-sm-9.summary-input
+            .summary-input.col-xs-12.col-sm-9
                 input.form-control(:id="'boxForStory' + id" type="text" autocomplete="off"
                     @keyup.enter="save" 
                     v-model="model.summary")
 
-            .hidden-xs.col-sm-3(ng-if="!isScreenXs")
+            .hidden-xs.col-sm-3(v-if="!isScreenXs")
                 .deselect
                     a(@click.stop="deselect") Hide details
 
@@ -169,32 +169,32 @@ export default {
         .status(v-show="!(isNextMeeting || isDeadline)") Task progress?
             .row
                 .col-xs-5.col-sm-2.wider-left.debug
-                    a(:class="activeIf('sad')" @click="setStatus('sad')").btn.btn-default.sad.form-control
+                    a.sad(:class="activeIf('sad')" @click="setStatus('sad')").btn.btn-default.form-control
                         i.btn-icon-status.glyphicon.glyphicon-stop
                         span Help?
 
                 .col-xs-3.col-sm-2.debug
-                    a(:class="activeIf('')" @click="setStatus('')").btn.btn-default.question.neutral.form-control
+                    a.neutral(:class="activeIf('')" @click="setStatus('')").btn.btn-default.question.form-control
                         span.txt New
 
                 .col-xs-4.col-sm-2.wider
-                    a(:class="activeIf('assigned')" @click="setStatus('assigned')").btn.btn-default.neutral.form-control
+                    a.neutral(:class="activeIf('assigned')" @click="setStatus('assigned')").btn.btn-default.form-control
                      | Will do
 
                 .hidden-xs.col-sm-3.wider(v-if="!isScreenXs")
-                    a(:class="activeIf('active')" @click="setStatus('active')").btn.btn-default.in-progress.form-control
+                    a.in-progress(:class="activeIf('active')" @click="setStatus('active')").btn.btn-default.form-control
                         i.btn-icon-status
                             span(v-html="iconHalfCircleSvg")
                         span &nbsp;On it
 
                 .col-xs-6.visible-xs
-                    a(:class="activeIf('active')" @click="setStatus('active')").btn.btn-default.in-progress.form-control
+                    a.in-progress(:class="activeIf('active')" @click="setStatus('active')").btn.btn-default.form-control
                         i.btn-icon-status
                             span(v-html="iconHalfCircleSvg")
                         span &nbsp;On it
 
                 .col-xs-6.col-sm-3.wider
-                    a(:class="activeIf('done')" @click="setStatus('done')").btn.btn-default.done.form-control
+                    a.done(:class="activeIf('done')" @click="setStatus('done')").btn.btn-default.form-control
                         i.btn-icon-status
                             span(v-html="iconCircleSvg")
                         span &nbsp;Done!
@@ -207,26 +207,25 @@ export default {
 
             .btn-wrapper
                 .pull-right
-                    span.subtle.topLinkToTask
+                    span.topLinkToTask.subtle
                         a(v-bind:href="'/#/stories/' + id")
                             span.glyphicon.glyphicon-link
                             span Link to {{storyNoun}}
 
-                    button(type="button" @click.stop="save").saveBtn.topSaveBtn.btn.btn-default Save
+                    button.saveBtn(type="button" @click.stop="save").topSaveBtn.btn.btn-default Save
                 
-                button(type="button" @click="saveComment").saveBtn.saveCommentBtn.topSaveBtn.btn.pull-left Add comment
+                button.saveCommentBtn(type="button" @click="saveComment").saveBtn.topSaveBtn.btn.pull-left Add comment
             
             .comments.clear
                 //- ng-class-odd="'odd'"
                 .comment(v-for="comment in commentsReversed") 
                     .text
                         span.name {{comment.createdBy.name}}, 
-                        //- TODO: getTimestampFilter(comment)
                         span.timestamp {{comment.timestamp | date}}:&nbsp;
                         span(v-html="linky(comment.text)")
 
         .action-buttons
-            button(v-if="!isScreenXs" v-show="!isNextMeeting" type="button" @click="remove").hidden-xs.removeBtn
+            button.removeBtn(v-if="!isScreenXs" v-show="!isNextMeeting" type="button" @click="remove").hidden-xs
                 span Remove {{storyNoun}}
 
             .pull-right(v-show="isNextMeeting || isDeadline")
@@ -235,7 +234,7 @@ export default {
                         span.glyphicon.glyphicon-link
                         span Link to {{storyNoun}}
 
-                button(type="button" @click.stop="save").saveBtn.btn.btn-default Save
+                button.saveBtn(type="button" @click.stop="save").btn.btn-default Save
 </template>
 
 <style src="awesomplete/awesomplete.css"></style>
