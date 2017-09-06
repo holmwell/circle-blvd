@@ -1,8 +1,8 @@
 <script>
-import Autolinker from "autolinker"
-import Autosize from "autosize"
-import Awesomplete from "awesomplete"
-import dateformat from "dateformat"
+import Autolinker   from "autolinker"
+import Autosize     from "autosize"
+import Awesomplete  from "awesomplete"
+import dateformat   from "dateformat"
 import sanitizeHtml from "sanitize-html"
 
 export default {

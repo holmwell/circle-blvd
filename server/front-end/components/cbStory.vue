@@ -1,4 +1,6 @@
 <script>
+import Vue from 'vue'
+
 import StoryDetail  from './cbStoryDetail.vue';
 import StorySummary from './cbStorySummary.vue';
 
@@ -41,6 +43,8 @@ export default {
     }, 
     data: function () {
         return {
+            isPulsing: false,
+            isColoring: false,
             isMouseOver: false
         };
     },
@@ -65,6 +69,10 @@ export default {
                 inClipboard: this.isInClipboard,
                 mine: this.isMine,
                 'team-highlighted': this.isHighlightedByTeam,
+
+                pulse: this.isPulsing && !this.isDeadline,
+                'pulse-milepost': this.isPulsing && this.isDeadline,
+                'color-transition': this.isColoring
             }];
         },
         isSad: function () {
@@ -99,6 +107,20 @@ export default {
         },
         isMindsetBump: function () {
             return this.mindset === 'bump';
+        }
+    },
+    watch: {
+        status: function () {
+            if (!this.isSelected)
+                this.pulse();
+        },
+        isSelected: function (val) {
+            if (!val)
+                this.pulse();
+        },
+        index: function (val) {
+            if (this.isHighlighted)
+                this.pulse();
         }
     },
     methods: {
@@ -162,6 +184,26 @@ export default {
         },
         moveToTop: function () {
             this.$emit('move-to-top', this);
+        },
+        pulse: function () {
+            var self = this;
+
+            var turnOn = function (callback) {
+                self.isPulsing = true;
+                Vue.nextTick(function () {
+                    self.isColoring = true;
+                    Vue.nextTick(callback);
+                });
+            };
+
+            var turnOff = function () {
+                self.isPulsing = false;
+                setTimeout(function () {
+                    self.isColoring = false;
+                }, 500);
+            };
+
+            turnOn(turnOff);
         }
      }
 }
