@@ -1,13 +1,15 @@
-<template><span>
-	<span v-if="!hasLabels">{{summary}}</span>
-	<span v-else v-for="(s, index) in spans">
-		<span v-if="s.isLabel" @mouseup.stop.prevent v-on:click.stop.prevent="selectLabel(s.label)">
-			<span v-if="(index !== 0)">&nbsp;</span><span class="story-label">{{s.text}}</span>
+<template>
+	<span>
+		<span v-if="!hasLabels">{{summary}}</span>
+		<span v-else v-for="(s, index) in spans">
+			<span v-if="s.isLabel" @mouseup.stop.prevent v-on:click.stop.prevent="selectLabel(s.label)">
+				<span v-if="(index !== 0)">&nbsp;</span><span class="story-label">{{s.text}}</span>
+			</span>
+			<span v-else-if="s.isPostLabel">{{s.text}}</span>
+			<span v-else> {{s.text}}</span>
 		</span>
-		<span v-else-if="s.isPostLabel">{{s.text}}</span>
-		<span v-else> {{s.text}}</span>
 	</span>
-</span></template>
+</template>
 
 <script>
 var ReplaceLabelRegex = /[#:;,<> \\\{\[\(\!\?\.\`\'\"\*\)\]\}\/]/g;

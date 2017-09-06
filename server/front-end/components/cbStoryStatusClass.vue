@@ -1,3 +1,8 @@
+<template lang="pug">
+    div(:class="statusClass")
+        slot
+</template>
+
 <script>
 module.exports = {
     props: {
@@ -28,8 +33,3 @@ module.exports = {
     }
 };
 </script>
-
-<template lang="pug">
-    div(:class="statusClass")
-        slot
-</template>

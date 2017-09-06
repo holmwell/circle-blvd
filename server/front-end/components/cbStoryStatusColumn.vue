@@ -1,3 +1,23 @@
+<template lang="pug">
+    .hidden-xs.col-sm-2.debug.clear.hide-mindset-roadmap(v-if="!isScreenXs")
+        .backlog-mine.col-xs-9.debug(:class="isStoryDoneClass")
+            //- The 'mine button' stuff would go here, but that should be removed anyway,
+            //- so this is just here for spacing.
+        .backlog-status.col-xs-3.debug.no-select
+            i.done-status.done-status-archive(v-show="isDeadline && !isAfterNextMeeting" 
+                @click="archive" title="archive milepost")
+                div(v-html="iconCircleSvg")
+
+            i.done-status(@click="archive" title="archive task")
+                div(v-html="iconCircleSvg")
+
+            i.active-status
+                div(v-html="iconHalfCircleSvg")
+
+            i.sad-status.glyphicon.glyphicon-stop
+            span.new-status(v-show="isStoryMine") New
+</template>
+
 <script>
 module.exports = {
     props: {
@@ -54,27 +74,6 @@ function isStoryStatus(story, status) {
     return false;
 }
 </script>
-
-<template lang="pug">
-    .hidden-xs.col-sm-2.debug.clear.hide-mindset-roadmap(v-if="!isScreenXs")
-        .backlog-mine.col-xs-9.debug(:class="isStoryDoneClass")
-            //- The 'mine button' stuff would go here, but that should be removed anyway,
-            //- so this is just here for spacing.
-        .backlog-status.col-xs-3.debug.no-select
-            i.done-status.done-status-archive(v-show="isDeadline && !isAfterNextMeeting" 
-                @click="archive" title="archive milepost")
-                div(v-html="iconCircleSvg")
-
-            i.done-status(@click="archive" title="archive task")
-                div(v-html="iconCircleSvg")
-
-            i.active-status
-                div(v-html="iconHalfCircleSvg")
-
-            i.sad-status.glyphicon.glyphicon-stop
-            span.new-status(v-show="isStoryMine") New
-</template>
-
 
 <!-- // Old template, for reference:
 //
