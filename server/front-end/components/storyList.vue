@@ -1,5 +1,10 @@
 <template lang="pug">
    #backlog
+      story-filter-panel(v-show="isShowingFilterPanel"
+         :selected-labels="selectedLabels"
+         :selected-owner="selectedOwner"
+         @deselect-label="deselectLabel"
+         @deselect-owner="deselectOwner")
       cb-story-list#sortableList(
          :scope="scope" 
          :stories="stories"
@@ -25,6 +30,7 @@
 
 <script>
 import cbStoryList from './cbStoryList.vue'
+import storyFilterPanel from './storyFilterPanel.vue'
 import listBuilder from './lib/storyListBuilder.js'
 
 import legacyStories from './lib/legacy/stories.js'
@@ -38,7 +44,7 @@ import mover from './lib/mover.js'
 // import dragAndDrop from './lib/dragAndDrop.js'
 
 export default {
-   components: { cbStoryList },
+   components: { cbStoryList, storyFilterPanel },
    props: ['storyDictionary', 'listMeta', 'keyboard', 'member'],
    data: function () {
       return {
@@ -68,6 +74,11 @@ export default {
          mindset: 'detailed',
          owners: [],
          accountName: this.member.name
+      }
+   },
+   computed: {
+      isShowingFilterPanel: function () {
+         return this.selectedLabels.length > 0 || this.selectedOwner;
       }
    },
    created: function () {
@@ -121,10 +132,19 @@ export default {
             this.selectedLabels.push(text);
          }
       },
+      deselectLabel: function (text) {
+         var index = this.selectedLabels.indexOf(text);
+         if (index >= 0) {
+            this.selectedLabels.splice(index, 1);
+         }
+      },
       selectOwner: function (owner) {
          if (owner) {
             this.selectedOwner = owner;
          }
+      },
+      deselectOwner: function () {
+         this.selectedOwner = null;
       }
    }
 }
