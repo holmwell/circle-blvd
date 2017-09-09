@@ -1,5 +1,12 @@
 <template lang="pug">
    #backlog
+      list-tool-panel(
+         :isInserting="isShowingInsertStory"
+         :profileName="accountName"
+         :selectedOwner="selectedOwner"
+         @show-entry="showEntry"
+         @select-my-tasks="selectMyTasks"
+         @search="updateSearchEntry")
       story-filter-panel(v-show="isShowingFilterPanel"
          :selected-labels="selectedLabels"
          :selected-owner="selectedOwner"
@@ -31,6 +38,7 @@
 <script>
 import cbStoryList from './cbStoryList.vue'
 import storyFilterPanel from './storyFilterPanel.vue'
+import listToolPanel from './listToolPanel.vue'
 import listBuilder from './lib/storyListBuilder.js'
 
 import legacyStories from './lib/legacy/stories.js'
@@ -44,7 +52,7 @@ import mover from './lib/mover.js'
 // import dragAndDrop from './lib/dragAndDrop.js'
 
 export default {
-   components: { cbStoryList, storyFilterPanel },
+   components: { cbStoryList, storyFilterPanel, listToolPanel },
    props: ['storyDictionary', 'listMeta', 'keyboard', 'member'],
    data: function () {
       return {
@@ -121,6 +129,14 @@ export default {
          }
          this.isClipboardActive = clipboard.isActive();
       },
+      showEntry: function () {
+         this.highlight({
+            storyId: this.stories[0].id,
+            type: 'single'
+         });
+
+         this.showInsertStory();
+      },
       showInsertStory: function () {
          this.isShowingInsertStory = true;
       },
@@ -145,6 +161,12 @@ export default {
       },
       deselectOwner: function () {
          this.selectedOwner = null;
+      },
+      selectMyTasks: function () {
+         this.selectOwner(this.accountName);
+      },
+      updateSearchEntry: function (val) {
+         this.searchEntry = val;
       }
    }
 }

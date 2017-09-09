@@ -188,7 +188,7 @@ export default {
 
             // Search
             if (searchEntry && searchEntry.length > 0) {
-                for (index in searchEntry) {
+                for (var index in searchEntry) {
                     if (story.summary.toLowerCase().indexOf(searchEntry[index]) < 0) {
                         if (story.owner && story.owner.toLowerCase().indexOf(searchEntry[index]) >= 0) {
                             // Stay cool.
