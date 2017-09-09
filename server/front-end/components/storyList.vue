@@ -128,11 +128,11 @@ export default {
              moveStoryBlock,
              stories);
 
-         // TODO: reactivity is broken
          if (highlightedStories.length > 0) {
             var mostRecent = highlightedStories[0];
             highlighter.setMostRecent(mostRecent);
          }
+
          this.isClipboardActive = clipboard.isActive();
       },
       showEntry: function () {

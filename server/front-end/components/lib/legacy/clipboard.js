@@ -1,3 +1,5 @@
+import highlighter from '../highlighter.js'
+
 // When passed a block of tasks from the
 // StoryList, what are the 'start' and
 // 'end' tasks in that block?
@@ -88,9 +90,10 @@ var clipboard = function () {
             highlightedStory = highlightedStories[0];
         }
 
-        highlightedStories.unhighlightAll();
-        highlightedStory.isHighlighted = true;
-        highlightedStories.highlight(highlightedStory, 'single');
+        highlighter.highlight({
+            story: highlightedStory,
+            type: 'single'
+        });
     }
 
     function pasteHighlighted(highlightedStories, moveStoryBlock, stories) {
@@ -99,6 +102,7 @@ var clipboard = function () {
         }
 
         var nextStory = highlightedStories.pop();
+        nextStory.isMostRecentHighlight = false;
         nextStory.isHighlighted = false;
 
         var block = lib.getStartAndEndOfBlock(clipboardStories);
