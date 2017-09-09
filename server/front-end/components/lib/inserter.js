@@ -2,6 +2,7 @@
 
 import stories from './legacy/stories.js'
 import mover   from './mover.js'
+import StoryListBus from './storyListBus.js'
 
 var isInsertingStory = false;
 var storyBeingInserted = null;
@@ -140,7 +141,12 @@ export default {
           insertNewStory(newStory, circleId, listId, function (story) {
 
               var storyToMove = stories.get(story.id);
-              mover.move(storyToMove, nextStory, listId);
+              var moved = mover.move(storyToMove, nextStory, listId);
+              if (!moved) {
+                  // We'll get here if we're inserting at the top of
+                  // the list
+                  StoryListBus.$emit('story-order-updated', 'inserter.js');
+              }
 
               // scope.insertedStory = {};
               isInsertingStory = false;

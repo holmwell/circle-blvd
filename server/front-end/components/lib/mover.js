@@ -53,7 +53,7 @@ var isStoryBetween = function (story, start, end) {
    return false;
 };
 
-
+// Returns true if a move actually happened
 function moveStoryBlock (uiStartStory, startStory, endStory, nextStory, isLocalOnly) {
    var storyToMove = startStory;
 
@@ -63,7 +63,7 @@ function moveStoryBlock (uiStartStory, startStory, endStory, nextStory, isLocalO
       || endStory.nextId === nextStory.id
       || isStoryBetween(nextStory, startStory, endStory)) {
       // Do nothing.
-      return;
+      return false;
    }
 
    // Update data model
@@ -111,7 +111,7 @@ function moveStoryBlock (uiStartStory, startStory, endStory, nextStory, isLocalO
    }, 100);
 
    if (isLocalOnly) {
-       return;
+       return true;
    }
 
    // Update server
@@ -133,6 +133,8 @@ function moveStoryBlock (uiStartStory, startStory, endStory, nextStory, isLocalO
            }
        });
    }, 0);
+
+   return true;
 }
 
 function moveStory (uiStory, storyToMove, nextStory) {
