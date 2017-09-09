@@ -1,5 +1,5 @@
 <template lang="pug">
-   #backlog
+div
       list-tool-panel(
          :isInserting="isShowingInsertStory"
          :profileName="accountName"
@@ -12,27 +12,29 @@
          :selected-owner="selectedOwner"
          @deselect-label="deselectLabel"
          @deselect-owner="deselectOwner")
-      cb-story-list#sortableList(
-         :scope="scope" 
-         :stories="stories"
-         :selected-owner="selectedOwner"
-         :selected-labels="selectedLabels"
-         :search-entry="searchEntry"
-         :is-screen-xs="isScreenXs"
-         :is-showing-insert-story="isShowingInsertStory"
-         :is-clipboard-active="isClipboardActive"
-         :is-searching="isSearching"
-         :mindset="mindset"
-         :owners="owners"
-         :account-name="accountName"
-         :keyboard="keyboard"
-         @cut-highlighted="cutHighlighted"
-         @highlight="highlight"
-         @paste-highlighted="pasteHighlighted"
-         @select-label="selectLabel"
-         @select-owner="selectOwner"
-         @show-insert-story="showInsertStory"
-         @hide-insert-story="hideInsertStory")
+
+      #backlog
+         cb-story-list#sortableList(
+            :scope="scope" 
+            :stories="stories"
+            :selected-owner="selectedOwner"
+            :selected-labels="selectedLabels"
+            :search-entry="searchEntry"
+            :is-screen-xs="isScreenXs"
+            :is-showing-insert-story="isShowingInsertStory"
+            :is-clipboard-active="isClipboardActive"
+            :is-searching="isSearching"
+            :mindset="mindset"
+            :owners="owners"
+            :account-name="accountName"
+            :keyboard="keyboard"
+            @cut-highlighted="cutHighlighted"
+            @highlight="highlight"
+            @paste-highlighted="pasteHighlighted"
+            @select-label="selectLabel"
+            @select-owner="selectOwner"
+            @show-insert-story="showInsertStory"
+            @hide-insert-story="hideInsertStory")
 </template>
 
 <script>
