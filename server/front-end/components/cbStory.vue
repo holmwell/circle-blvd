@@ -148,7 +148,7 @@ export default {
                 'team-highlighted': this.isHighlightedByTeam,
 
                 pulse: this.isPulsing && !this.isDeadline,
-                'pulse-milepost': this.isPulsing && this.isDeadline,
+                'pulse-milepost': this.isPulsing && (this.isDeadline || this.isNextMeeting),
                 'color-transition': this.isColoring
             }];
         },
