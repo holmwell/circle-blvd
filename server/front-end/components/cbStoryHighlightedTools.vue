@@ -1,3 +1,41 @@
+<template lang="pug">
+    #highlightedTools.tools
+        .insertTools(v-if="isShowingInsertStory")
+
+            //- .jsLink(@click="changeInsertType('task')")
+            //-     span.text Task
+
+            //- .jsLink(@click="changeInsertType('deadline')")
+            //-     span.text Milepost 
+
+            .jsLink(@click="hideInsertStory")
+                span.glyphicon.glyphicon-remove 
+                span.text Hide entry
+
+        .clipboardTools(v-else-if="isClipboardActive")
+            .jsLink(@click="pasteHighlighted")
+                span.glyphicon.glyphicon-paste 
+                span.text Paste
+
+        .regularTools(v-else)
+            .jsLink(@click="markHighlightedAs('active')")
+                span.done(v-html="iconHalfCircleSvg") 
+                span.text On it
+
+            .jsLink(@click="markHighlightedAs('done')")
+                span.done(v-html="iconCircleSvg") 
+                span.text Done
+
+            .jsLink(@click="showInsertStory")
+                span.glyphicon.glyphicon-plus
+                span.text Add task
+
+            .jsLink(@click="cutHighlighted")
+                span.glyphicon.glyphicon-scissors 
+                span.text Cut
+</template>
+
+
 <script>
 export default {
     props: {
@@ -36,42 +74,6 @@ export default {
 }
 </script>
 
-<template lang="pug">
-    #highlightedTools.tools
-        .insertTools(v-if="isShowingInsertStory")
-
-            //- .jsLink(@click="changeInsertType('task')")
-            //-     span.text Task
-
-            //- .jsLink(@click="changeInsertType('deadline')")
-            //-     span.text Milepost 
-
-            .jsLink(@click="hideInsertStory")
-                span.glyphicon.glyphicon-remove 
-                span.text Hide entry
-
-        .clipboardTools(v-else-if="isClipboardActive")
-            .jsLink(@click="pasteHighlighted")
-                span.glyphicon.glyphicon-paste 
-                span.text Paste
-
-        .regularTools(v-else)
-            .jsLink(@click="markHighlightedAs('active')")
-                span.done(v-html="iconHalfCircleSvg") 
-                span.text On it
-
-            .jsLink(@click="markHighlightedAs('done')")
-                span.done(v-html="iconCircleSvg") 
-                span.text Done
-
-            .jsLink(@click="showInsertStory")
-                span.glyphicon.glyphicon-plus
-                span.text Add task
-
-            .jsLink(@click="cutHighlighted")
-                span.glyphicon.glyphicon-scissors 
-                span.text Cut
-</template>
 
 <style scoped>
     .text {

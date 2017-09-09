@@ -1,3 +1,72 @@
+<template><div>
+    <div v-for="(story, index) in stories" class="storyWrapper row debug no-select" 
+        v-show="!shouldHide(story)"
+        :class="story.isHighlighted ? 'highlightedWrapper' : ''" 
+        :data-story-id="story.id" 
+        :data-left-story-id="story.id"
+        :key="story.id">
+        <cb-story-status-class v-bind="story">
+            <cb-insert-story v-if="isShowingInsertStory && story.isMostRecentHighlight && !isSearching"
+                :story="story"
+                :mindset="mindset"
+                :insert-type="insertType"
+                :account-name="accountName"
+                @change-insert-type="insertTypeChanged"
+                @insert-story="insertStory"
+                @hide="hideInsertStory"
+            ></cb-insert-story>
+            
+            <div v-cloak v-if="isClipboardActive && story.isHighlighted">
+                <div class="story col-sm-offset-2 col-xs-12 debug paste-destination"
+                    :class="isMindsetRoadmap ? 'col-sm-12' : 'col-sm-8'">
+                    <div class="paddy">(clipboard tasks will be moved here)</div>
+                </div>
+            </div>
+
+            <cb-story-highlighted-tools v-if="!isMindsetRoadmap && !isScreenXs && story.isMostRecentHighlight"
+                class="hidden-xs"
+                :is-clipboard-active="isClipboardActive"
+                :is-screen-xs="isScreenXs"
+                :is-most-recent-highlight="story.isMostRecentHighlight"
+                :is-showing-insert-story="isShowingInsertStory" 
+                :mindset="mindset"
+                @change-status="markHighlightedAs"
+                @show-insert-story="showInsertStory"
+                @hide-insert-story="hideInsertStory"
+                @cut="cutHighlighted"
+                @paste="pasteHighlighted">
+            </cb-story-highlighted-tools>
+
+            <cb-story-status-column v-bind="story" 
+                :account-name="accountName"
+                @archive="archive">
+            </cb-story-status-column>
+
+            <cb-story v-bind="story" 
+                :is-screen-xs="isScreenXs"
+                :is-clipboard-active="isClipboardActive"
+                :is-mine="isMine(story)"
+                :is-highlighted-by-team="isHighlightedByTeam(story)"
+                :index="index"
+                :mindset="mindset"
+                :owners="owners"
+                @deselect-story="deselectStory"
+                @highlight="highlight"
+                @move-to-top="moveToTop"
+                @remove="remove"
+                @select-label="selectLabel" 
+                @select-story="selectStory"
+                @save="save"
+                @save-comment="saveComment"></cb-story>
+
+            <cb-story-owner-column v-bind="story" 
+                @select-owner="selectOwner">
+            </cb-story-owner-column>
+        </cb-story-status-class>
+    </div>
+</div></template>
+
+
 <script>
 import Vue from 'vue'
 
@@ -259,71 +328,3 @@ export default {
     }
 }
 </script>
-
-<template><div>
-    <div v-for="(story, index) in stories" class="storyWrapper row debug no-select" 
-        v-show="!shouldHide(story)"
-        :class="story.isHighlighted ? 'highlightedWrapper' : ''" 
-        :data-story-id="story.id" 
-        :data-left-story-id="story.id"
-        :key="story.id">
-        <cb-story-status-class v-bind="story">
-            <cb-insert-story v-if="isShowingInsertStory && story.isMostRecentHighlight && !isSearching"
-                :story="story"
-                :mindset="mindset"
-                :insert-type="insertType"
-                :account-name="accountName"
-                @change-insert-type="insertTypeChanged"
-                @insert-story="insertStory"
-                @hide="hideInsertStory"
-            ></cb-insert-story>
-            
-            <div v-cloak v-if="isClipboardActive && story.isHighlighted">
-                <div class="story col-sm-offset-2 col-xs-12 debug paste-destination"
-                    :class="isMindsetRoadmap ? 'col-sm-12' : 'col-sm-8'">
-                    <div class="paddy">(clipboard tasks will be moved here)</div>
-                </div>
-            </div>
-
-            <cb-story-highlighted-tools v-if="!isMindsetRoadmap && !isScreenXs && story.isMostRecentHighlight"
-                class="hidden-xs"
-                :is-clipboard-active="isClipboardActive"
-                :is-screen-xs="isScreenXs"
-                :is-most-recent-highlight="story.isMostRecentHighlight"
-                :is-showing-insert-story="isShowingInsertStory" 
-                :mindset="mindset"
-                @change-status="markHighlightedAs"
-                @show-insert-story="showInsertStory"
-                @hide-insert-story="hideInsertStory"
-                @cut="cutHighlighted"
-                @paste="pasteHighlighted">
-            </cb-story-highlighted-tools>
-
-            <cb-story-status-column v-bind="story" 
-                :account-name="accountName"
-                @archive="archive">
-            </cb-story-status-column>
-
-            <cb-story v-bind="story" 
-                :is-screen-xs="isScreenXs"
-                :is-clipboard-active="isClipboardActive"
-                :is-mine="isMine(story)"
-                :is-highlighted-by-team="isHighlightedByTeam(story)"
-                :index="index"
-                :mindset="mindset"
-                :owners="owners"
-                @deselect-story="deselectStory"
-                @highlight="highlight"
-                @move-to-top="moveToTop"
-                @remove="remove"
-                @select-label="selectLabel" 
-                @select-story="selectStory"
-                @save="save"
-                @save-comment="saveComment"></cb-story>
-
-            <cb-story-owner-column v-bind="story" 
-                @select-owner="selectOwner">
-            </cb-story-owner-column>
-        </cb-story-status-class>
-    </div>
-</div></template>

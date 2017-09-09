@@ -1,3 +1,80 @@
+<template lang="pug">
+    div(v-bind:class="cssClass" 
+        @dblclick="select" 
+        @click="handleSingleClicks" 
+        @mousedown="highlight" 
+        @mouseenter="mouseOver" 
+        @mouseleave="mouseLeave" v-bind:style="backgroundStyle")
+        //-  TODO: Get the id, for scrolling 
+        div(v-if="isSelected")
+            cb-story-detail(v-bind="$props" is-screen-xs="isScreenXs" 
+                @save="save" 
+                @save-comment="saveComment"
+                @deselect="deselect" 
+                @remove="remove")
+        div(v-else)
+            .row.no-select.hidden-xs
+                .col-sm-10.paddy
+                    .summary(:class="isStoryMineClass")
+                        cb-story-summary(@select-label="selectLabel", :summary="summary")
+
+                .col-sm-1.paddy.details-icon
+                     .pull-right(v-show="isMouseOver" @click="select")
+                         span.glyphicon.glyphicon-option-horizontal
+
+                div(v-if="(isMindsetBump || isDone) && isAfterNextMeeting" @click.stop.prevent="moveToTop").col-sm-1.bumpy
+                    .pull-right.bumpy-viz
+                        div(v-show="!isFirstStory").glyphicon.glyphicon-chevron-up &nbsp;
+
+                div(v-else).col-sm-1.grippy
+                    .pull-right.grippy-viz
+                        span.grippy-bar.top
+                        span.grippy-bar
+                        .row
+                             .col-sm-offset-5
+                                .glyphicon.glyphicon-move &nbsp;
+                        span.grippy-bar.top
+                        span.grippy-bar
+
+            div(v-if="isScreenXs").no-select.phone-row.hidden-sm.hidden-md.hidden-lg
+                //- ng-class="{mine: isStoryMine(story)}" 
+            
+                .col-xs-11.paddy
+                    .phone-backlog-status.col-xs-2.debug.no-select
+                        i(v-show="isDeadline && !isAfterNextMeeting").done-status
+                        //- @click="archive" title="archive milepost")
+
+                        i(v-show="isDone").done-status 
+                        //-     class="done-status"
+                        //-     ng-click="archive(story)" 
+                        //-     title="archive story">
+                        //- </i>
+
+                        i(v-show="isActive").active-status
+                        i(v-show="isSad").sad-status.glyphicon.glyphicon-stop
+
+                        span.new-status(v-show="isNew && isMine") New
+
+                    .phone-summary.col-xs-10
+                        cb-story-summary(@select-label="selectLabel", :summary="summary")
+
+                //- Note: Small screens don't switch to bumpy when a task is done
+                div(v-if="isMindsetBump && isAfterNextMeeting" @click.stop.prevent="moveToTop").col-xs-1.bumpy
+                    .pull-right.bumpy-viz
+                        div(v-show="!isFirstStory").glyphicon.glyphicon-chevron-up &nbsp;
+
+                div(v-else).col-xs-1.grippy
+                    .pull-right.grippy-viz
+                        span.grippy-bar.top
+                        span.grippy-bar
+                        .row
+                            .col-xs-offset-5
+                                .glyphicon.glyphicon-move &nbsp;
+                        span.grippy-bar.top
+                        span.grippy-bar
+
+</template>
+
 <script>
 import Vue from 'vue'
 
@@ -209,82 +286,7 @@ export default {
 }
 </script>
 
-<template lang="pug">
-    div(v-bind:class="cssClass" 
-        @dblclick="select" 
-        @click="handleSingleClicks" 
-        @mousedown="highlight" 
-        @mouseenter="mouseOver" 
-        @mouseleave="mouseLeave" v-bind:style="backgroundStyle")
-        //-  TODO: Get the id, for scrolling 
-        div(v-if="isSelected")
-            cb-story-detail(v-bind="$props" is-screen-xs="isScreenXs" 
-                @save="save" 
-                @save-comment="saveComment"
-                @deselect="deselect" 
-                @remove="remove")
-        div(v-else)
-            .row.no-select.hidden-xs
-                .col-sm-10.paddy
-                    .summary(:class="isStoryMineClass")
-                        cb-story-summary(@select-label="selectLabel", :summary="summary")
 
-                .col-sm-1.paddy.details-icon
-                     .pull-right(v-show="isMouseOver" @click="select")
-                         span.glyphicon.glyphicon-option-horizontal
-
-                div(v-if="(isMindsetBump || isDone) && isAfterNextMeeting" @click.stop.prevent="moveToTop").col-sm-1.bumpy
-                    .pull-right.bumpy-viz
-                        div(v-show="!isFirstStory").glyphicon.glyphicon-chevron-up &nbsp;
-
-                div(v-else).col-sm-1.grippy
-                    .pull-right.grippy-viz
-                        span.grippy-bar.top
-                        span.grippy-bar
-                        .row
-                             .col-sm-offset-5
-                                .glyphicon.glyphicon-move &nbsp;
-                        span.grippy-bar.top
-                        span.grippy-bar
-
-            div(v-if="isScreenXs").no-select.phone-row.hidden-sm.hidden-md.hidden-lg
-                //- ng-class="{mine: isStoryMine(story)}" 
-            
-                .col-xs-11.paddy
-                    .phone-backlog-status.col-xs-2.debug.no-select
-                        i(v-show="isDeadline && !isAfterNextMeeting").done-status
-                        //- @click="archive" title="archive milepost")
-
-                        i(v-show="isDone").done-status 
-                        //-     class="done-status"
-                        //-     ng-click="archive(story)" 
-                        //-     title="archive story">
-                        //- </i>
-
-                        i(v-show="isActive").active-status
-                        i(v-show="isSad").sad-status.glyphicon.glyphicon-stop
-
-                        span.new-status(v-show="isNew && isMine") New
-
-                    .phone-summary.col-xs-10
-                        cb-story-summary(@select-label="selectLabel", :summary="summary")
-
-                //- Note: Small screens don't switch to bumpy when a task is done
-                div(v-if="isMindsetBump && isAfterNextMeeting" @click.stop.prevent="moveToTop").col-xs-1.bumpy
-                    .pull-right.bumpy-viz
-                        div(v-show="!isFirstStory").glyphicon.glyphicon-chevron-up &nbsp;
-
-                div(v-else).col-xs-1.grippy
-                    .pull-right.grippy-viz
-                        span.grippy-bar.top
-                        span.grippy-bar
-                        .row
-                            .col-xs-offset-5
-                                .glyphicon.glyphicon-move &nbsp;
-                        span.grippy-bar.top
-                        span.grippy-bar
-
-</template>
 
 <!-- // Old template, for reference:
 //

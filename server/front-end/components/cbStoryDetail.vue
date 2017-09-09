@@ -1,3 +1,106 @@
+<template lang="pug">
+    div(name="storyForm")
+        .summary.row
+            .visible-xs.col-xs-12
+                .deselect
+                    a.subtle.jslink(@click.stop="deselect") Hide details
+
+            .summary-input.col-xs-12.col-sm-9
+                input.form-control(:id="'boxForStory' + id" type="text" autocomplete="off"
+                    @keyup.enter="save" 
+                    v-model="model.summary")
+
+            .hidden-xs.col-sm-3(v-if="!isScreenXs")
+                .deselect
+                    a(@click.stop="deselect") Hide details
+
+        .top-info(v-show="!(isNextMeeting || isDeadline)")
+            .owner Who's doing this?
+                input(type="text" v-model="model.owner" list="owner-list").form-control.awesomplete
+                datalist#owner-list
+                    option(v-for="name in owners") {{name}}
+            .owner-placeholder {{warning}}
+
+        .description
+            div What are the details?
+                .created-by.pull-right(v-if="createdBy")
+                    | {{storyNoun}} created by {{createdBy.name}}
+
+            .textarea-container
+                textarea#description-textarea.form-control(v-model="model.description")
+
+        .status(v-show="!(isNextMeeting || isDeadline)") Task progress?
+            .row
+                .col-xs-5.col-sm-2.wider-left.debug
+                    a.sad(:class="activeIf('sad')" @click="setStatus('sad')").btn.btn-default.form-control
+                        i.btn-icon-status.glyphicon.glyphicon-stop
+                        span Help?
+
+                .col-xs-3.col-sm-2.debug
+                    a.neutral(:class="activeIf('')" @click="setStatus('')").btn.btn-default.question.form-control
+                        span.txt New
+
+                .col-xs-4.col-sm-2.wider
+                    a.neutral(:class="activeIf('assigned')" @click="setStatus('assigned')").btn.btn-default.form-control
+                     | Will do
+
+                .hidden-xs.col-sm-3.wider(v-if="!isScreenXs")
+                    a.in-progress(:class="activeIf('active')" @click="setStatus('active')").btn.btn-default.form-control
+                        i.btn-icon-status
+                            span(v-html="iconHalfCircleSvg")
+                        span &nbsp;On it
+
+                .col-xs-6.visible-xs
+                    a.in-progress(:class="activeIf('active')" @click="setStatus('active')").btn.btn-default.form-control
+                        i.btn-icon-status
+                            span(v-html="iconHalfCircleSvg")
+                        span &nbsp;On it
+
+                .col-xs-6.col-sm-3.wider
+                    a.done(:class="activeIf('done')" @click="setStatus('done')").btn.btn-default.form-control
+                        i.btn-icon-status
+                            span(v-html="iconCircleSvg")
+                        span &nbsp;Done!
+
+        .commentArea(v-if="!(isNextMeeting || isDeadline)")
+            .commentHeading Questions or comments?
+            .textarea-container
+                textarea#comment-textarea(placeholder="Add comment or link ..." 
+                    v-model="model.newComment" rows="1").form-control
+
+            .btn-wrapper
+                .pull-right
+                    span.topLinkToTask.subtle
+                        a(v-bind:href="'/#/stories/' + id")
+                            span.glyphicon.glyphicon-link
+                            span Link to {{storyNoun}}
+
+                    button.saveBtn(type="button" @click.stop="save").topSaveBtn.btn.btn-default Save
+                
+                button.saveCommentBtn(type="button" @click="saveComment").saveBtn.topSaveBtn.btn.pull-left Add comment
+            
+            .comments.clear
+                //- ng-class-odd="'odd'"
+                .comment(v-for="comment in commentsReversed") 
+                    .text
+                        span.name {{comment.createdBy.name}}, 
+                        span.timestamp {{comment.timestamp | date}}:&nbsp;
+                        span(v-html="linky(comment.text)")
+
+        .action-buttons
+            button.removeBtn(v-if="!isScreenXs" v-show="!isNextMeeting" type="button" @click="remove").hidden-xs
+                span Remove {{storyNoun}}
+
+            .pull-right(v-show="isNextMeeting || isDeadline")
+                span.linkToTask.subtle
+                    a(v-bind:href="'/#/stories/' + id")
+                        span.glyphicon.glyphicon-link
+                        span Link to {{storyNoun}}
+
+                button.saveBtn(type="button" @click.stop="save").btn.btn-default Save
+</template>
+
+
 <script>
 import Autolinker   from "autolinker"
 import Autosize     from "autosize"
@@ -134,108 +237,6 @@ export default {
     }
 };
 </script>
-
-<template lang="pug">
-    div(name="storyForm")
-        .summary.row
-            .visible-xs.col-xs-12
-                .deselect
-                    a.subtle.jslink(@click.stop="deselect") Hide details
-
-            .summary-input.col-xs-12.col-sm-9
-                input.form-control(:id="'boxForStory' + id" type="text" autocomplete="off"
-                    @keyup.enter="save" 
-                    v-model="model.summary")
-
-            .hidden-xs.col-sm-3(v-if="!isScreenXs")
-                .deselect
-                    a(@click.stop="deselect") Hide details
-
-        .top-info(v-show="!(isNextMeeting || isDeadline)")
-            .owner Who's doing this?
-                input(type="text" v-model="model.owner" list="owner-list").form-control.awesomplete
-                datalist#owner-list
-                    option(v-for="name in owners") {{name}}
-            .owner-placeholder {{warning}}
-
-        .description
-            div What are the details?
-                .created-by.pull-right(v-if="createdBy")
-                    | {{storyNoun}} created by {{createdBy.name}}
-
-            .textarea-container
-                textarea#description-textarea.form-control(v-model="model.description")
-
-        .status(v-show="!(isNextMeeting || isDeadline)") Task progress?
-            .row
-                .col-xs-5.col-sm-2.wider-left.debug
-                    a.sad(:class="activeIf('sad')" @click="setStatus('sad')").btn.btn-default.form-control
-                        i.btn-icon-status.glyphicon.glyphicon-stop
-                        span Help?
-
-                .col-xs-3.col-sm-2.debug
-                    a.neutral(:class="activeIf('')" @click="setStatus('')").btn.btn-default.question.form-control
-                        span.txt New
-
-                .col-xs-4.col-sm-2.wider
-                    a.neutral(:class="activeIf('assigned')" @click="setStatus('assigned')").btn.btn-default.form-control
-                     | Will do
-
-                .hidden-xs.col-sm-3.wider(v-if="!isScreenXs")
-                    a.in-progress(:class="activeIf('active')" @click="setStatus('active')").btn.btn-default.form-control
-                        i.btn-icon-status
-                            span(v-html="iconHalfCircleSvg")
-                        span &nbsp;On it
-
-                .col-xs-6.visible-xs
-                    a.in-progress(:class="activeIf('active')" @click="setStatus('active')").btn.btn-default.form-control
-                        i.btn-icon-status
-                            span(v-html="iconHalfCircleSvg")
-                        span &nbsp;On it
-
-                .col-xs-6.col-sm-3.wider
-                    a.done(:class="activeIf('done')" @click="setStatus('done')").btn.btn-default.form-control
-                        i.btn-icon-status
-                            span(v-html="iconCircleSvg")
-                        span &nbsp;Done!
-
-        .commentArea(v-if="!(isNextMeeting || isDeadline)")
-            .commentHeading Questions or comments?
-            .textarea-container
-                textarea#comment-textarea(placeholder="Add comment or link ..." 
-                    v-model="model.newComment" rows="1").form-control
-
-            .btn-wrapper
-                .pull-right
-                    span.topLinkToTask.subtle
-                        a(v-bind:href="'/#/stories/' + id")
-                            span.glyphicon.glyphicon-link
-                            span Link to {{storyNoun}}
-
-                    button.saveBtn(type="button" @click.stop="save").topSaveBtn.btn.btn-default Save
-                
-                button.saveCommentBtn(type="button" @click="saveComment").saveBtn.topSaveBtn.btn.pull-left Add comment
-            
-            .comments.clear
-                //- ng-class-odd="'odd'"
-                .comment(v-for="comment in commentsReversed") 
-                    .text
-                        span.name {{comment.createdBy.name}}, 
-                        span.timestamp {{comment.timestamp | date}}:&nbsp;
-                        span(v-html="linky(comment.text)")
-
-        .action-buttons
-            button.removeBtn(v-if="!isScreenXs" v-show="!isNextMeeting" type="button" @click="remove").hidden-xs
-                span Remove {{storyNoun}}
-
-            .pull-right(v-show="isNextMeeting || isDeadline")
-                span.linkToTask.subtle
-                    a(v-bind:href="'/#/stories/' + id")
-                        span.glyphicon.glyphicon-link
-                        span Link to {{storyNoun}}
-
-                button.saveBtn(type="button" @click.stop="save").btn.btn-default Save
-</template>
 
 <style src="awesomplete/awesomplete.css"></style>
 
