@@ -1,7 +1,6 @@
 function getStoryArray(dict, firstStory) {
    // Migrating from cbStoryListBuilder
    var first = dict[firstStory.id];
-   first.isFirstAtLoad = true;
 
    var array = [];
    var isAfterNextMeeting = false;

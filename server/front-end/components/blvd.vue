@@ -161,6 +161,7 @@ function getReactiveStories(stories) {
    for (var prop in stories) {
       var story = reactive[prop] = stories[prop];
 
+      ensure(story, "isFirstAtLoad", false);
       ensure(story, "isSelected", false);
       ensure(story, "isHighlighted", false);
       ensure(story, "isMostRecentHighlight", false);

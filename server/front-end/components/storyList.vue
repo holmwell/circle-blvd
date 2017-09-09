@@ -70,10 +70,7 @@ export default {
             markHighlightedAs: this.nope,
             keyboard: {}
          },
-         stories: listBuilder.getStoryArray(
-            this.storyDictionary, 
-            this.storyDictionary[this.listMeta.firstStoryId]
-         ),
+         stories: [],
          selectedOwner: '',
          selectedLabels: [],
          searchEntry: [],
@@ -101,6 +98,13 @@ export default {
             self.storyDictionary, 
             legacyStories.getFirst());
       });
+
+      var initialArray = listBuilder.getStoryArray(
+         this.storyDictionary, 
+         this.storyDictionary[this.listMeta.firstStoryId]);
+
+      initialArray[0].isFirstAtLoad = true;
+      self.stories = initialArray;
    },
    methods: {
       nope: function () {},
