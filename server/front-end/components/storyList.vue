@@ -16,7 +16,7 @@
             :selected-owner="selectedOwner"
             @deselect-label="deselectLabel"
             @deselect-owner="deselectOwner")
-            
+
          cb-story-list#sortableList(
             :scope="scope" 
             :stories="stories"
@@ -107,6 +107,13 @@ export default {
          });
       }
    },
+
+   watch: {
+      mileposts: function () {
+         this.$emit('activate-dnd');
+      }
+   },
+
    created: function () {
       var self = this;
       StoryListBus.$on('story-order-updated', function() {

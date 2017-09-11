@@ -22,7 +22,8 @@ div
                :keyboard="keyboard"
                :member="member"
                :mindset="mindset"
-               @highlight="highlight")
+               @highlight="highlight"
+               @activate-dnd="activateDnd")
 </template>
 
 <script>
@@ -43,6 +44,8 @@ import legacyStories from './lib/legacy/stories.js'
 import legacyDnd     from './lib/legacy/dragAndDrop.js'
 
 import http from 'axios'
+
+var dnd = null;
 
 export default {
    name: 'blvd',
@@ -129,7 +132,7 @@ export default {
       legacyStories.setFirst(firstStory);
 
       var isScreenXs = false;
-      var dnd = legacyDnd(this.circleId, this.circleId, this.mindset, isScreenXs);
+      dnd = legacyDnd(this.circleId, this.circleId, this.mindset, isScreenXs);
       dnd.activate();
    },
    methods: {
@@ -151,6 +154,11 @@ export default {
          request.story = this.storyDictionary[id];
          highlighter.highlight(request);
       },
+      activateDnd: function () {
+         if (dnd) {
+            dnd.activate();
+         }
+      }
    }
 }
 
