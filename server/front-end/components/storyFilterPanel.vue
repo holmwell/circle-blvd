@@ -29,7 +29,8 @@
         },
         computed: {
             columnClass: function () {
-                return this.isMindsetRoadmap ? 'col-sm-12' : 'col-sm-8';
+                // return this.isMindsetRoadmap ? 'col-sm-8' : 'col-sm-12';
+                return 'col-sm-12';
             },
             isMindsetRoadmap: function () {
                 return this.mindset === 'roadmap';

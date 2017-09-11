@@ -38,6 +38,7 @@
             </cb-story-highlighted-tools>
 
             <cb-story-status-column v-bind="story" 
+                v-if="!isMindsetRoadmap"
                 :account-name="accountName"
                 @archive="archive">
             </cb-story-status-column>
@@ -60,6 +61,7 @@
                 @save-comment="saveComment"></cb-story>
 
             <cb-story-owner-column v-bind="story" 
+                v-if="!isMindsetRoadmap"
                 @select-owner="selectOwner">
             </cb-story-owner-column>
         </cb-story-status-class>

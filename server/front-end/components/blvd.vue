@@ -21,6 +21,7 @@ div
                :listMeta="listMeta"
                :keyboard="keyboard"
                :member="member"
+               :mindset="mindset"
                @highlight="highlight")
 </template>
 

@@ -1,19 +1,22 @@
 <template lang="pug">
-div
+   #storyList(:class="mindset").no-select.row
       list-tool-panel(
          :isInserting="isShowingInsertStory"
+         :mindset="mindset"
          :profileName="accountName"
          :selectedOwner="selectedOwner"
          @show-entry="showEntry"
          @select-my-tasks="selectMyTasks"
          @search="updateSearchEntry")
-      story-filter-panel(v-show="isShowingFilterPanel"
-         :selected-labels="selectedLabels"
-         :selected-owner="selectedOwner"
-         @deselect-label="deselectLabel"
-         @deselect-owner="deselectOwner")
 
-      #backlog
+      #backlog(:class="isMindsetRoadmap ? 'col-sm-7': ''")   
+         story-filter-panel(v-show="isShowingFilterPanel"
+            :mindset="mindset"
+            :selected-labels="selectedLabels"
+            :selected-owner="selectedOwner"
+            @deselect-label="deselectLabel"
+            @deselect-owner="deselectOwner")
+            
          cb-story-list#sortableList(
             :scope="scope" 
             :stories="stories"
@@ -35,6 +38,12 @@ div
             @select-owner="selectOwner"
             @show-insert-story="showInsertStory"
             @hide-insert-story="hideInsertStory")
+
+      #mileposts-wrapper.col-sm-5.debug(v-if="isMindsetRoadmap")
+         #mileposts.debug
+            .storyWrapper.row.no-select.debug(:data-story-id="story.id" 
+               v-for="(story, index) in mileposts")
+               <roadmap-milepost v-bind="story" :storyIndex="index"></roadmap-milepost>
 </template>
 
 <script>
@@ -50,12 +59,14 @@ import clipboard from './lib/legacy/clipboard.js'
 import highlighter from './lib/highlighter.js'
 import mover from './lib/mover.js'
 
+import roadmapMilepost from './roadmapMilepost.vue'
+
 // import listUtil    from './lib/storyListUtil.js'
 // import dragAndDrop from './lib/dragAndDrop.js'
 
 export default {
-   components: { cbStoryList, storyFilterPanel, listToolPanel },
-   props: ['storyDictionary', 'listMeta', 'keyboard', 'member'],
+   components: { cbStoryList, storyFilterPanel, listToolPanel, roadmapMilepost },
+   props: ['storyDictionary', 'listMeta', 'keyboard', 'member', 'mindset'],
    data: function () {
       return {
          scope: {
@@ -78,7 +89,6 @@ export default {
          isShowingInsertStory: false,
          isClipboardActive: false,
          isSearching: false,
-         mindset: 'detailed',
          owners: [],
          accountName: this.member.name
       }
@@ -86,6 +96,15 @@ export default {
    computed: {
       isShowingFilterPanel: function () {
          return this.selectedLabels.length > 0 || this.selectedOwner;
+      },
+      isMindsetRoadmap: function () {
+         return this.mindset === 'roadmap';
+      },
+      mileposts: function () {
+         console.log('m');
+         return this.stories.filter(function (story) {
+            return story.isDeadline || story.isNextMeeting;
+         });
       }
    },
    created: function () {
@@ -94,6 +113,7 @@ export default {
          // Developers note: Vue can be slow in development mode
          // as list size increases, and this will take a second,
          // but in production mode it is near-instant.
+         console.log('u')
          self.stories = listBuilder.getStoryArray(
             self.storyDictionary, 
             legacyStories.getFirst());
@@ -103,6 +123,7 @@ export default {
          this.storyDictionary, 
          this.storyDictionary[this.listMeta.firstStoryId]);
 
+      console.log('i');
       initialArray[0].isFirstAtLoad = true;
       self.stories = initialArray;
    },
