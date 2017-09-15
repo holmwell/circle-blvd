@@ -62,13 +62,11 @@ function moveStoryBlock (uiStartStory, startStory, endStory, nextStory, isLocalO
       || endStory.id === nextStory.id
       || endStory.nextId === nextStory.id
       || isStoryBetween(nextStory, startStory, endStory)) {
-      // Do nothing.
+      // We didn't actually move. Do nothing.
       return false;
    }
 
    // Update data model
-   // TODO: Refactor, to share the same code used
-   // in the drag and drop module.
    var preMove = {
        storyBefore: stories.getPrevious(uiStartStory, startStory),
        storyAfter: stories.get(endStory.nextId)
@@ -91,15 +89,18 @@ function moveStoryBlock (uiStartStory, startStory, endStory, nextStory, isLocalO
        preMove.storyBefore.nextId = preMove.storyAfter ? preMove.storyAfter.id : getLastStoryId();
    }
 
-   // 2. ...
+   // 2. The story before the moved story, after it was moved.
    if (postMove.storyBefore) {
        postMove.storyBefore.nextId = startStory.id;
    }
    else {
-       stories.setFirst(startStory);   
+      // No need to set the "nextId" on the "storyBefore," because 
+      // there isn't one. Instead, we know that the moved story
+      // is now the first story.
+      stories.setFirst(startStory);   
    }
    
-   // 3. ...
+   // 3. The last story that was moved, unless it's now the last story.
    endStory.nextId = postMove.storyAfter ? postMove.storyAfter.id : getLastStoryId();
 
    // Update view model
@@ -159,14 +160,35 @@ export default {
       self = {
          listId: listId
       };
+
+      if (!nextStory) {
+        nextStory = {
+          id: getLastStoryId()
+        };
+      }
+
       moveStory(story, story, nextStory);
+   },
+
+   moveStoryBlock: function (startStory, endStory, nextStory, listId) {
+      self = {
+        listId: listId
+      };
+
+      if (!nextStory) {
+        nextStory = {
+          id: getLastStoryId()
+        };
+      }
+
+      return moveStoryBlock(startStory, startStory, endStory, nextStory);
    },
 
    getMoveStoryBlock: function (listId) {
       // TODO: This is tenuous at best
       self = {
          listId: listId
-      }
+      };
       return moveStoryBlock;
    }
 }

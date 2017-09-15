@@ -90,6 +90,19 @@ export default {
          mover.moveToTop(self.storyDictionary[story.id], self.circleId);
       });
 
+      StoryListBus.$on('move-story', function (story, nextStory) {
+         mover.move(story, nextStory, self.circleId);
+      });
+
+      StoryListBus.$on('move-story-block', function (startStory, endStory, nextStory) {
+         var start = self.storyDictionary[startStory.id];
+         var end = self.storyDictionary[endStory.id];
+         var next = nextStory ? self.storyDictionary[nextStory.id] : null;
+
+         mover.moveStoryBlock(start, end, next, self.circleId);
+         StoryListBus.$emit('story-order-updated');
+      });
+
       StoryListBus.$on('remove-story', function (story) {
          remover.remove(self.storyDictionary[story.id]);
       });

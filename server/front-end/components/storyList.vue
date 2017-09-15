@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import cbStoryList from './cbStoryList.vue'
 import storyFilterPanel from './storyFilterPanel.vue'
 import listToolPanel from './listToolPanel.vue'
@@ -101,7 +102,6 @@ export default {
          return this.mindset === 'roadmap';
       },
       mileposts: function () {
-         console.log('m');
          return this.stories.filter(function (story) {
             return story.isDeadline || story.isNextMeeting;
          });
@@ -120,17 +120,27 @@ export default {
          // Developers note: Vue can be slow in development mode
          // as list size increases, and this will take a second,
          // but in production mode it is near-instant.
-         console.log('u')
          self.stories = listBuilder.getStoryArray(
             self.storyDictionary, 
             legacyStories.getFirst());
       });
 
+      StoryListBus.$on('rebuild-lists-dnd-hack', function () {
+         if (self.mindset === 'roadmap') {
+            console.log('hard refresh')
+            self.hardRefresh();
+         }
+      });
+
+      StoryListBus.$on('rebuild-lists-dnd-hack-force', function () {
+         self.hardRefresh();
+      });
+
+
       var initialArray = listBuilder.getStoryArray(
          this.storyDictionary, 
          this.storyDictionary[this.listMeta.firstStoryId]);
 
-      console.log('i');
       initialArray[0].isFirstAtLoad = true;
       self.stories = initialArray;
    },
@@ -201,6 +211,17 @@ export default {
       },
       updateSearchEntry: function (val) {
          this.searchEntry = val;
+      },
+      hardRefresh: function () {
+         // This is to deal with jQueryUI drag and drop
+         // corner cases.
+         var self = this;
+         this.stories = [];
+         Vue.nextTick(function () {
+            self.stories = listBuilder.getStoryArray(
+               self.storyDictionary,
+               legacyStories.getFirst());
+         });
       }
    }
 }
