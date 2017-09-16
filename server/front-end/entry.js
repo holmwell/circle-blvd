@@ -16,10 +16,16 @@ new Vue({
     // we don't have to include the compiler in our dist.
     render (createElement) {
         return createElement('blvd', {
+            attrs: {
+                id: this.rawAttr("id"),
+                member: this.rawAttr("member"),
+                stories: this.rawAttr("stories"),
+                listMeta: this.rawAttr("listMeta") 
+            },
             props: {
-                circleId: this.$el.attributes.id.value,
-                member: this.attr("member"),
-                stories: this.attr("stories"),
+                circleId: this.rawAttr("id"),
+                member: this.attr("member"), 
+                stories: this.attr("stories"), 
                 listMeta: this.attr("listMeta")
             }
         })
@@ -27,6 +33,9 @@ new Vue({
     methods: {
         attr: function (attrName) {
             return JSON.parse(this.$el.attributes[attrName].value);
+        },
+        rawAttr: function (attrName) {
+            return this.$el.attributes[attrName].value;
         }
     }
 });
