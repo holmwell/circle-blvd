@@ -1,6 +1,5 @@
 <template>
-   <div class="story col-xs-12 debug no-select" :class="deadlineClass" 
-      ng-click="scrollToMilepost(story)"> 
+   <div class="story col-xs-12 debug no-select" :class="deadlineClass"> 
        <div class="row no-select hidden-xs" :id="'story-' + storyIndex">
            <div class="col-sm-12 paddy">
                <div class="text-select summary">

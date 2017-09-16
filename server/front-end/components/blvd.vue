@@ -42,6 +42,7 @@ import inserter     from './lib/inserter.js'
 import StoryListBus  from './lib/storyListBus.js'
 import legacyStories from './lib/legacy/stories.js'
 import legacyDnd     from './lib/legacy/dragAndDrop.js'
+import pulser        from './lib/legacy/storyPulser.js'
 
 import http from 'axios'
 
@@ -137,6 +138,10 @@ export default {
                StoryListBus.$emit('insert-queue-ready');
             }
          );
+      });
+
+      StoryListBus.$on('scroll-to-story', function (story) {
+         pulser.scrollToAndPulse(story, 'data-left-story-id');
       });
    },
    mounted: function () {

@@ -42,7 +42,7 @@
       #mileposts-wrapper.col-sm-5.debug(v-if="isMindsetRoadmap")
          #mileposts.debug
             .storyWrapper.row.no-select.debug(:data-story-id="story.id" 
-               v-for="(story, index) in mileposts")
+               v-for="(story, index) in mileposts" @click="scrollToStory(story)")
                <roadmap-milepost v-bind="story" :storyIndex="index"></roadmap-milepost>
 </template>
 
@@ -146,6 +146,9 @@ export default {
    },
    methods: {
       nope: function () {},
+      scrollToStory: function (story) {
+         StoryListBus.$emit('scroll-to-story', story);
+      },
       highlight: function (request) {
          request.stories = this.stories;
          this.$emit('highlight', request);
