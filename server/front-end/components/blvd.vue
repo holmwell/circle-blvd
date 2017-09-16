@@ -145,8 +145,8 @@ export default {
       legacyStories.setFirst(firstStory);
 
       var isScreenXs = false;
-      dnd = legacyDnd(this.circleId, this.circleId, this.mindset, isScreenXs);
-      dnd.activate();
+      dnd = legacyDnd(this.circleId, this.circleId, isScreenXs);
+      this.activateDnd();
    },
    methods: {
       nav: navvy.nav,
@@ -158,6 +158,7 @@ export default {
       },
       setMindset: function (name) {
          this.mindset = name;
+         this.activateDnd();
       },
       highlight: function (request) {
          var id = request.storyId;
@@ -169,7 +170,7 @@ export default {
       },
       activateDnd: function () {
          if (dnd) {
-            dnd.activate();
+            dnd.activate(this.mindset);
          }
       }
    }

@@ -13,12 +13,8 @@ import errors      from "../errors.js"
 import highlighter from "../highlighter.js"
 import stories     from "./stories.js"
 
-import Vue from 'vue'
+import Vue          from 'vue'
 import StoryListBus from "../storyListBus.js"
-
-function $timeout (fn, ms) {
-    window.setTimeout(fn, ms);
-};
 
 var listId = null;
 var circleId = null;
@@ -86,7 +82,7 @@ var isStoryBetween = function (story, start, end) {
    return false;
 };
 
-export default function (circleIdParam, listIdParam, mindset, isScreenXs) {
+export default function (circleIdParam, listIdParam, isScreenXs) {
     circleId = circleIdParam;
     listId = listIdParam;
     
@@ -181,7 +177,7 @@ export default function (circleIdParam, listIdParam, mindset, isScreenXs) {
         StoryListBus.$emit('rebuild-lists-dnd-hack-force', 'dragAndDrop.js');
     };
 
-    var newDraggable = function () {
+    var makeStoriesDraggable = function (mindset) {
         var multidragDataLabel = 'multidrag';
         var selector = '.highlightedWrapper';
 
@@ -261,29 +257,20 @@ export default function (circleIdParam, listIdParam, mindset, isScreenXs) {
         $(sortableListSelector).sortable("option", "handle", ".highlighted");
     });
 
-    scope.$on('makeStoriesDraggable', function (e) {
-        makeStoriesDraggable();
-    });
-
-    var updateUI = function () {
-        // Do nothing.
-    };
-
-    var makeStoriesDraggable = function () {
-        newDraggable();
-        updateUI();
-    };
-
     scope.$on('activateDragAndDrop', function () {
         activateDragAndDrop();
     });
 
-    var activateDragAndDrop = function () {
+    var activateDragAndDrop = function (mindset) {
+        if (!mindset) {
+            throw "activateDragAndDrop: mindset is required, but was not specified"
+        }
+
         // Even though we're waiting for viewContentLoaded, 
         // I guess we need to yield to whatever else is happening.
-        $timeout(function () {
-            makeStoriesDraggable();
-        }, 0);
+        Vue.nextTick(function () {
+            makeStoriesDraggable(mindset);
+        });
     };
 
     return {
