@@ -171,7 +171,7 @@ export default {
       headerNav: function (destination) {
          switch (destination) {
             case 'archives':
-               this.mindset = 'detailed';
+               this.mindset = 'archives';
                blvdRouter.push({ name: 'archives' });
                break;
             default:

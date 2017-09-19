@@ -8,7 +8,7 @@
       .header-menu.col-sm-6.col-xs-12.debug
         div
           a.jsLink.glyph(@click="nav('archives')"
-            :class="activeIf(view === 'archives')")
+            :class="activeIf(mindset === 'archives')")
             .glyphicon-time.glyphicon
             div Archives
 
