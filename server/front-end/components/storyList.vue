@@ -110,7 +110,7 @@ export default {
 
    watch: {
       mileposts: function () {
-         this.$emit('activate-dnd');
+         StoryListBus.$emit('activate-dnd');
       }
    },
 
@@ -151,7 +151,7 @@ export default {
       },
       highlight: function (request) {
          request.stories = this.stories;
-         this.$emit('highlight', request);
+         StoryListBus.$emit('highlight-story', request);
       },
       cutHighlighted: function () {
          var highlightedStories = highlighter.getHighlightedStories();

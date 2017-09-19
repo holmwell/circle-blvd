@@ -16,17 +16,16 @@ div
 
       .main.container-fluid.no-select.debug
          .content.view.home
-            story-list(
-               :storyDictionary="storyDictionary", 
-               :listMeta="listMeta"
-               :keyboard="keyboard"
-               :member="member"
-               :mindset="mindset"
-               @highlight="highlight"
-               @activate-dnd="activateDnd")
+            router-view(
+                :storyDictionary="storyDictionary"
+                :listMeta="listMeta"
+                :keyboard="keyboard"
+                :member="member"
+                :mindset="mindset")
 </template>
 
 <script>
+import blvdRouter   from './blvdRouter.js'
 import navbar       from './navbar.vue'
 import circleHeader from './circleHeader.vue'
 import storyList    from './storyList.vue'
@@ -50,6 +49,7 @@ var dnd = null;
 
 export default {
    name: 'blvd',
+   router: blvdRouter,
    props: ['circleId', 'member', 'stories', 'listMeta'],
    data: function () {
       return {
@@ -77,6 +77,15 @@ export default {
          if (e.keyCode === 16) {
             self.keyboard.isShiftDown = false;
          }
+      });
+
+      StoryListBus.$on('highlight-story', function (request) {
+         var id = request.storyId;
+         // We go through this 'event hassle' in order to
+         // modify the storyDictionary proper ... even though
+         // it's all pass-by-reference ... so, whatever.
+         request.story = self.storyDictionary[id];
+         highlighter.highlight(request);
       });
 
       StoryListBus.$on('select-story', function (story) {
@@ -143,6 +152,10 @@ export default {
       StoryListBus.$on('scroll-to-story', function (story) {
          pulser.scrollToAndPulse(story, 'data-left-story-id');
       });
+
+      StoryListBus.$on('activate-dnd', function () {
+         self.activateDnd();
+      });
    },
    mounted: function () {
       legacyStories.init(this.storyDictionary);
@@ -164,14 +177,6 @@ export default {
       setMindset: function (name) {
          this.mindset = name;
          this.activateDnd();
-      },
-      highlight: function (request) {
-         var id = request.storyId;
-         // We go through this 'event hassle' in order to
-         // modify the storyDictionary proper ... even though
-         // it's all pass-by-reference ... so, whatever.
-         request.story = this.storyDictionary[id];
-         highlighter.highlight(request);
       },
       activateDnd: function () {
          if (dnd) {
