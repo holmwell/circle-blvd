@@ -11,7 +11,7 @@ div
          :circleId="circleId", 
          :member="member"
          :mindset="mindset"
-         @nav="nav"
+         @nav="headerNav"
          @mindset-changed="setMindset")
 
       .main.container-fluid.no-select.debug
@@ -168,6 +168,17 @@ export default {
    },
    methods: {
       nav: navvy.nav,
+      headerNav: function (destination) {
+         switch (destination) {
+            case 'archives':
+               this.mindset = 'detailed';
+               blvdRouter.push({ name: 'archives' });
+               break;
+            default:
+               navvy.nav(destination);
+               break;
+         }
+      },
       signout: function() {
          http.get('/auth/signout').then(function () {
             //resetSession();
@@ -175,6 +186,7 @@ export default {
          });
       },
       setMindset: function (name) {
+         blvdRouter.push({ name: 'default' });
          this.mindset = name;
          this.activateDnd();
       },
