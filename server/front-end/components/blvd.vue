@@ -174,6 +174,10 @@ export default {
                this.mindset = 'archives';
                blvdRouter.push({ name: 'archives' });
                break;
+            case 'admin': 
+               this.mindset = 'admin';
+               blvdRouter.push({ name: 'admin' });
+               break;
             default:
                navvy.nav(destination);
                break;

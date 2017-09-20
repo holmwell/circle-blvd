@@ -30,7 +30,7 @@
             div Roadmap
 
           a.glyph.jsLink.right-most.hidden-xs(
-            :class="activeIf(view === 'admin')"
+            :class="activeIf(mindset === 'admin')"
             @click="nav('admin')")
             .glyphicon-cog.glyphicon
             div Admin
