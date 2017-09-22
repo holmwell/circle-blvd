@@ -1,6 +1,6 @@
 <template>
 <div class="content admin text-select">
-   <p v-show="!isSignedIn">Please <a href="/#/signin">sign in</a>.</p>
+   <p v-show="!isSignedIn">Please <a href="/signin">sign in</a>.</p>
    <div v-show="isSignedIn" class="hidden-xs">
       <form>
          <h4 class="first">Circle name</h4>
