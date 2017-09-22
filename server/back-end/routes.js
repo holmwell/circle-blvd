@@ -152,7 +152,7 @@ module.exports = function (sessionMaker, db) {
             return false;
         };
 
-        var hasMainframeAccess = isInGroup("Mainframe", circleId);
+        var hasMainframeAccess = isInGroup("Mainframe", null);
         var isAdmin = isInGroup("Administrative", circleId);
 
         db.listMeta.byListId(circleId, guard(res, function (meta) {
