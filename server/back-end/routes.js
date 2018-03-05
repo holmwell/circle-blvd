@@ -106,6 +106,23 @@ module.exports = function (sessionMaker, db) {
 
     router.get("/data/waitlist", ensure.mainframe, send(db.waitlist.get));
 
+    router.post('/io', function (req, res) {
+        var payload = JSON.parse(req.body.payload);
+        var message = payload.original_message;
+
+        //console.log(payload);
+        //console.log(message);
+        var action = payload.actions.shift();
+
+        message.attachments[0] = {
+            title: message.attachments[0].title,
+            text: '<@' + payload.user.id + '> ' +
+                'marked this task as *' + action.value + '*'
+        };
+
+        res.status(200).send(message);
+    });
+
     // The secret to bridging Angular and Express in a 
     // way that allows us to pass any path to the client.
     // 
