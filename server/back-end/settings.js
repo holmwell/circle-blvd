@@ -51,6 +51,18 @@ module.exports = [{
     value: null,
     visibility: "private"
 },{
+    name: "slack-client-id",
+    value: null,
+    visibility: "public"
+},{
+    name: "slack-client-secret",
+    value: null,
+    visibility: "secret"
+},{
+    name: "slack-verification-token",
+    value: null,
+    visibility: "secret"
+},{
     name: "smtp-login",
     value: null,
     visibility: "private"

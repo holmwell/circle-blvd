@@ -333,6 +333,9 @@ function AdminCtrl(session, stories, $scope, $http, $route, $window, errors) {
 		.error(errors.handle);
 	});
 
+	// TODO: This is a hack to get this rolling
+	$scope.slackState = activeCircle;
+
 	var init = function () {
 		$scope.memberGroups = {};
 
