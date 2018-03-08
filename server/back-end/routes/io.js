@@ -9,26 +9,39 @@ var ensure = require('circle-blvd/auth-ensure');
 
 var guard = errors.guard;
 var handle = require('circle-blvd/handle');
+var request = require('request');
 
 module.exports = function (db) {
-	var limits = require('circle-blvd/limits')(db);
-	var notify = require('circle-blvd/notify')(db);
+	var settings = require('circle-blvd/settings')(db);
 
 	router.post('/', function (req, res) {
-		var payload = JSON.parse(req.body.payload);
-		var message = payload.original_message;
+		settings.get(guard(res, processSettings));
 
-		//console.log(payload);
-		//console.log(message);
-		var action = payload.actions.shift();
+		function processSettings(settings) {
+			var payload = JSON.parse(req.body.payload);
+			var message = payload.original_message;
 
-		message.attachments[0] = {
-			title: message.attachments[0].title,
-			text: '<@' + payload.user.id + '> ' +
-			'marked this task as *' + action.value + '*'
-		};
+			var token = settings['slack-verification-token'].value;
+			if (!payload || payload.token !== token) {
+				res.status(400).send();
+				return;
+			}
 
-		res.status(200).send(message);
+			// console.log(payload);
+			var action = payload.actions.shift();
+
+			message.attachments[0] = {
+				title: message.attachments[0].title,
+				text: '<@' + payload.user.id + '> ' +
+				'marked this task as *' + action.value + '*'
+			};
+
+			res.status(200).send(message);
+
+			// TODO:
+			// var dm = {};
+			// request.post('https://slack.com/api/chat.postMessage', dm);
+		}
 	});
 
 	return {
