@@ -15,7 +15,7 @@ module.exports = function (db) {
 
 	var settings = require('circle-blvd/settings')(db);
 
-	router.get('/oauth/slack', ensure.auth, function (req, res) {
+	router.get('/slack', ensure.auth, function (req, res) {
 		var payload = req.query;
 
 		if (payload.state && payload.code) {
