@@ -49,26 +49,24 @@ module.exports = function (db) {
 			var access = JSON.parse(body);
 			if (access && access.ok) {
 				var circleId = payload.state;
-				db.circles.get(circleId, guard(res, updateCircle));
+				db.circles.get(circleId, guard(res, function (circle) {
+					circle.access = circle.access || {};
+					circle.access.slack = access;
+
+					circle.webhooks = circle.webhooks || {};
+					circle.webhooks.slack = circle.webhooks.slack || {};
+					circle.webhooks.slack.url = access.incoming_webhook.url;
+
+					db.circles.update(circle, guard(res, function () {
+						res.redirect('/#/');
+					}));
+				}));
 			}
 			else {
 				// Didn't work out
 				console.log(err);
 				res.redirect('/#/');
 			}
-		}
-
-		function updateCircle(circle) {
-			circle.access = circle.access || {};
-			circle.access.slack = access;
-
-			circle.webhooks = circle.webhooks || {};
-			circle.webhooks.slack = circle.webhooks.slack || {};
-			circle.webhooks.slack.url = access.incoming_webhook.url;
-
-			db.circles.update(circle, guard(res, function () {
-				res.redirect('/#/');
-			}));
 		}
 
 		// fallback / invalid request
